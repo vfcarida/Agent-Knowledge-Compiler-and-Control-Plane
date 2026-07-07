@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { OKFDocumentService, OKFDocumentFactory, OKFDocumentType, ApplicationStatus } from '@ocf/core';
 import { BrowserOrchestrator } from './automation/browser-orchestrator.js';
 import { MCPToolExecutionError } from './errors.js';
+import { OllamaService } from './services/ollama-service.js';
 
 export class OCFMcpServer {
   private readonly server: McpServer;
@@ -110,8 +111,9 @@ export class OCFMcpServer {
         jobDescription: z.string().describe('The full text description of the target job vacancy'),
         format: z.enum(['markdown', 'text']).optional().default('markdown').describe('Format of the output tailored suggestions'),
         focusAreas: z.array(z.string()).optional().describe('Core skills or concepts to prioritize in tailoring'),
+        localGeneration: z.boolean().optional().default(false).describe('If true, queries local Ollama gemma4 instance to return the tailored resume suggestions directly'),
       },
-      async ({ jobDescription, format: _format, focusAreas }) => {
+      async ({ jobDescription, format: _format, focusAreas, localGeneration }) => {
         try {
           const context = await this.docService.getCareerContext();
 
@@ -120,6 +122,36 @@ export class OCFMcpServer {
           const experienceList = context.experiences
             .map((e) => `### ${e.frontmatter.role} at ${e.frontmatter.company}\n*Period: ${e.frontmatter.startDate || ''} - ${e.frontmatter.endDate || (e.frontmatter.current ? 'Present' : '')}*\n\n${e.body}`)
             .join('\n\n');
+
+          const isLocal = localGeneration || process.env['LLM_PROVIDER'] === 'ollama';
+
+          if (isLocal) {
+            const ollama = new OllamaService();
+            const prompt = [
+              'Please generate highly optimized resume suggestions and a cover letter draft based on the candidate profile and target job description below.',
+              '',
+              '### Candidate Profile',
+              '#### Available Skills:',
+              skillsList || 'None listed.',
+              '',
+              '#### Professional Experience:',
+              experienceList || 'None listed.',
+              '',
+              '### Target Job Description',
+              jobDescription,
+              '',
+              focusAreas && focusAreas.length > 0 ? `### Prioritize Focus Areas:\n${focusAreas.join(', ')}` : '',
+              '',
+              'Provide professional suggestions, key adjustments, and drafts in clear Markdown.',
+            ].join('\n');
+
+            const systemPrompt = 'You are an elite ATS optimization engine that tailors candidate profiles to match vacancy descriptions with absolute precision.';
+            const responseText = await ollama.generateCompletion(prompt, systemPrompt);
+
+            return {
+              content: [{ type: 'text', text: responseText }],
+            };
+          }
 
           const responseText = [
             '# ATS Resume Tailoring Instructions & Suggested Content',

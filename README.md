@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/Spec-OKF%20v0.1-6366f1?style=for-the-badge" alt="OKF Spec Badge" />
   <img src="https://img.shields.io/badge/Protocol-MCP%20v1.0-06b6d4?style=for-the-badge" alt="MCP Protocol Badge" />
   <img src="https://img.shields.io/badge/Monorepo-pnpm-a855f7?style=for-the-badge" alt="Pnpm Monorepo Badge" />
-  <img src="https://img.shields.io/badge/Tests-52%20Passed-22c55e?style=for-the-badge" alt="Tests Badge" />
+  <img src="https://img.shields.io/badge/Tests-53%20Passed-22c55e?style=for-the-badge" alt="Tests Badge" />
 </p>
 
 <p align="center">
@@ -21,13 +21,14 @@
 2. [Architectural Foundation: OKF and MCP](#2-architectural-foundation-okf-and-mcp)
 3. [The Reference Implementation: Career Management](#3-the-reference-implementation-career-management)
 4. [System Architecture](#4-system-architecture)
-5. [Core Features](#5-core-features)
-6. [OKF Career Types Rationale](#6-okf-career-types-rationale)
-7. [Getting Started & Configuration](#7-getting-started--configuration)
-8. [Claude Desktop Integration](#8-claude-desktop-integration)
-9. [Playwright Session Strategy](#9-playwright-session-strategy)
-10. [Contributing & Spec-Driven Development](#10-contributing--spec-driven-development)
-11. [License](#11-license)
+5. [Local-First Execution: Privacy & Zero-Cost Orchestration with Gemma](#5-local-first-execution-privacy--zero-cost-orchestration-with-gemma)
+6. [Core Features](#6-core-features)
+7. [OKF Career Types Rationale](#7-okf-career-types-rationale)
+8. [Getting Started & Configuration](#8-getting-started--configuration)
+9. [Claude Desktop Integration](#9-claude-desktop-integration)
+10. [Playwright Session Strategy](#10-playwright-session-strategy)
+11. [Contributing & Spec-Driven Development](#11-contributing--spec-driven-development)
+12. [License](#12-license)
 
 ---
 
@@ -82,7 +83,41 @@ graph TD
 
 ---
 
-## 5. Core Features
+## 5. Local-First Execution: Privacy & Zero-Cost Orchestration with Gemma
+
+Career data inherently contains highly sensitive Personally Identifiable Information (PII) — including salary histories, home addresses, performance reviews, and confidential project details. Transmitting this data to proprietary cloud LLM providers introduces significant privacy risks and recurring token costs.
+
+To solve this, the Open Career Format (OCF) Orchestrator is designed with a Local-First / Offline-First execution path. By leveraging the open-weights Google Gemma 4 model family running locally via Ollama, the orchestrator can analyze job postings, parse OKF bundles, and generate tailored cover letters entirely on-device.
+
+### Strategic Advantages of the Gemma + Ollama Stack:
+*   **Absolute Data Sovereignty**: Your `.okf/` knowledge bundle and generated resumes never leave your machine's local memory.
+*   **Large Context Windows**: Gemma 4 supports up to a 128K context window natively, allowing the agent to ingest the entire `index.md` and extensive job descriptions without truncation or the need for complex vector databases.
+*   **Zero Inference Costs**: Eliminate the financial overhead of high-volume token processing (preventing API bill shocks during mass job applications).
+*   **Hardware Efficiency**: Using Per-Layer Embeddings (PLE), Gemma 4 edge variants (`gemma4:e4b`) run efficiently on standard developer laptops, while the `gemma4:12b` variant provides frontier-level reasoning for dedicated workstations.
+
+### How to Run Locally
+
+1. **Install Ollama**: Download and install the engine from [ollama.com](https://ollama.com).
+2. **Pull the Gemma Model**: Open your terminal and pull the model that best fits your hardware constraints:
+   ```bash
+   # For standard laptops (Effective 4B parameters)
+   ollama pull gemma4:e4b
+
+   # For advanced workstations (12B parameters for deeper reasoning)
+   ollama pull gemma4:12b
+   ```
+3. **Configure the Orchestrator**: Update your `.env` file to route the MCP client traffic to your local Ollama instance rather than a cloud provider:
+   ```env
+   LLM_PROVIDER=ollama
+   OLLAMA_BASE_URL=http://localhost:11434/v1
+   OLLAMA_MODEL=gemma4:e4b
+   ```
+
+Once configured, the orchestrator will handle job matching and MCP Tool execution completely offline, ensuring your professional knowledge graph remains strictly confidential.
+
+---
+
+## 6. Core Features
 
 *   **Deterministic OKF Memory**: Strict Zod-backed validation of Markdown and YAML frontmatter, ensuring the AI agent operates on reliable, structure-compliant data.
 *   **Decoupled MCP Integration**: Browser automation and file system access are isolated into specific MCP servers, improving security and fault tolerance.
@@ -92,7 +127,7 @@ graph TD
 
 ---
 
-## 6. OKF Career Types Rationale
+## 7. OKF Career Types Rationale
 
 Following the **Open Knowledge Format (OKF)** paradigm, professional metadata is structured as distinct collections. Each record has a required `type` field in its frontmatter, prompting clean semantic boundaries:
 
@@ -108,7 +143,7 @@ Following the **Open Knowledge Format (OKF)** paradigm, professional metadata is
 
 ---
 
-## 7. Getting Started & Configuration
+## 8. Getting Started & Configuration
 
 ### Prerequisites
 *   **Node.js**: `>= 20.0`
@@ -155,7 +190,7 @@ npx pnpm --filter @ocf/dashboard build
 
 ---
 
-## 8. Claude Desktop Integration
+## 9. Claude Desktop Integration
 
 To register OCF as a server in **Claude Desktop**, add the following entry to your configuration file:
 
@@ -186,7 +221,7 @@ Once loaded, the AI agent gains access to 3 core semantic tools:
 
 ---
 
-## 9. Playwright Session Strategy
+## 10. Playwright Session Strategy
 
 Modern job search sites (LinkedIn, Gupy, Indeed) apply aggressive anti-scraping and CAPTCHA limits during login sequences. To prevent candidate accounts from being flagged and ensure seamless form automation, OCF implements a **cookie-persistency and profile strategy**:
 
@@ -209,7 +244,7 @@ This circumvents username/password inputs entirely, preserving absolute credenti
 
 ---
 
-## 10. Contributing & Spec-Driven Development
+## 11. Contributing & Spec-Driven Development
 
 We welcome contributions applying Spec-Driven Development (SDD) principles. Please review our `AGENTS.md` and `CONTRIBUTING.md` before submitting pull requests to ensure architectural alignment.
 
@@ -219,6 +254,6 @@ We welcome contributions applying Spec-Driven Development (SDD) principles. Plea
 
 ---
 
-## 11. License
+## 12. License
 
 This project is licensed under the MIT License.

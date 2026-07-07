@@ -7,6 +7,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { OKFDocumentType, ApplicationStatus } from '@ocf/core';
 import { OCFMcpServer } from '../server.js';
 import { BrowserOrchestrator } from '../automation/browser-orchestrator.js';
+import { OllamaService } from '../services/ollama-service.js';
 
 // Mock BrowserOrchestrator to avoid opening real chromium browsers during tests
 vi.mock('../automation/browser-orchestrator.js', () => {
@@ -103,6 +104,22 @@ describe('OCFMcpServer Tools', () => {
       expect(response.content[0].text).toContain('ATS Resume Tailoring Instructions');
       expect(response.content[0].text).toContain('TypeScript');
       expect(response.content[0].text).toContain('Looking for a TypeScript Staff developer.');
+    });
+
+    it('should query Ollama when localGeneration is true', async () => {
+      const serverInstance = ocfServer.getServerInstance();
+      const tailorTool = (serverInstance as any)._registeredTools['tailor_resume'];
+
+      const spyOllama = vi.spyOn(OllamaService.prototype, 'generateCompletion').mockResolvedValue('Mocked tailored resume content from Ollama');
+
+      const response = await tailorTool.handler({
+        jobDescription: 'Looking for a TypeScript Staff developer.',
+        localGeneration: true,
+      });
+
+      expect(spyOllama).toHaveBeenCalled();
+      expect(response.content[0].text).toBe('Mocked tailored resume content from Ollama');
+      spyOllama.mockRestore();
     });
   });
 
