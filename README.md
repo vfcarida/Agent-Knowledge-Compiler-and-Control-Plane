@@ -1,77 +1,124 @@
 # 🌌 Open Career Format Orchestrator (OCF)
 
 <p align="center">
+  <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License Badge" />
+  <img src="https://img.shields.io/badge/Node.js-%3E%3D%2020.0-emerald?style=for-the-badge" alt="Node.js Badge" />
   <img src="https://img.shields.io/badge/Spec-OKF%20v0.1-6366f1?style=for-the-badge" alt="OKF Spec Badge" />
   <img src="https://img.shields.io/badge/Protocol-MCP%20v1.0-06b6d4?style=for-the-badge" alt="MCP Protocol Badge" />
   <img src="https://img.shields.io/badge/Monorepo-pnpm-a855f7?style=for-the-badge" alt="Pnpm Monorepo Badge" />
-  <img src="https://img.shields.io/badge/Tests-52%20Passed-emerald?style=for-the-badge" alt="Tests Badge" />
-  <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License Badge" />
+  <img src="https://img.shields.io/badge/Tests-52%20Passed-22c55e?style=for-the-badge" alt="Tests Badge" />
 </p>
 
 <p align="center">
-  <strong>Transforming static professional history and job applications into a living, semantic, local-first knowledge graph.</strong>
+  <strong>Decoupling career metadata from centralized platforms using standard semantic schemas and model context protocols.</strong>
 </p>
-
----
-
-## 🎯 Strategic Overview
-
-Modern career hunting is fragmented, repetitive, and siloed in proprietary databases. The **Open Career Format Orchestrator (OCF)** resolves this by turning the candidate's trajectory into an interoperable semantic database. Built on top of Google Cloud's **Open Knowledge Format (OKF)** specification and Anthropic's **Model Context Protocol (MCP)**, OCF decouples career metadata from centralized platforms.
-
-Every skill, certificate, preference, and job application is stored locally as human-readable Markdown with structured YAML frontmatter. The system operates as a unified monorepo divided into three specialized layers:
-*   **The Engine (`@ocf/core`)**: Pure domain logic and filesystem adapters.
-*   **The Brain (`@ocf/mcp-server`)**: Model Context Protocol transport layer connecting career context and browser automation tools to AI models.
-*   **The Lens (`@ocf/dashboard`)**: A visual Single Page Application rendering interactive Kanban pipelines and connection graphs locally in the browser with absolute privacy.
 
 ---
 
 ## 📌 Table of Contents
 
-1. [Features](#-features)
-2. [Architecture & Monorepo Structure](#-architecture--monorepo-structure)
-3. [Prerequisites & Setup](#-prerequisites--setup)
-4. [Quick Start](#-quick-start)
-5. [Claude Desktop Integration](#-claude-desktop-integration)
-6. [OKF Career Types Rationale](#-okf-career-types-rationale)
-7. [Playwright Session Strategy](#-playwright-session-strategy)
-8. [License](#-license)
+1. [Executive Context: From API-First to Agent-First](#1-executive-context-from-api-first-to-agent-first)
+2. [Architectural Foundation: OKF and MCP](#2-architectural-foundation-okf-and-mcp)
+3. [The Reference Implementation: Career Management](#3-the-reference-implementation-career-management)
+4. [System Architecture](#4-system-architecture)
+5. [Core Features](#5-core-features)
+6. [OKF Career Types Rationale](#6-okf-career-types-rationale)
+7. [Getting Started & Configuration](#7-getting-started--configuration)
+8. [Claude Desktop Integration](#8-claude-desktop-integration)
+9. [Playwright Session Strategy](#9-playwright-session-strategy)
+10. [Contributing & Spec-Driven Development](#10-contributing--spec-driven-development)
+11. [License](#11-license)
 
 ---
 
-## ✨ Features
+## 1. Executive Context: From API-First to Agent-First
 
-*   **Semantic Interoperability**: Adheres strictly to the **OKF v0.1 spec** for progressive disclosure and machine readability.
-*   **Model Context Protocol (MCP) native**: Directly connects candidate records to LLM clients (e.g. Claude, Cursor) as tools.
-*   **Automated Job Funnel**: Orchestrates headless browsers (Playwright) to fill out applications and registers submissions into `.okf/applications/` and `log.md`.
-*   **D3.js Force Connection Graph**: Automatically maps relationships between registered skills and companies where they were utilized.
-*   **Privacy-by-Design**: Operates entirely local-first. Zero tracking, zero remote database servers, absolute data sovereignty.
+For the past decade, the **"API-first"** strategy successfully drove cloud migration, microservices adoption, and application modernization. However, as software development transitions toward **Agentic AI**, traditional APIs reveal structural limitations. Standard APIs were designed for deterministic, human-authored integrations and often lack the dynamic, self-describing interfaces required for autonomous systems to discover and interact with tools at runtime.
+
+Research from Gartner indicates that Agentic AI — goal-driven software entities capable of autonomous decision-making — will fundamentally alter enterprise software economics. Yet, the same research warns that a significant portion of early agentic projects risk failure due to a **"capability-deployment verification gap"**. These failures do not stem from the underlying AI models' reasoning capabilities, but from fragmented data silos, poor governance, and the inability of agents to securely access organizational knowledge.
+
+To achieve sustainable AI automation across any industry, systems must be re-architected to provide clean, standardized knowledge and secure execution boundaries.
 
 ---
 
-## 🏗️ Architecture & Monorepo Structure
+## 2. Architectural Foundation: OKF and MCP
 
+To resolve data fragmentation and integration bottlenecks, OCF relies upon two emerging open standards:
+
+*   **Open Knowledge Format (OKF)**: An open specification introduced to formalize organizational knowledge. OKF structures data as a directory of Markdown files equipped with strict YAML frontmatter. This vendor-neutral format allows both humans and AI agents to read, version-control, and validate knowledge natively, effectively bypassing the need for complex, proprietary databases or indexing services.
+*   **Model Context Protocol (MCP)**: Recognized in the Thoughtworks Technology Radar, MCP establishes a universal communication standard between AI models and external data sources or tools. Instead of engineering custom API wrappers for every new AI model, MCP provides a unified interface where capabilities are dynamically exposed and securely executed.
+
+---
+
+## 3. The Reference Implementation: Career Management
+
+To tangibilize this architecture, we implemented the **Open Career Format Orchestrator (OCF)**. The domain of professional career management was selected because it perfectly mirrors the enterprise data problem: user data is heavily fragmented across static PDFs, multiple Applicant Tracking Systems (ATS), and professional networks.
+
+This project converts the traditional, static resume into a living, OKF-compliant knowledge graph. It utilizes MCP servers to read this standardized context and safely automate interactions with the external job market, matching skills and submitting applications with semantic accuracy.
+
+While this implementation focuses on career management, it is designed as an open-source reference architecture. The principles demonstrated here — deterministic data validation, modular MCP connectivity, and privacy-first orchestration — can be extracted, adapted, and scaled to solve agentic workflow challenges in finance, healthcare, IT operations, or any other data-heavy industry.
+
+---
+
+## 4. System Architecture
+
+The monorepo architecture cleanly separates the core semantic evaluation engine, the protocol transportation server, and the client visualization SPA:
+
+```mermaid
+graph TD
+    User([User / Candidate]) <-->|Local Host Browser| UI[React Dashboard SPA @ocf/dashboard]
+    UI <-->|HTML5 Directory Access| LocalDir[(Local Filesystem: .okf/)]
+    
+    HostClient([AI Agent / Claude Desktop]) <-->|MCP Transport: stdio| MCPServer[MCP Server @ocf/mcp-server]
+    MCPServer <-->|Local Core API| Core[@ocf/core Engine]
+    Core <-->|File CRUD / Parsers| LocalDir
+    MCPServer <-->|Playwright POM Drivers| Browser[Headless Chromium Context]
+    Browser <-->|Human-in-the-Loop Gate| ATS[External Platforms: LinkedIn/Gupy/Indeed]
 ```
-├── packages/
-│   ├── core/           # Layer 1: Core domain models, repository, parser, services & tests
-│   ├── mcp-server/     # Layer 2: MCP server registering tools and Playwright automation
-│   └── dashboard/      # Layer 3: React Dashboard SPA + D3.js Graph + Tailwind CSS v4
-├── sample-data/
-│   └── .okf/           # Dummy local candidate career bundle dataset
-├── package.json        # Workspace configuration
-└── tsconfig.base.json  # Shared TypeScript root references
-```
+
+*   **`@ocf/core`**: Domain logic, schema definitions, and markdown repository implementation.
+*   **`@ocf/mcp-server`**: Bridges the engine to external LLM execution clients using stdio transport.
+*   **`@ocf/dashboard`**: A browser-safe Single Page Application utilizing Tailwind CSS v4 and D3.js force layouts to visualize the local dataset in-memory.
 
 ---
 
-## ⚙️ Prerequisites & Setup
+## 5. Core Features
+
+*   **Deterministic OKF Memory**: Strict Zod-backed validation of Markdown and YAML frontmatter, ensuring the AI agent operates on reliable, structure-compliant data.
+*   **Decoupled MCP Integration**: Browser automation and file system access are isolated into specific MCP servers, improving security and fault tolerance.
+*   **Progressive Disclosure**: Utilizes index files (`index.md`) to allow the AI to navigate the knowledge base hierarchically, optimizing context window usage and reducing token costs.
+*   **Human-in-the-Loop Controls**: Critical actions (like final job application submission) are intercepted, requiring explicit user approval.
+*   **D3.js Force connection Graph**: Client-side reactive graph matching candidate competencies with historical company roles.
+
+---
+
+## 6. OKF Career Types Rationale
+
+Following the **Open Knowledge Format (OKF)** paradigm, professional metadata is structured as distinct collections. Each record has a required `type` field in its frontmatter, prompting clean semantic boundaries:
+
+| Concept Type | Folder Path | Purpose | Key Metadata Fields |
+| :--- | :--- | :--- | :--- |
+| **`Skill`** | `skills/*.md` | Models technical and core competencies | `level`, `yearsOfExperience`, `category` |
+| **`Experience`** | `experiences/*.md` | Models professional roles and job history | `company`, `role`, `startDate`, `endDate`, `current` |
+| **`Education`** | `education/*.md` | Models academic credentials and studies | `institution`, `degree`, `field`, `location` |
+| **`Preference`** | `preferences/*.md` | Models target search parameters and limits | `locations`, `remote`, `salaryRange`, `roles` |
+| **`Application`** | `applications/*.md` | Tracks candidates' pipeline funnel | `platform`, `status`, `appliedAt`, `url` |
+| **`Certificate`** | `certificates/*.md` | Tracks verified certifications | `issuer`, `dateObtained`, `credentialId`, `url` |
+| **`Project`** | `projects/*.md` | Models portfolio items and contributions | `url`, `technologies`, `startDate` |
+
+---
+
+## 7. Getting Started & Configuration
 
 ### Prerequisites
 *   **Node.js**: `>= 20.0`
 *   **pnpm**: `>= 9.0` (Run `npx pnpm` if not globally installed)
 
-### Setup
-Install workspace dependencies (build scripts are bypassed for security):
+### Installation
+Clone the repository and install workspace dependencies:
 ```bash
+git clone https://github.com/vfcarida/Open-Career-Format-Orchestrator.git
+cd Open-Career-Format-Orchestrator
 npx pnpm install --ignore-scripts
 ```
 
@@ -83,59 +130,38 @@ npx pnpm --filter @ocf/mcp-server build
 npx pnpm --filter @ocf/dashboard build
 ```
 
-### Run Tests
-Execute the Vitest test suites (all 52 tests green):
-```bash
-npx pnpm test
-```
+### Running the Services
+
+1. **Start the MCP Server**:
+   To boot the stdio server connecting to an AI client:
+   ```bash
+   # Set custom bundle root directory path (defaults to ./.okf)
+   export OCF_BUNDLE_PATH="./sample-data/.okf"
+   pnpm --filter @ocf/mcp-server dev
+   ```
+
+2. **Start the React Dashboard**:
+   To open the visualization suite:
+   ```bash
+   pnpm --filter @ocf/dashboard dev
+   ```
+   Open the outputted address (usually `http://localhost:5173/`), click **Select .okf Directory**, and point the file dialog to `sample-data/.okf/` (or your own catalog folder).
+
+3. **Run Unit Tests**:
+   Run Vitest across the engine and server packages:
+   ```bash
+   npx pnpm test
+   ```
 
 ---
 
-## 🚀 Quick Start
+## 8. Claude Desktop Integration
 
-### 1. Run the MCP Server
-To boot the stdio server connecting to an AI client:
-```bash
-# Set custom bundle root directory path (defaults to ./.okf)
-export OCF_BUNDLE_PATH="./sample-data/.okf"
+To register OCF as a server in **Claude Desktop**, add the following entry to your configuration file:
 
-# Start in development mode (using tsx)
-pnpm --filter @ocf/mcp-server dev
-```
+*   **macOS / Linux**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+*   **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
-### 2. Run the React Dashboard
-To open the visualization suite:
-```bash
-pnpm --filter @ocf/dashboard dev
-```
-Open `http://localhost:5173/` in your browser, click **Select .okf Directory**, and point the file dialog to `sample-data/.okf/` (or your own catalog folder).
-
----
-
-## 🔌 Claude Desktop Integration
-
-To register OCF as a server in **Claude Desktop**, add the following entry to your `claude_desktop_config.json`:
-
-### macOS / Linux
-`~/Library/Application Support/Claude/claude_desktop_config.json`
-```json
-{
-  "mcpServers": {
-    "open-career-format-orchestrator": {
-      "command": "node",
-      "args": [
-        "/absolute/path/to/Open-Career-Format-Orchestrator/packages/mcp-server/dist/index.js"
-      ],
-      "env": {
-        "OCF_BUNDLE_PATH": "/absolute/path/to/your/career-bundle/.okf"
-      }
-    }
-  }
-}
-```
-
-### Windows
-`%APPDATA%\Claude\claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
@@ -151,35 +177,16 @@ To register OCF as a server in **Claude Desktop**, add the following entry to yo
   }
 }
 ```
+*(Adjust the absolute file paths to point to your actual directories)*
 
-Once loaded, Claude gains access to 3 core semantic tools:
+Once loaded, the AI agent gains access to 3 core semantic tools:
 1.  `read_career_context`: Feeds skills, experiences, and applications into context.
 2.  `tailor_resume`: Re-evaluates CV fields against a target vacancy description.
 3.  `orchestrate_application`: Automates application submission on platforms.
 
 ---
 
-## 🧠 OKF Career Types Rationale
-
-Following the **Open Knowledge Format (OKF)** paradigm, professional metadata is structured as distinct collections. Each record has a required `type` field in its frontmatter, prompting clean semantic boundaries:
-
-| Concept Type | Folder Path | Purpose | Key Metadata Fields |
-| :--- | :--- | :--- | :--- |
-| **`Skill`** | `skills/*.md` | Models technical and core competencies | `level`, `yearsOfExperience`, `category` |
-| **`Experience`** | `experiences/*.md` | Models professional roles and job history | `company`, `role`, `startDate`, `endDate`, `current` |
-| **`Education`** | `education/*.md` | Models academic credentials and studies | `institution`, `degree`, `field`, `location` |
-| **`Preference`** | `preferences/*.md` | Models target search parameters and limits | `locations`, `remote`, `salaryRange`, `roles` |
-| **`Application`** | `applications/*.md` | Tracks candidates' pipeline funnel | `platform`, `status`, `appliedAt`, `url` |
-| **`Certificate`** | `certificates/*.md` | Tracks verified certifications | `issuer`, `dateObtained`, `credentialId`, `url` |
-| **`Project`** | `projects/*.md` | Models portfolio items and contributions | `url`, `technologies`, `startDate` |
-
-### The Methodology Behind the Architecture
-*   **Progressive Disclosure**: Placing documents in separate categorical directories allows AI models to parse only what is requested (e.g., loading only `skills` and `preferences`), optimizing context window usage.
-*   **Human-in-the-Loop**: The YAML metadata remains strictly structured for parsers, while the body section is raw markdown, making it simple for developers and candidates to edit.
-
----
-
-## 🛡️ Playwright Session Strategy
+## 9. Playwright Session Strategy
 
 Modern job search sites (LinkedIn, Gupy, Indeed) apply aggressive anti-scraping and CAPTCHA limits during login sequences. To prevent candidate accounts from being flagged and ensure seamless form automation, OCF implements a **cookie-persistency and profile strategy**:
 
@@ -202,6 +209,16 @@ This circumvents username/password inputs entirely, preserving absolute credenti
 
 ---
 
-## 📄 License
+## 10. Contributing & Spec-Driven Development
 
-This project is licensed under the MIT License. Feel free to use, modify, and distribute as desired.
+We welcome contributions applying Spec-Driven Development (SDD) principles. Please review our `AGENTS.md` and `CONTRIBUTING.md` before submitting pull requests to ensure architectural alignment.
+
+*   Every functional enhancement must start as a specification change.
+*   Tests must be updated in sync with domain services modification.
+*   Commits must use simple conventional names and must never credit AI/LLMs.
+
+---
+
+## 11. License
+
+This project is licensed under the MIT License.
