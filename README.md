@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <strong>Decoupling career metadata from centralized platforms using standard semantic schemas and model context protocols.</strong>
+  <strong>An enterprise-grade reference architecture for building agent-ready organizational knowledge bases using Open Knowledge Format (OKF) and Model Context Protocol (MCP).</strong>
 </p>
 
 ---
