@@ -25,6 +25,9 @@ export { OKFDocumentFactory } from './factories/okf-document-factory.js';
 export * from './domain/context-pack.js';
 export { ContextPacker } from './services/context-packer.js';
 
+// Policy & Governance
+export * from './domain/policy.js';
+
 // Migrations
 export { migrateBundle } from './migrations/migrate-bundle.js';
 

@@ -17,12 +17,13 @@ import {
   automationSubmissionSuccessCounter,
   createToolSuccess,
   createToolFailure,
-  withToolTracing
 } from '@ocf/core';
 import { BrowserOrchestrator } from './automation/browser-orchestrator.js';
 import { ApprovalStore } from './approval/approval-store.js';
+import type { AgentPolicy } from '@ocf/core';
+import { enforcePolicy } from '@ocf/core';
 import { auditLogger } from './audit/audit-log.js';
-import { checkPolicy } from './policy/autonomy-policy.js';
+import { automationServerCapabilities } from './capabilities.js';
 
 const approvalStore = new ApprovalStore();
 
@@ -32,10 +33,12 @@ export class OCFMcpAutomationServer {
   private readonly server: McpServer;
   private readonly docService: OKFDocumentService;
   private readonly orchestrator: BrowserOrchestrator;
+  private readonly policy?: AgentPolicy;
 
-  constructor(docService: OKFDocumentService) {
+  constructor(docService: OKFDocumentService, policy?: AgentPolicy) {
     this.docService = docService;
     this.orchestrator = new BrowserOrchestrator();
+    this.policy = policy;
 
     // Create the MCP server instance
     this.server = new McpServer({
@@ -108,8 +111,9 @@ export class OCFMcpAutomationServer {
         automationApprovalRequiredCounter.add(1);
         
         try {
+          enforcePolicy(toolName, automationServerCapabilities, this.policy);
+          
           const { data, durationMs } = await withToolTracing(toolName, toolVersion, reqId, async () => {
-            const policy = checkPolicy('prepare_application');
             const context = await this.docService.getCareerContext();
             
             const pref = context.preferences[0];
@@ -124,15 +128,15 @@ export class OCFMcpAutomationServer {
             const metadata = { jobUrl, platform: this.detectPlatform(jobUrl) };
             const token = approvalStore.generateToken('confirm_application_submission', payload, metadata);
 
-            return { token, preparedFields, policy };
+            return { token, preparedFields };
           });
 
           auditLogger.log({
             requestId: data.token,
             toolName: 'prepare_application',
-            autonomyLevel: data.policy?.approvalMode === 'required' ? 'act-with-approval' : 'advise',
+            autonomyLevel: this.policy?.autonomyLevel || 'act-with-approval',
             approvalRequired: false,
-            sideEffectLevel: data.policy?.sideEffectLevel || 'external-read',
+            sideEffectLevel: 'external-read',
             status: 'success',
             durationMs,
           });
@@ -184,9 +188,10 @@ export class OCFMcpAutomationServer {
         const toolName = 'confirm_application_submission';
         const toolVersion = '0.1.0';
         mcpToolCallsCounter.add(1);
-        const policy = checkPolicy('confirm_application_submission');
 
         try {
+          enforcePolicy(toolName, automationServerCapabilities, this.policy);
+
           const { data, durationMs } = await withToolTracing(toolName, toolVersion, reqId, async () => {
             // Re-fetch context to rebuild the exact payload that was hashed
             const context = await this.docService.getCareerContext();
@@ -240,9 +245,9 @@ export class OCFMcpAutomationServer {
           auditLogger.log({
             requestId: approvalToken,
             toolName: 'confirm_application_submission',
-            autonomyLevel: 'act-with-approval',
+            autonomyLevel: this.policy?.autonomyLevel || 'act-with-approval',
             approvalRequired: true,
-            sideEffectLevel: policy?.sideEffectLevel || 'external-submit',
+            sideEffectLevel: 'external-submit',
             status: 'success',
             durationMs,
           });
@@ -268,9 +273,9 @@ export class OCFMcpAutomationServer {
           auditLogger.log({
             requestId: approvalToken,
             toolName: 'confirm_application_submission',
-            autonomyLevel: 'act-with-approval',
+            autonomyLevel: this.policy?.autonomyLevel || 'act-with-approval',
             approvalRequired: true,
-            sideEffectLevel: policy?.sideEffectLevel || 'external-submit',
+            sideEffectLevel: 'external-submit',
             status: failReason === 'automation_failed' ? 'failure' : 'blocked',
             durationMs: 0,
             details: { reason: failReason, error: err.message }

@@ -1,7 +1,14 @@
 import type { OKFDocument } from '../domain/types.js';
 import type { ContextPackRequest, ContextPackResult } from '../domain/context-pack.js';
+import type { AgentPolicy } from '../domain/policy.js';
 
 export class ContextPacker {
+  private policy?: AgentPolicy;
+
+  constructor(policy?: AgentPolicy) {
+    this.policy = policy;
+  }
+
   /**
    * Deterministic simple token estimation.
    */
@@ -58,7 +65,23 @@ export class ContextPacker {
 
       const estimatedTokens = this.estimateTokens(excerpt);
 
-      // 3. Enforce Budget
+      // 3. PII Handling
+      if (this.policy?.piiHandling === 'deny') {
+        const sensitiveKeys = ['email', 'phone', 'address', 'dob'];
+        const hasPii = sensitiveKeys.some(key => doc.frontmatter[key] !== undefined);
+        if (hasPii) {
+          result.omitted.push({ id: doc.conceptId, reason: 'PII Handling Policy: Deny' });
+          continue;
+        }
+      }
+
+      if (this.policy?.piiHandling === 'redact') {
+        // Simple regex heuristics for masking
+        excerpt = excerpt.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[REDACTED_EMAIL]');
+        excerpt = excerpt.replace(/\+?\d{1,3}[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}/g, '[REDACTED_PHONE]');
+      }
+
+      // 4. Enforce Budget
       if (request.mode !== 'audit' && (result.totalEstimatedTokens + estimatedTokens > request.maxTokens)) {
         result.omitted.push({
           id: doc.conceptId,
