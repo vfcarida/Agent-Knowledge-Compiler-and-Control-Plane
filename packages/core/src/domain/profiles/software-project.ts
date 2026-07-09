@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { OKFFrontmatterSchema } from '../okf.js';
 
 export const SoftwareProjectDocumentType = {
+  ProjectOverview: 'ProjectOverview',
   ArchitectureDecision: 'ArchitectureDecision',
   Service: 'Service',
   APIEndpoint: 'APIEndpoint',
@@ -13,6 +14,12 @@ export const SoftwareProjectDocumentType = {
 } as const;
 
 export type SoftwareProjectDocumentType = (typeof SoftwareProjectDocumentType)[keyof typeof SoftwareProjectDocumentType];
+
+export const ProjectOverviewSchema = OKFFrontmatterSchema.extend({
+  type: z.literal(SoftwareProjectDocumentType.ProjectOverview),
+  repository: z.string().url().optional(),
+  primaryLanguage: z.string().optional(),
+});
 
 export const ArchitectureDecisionSchema = OKFFrontmatterSchema.extend({
   type: z.literal(SoftwareProjectDocumentType.ArchitectureDecision),
@@ -67,6 +74,7 @@ export const WorkflowSchema = OKFFrontmatterSchema.extend({
 });
 
 export const SoftwareProjectFrontmatterSchema = z.discriminatedUnion('type', [
+  ProjectOverviewSchema,
   ArchitectureDecisionSchema,
   ServiceSchema,
   APIEndpointSchema,

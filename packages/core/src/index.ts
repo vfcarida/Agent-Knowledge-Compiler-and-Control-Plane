@@ -37,3 +37,6 @@ export {
   automationSubmissionSuccessCounter,
   withToolTracing
 } from './observability/otel.js';
+
+// Integrations
+export { importOpenWiki } from './integrations/openwiki-importer.js';

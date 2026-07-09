@@ -109,6 +109,52 @@ program
     console.log(`[OK] No semantic changes detected.`);
   });
 
+// COMMAND: import
+program
+  .command('import')
+  .description('Import from external systems into a Context Pack')
+  .argument('<source>', 'Source system (e.g., openwiki)')
+  .option('-i, --input <dir>', 'Input directory', 'openwiki')
+  .option('-o, --output <dir>', 'Output directory for context pack', '.okf')
+  .option('--dry-run', 'Do not write files, just show what would be generated')
+  .option('--force', 'Overwrite existing files without prompting')
+  .action(async (source, options) => {
+    if (source.toLowerCase() !== 'openwiki') {
+      console.error(`[ERROR] Unsupported source: ${source}. Supported sources: openwiki`);
+      process.exit(1);
+    }
+    
+    console.log(`[INFO] Importing from OpenWiki (${options.input}) to ${options.output}...`);
+    try {
+      const require = createRequire(import.meta.url);
+      const importerPath = require.resolve('@ocf/core/dist/integrations/openwiki-importer.js');
+      const { importOpenWiki } = await import(importerPath);
+      const { FileSystemAdapter } = await import(require.resolve('@ocf/core/dist/infrastructure/file-system-adapter.js'));
+      
+      const fsAdapter = new FileSystemAdapter();
+      const report = await importOpenWiki(fsAdapter, path.resolve(process.cwd(), options.input), path.resolve(process.cwd(), options.output), options.dryRun);
+      
+      console.log(`\nImport Summary:`);
+      console.log(`- Files processed: ${report.importedFiles}`);
+      console.log(`- Files skipped: ${report.skippedFiles}`);
+      if (report.mappings.length > 0) {
+        console.log(`\nMappings:`);
+        report.mappings.forEach((m: any) => {
+          console.log(`  - ${m.source} -> ${m.target} (Type: ${m.type})`);
+        });
+      }
+      
+      if (options.dryRun) {
+        console.log(`\n[INFO] Dry run finished. No files were written.`);
+      } else {
+        console.log(`\n[OK] Import complete. Remember to instruct AGENTS.md to use this context.`);
+      }
+    } catch (err: any) {
+      console.error(`[ERROR] Import failed: ${err.message}`);
+      process.exit(1);
+    }
+  });
+
 // COMMAND: serve:mcp (Skeleton)
 program
   .command('serve:mcp')
