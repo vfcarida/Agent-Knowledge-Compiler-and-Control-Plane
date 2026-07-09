@@ -20,7 +20,7 @@
 
 Rather than relying on probabilistic RAG retrieval or massive unchecked prompt inputs, ContextOps provides deterministic, strictly-typed data payloads. We leverage Google's lightweight **Open Knowledge Format (OKF)** specification, exposed securely via Anthropic's **Model Context Protocol (MCP)**.
 
-Read the full strategic positioning here: [`docs/strategy/positioning.md`](docs/strategy/positioning.md).
+Read the [ContextOps Strategic Positioning](docs/strategy/positioning.md) and the [Manifesto: 10 Principles of Agent-Ready Knowledge](docs/manifesto/agent-ready-knowledge.md).
 
 ## 2. The Wedge (Why You Need This)
 Agents today fail not because they lack reasoning, but because they lack **clean, deterministic context**. Developers and platform teams struggle to keep context synchronized across different agent frameworks (Cline, Cursor, Custom MCP clients).
