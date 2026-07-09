@@ -23,6 +23,7 @@
     "clean": "pnpm -r run clean",
     "validate:bundle": "tsx packages/core/src/cli/validate-bundle.ts",
     "migrate:bundle": "tsx packages/core/src/cli/migrate-bundle.ts",
+    "generate:registry": "tsx scripts/generate-registry.ts",
     "evals": "pnpm --filter @ocf/evals run evals",
     "dev:profile-server": "pnpm --filter @ocf/mcp-profile-server dev",
     "dev:automation-server": "pnpm --filter @ocf/mcp-automation-server dev",

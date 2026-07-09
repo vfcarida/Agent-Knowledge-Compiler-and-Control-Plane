@@ -2,6 +2,7 @@
 export * from './domain/types.js';
 export * from './domain/errors.js';
 export * from './domain/schemas.js';
+export * from './domain/capabilities.js';
 export * from './contracts/tool-result.js';
 export type { IFileSystemAdapter, IFrontmatterParser, IOKFRepository, IIndexService, ILogService } from './domain/interfaces.js';
 

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ocf.profile.list_documents",
+    "name": "list_documents",
+    "kind": "tool",
+    "version": "1.0.0",
+    "description": "Lists all available documents in the Context Pack.",
+    "riskLevel": "low",
+    "sideEffectLevel": "local-read",
+    "requiredApproval": false
+  },
+  {
+    "id": "ocf.profile.read_document",
+    "name": "read_document",
+    "kind": "tool",
+    "version": "1.0.0",
+    "description": "Reads the contents and frontmatter of a specific document.",
+    "riskLevel": "low",
+    "sideEffectLevel": "local-read",
+    "requiredApproval": false
+  },
+  {
+    "id": "ocf.profile.create_document",
+    "name": "create_document",
+    "kind": "tool",
+    "version": "1.0.0",
+    "description": "Creates a new document in the Context Pack.",
+    "riskLevel": "medium",
+    "sideEffectLevel": "local-write",
+    "requiredApproval": true
+  },
+  {
+    "id": "ocf.profile.update_document",
+    "name": "update_document",
+    "kind": "tool",
+    "version": "1.0.0",
+    "description": "Updates an existing document in the Context Pack.",
+    "riskLevel": "medium",
+    "sideEffectLevel": "local-write",
+    "requiredApproval": true
+  },
+  {
+    "id": "ocf.profile.delete_document",
+    "name": "delete_document",
+    "kind": "tool",
+    "version": "1.0.0",
+    "description": "Deletes a document from the Context Pack.",
+    "riskLevel": "high",
+    "sideEffectLevel": "local-write",
+    "requiredApproval": true
+  },
+  {
+    "id": "ocf.profile.validate_bundle",
+    "name": "validate_bundle",
+    "kind": "tool",
+    "version": "1.0.0",
+    "description": "Validates the structural integrity of the entire Context Pack.",
+    "riskLevel": "low",
+    "sideEffectLevel": "local-read",
+    "requiredApproval": false
+  },
+  {
+    "id": "ocf.profile.migrate_bundle",
+    "name": "migrate_bundle",
+    "kind": "tool",
+    "version": "1.0.0",
+    "description": "Migrates the Context Pack to the latest schema version.",
+    "riskLevel": "high",
+    "sideEffectLevel": "local-write",
+    "requiredApproval": true
+  },
+  {
+    "id": "ocf.profile.rebuild_indexes",
+    "name": "rebuild_indexes",
+    "kind": "tool",
+    "version": "1.0.0",
+    "description": "Rebuilds index.md files for progressive disclosure.",
+    "riskLevel": "medium",
+    "sideEffectLevel": "local-write",
+    "requiredApproval": true
+  }
+]

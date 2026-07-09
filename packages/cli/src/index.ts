@@ -126,10 +126,7 @@ program
     
     console.log(`[INFO] Importing from OpenWiki (${options.input}) to ${options.output}...`);
     try {
-      const require = createRequire(import.meta.url);
-      const importerPath = require.resolve('@ocf/core/dist/integrations/openwiki-importer.js');
-      const { importOpenWiki } = await import(importerPath);
-      const { FileSystemAdapter } = await import(require.resolve('@ocf/core/dist/infrastructure/file-system-adapter.js'));
+      const { importOpenWiki, FileSystemAdapter } = await import('@ocf/core');
       
       const fsAdapter = new FileSystemAdapter();
       const report = await importOpenWiki(fsAdapter, path.resolve(process.cwd(), options.input), path.resolve(process.cwd(), options.output), options.dryRun);

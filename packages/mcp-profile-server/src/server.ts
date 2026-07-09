@@ -23,6 +23,7 @@ import {
   createToolFailure,
   withToolTracing
 } from '@ocf/core';
+import { profileServerCapabilities } from './capabilities.js';
 
 export class OCFMcpProfileServer {
   private readonly server: McpServer;
@@ -162,6 +163,21 @@ export class OCFMcpProfileServer {
    * Register tools
    */
   private registerTools(): void {
+    // Tool list_capabilities
+    this.server.tool('list_capabilities', {}, async () => {
+      const reqId = crypto.randomUUID();
+      const toolName = 'list_capabilities';
+      const toolVersion = '1.0.0';
+      mcpToolCallsCounter.add(1);
+
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify(createToolSuccess(profileServerCapabilities, { requestId: reqId, toolName, toolVersion, durationMs: 0 }), null, 2)
+        }]
+      };
+    });
+
     // Tool list_documents
     this.server.tool('list_documents', {}, async () => {
       const reqId = crypto.randomUUID();
