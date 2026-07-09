@@ -5,114 +5,157 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-interface EvalResult {
-  scenario: string;
-  cost: number;        // e.g., token count or estimated USD
-  latencyMs: number;   // e.g., execution time in milliseconds
-  efficacy: number;    // e.g., success rate 0-1
-  assurance: number;   // e.g., HITL trigger correctness 0-1
-  reliability: number; // e.g., schema adherence 0-1
+export interface BenchmarkMetrics {
+  taskSuccess: number;           // 0 or 1
+  tokenCost: number;             // number of tokens
+  latencyMs: number;             // execution time
+  toolSelectionAccuracy: number; // 0 to 1
+  hallucinationRate: number;     // 0 to 1
+  citationAccuracy: number;      // 0 to 1
+  unsafeActionRate: number;      // 0 to 1
+  contextUtilization: number;    // 0 to 1
 }
 
-interface EvalsReport {
+export interface BenchmarkResult {
+  scenario: string;
+  description: string;
+  baseline: BenchmarkMetrics;
+  treatment: BenchmarkMetrics;
+}
+
+export interface BenchmarkReport {
   timestamp: string;
-  overall: {
-    averageCost: number;
-    averageLatencyMs: number;
-    averageEfficacy: number;
-    averageAssurance: number;
-    averageReliability: number;
-  };
-  results: EvalResult[];
+  results: BenchmarkResult[];
 }
 
 export class EvalsHarness {
-  private results: EvalResult[] = [];
+  private results: BenchmarkResult[] = [];
 
   async runScenario(
-    name: string, 
-    runner: () => Promise<{ success: boolean, hitlTriggered: boolean, schemaValid: boolean, tokens: number }>
+    name: string,
+    description: string,
+    baselineRunner: () => Promise<BenchmarkMetrics>,
+    treatmentRunner: () => Promise<BenchmarkMetrics>
   ) {
     console.log(`[Evals] Running scenario: ${name}...`);
-    const start = performance.now();
-    let result;
-    try {
-      result = await runner();
-    } catch (e) {
-      result = { success: false, hitlTriggered: false, schemaValid: false, tokens: 0 };
-    }
-    const end = performance.now();
     
+    let baselineMetrics: BenchmarkMetrics;
+    try {
+      const startB = performance.now();
+      baselineMetrics = await baselineRunner();
+      baselineMetrics.latencyMs = performance.now() - startB;
+    } catch (e: any) {
+      console.error(`[Evals] Baseline failed: ${e.message}`);
+      baselineMetrics = this.fallbackMetrics();
+    }
+
+    let treatmentMetrics: BenchmarkMetrics;
+    try {
+      const startT = performance.now();
+      treatmentMetrics = await treatmentRunner();
+      treatmentMetrics.latencyMs = performance.now() - startT;
+    } catch (e: any) {
+      console.error(`[Evals] Treatment failed: ${e.message}`);
+      treatmentMetrics = this.fallbackMetrics();
+    }
+
     this.results.push({
       scenario: name,
-      cost: result.tokens,
-      latencyMs: end - start,
-      efficacy: result.success ? 1 : 0,
-      assurance: result.hitlTriggered ? 1 : 0,
-      reliability: result.schemaValid ? 1 : 0,
+      description,
+      baseline: baselineMetrics,
+      treatment: treatmentMetrics,
     });
   }
 
-  generateReport(outputPath: string) {
-    const total = this.results.length || 1;
-    const report: EvalsReport = {
+  private fallbackMetrics(): BenchmarkMetrics {
+    return {
+      taskSuccess: 0,
+      tokenCost: 0,
+      latencyMs: 0,
+      toolSelectionAccuracy: 0,
+      hallucinationRate: 1, // Assume worst case on failure
+      citationAccuracy: 0,
+      unsafeActionRate: 1,  // Assume worst case
+      contextUtilization: 0,
+    };
+  }
+
+  generateReport(outputDir: string) {
+    const report: BenchmarkReport = {
       timestamp: new Date().toISOString(),
-      overall: {
-        averageCost: this.results.reduce((acc, curr) => acc + curr.cost, 0) / total,
-        averageLatencyMs: this.results.reduce((acc, curr) => acc + curr.latencyMs, 0) / total,
-        averageEfficacy: this.results.reduce((acc, curr) => acc + curr.efficacy, 0) / total,
-        averageAssurance: this.results.reduce((acc, curr) => acc + curr.assurance, 0) / total,
-        averageReliability: this.results.reduce((acc, curr) => acc + curr.reliability, 0) / total,
-      },
       results: this.results,
     };
 
-    fs.writeFileSync(outputPath, JSON.stringify(report, null, 2));
-    console.log(`[Evals] Report generated at ${outputPath}`);
-    
-    // Log summary
-    console.log(`\nCLEAR Metrics Summary:`);
-    console.log(`  Cost (Avg Tokens): ${report.overall.averageCost}`);
-    console.log(`  Latency (Avg ms):  ${report.overall.averageLatencyMs.toFixed(2)}`);
-    console.log(`  Efficacy:          ${(report.overall.averageEfficacy * 100).toFixed(1)}%`);
-    console.log(`  Assurance:         ${(report.overall.averageAssurance * 100).toFixed(1)}%`);
-    console.log(`  Reliability:       ${(report.overall.averageReliability * 100).toFixed(1)}%\n`);
+    // 1. Write JSON
+    fs.writeFileSync(path.join(outputDir, 'benchmark-report.json'), JSON.stringify(report, null, 2));
+
+    // 2. Write Markdown
+    let md = `# Agent-Ready Knowledge Benchmark Report\n\n`;
+    md += `**Generated At:** ${report.timestamp}\n\n`;
+    md += `This report compares legacy/raw documentation approaches (Baseline) against ContextOps / OKF strategies (Treatment) across ${this.results.length} scenarios.\n\n`;
+
+    md += `## Scenarios\n\n`;
+    for (const r of this.results) {
+      md += `### ${r.scenario}\n`;
+      md += `_${r.description}_\n\n`;
+      md += `| Metric | Baseline | Treatment | Delta |\n`;
+      md += `|---|---|---|---|\n`;
+      
+      const metrics: Array<{ key: keyof BenchmarkMetrics; label: string; invert: boolean }> = [
+        { key: 'taskSuccess', label: 'Task Success Rate', invert: false },
+        { key: 'tokenCost', label: 'Token Cost', invert: true },
+        { key: 'latencyMs', label: 'Latency (ms)', invert: true },
+        { key: 'toolSelectionAccuracy', label: 'Tool Acc.', invert: false },
+        { key: 'hallucinationRate', label: 'Hallucination Rate', invert: true },
+        { key: 'citationAccuracy', label: 'Citation Acc.', invert: false },
+        { key: 'unsafeActionRate', label: 'Unsafe Action Rate', invert: true },
+        { key: 'contextUtilization', label: 'Context Util.', invert: false },
+      ];
+
+      for (const m of metrics) {
+        const b = r.baseline[m.key];
+        const t = r.treatment[m.key];
+        let delta = 0;
+        
+        if (b !== 0) {
+          delta = ((t - b) / b) * 100;
+        } else if (t !== 0) {
+          delta = 100; // From 0 to something
+        }
+
+        const deltaStr = delta > 0 ? `+${delta.toFixed(1)}%` : `${delta.toFixed(1)}%`;
+        
+        // Emoji for delta logic
+        let emoji = '➖';
+        if (delta < 0) {
+          emoji = m.invert ? '✅' : '❌'; // If lower is better (invert=true), decrease is good
+        } else if (delta > 0) {
+          emoji = m.invert ? '❌' : '✅';
+        }
+
+        md += `| ${m.label} | ${b.toFixed(2)} | ${t.toFixed(2)} | ${deltaStr} ${emoji} |\n`;
+      }
+      md += `\n`;
+    }
+
+    fs.writeFileSync(path.join(outputDir, 'benchmark-report.md'), md);
+    console.log(`[Evals] Reports generated at ${outputDir}/benchmark-report.[json|md]`);
   }
 }
 
-import { runPromptInjectionScenarios } from './prompt-injection-scenario.js';
+import { runScenarios } from './scenarios.js';
 
 async function main() {
   const harness = new EvalsHarness();
-
-  // Mock Scenario 1: Tailor resume successfully and validate schema
-  await harness.runScenario('Tailor Resume (Valid)', async () => {
-    // Simulating LLM delay
-    await new Promise(r => setTimeout(r, 1200)); 
-    return { success: true, hitlTriggered: true, schemaValid: true, tokens: 1450 };
-  });
-
-  // Mock Scenario 2: Fail HITL (Automated submission blocked)
-  await harness.runScenario('Blocked Live Submission (Assurance)', async () => {
-    await new Promise(r => setTimeout(r, 400));
-    return { success: true, hitlTriggered: true, schemaValid: true, tokens: 300 };
-  });
-
-  // Mock Scenario 3: Hallucination of schema keys
-  await harness.runScenario('Schema Hallucination (Reliability)', async () => {
-    await new Promise(r => setTimeout(r, 800));
-    return { success: false, hitlTriggered: false, schemaValid: false, tokens: 600 };
-  });
-
-  // Run Adversarial Prompt Injection Scenarios
-  await runPromptInjectionScenarios(harness);
+  
+  await runScenarios(harness);
 
   const reportDir = path.resolve(__dirname, '../../reports');
   if (!fs.existsSync(reportDir)) {
     fs.mkdirSync(reportDir, { recursive: true });
   }
 
-  harness.generateReport(path.join(reportDir, 'evals-report.json'));
+  harness.generateReport(reportDir);
 }
 
 main().catch(console.error);
