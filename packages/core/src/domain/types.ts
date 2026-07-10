@@ -1,6 +1,6 @@
 /**
  * @module domain/types
- * @description Core type definitions for the Open Career Format (OCF) system.
+ * @description Core type definitions for the Agent Knowledge Compiler and Control Plane (AKCP) (OCF) system.
  *
  * These types implement the OKF v0.1 specification adapted for career management.
  * The OKF spec requires only a `type` field in YAML frontmatter, but we define

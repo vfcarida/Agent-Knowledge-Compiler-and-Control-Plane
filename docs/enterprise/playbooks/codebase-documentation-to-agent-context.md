@@ -1,7 +1,7 @@
 # Playbook: Codebase Documentation to Agent Context
 
 ## Objective
-Transform stagnant, unstructured codebase documentation (Confluence, standard READMEs, wikis) into dynamic, agent-ready Open Knowledge Format (OKF) bundles.
+Transform stagnant, unstructured codebase documentation (Confluence, standard READMEs, wikis) into dynamic, akcp Open Knowledge Format (OKF) bundles.
 
 ## Prerequisites
 - Existing documentation repository or export capability from corporate wikis.

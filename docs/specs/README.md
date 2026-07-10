@@ -1,6 +1,6 @@
-# ContextOps Specifications
+# AKCP Specifications
 
-This directory contains the normative specifications for ContextOps. Because ContextOps provides a standardized delivery mechanism for autonomous agent context, **the specification must evolve slower and be more stable than the implementation.**
+This directory contains the normative specifications for AKCP. Because AKCP provides a standardized delivery mechanism for autonomous agent context, **the specification must evolve slower and be more stable than the implementation.**
 
 ## Active Specifications
 

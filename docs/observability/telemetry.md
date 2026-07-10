@@ -1,6 +1,6 @@
 # OCF Telemetry Guidelines
 
-The Open Career Format Orchestrator uses OpenTelemetry (OTel) for distributed tracing, metrics, and structured logging.
+The Agent Knowledge Compiler and Control Plane uses OpenTelemetry (OTel) for distributed tracing, metrics, and structured logging.
 
 ## Initialization
 Telemetry is initialized automatically when the MCP servers start. It intercepts Node.js built-ins and provides standard spans for file system operations, HTTP requests, and Playwright orchestrations.

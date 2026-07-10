@@ -4,7 +4,7 @@ This roadmap outlines the path towards a fully-featured, enterprise-ready Agent 
 
 ## ✅ Phase 1: Build-Time Compiler Foundation
 - Open Knowledge Format (OKF) parsing and strict Zod validation.
-- CLI scaffolding (`agent-ready init`, `validate`, `migrate`).
+- CLI scaffolding (`akcp init`, `validate`, `migrate`).
 - Agent Instructions Sync (`agents sync`).
 
 ## 🔄 Phase 2: Runtime Control Plane (Current)
@@ -21,4 +21,4 @@ This roadmap outlines the path towards a fully-featured, enterprise-ready Agent 
 ## 🔮 Phase 4: Enterprise Scale
 - **Authentication:** Implement OAuth 2.0 / Identity flows for remote MCP exposure via Server-Sent Events (SSE).
 - **Control Plane Integrations:** Native export to enterprise observability stacks (Datadog, Splunk).
-- **ContextOps Hub:** An open-source directory of community-submitted Domain Adapters and Capabilities.
+- **AKCP Hub:** An open-source directory of community-submitted Domain Adapters and Capabilities.

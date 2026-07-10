@@ -1,7 +1,7 @@
-# Specification: ContextOps CLI (`agent-ready`)
+# Specification: AKCP CLI (`akcp`)
 
 ## Overview
-The `agent-ready` CLI is the operational entry point for ContextOps. It transforms standard directories into governed, agent-readable Open Knowledge Format (OKF) bundles and exposes them securely via the Model Context Protocol (MCP).
+The `akcp` CLI is the operational entry point for AKCP. It transforms standard directories into governed, agent-readable Open Knowledge Format (OKF) bundles and exposes them securely via the Model Context Protocol (MCP).
 
 It is designed to be fully functional without an LLM (relying purely on strict schemas), but can optionally orchestrate LLMs to assist in translating unstructured knowledge into structured context packs.
 
@@ -57,17 +57,17 @@ Diagnostics tool to verify environment readiness.
 ## Usage Example (The "Happy Path")
 ```bash
 # 1. Initialize a new software engineering context pack
-npx agent-ready init ./my-project --profile software
+npx akcp init ./my-project --profile software
 
 # 2. Add raw documents and let the CLI structure them (Dry run first)
-npx agent-ready scan ./my-project/docs --model-provider openai --dry-run
+npx akcp scan ./my-project/docs --model-provider openai --dry-run
 
 # 3. Validate the manually authored schemas
-npx agent-ready validate ./my-project/.agent-context
+npx akcp validate ./my-project/.agent-context
 
 # 4. Build the final bundle index
-npx agent-ready build ./my-project/.agent-context
+npx akcp build ./my-project/.agent-context
 
 # 5. Serve directly to your agent IDE
-npx agent-ready serve:mcp ./my-project/.agent-context
+npx akcp serve:mcp ./my-project/.agent-context
 ```

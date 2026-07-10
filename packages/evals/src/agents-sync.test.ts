@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { syncAgentInstructions } from '@ocf/core';
 
 describe('Agent Instructions Sync', () => {
-  const START_MARKER = '<!-- agent-ready:start -->';
-  const END_MARKER = '<!-- agent-ready:end -->';
+  const START_MARKER = '<!-- akcp:start -->';
+  const END_MARKER = '<!-- akcp:end -->';
 
   it('generates a new block if file is empty', () => {
     const result = syncAgentInstructions('');

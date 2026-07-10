@@ -1,6 +1,6 @@
 # Human-in-the-Loop (HITL) Policy
 
-The Open Career Format Orchestrator strictly enforces a Human-in-the-Loop policy for all side-effecting operations.
+The Agent Knowledge Compiler and Control Plane strictly enforces a Human-in-the-Loop policy for all side-effecting operations.
 
 ## Requirements
 1. **No Silent State Changes**: Any action that alters external systems (like applying to a job) MUST require explicit user confirmation.

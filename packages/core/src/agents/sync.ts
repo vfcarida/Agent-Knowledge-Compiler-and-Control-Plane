@@ -10,14 +10,14 @@ export interface SyncAgentInstructionsOptions {
   commitConventions?: string;
 }
 
-const START_MARKER = '<!-- agent-ready:start -->';
-const END_MARKER = '<!-- agent-ready:end -->';
+const START_MARKER = '<!-- akcp:start -->';
+const END_MARKER = '<!-- akcp:end -->';
 
 const DEFAULT_OPTIONS: SyncAgentInstructionsOptions = {
-  projectPurpose: 'ContextOps Orchestrator - Managing AI Agent Knowledge via Open Career Format (OKF) and Context Packs.',
+  projectPurpose: 'AKCP Orchestrator - Managing AI Agent Knowledge via Agent Knowledge Compiler and Control Plane (AKCP) (OKF) and Context Packs.',
   architectureBoundaries: 'Use TypeScript, ESM, Node.js. Avoid external dependencies unless justified.',
   contextSources: 'Always consult the `.agent-context/` directory or use MCP Profile Server tools (`list_documents`, `read_document`) before answering questions.',
-  commandsToRun: 'Run `npx agent-ready validate` to check OKF bundles. Run `pnpm test` for unit tests.',
+  commandsToRun: 'Run `npx akcp validate` to check OKF bundles. Run `pnpm test` for unit tests.',
   forbiddenActions: 'Do NOT bypass MCP capabilities. Do NOT commit destructive changes without user approval.',
   docsToConsult: 'Reference OKF Specification, MCP Architecture, NIST AI RMF, and OWASP LLM Top 10.',
   testingRequirements: 'Write tests proportionate to the risk level. Run Vitest before declaring success.',
@@ -30,7 +30,7 @@ export function syncAgentInstructions(existingContent: string, options?: Partial
 
   const generatedBlock = `${START_MARKER}
 > **⚠️ MANAGED CONTEXT BLOCK ⚠️**
-> The contents of this block are automatically synchronized by \`agent-ready agents sync\`.
+> The contents of this block are automatically synchronized by \`akcp agents sync\`.
 > Do not edit this block manually. Place custom instructions outside these markers.
 
 ## 1. Project Purpose

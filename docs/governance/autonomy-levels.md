@@ -1,6 +1,6 @@
 # Agent Autonomy Levels
 
-ContextOps enforces proportional governance over LLMs based on 4 operational tiers.
+AKCP enforces proportional governance over LLMs based on 4 operational tiers.
 
 ## 1. Observe
 The agent has read-only access to specific, scoped data.

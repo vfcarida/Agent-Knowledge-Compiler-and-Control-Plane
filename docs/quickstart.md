@@ -1,6 +1,6 @@
 # Quickstart
 
-Welcome to the Agent-ready Knowledge Reference Architecture. This quickstart will help you get running in under 5 minutes.
+Welcome to the Agent Knowledge Compiler and Control Plane. This quickstart will help you get running in under 5 minutes.
 
 ## Prerequisites
 - Node.js >= 22
@@ -9,8 +9,8 @@ Welcome to the Agent-ready Knowledge Reference Architecture. This quickstart wil
 
 ## Installation
 ```bash
-git clone https://github.com/vfcarida/Agent-ready-Knowledge-Reference-Architecture.git
-cd Agent-ready-Knowledge-Reference-Architecture
+git clone https://github.com/vfcarida/AKCP-Knowledge-Reference-Architecture.git
+cd AKCP-Knowledge-Reference-Architecture
 pnpm install --frozen-lockfile
 cp .env.example .env
 ```

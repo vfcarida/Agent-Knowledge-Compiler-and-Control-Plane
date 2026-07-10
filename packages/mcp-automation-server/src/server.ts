@@ -34,7 +34,7 @@ const approvalStore: IApprovalStore = process.env.REDIS_URL
 
 // Centralized approval store handles pending tokens
 
-export class OCFMcpAutomationServer {
+export class AKCPAutomationServer {
   private readonly server: McpServer;
   private readonly docService: OKFDocumentService;
   private readonly orchestrator: BrowserOrchestrator;
@@ -47,7 +47,7 @@ export class OCFMcpAutomationServer {
 
     // Create the MCP server instance
     this.server = new McpServer({
-      name: 'open-career-format-automation-server',
+      name: 'akcp-automation-server',
       version: '0.1.0',
     });
 

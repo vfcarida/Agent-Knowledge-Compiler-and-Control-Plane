@@ -6,4 +6,4 @@ version: 1.0.0
 ---
 
 # Agent Context Pack
-This directory contains agent-ready knowledge bundles.
+This directory contains akcp knowledge bundles.

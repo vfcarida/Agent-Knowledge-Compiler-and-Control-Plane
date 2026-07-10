@@ -14,9 +14,9 @@ export class AgentsMdTarget implements CompileTarget {
     await fs.mkdir(outDir, { recursive: true });
     
     // Generates a snippet to be appended to AGENTS.md or CLAUDE.md
-    const content = `<!-- agent-ready:start -->
+    const content = `<!-- akcp:start -->
 > **⚠️ MANAGED CONTEXT BLOCK ⚠️**
-> The contents of this block are automatically synchronized by \`agent-ready agents sync\`.
+> The contents of this block are automatically synchronized by \`akcp agents sync\`.
 > Do not edit this block manually. Place custom instructions outside these markers.
 
 ## 1. Project Purpose
@@ -30,7 +30,7 @@ Always consult the MCP Profile Server tools (\`list_documents\`, \`read_document
 The following MCP capabilities are active:
 ${(ir.capabilities || []).map(c => `- ${c}`).join('\n')}
 
-<!-- agent-ready:end -->
+<!-- akcp:end -->
 `;
     
     await fs.writeFile(outPath, content, 'utf-8');

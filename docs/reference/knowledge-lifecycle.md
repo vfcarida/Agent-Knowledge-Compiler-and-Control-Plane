@@ -1,6 +1,6 @@
 # Knowledge Lifecycle
 
-The Open Career Format (OKF) orchestrated by AKCP treats knowledge as living assets. Over time, knowledge decays—APIs change, organizational constraints drift, and skills become obsolete.
+The Agent Knowledge Compiler and Control Plane (AKCP) (OKF) orchestrated by AKCP treats knowledge as living assets. Over time, knowledge decays—APIs change, organizational constraints drift, and skills become obsolete.
 
 To manage this drift systematically, AKCP introduces a **Knowledge Lifecycle**.
 

@@ -1,6 +1,6 @@
 # Compatibility & Deprecation Policy
 
-To maintain trust with enterprise adoptions, ContextOps enforces a strict compatibility and deprecation policy. Agents and automated systems must be able to rely on the stability of MCP tools and OKF schemas.
+To maintain trust with enterprise adoptions, AKCP enforces a strict compatibility and deprecation policy. Agents and automated systems must be able to rely on the stability of MCP tools and OKF schemas.
 
 ## 1. Additive Changes (Non-Breaking)
 The following changes are considered **backward compatible** and will only trigger a MINOR version bump:
@@ -9,7 +9,7 @@ The following changes are considered **backward compatible** and will only trigg
 - Adding new optional arguments to existing MCP tools.
 - Adding new commands to the CLI.
 
-> **Requirement:** All parsers and agents interacting with ContextOps MUST tolerate unknown keys in JSON payloads and OKF Frontmatter.
+> **Requirement:** All parsers and agents interacting with AKCP MUST tolerate unknown keys in JSON payloads and OKF Frontmatter.
 
 ## 2. Breaking Changes
 The following changes are **breaking** and require a MAJOR version bump:
@@ -21,7 +21,7 @@ The following changes are **breaking** and require a MAJOR version bump:
 ### Migration Requirements
 Any breaking change MUST be accompanied by:
 1. An approved [RFC](../rfcs/README.md).
-2. A CLI migration path (e.g., `agent-ready migrate --to v2`).
+2. A CLI migration path (e.g., `akcp migrate --to v2`).
 
 ## 3. Deprecation Timeline
 When a feature, schema field, or MCP tool is scheduled for removal:

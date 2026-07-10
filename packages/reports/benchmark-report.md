@@ -2,7 +2,7 @@
 
 **Generated At:** 2026-07-10T17:56:08.444Z
 
-This report compares legacy/raw documentation approaches (Baseline) against ContextOps / OKF strategies (Treatment) across 8 scenarios.
+This report compares legacy/raw documentation approaches (Baseline) against AKCP / OKF strategies (Treatment) across 8 scenarios.
 
 ## Scenarios
 

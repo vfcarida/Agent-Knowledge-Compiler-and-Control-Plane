@@ -12,7 +12,7 @@ This example demonstrates an AKCP bundle for an IT operations team managing runb
 
 ```bash
 # Validate the bundle schema
-npx agent-ready validate ./examples/domains/it-operations/sample-data
+npx akcp validate ./examples/domains/it-operations/sample-data
 
 # Compile to all targets (including eval-dataset for CI testing)
 akcp compile --bundle ./examples/domains/it-operations

@@ -36,7 +36,7 @@ Evolve static, human-centric operational runbooks (e.g., Incident Response, Depl
 ## Metrics (Before/After)
 - **Before:** Runbooks are manually executed, prone to human error, and rarely tested.
 - **After:** Runbooks are versioned OKF artifacts, securely governed, and continuously evaluated.
-- **Metric:** Mean Time to Resolution (MTTR) for incidents covered by agent-ready playbooks.
+- **Metric:** Mean Time to Resolution (MTTR) for incidents covered by akcp playbooks.
 
 ## Definition of Done
 - Runbooks are converted to OKF `type: playbook` format.

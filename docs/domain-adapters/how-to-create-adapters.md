@@ -1,6 +1,6 @@
 # How to Create a New Domain Adapter
 
-Creating a custom Domain Adapter allows you to ship ContextOps logic to new industries.
+Creating a custom Domain Adapter allows you to ship AKCP logic to new industries.
 
 ## 1. Scaffold the Directory
 Create a folder in `examples/domains/<your-domain>`.

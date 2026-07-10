@@ -1,4 +1,6 @@
-# 🌌 Agent Knowledge Compiler and Control Plane (AKCP)
+# Agent Knowledge Compiler and Control Plane
+
+AKCP is an open-source compiler and control plane for turning organizational knowledge into versioned, governed, cost-efficient, agent-consumable artifacts, and for controlling how agents discover, retrieve and act on that knowledge through MCP-compatible capabilities.
 
 <p align="center">
   <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License Badge" />
@@ -9,7 +11,7 @@
 
 ## 1. Category Thesis
 
-> **Agent Knowledge Compiler and Control Plane compiles organizational knowledge into governed, versioned, cost-efficient, agent-consumable artifacts and controls how agents discover, retrieve and act on them.**
+> **AKCP compiles organizational knowledge into versioned, governed, cost-efficient and agent-consumable artifacts, and controls how agents discover, retrieve and act on that knowledge through MCP-compatible capabilities.**
 
 AI agents today suffer from structural hallucination: they lack deterministic grounding. 
 **AKCP** establishes a new product category by explicitly separating the lifecycle of agent knowledge into two operational planes:
@@ -40,7 +42,7 @@ Enterprises cannot afford unpredictable agentic behavior. Standard tools solve p
 
 ## 4. Reference Domains (Career, IT Ops, Software)
 To prove the model-independent nature of the compiler, this repository ships with `examples/domains/`. 
-- **Career** is used as a vertical demo (resumes, skills, applications), demonstrating how human knowledge translates to agent context.
+- **Career Knowledge Demo** is used as a vertical demo (resumes, skills, applications), demonstrating how human knowledge translates to agent context.
 - **IT Operations** and **Software Projects** are included to prove cross-industry extensibility.
 
 ## 5. Quickstart
@@ -48,32 +50,34 @@ To prove the model-independent nature of the compiler, this repository ships wit
 ### Installation
 You can install the CLI globally or use it via `npx` from within the repository:
 ```bash
-git clone https://github.com/vfcarida/Agent-ready-Knowledge-Reference-Architecture.git
-cd Agent-ready-Knowledge-Reference-Architecture
+git clone https://github.com/vfcarida/Agent-Knowledge-Compiler-Control-Plane.git akcp
+cd akcp
 npx pnpm install --frozen-lockfile
 npx pnpm build
 ```
 
-### The `agent-ready` CLI
+### The `akcp` CLI
 
-The `@ocf/cli` provides a seamless developer experience for maintaining context:
+The CLI provides a seamless developer experience for maintaining context:
 
 ```bash
 # Initialize a new context pack in your current project
-npx agent-ready init ./my-project --profile software
+npx akcp init ./my-project --profile software
 
-# Validate an existing OKF bundle without an LLM
-npx agent-ready validate sample-data/.okf
+# Validate an existing bundle without an LLM
+npx akcp validate sample-data/.okf
 
 # Check your environment readiness
-npx agent-ready doctor
+npx akcp doctor
 ```
 
 Read the full [CLI Specification](docs/specs/cli.md) for advanced commands like `scan`, `build`, and `serve:mcp`.
 
+*(Note: The legacy command `akcp` is maintained as a deprecated alias for backwards compatibility.)*
+
 ## 6. Enterprise Adoption Playbooks
 
-AKCP provides practical, step-by-step playbooks to help organizations transition from generic wikis to governed, agent-ready knowledge:
+AKCP provides practical, step-by-step playbooks to help organizations transition from generic wikis to governed, akcp knowledge:
 
 - 🚀 **[Pilot in 2 Weeks](docs/enterprise/playbooks/pilot-in-2-weeks.md):** Launch a focused, high-value pilot quickly.
 - 📚 **[Codebase Docs to Agent Context](docs/enterprise/playbooks/codebase-documentation-to-agent-context.md):** Transform stagnant wikis into dynamic OKF bundles.
@@ -93,7 +97,7 @@ AKCP provides practical, step-by-step playbooks to help organizations transition
 | **Observability** | Beta | OpenTelemetry instrumented spans |
 
 ## 8. Roadmap & Governance
-ContextOps evolves as a formal specification. To ensure a stable ecosystem for agent-ready context packs, we maintain strict versioning and compatibility guarantees.
+AKCP evolves as a formal specification. To ensure a stable ecosystem for context packs, we maintain strict versioning and compatibility guarantees.
 
 - **[AKCP Specification (spec/)](spec/README.md):** Implementation-independent specification for AK-IR, build pipeline, Policy Cards, and conformance levels.
 - **[Whitepaper](docs/research/whitepaper.md):** The full problem statement, prior art, and architecture thesis.

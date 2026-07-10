@@ -1,6 +1,6 @@
-# ContextOps: 5-Minute Quickstart (No LLM Required)
+# AKCP: 5-Minute Quickstart (No LLM Required)
 
-This quickstart demonstrates how to organize, validate, and govern Agent-Ready Knowledge using the ContextOps CLI and OKF format without needing any API keys.
+This quickstart demonstrates how to organize, validate, and govern Agent-Ready Knowledge using the AKCP CLI and OKF format without needing any API keys.
 
 ## Prerequisites
 - Node.js (v18+)
@@ -11,7 +11,7 @@ This quickstart demonstrates how to organize, validate, and govern Agent-Ready K
 \`\`\`bash
 npm install -g @ocf/cli
 \`\`\`
-*(For local development, you can use `npx agent-ready` at the root of the repo)*
+*(For local development, you can use `npx akcp` at the root of the repo)*
 
 ## 2. Initialize a Context Pack
 
@@ -20,7 +20,7 @@ Let's create a strictly typed Context Pack using the `software-project` domain t
 \`\`\`bash
 mkdir my-agent-knowledge
 cd my-agent-knowledge
-npx agent-ready init . --profile software-project
+npx akcp init . --profile software-project
 \`\`\`
 
 This will create a `.agent-context/` directory with an `index.md` and some sample OKF documents.
@@ -30,7 +30,7 @@ This will create a `.agent-context/` directory with an `index.md` and some sampl
 Instead of hoping the LLM figures out your messy README, let's strictly validate our new Context Pack to ensure it adheres to the schema.
 
 \`\`\`bash
-npx agent-ready validate . --profile software-project
+npx akcp validate . --profile software-project
 \`\`\`
 
 You should see:
@@ -44,7 +44,7 @@ You should see:
 Now, instead of writing a massive prompt, run the sync command to instruct your agent (Copilot, Cursor, Cline) to use this structured knowledge.
 
 \`\`\`bash
-npx agent-ready agents sync
+npx akcp agents sync
 \`\`\`
 
 Check your `AGENTS.md` file! The CLI has injected a strictly governed instruction block pointing the agent to your `.agent-context/` folder and defining safety policies.

@@ -1,6 +1,6 @@
 # OCF Reference Architecture Threat Model
 
-This document outlines the threat model for the Agent-Ready Knowledge Reference Architecture using the STRIDE methodology.
+This document outlines the threat model for the Agent Knowledge Compiler and Control Plane using the STRIDE methodology.
 
 ## STRIDE Analysis
 

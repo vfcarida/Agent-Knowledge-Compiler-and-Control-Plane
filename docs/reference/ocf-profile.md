@@ -1,6 +1,6 @@
 # OCF Profile v1
 
-The Open Career Format (OCF) Profile v1 is an extension of the Open Knowledge Format (OKF) specification, heavily tailored for modeling professional career management data.
+The Agent Knowledge Compiler and Control Plane (AKCP) (OCF) Profile v1 is an extension of the Open Knowledge Format (OKF) specification, heavily tailored for modeling professional career management data.
 
 ## Base Conformance
 As per the OKF specification:

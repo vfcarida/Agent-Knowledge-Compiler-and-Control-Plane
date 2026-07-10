@@ -1,6 +1,6 @@
-# ContextOps Operator Dashboard Spec
+# AKCP Operator Dashboard Spec
 
-This document outlines the design and specification for the ContextOps Operator Dashboard, transitioning it from a mere "data viewer" to a proactive Command Center.
+This document outlines the design and specification for the AKCP Operator Dashboard, transitioning it from a mere "data viewer" to a proactive Command Center.
 
 ## Objective
 The dashboard must answer critical operational questions:

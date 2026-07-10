@@ -1,7 +1,7 @@
 # Specification: Context Budget
 
 ## Objective
-To reduce token costs, lower latency, and prevent LLM hallucination (context collapse) by introducing a strictly governed context envelope. Instead of dumping the entire OKF bundle into an LLM session, ContextOps selects, compresses, and audits exactly what goes into the context window.
+To reduce token costs, lower latency, and prevent LLM hallucination (context collapse) by introducing a strictly governed context envelope. Instead of dumping the entire OKF bundle into an LLM session, AKCP selects, compresses, and audits exactly what goes into the context window.
 
 ## Compression Modes
 1. **`minimal`**: Exclusively serializes YAML frontmatter. Markdown body is dropped entirely. Useful for index-level navigation and high-level routing.

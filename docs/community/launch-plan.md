@@ -1,4 +1,4 @@
-# ContextOps Orchestrator Launch Plan
+# AKCP Orchestrator Launch Plan
 
 ## The Problem Narrative
 AI Agents are fast, but their Context Windows are full of noise. Projects like OpenWiki proved that agents need curated, structured documentation. However, plain Markdown isn't enough for enterprise deployments. Enterprises need **Agent-Ready Knowledge**: structured data (OKF) delivered through safe, governed, token-budgeted pipes (MCP).
@@ -27,7 +27,7 @@ AI Agents are fast, but their Context Windows are full of noise. Projects like O
 ### Phase 3: Enterprise Trust
 - Publish the NIST AI RMF and OWASP mapping whitepapers.
 - Highlight the `Agent-Ready Control Plane` capability.
-- Call to Action: *Adopt ContextOps for your internal AI platform.*
+- Call to Action: *Adopt AKCP for your internal AI platform.*
 
 ## Channels
 1. **GitHub / Dev.to:** Technical deep-dives into "Why Context Engineering matters".

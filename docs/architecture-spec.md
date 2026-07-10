@@ -1,6 +1,6 @@
 # Agent-Oriented Architecture: Unifying Knowledge and Execution via OKF & MCP
 
-This document establishes the official architectural specification and engineering guidelines for the **Open Career Format Orchestrator (OCF)**. It describes the integration of Google Cloud's **Open Knowledge Format (OKF)** for structured career memory and Anthropic's **Model Context Protocol (MCP)** for secure, automated execution.
+This document establishes the official architectural specification and engineering guidelines for the **Agent Knowledge Compiler and Control Plane (OCF)**. It describes the integration of Google Cloud's **Open Knowledge Format (OKF)** for structured career memory and Anthropic's **Model Context Protocol (MCP)** for secure, automated execution.
 
 ---
 
@@ -12,8 +12,8 @@ To bypass this integration debt, OCF integrates two core industry standards:
 1.  **Open Knowledge Format (OKF)**: A vendor-neutral standard initiated by Google Cloud. It structures knowledge concepts inside standard directories using Markdown files and structured YAML frontmatter, making data readable by both humans and LLMs without heavy SDK dependencies.
 2.  **Model Context Protocol (MCP)**: An open standard created by Anthropic that defines how AI clients securely connect to local or remote data sources, filesystem contexts, and external automation tools using a unified client-server interface.
 
-### 1.1 The Practical Materialization: Open Career Format Orchestrator (OCF)
-While the combined pattern of OKF and MCP is vertical-agnostic (applicable to finance, medical records, or IT operations), the **Open Career Format Orchestrator (OCF)** serves as the reference implementation. OCF maps a candidate's complete professional journey, including skills, experiences, target job preferences, and application funnels, allowing autonomous agents to evaluate vacancies, tailor resumes, and execute browser automation securely.
+### 1.1 The Practical Materialization: Agent Knowledge Compiler and Control Plane (OCF)
+While the combined pattern of OKF and MCP is vertical-agnostic (applicable to finance, medical records, or IT operations), the **Agent Knowledge Compiler and Control Plane (OCF)** serves as the reference implementation. OCF maps a candidate's complete professional journey, including skills, experiences, target job preferences, and application funnels, allowing autonomous agents to evaluate vacancies, tailor resumes, and execute browser automation securely.
 
 ---
 

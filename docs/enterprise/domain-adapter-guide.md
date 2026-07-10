@@ -1,6 +1,6 @@
 # Domain Adapter Guide
 
-While the Open Career Format (OCF) Orchestrator was built for Career Management, the underlying architecture is domain-agnostic.
+While the Agent Knowledge Compiler and Control Plane (AKCP) (OCF) Orchestrator was built for Career Management, the underlying architecture is domain-agnostic.
 
 ## How to adapt for a new domain (e.g., IT Operations)
 

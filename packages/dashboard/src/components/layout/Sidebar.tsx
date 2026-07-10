@@ -13,7 +13,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ currentTab, setCurrentTab, data }: SidebarProps) {
-  // Aggregate Stats (ContextOps metrics)
+  // Aggregate Stats (AKCP metrics)
   const totalDocs = data?.applications.length ?? 0 + (data?.skills.length ?? 0);
   
   const stats = [
@@ -40,7 +40,7 @@ export function Sidebar({ currentTab, setCurrentTab, data }: SidebarProps) {
       {/* Brand Header */}
       <div className="p-8 border-b border-dark-border">
         <h1 className="text-2xl font-bold bg-gradient-to-r from-neon-indigo via-neon-blue to-neon-purple bg-clip-text text-transparent tracking-tight">
-          ContextOps
+          AKCP
         </h1>
         <p className="text-xs text-zinc-500 mt-1 uppercase tracking-widest">
           Operator Console

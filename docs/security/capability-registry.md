@@ -10,13 +10,13 @@ While functional, this lacks:
 - **Context Budget**: Will invoking this tool flood the LLM's context window?
 
 ## The Solution: `CapabilityManifest`
-ContextOps implements the `CapabilityManifest` schema. Before tools are registered to the MCP server, their capabilities are defined and audited in a centralized manifest.
+AKCP implements the `CapabilityManifest` schema. Before tools are registered to the MCP server, their capabilities are defined and audited in a centralized manifest.
 
 ### The `list_capabilities` Tool
-All ContextOps servers expose a standard MCP tool called `list_capabilities`.
+All AKCP servers expose a standard MCP tool called `list_capabilities`.
 
 **Agent Instruction**:
-> Agents MUST invoke `list_capabilities` when connecting to a new ContextOps server to understand the operational boundaries, risk levels, and approval requirements of the available tools.
+> Agents MUST invoke `list_capabilities` when connecting to a new AKCP server to understand the operational boundaries, risk levels, and approval requirements of the available tools.
 
 ### Enforcement (CI/CD)
 The repository automatically evaluates the registry inside `packages/evals/src/capabilities.test.ts`.

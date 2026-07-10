@@ -14,7 +14,7 @@ This example demonstrates an AKCP bundle for a software engineering team's knowl
 
 ```bash
 # Validate the bundle schema
-npx agent-ready validate ./examples/domains/software-project/sample-data
+npx akcp validate ./examples/domains/software-project/sample-data
 
 # Compile the bundle to all targets
 akcp compile --bundle ./examples/domains/software-project

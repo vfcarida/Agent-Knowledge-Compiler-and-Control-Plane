@@ -2,11 +2,11 @@
   "name": "@ocf/cli",
   "version": "0.1.0",
   "private": true,
-  "description": "ContextOps CLI: Generate, validate, update, and publish agent-ready context packs.",
+  "description": "AKCP CLI: Generate, validate, update, and publish akcp context packs.",
   "type": "module",
   "bin": {
-    "agent-ready": "./dist/index.js",
-    "akcp": "./dist/index.js"
+    "akcp": "./dist/index.js",
+    "agent-ready": "./dist/legacy-bin.js"
   },
   "scripts": {
     "build": "tsc",

@@ -46,8 +46,8 @@ The project is organized into the following workstreams. Pick the one that match
 
 ```bash
 # Clone the repository
-git clone https://github.com/vfcarida/Agent-ready-Knowledge-Reference-Architecture.git
-cd Agent-ready-Knowledge-Reference-Architecture
+git clone https://github.com/vfcarida/Agent-Knowledge-Compiler-Control-Plane.git akcp
+cd akcp
 
 # Install all workspace dependencies
 npx pnpm install
@@ -59,7 +59,7 @@ npx pnpm -r run build
 npx pnpm -r run test -- --run
 
 # Validate an example OKF bundle
-npx agent-ready validate examples/domains/software-project
+npx akcp validate examples/domains/software-project
 ```
 
 ---

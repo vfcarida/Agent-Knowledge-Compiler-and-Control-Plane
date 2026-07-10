@@ -96,7 +96,7 @@ export class EvalsHarness {
     // 2. Write Markdown
     let md = `# Agent-Ready Knowledge Benchmark Report\n\n`;
     md += `**Generated At:** ${report.timestamp}\n\n`;
-    md += `This report compares legacy/raw documentation approaches (Baseline) against ContextOps / OKF strategies (Treatment) across ${this.results.length} scenarios.\n\n`;
+    md += `This report compares legacy/raw documentation approaches (Baseline) against AKCP / OKF strategies (Treatment) across ${this.results.length} scenarios.\n\n`;
 
     md += `## Scenarios\n\n`;
     for (const r of this.results) {

@@ -55,7 +55,7 @@ export function EvalsSummary() {
             Evals Summary
           </h2>
           <p className="text-sm text-zinc-400 mt-1">
-            Tracking ContextOps orchestration metrics and tool accuracy.
+            Tracking AKCP orchestration metrics and tool accuracy.
           </p>
         </div>
         <div className="text-right">

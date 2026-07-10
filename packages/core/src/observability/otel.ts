@@ -34,9 +34,9 @@ export function startTelemetry(): void {
 
   try {
     sdk.start();
-    console.error('[OCF Telemetry] OpenTelemetry NodeSDK initialized successfully.');
+    console.error('[AKCP Telemetry] OpenTelemetry NodeSDK initialized successfully.');
   } catch (err) {
-    console.error('[OCF Telemetry] Failed to initialize OpenTelemetry:', err);
+    console.error('[AKCP Telemetry] Failed to initialize OpenTelemetry:', err);
   }
 }
 
@@ -47,64 +47,64 @@ export async function stopTelemetry(): Promise<void> {
   if (!sdk) return;
   try {
     await sdk.shutdown();
-    console.error('[OCF Telemetry] OpenTelemetry NodeSDK shut down.');
+    console.error('[AKCP Telemetry] OpenTelemetry NodeSDK shut down.');
   } catch (err) {
-    console.error('[OCF Telemetry] Error shutting down OpenTelemetry:', err);
+    console.error('[AKCP Telemetry] Error shutting down OpenTelemetry:', err);
   }
 }
 
 // ─── Custom Metrics Definitions ───────────────────────────────────────────────
 
-const meter = api.metrics.getMeter('open-career-format');
+const meter = api.metrics.getMeter('akcp');
 
 // Metrics counters
-export const mcpToolCallsCounter = meter.createCounter('ocf_mcp_tool_calls_total', {
+export const mcpToolCallsCounter = meter.createCounter('akcp_mcp_tool_calls_total', {
   description: 'Total number of MCP tool calls executed',
 });
 
-export const mcpToolFailuresCounter = meter.createCounter('ocf_mcp_tool_failures_total', {
+export const mcpToolFailuresCounter = meter.createCounter('akcp_mcp_tool_failures_total', {
   description: 'Total number of MCP tool calls that resulted in errors',
 });
 
-export const okfParseFailuresCounter = meter.createCounter('ocf_okf_parse_failures_total', {
+export const okfParseFailuresCounter = meter.createCounter('akcp_okf_parse_failures_total', {
   description: 'Total number of YAML/Markdown OKF parse failures',
 });
 
-export const bundleMigrationsCounter = meter.createCounter('ocf_bundle_migrations_total', {
+export const bundleMigrationsCounter = meter.createCounter('akcp_bundle_migrations_total', {
   description: 'Total number of OKF bundle migration processes triggered',
 });
 
-export const automationAttemptsCounter = meter.createCounter('ocf_automation_attempts_total', {
+export const automationAttemptsCounter = meter.createCounter('akcp_automation_attempts_total', {
   description: 'Total number of Playwright automation workflows triggered',
 });
 
-export const automationApprovalRequiredCounter = meter.createCounter('ocf_automation_approval_required_total', {
+export const automationApprovalRequiredCounter = meter.createCounter('akcp_automation_approval_required_total', {
   description: 'Total number of job submissions requiring explicit human approval',
 });
 
-export const automationSubmissionSuccessCounter = meter.createCounter('ocf_automation_submission_success_total', {
+export const automationSubmissionSuccessCounter = meter.createCounter('akcp_automation_submission_success_total', {
   description: 'Total number of successful job submissions registered in bundle',
 });
 
-export const bundleValidationFailuresCounter = meter.createCounter('ocf_bundle_validation_failures_total', {
+export const bundleValidationFailuresCounter = meter.createCounter('akcp_bundle_validation_failures_total', {
   description: 'Total number of OKF bundle validation errors',
 });
 
-export const automationPreviewsCounter = meter.createCounter('ocf_automation_previews_total', {
+export const automationPreviewsCounter = meter.createCounter('akcp_automation_previews_total', {
   description: 'Total number of automation job previews requested',
 });
 
-export const automationSubmissionBlockedCounter = meter.createCounter('ocf_automation_submission_blocked_total', {
+export const automationSubmissionBlockedCounter = meter.createCounter('akcp_automation_submission_blocked_total', {
   description: 'Total number of job submissions blocked by policy or HITL',
 });
 
-export const mcpToolDurationHistogram = meter.createHistogram('ocf_mcp_tool_duration_ms', {
+export const mcpToolDurationHistogram = meter.createHistogram('akcp_mcp_tool_duration_ms', {
   description: 'Duration of MCP tool executions in milliseconds',
 });
 
 // ─── Tracing Helpers ─────────────────────────────────────────────────────────
 
-export const tracer = api.trace.getTracer('open-career-format');
+export const tracer = api.trace.getTracer('akcp');
 
 /**
  * Wraps an async function with an OpenTelemetry span and records duration.

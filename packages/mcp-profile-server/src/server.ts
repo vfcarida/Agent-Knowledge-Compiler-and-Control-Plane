@@ -28,7 +28,7 @@ import {
 } from '@ocf/core';
 import { profileServerCapabilities } from './capabilities.js';
 
-export class OCFMcpProfileServer {
+export class AKCPProfileServer {
   private readonly server: McpServer;
   private readonly docService: OKFDocumentService;
   private readonly gateway: MCPGateway;
@@ -39,7 +39,7 @@ export class OCFMcpProfileServer {
 
     // Create the MCP server instance
     this.server = new McpServer({
-      name: 'open-career-format-profile-server',
+      name: 'akcp-profile-server',
       version: '0.1.0',
     });
 

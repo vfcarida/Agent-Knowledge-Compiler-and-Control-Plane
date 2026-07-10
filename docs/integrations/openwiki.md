@@ -6,13 +6,13 @@
 
 However, raw Markdown files without standardized schemas are difficult to programmatically validate, govern, and expose to external enterprise tools. 
 
-**Agent-Ready Knowledge (ARK) / ContextOps** steps in as the structured, governed layer on top of your raw documentation.
+**Agent-Ready Knowledge (ARK) / AKCP** steps in as the structured, governed layer on top of your raw documentation.
 
 ### The Pipeline
 1. **Generation (OpenWiki)**: Use OpenWiki to let agents effortlessly generate documentation.
-2. **Structuring (ContextOps)**: Use `agent-ready import openwiki` to ingest that raw Markdown, applying the `software-project` OKF Profile.
-3. **Validation (ContextOps)**: Run `agent-ready validate` in CI to ensure all architectural decisions, runbooks, and service definitions conform to your organization's schemas.
-4. **Serving (ContextOps MCP)**: Boot `agent-ready serve:mcp` to expose this validated context securely to your organization's LLM ecosystem via the Model Context Protocol.
+2. **Structuring (AKCP)**: Use `akcp import openwiki` to ingest that raw Markdown, applying the `software-project` OKF Profile.
+3. **Validation (AKCP)**: Run `akcp validate` in CI to ensure all architectural decisions, runbooks, and service definitions conform to your organization's schemas.
+4. **Serving (AKCP MCP)**: Boot `akcp serve:mcp` to expose this validated context securely to your organization's LLM ecosystem via the Model Context Protocol.
 
 ## Using the Importer
 
@@ -20,10 +20,10 @@ The `@ocf/cli` includes a dedicated bridge to convert an OpenWiki folder into an
 
 ```bash
 # Convert your OpenWiki folder into an OKF bundle (dry-run first)
-npx agent-ready import openwiki --input ./openwiki --output .okf --dry-run
+npx akcp import openwiki --input ./openwiki --output .okf --dry-run
 
 # Execute the import
-npx agent-ready import openwiki --input ./openwiki --output .okf --force
+npx akcp import openwiki --input ./openwiki --output .okf --force
 ```
 
 ### Mappings
@@ -42,7 +42,7 @@ Once imported, update your `AGENTS.md` (or `.clauderc`) to point agents to the s
 ```markdown
 # Agent Instructions
 
-This repository uses ContextOps for structured agent knowledge. 
+This repository uses AKCP for structured agent knowledge. 
 
 When you need context about architecture, commands, or conventions, DO NOT guess. 
 Instead, rely on the validated OKF bundle located in \`.okf/\`. 

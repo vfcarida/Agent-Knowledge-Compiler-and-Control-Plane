@@ -1,6 +1,6 @@
 # Conformance Suite
 
-The Agent Knowledge Compiler and Control Plane (AKCP) provides a strict, machine-readable **Conformance Suite** to certify if your context bundles (OKF directory + `akcp.yaml`) comply with the Agent-Ready Knowledge reference architecture.
+The Agent Knowledge Compiler and Control Plane (AKCP) provides a strict, machine-readable **Conformance Suite** to certify if your context bundles (OKF directory + `akcp.yaml`) comply with the Agent Knowledge Compiler and Control Plane.
 
 ## Usage
 
@@ -15,7 +15,7 @@ akcp conformance run --bundle path/to/bundle --profile career
 The conformance runner executes a sequential validation pipeline that maps to our four Compatibility Levels:
 
 1. **OKF-compatible (Base Spec)**: The runner reads all markdown files in your bundle. It ensures each file has valid YAML frontmatter containing a `type: <string>` field.
-2. **OCF-profile-compatible**: The runner loads the files against the selected Open Career Format (OCF) schema (e.g. `career`). It asserts that all files structurally align with their designated `type` schemas.
+2. **OCF-profile-compatible**: The runner loads the files against the selected Agent Knowledge Compiler and Control Plane (AKCP) (OCF) schema (e.g. `career`). It asserts that all files structurally align with their designated `type` schemas.
 3. **AKCP-compiler-compatible**: The runner compiles the bundle into the internal Agent Knowledge Intermediate Representation (IR). It validates semantic links between documents, ensuring there are no unrecoverable parse errors. Broken links are flagged as warnings.
 4. **AKCP-control-plane-compatible**: The runner inspects the `akcp.yaml` configuration to ensure policies are well-formed and target outputs are valid.
 

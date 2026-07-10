@@ -1,8 +1,8 @@
 # OWASP Top 10 for LLM Applications
 
-ContextOps mitigates major OWASP LLM vulnerabilities by design.
+AKCP mitigates major OWASP LLM vulnerabilities by design.
 
-| OWASP Risk | Mitigation in ContextOps |
+| OWASP Risk | Mitigation in AKCP |
 |------------|--------------------------|
 | **LLM01: Prompt Injection** | OKF strictly parses YAML. Malicious markdown bodies do not execute code. |
 | **LLM02: Insecure Output Handling** | MCP capabilities enforce schema validation before execution. |

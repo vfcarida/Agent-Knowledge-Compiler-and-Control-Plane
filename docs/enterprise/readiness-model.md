@@ -1,6 +1,6 @@
 # Enterprise Readiness Model
 
-This document maps the Agent-Ready Knowledge Reference Architecture to the **NIST AI Risk Management Framework (AI RMF)**, providing a baseline for enterprise governance.
+This document maps the Agent Knowledge Compiler and Control Plane to the **NIST AI Risk Management Framework (AI RMF)**, providing a baseline for enterprise governance.
 
 ## NIST AI RMF Core Mapping
 

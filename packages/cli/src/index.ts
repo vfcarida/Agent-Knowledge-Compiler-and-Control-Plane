@@ -50,7 +50,7 @@ version: 1.0.0
 ---
 
 # Agent Context Pack
-This directory contains agent-ready knowledge bundles.
+This directory contains akcp knowledge bundles.
 `;
     // Only write index if it doesn't already exist from the template
     if (!fs.existsSync(path.join(contextDir, 'index.md'))) {
@@ -385,7 +385,7 @@ program
   .command('doctor')
   .description('Diagnose environment configuration and readiness')
   .action(() => {
-    console.log(`[INFO] Running ContextOps Diagnostics...`);
+    console.log(`[INFO] Running AKCP Diagnostics...`);
     console.log(`- Node Version: ${process.version}`);
     
     // Check if MCP Server configs exist
@@ -394,7 +394,7 @@ program
     console.log(`- Monorepo structure detected: ${isMonorepo}`);
     
     if (isMonorepo) {
-      console.log(`[OK] Your environment is agent-ready.`);
+      console.log(`[OK] Your environment is akcp.`);
     } else {
       console.warn(`[WARN] Not running inside a known workspace.`);
     }

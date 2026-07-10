@@ -88,7 +88,7 @@ export default function App() {
           </div>
 
           <h2 className="text-3xl font-bold tracking-tight text-white mb-3">
-            Welcome to Open Career Format Orchestrator
+            Welcome to Agent Knowledge Compiler and Control Plane
           </h2>
           <p className="text-zinc-400 text-sm max-w-lg mb-10 leading-relaxed">
             A privacy-first career manager. All your experience, skills, and vacancy applications live locally on your machine in Markdown files.

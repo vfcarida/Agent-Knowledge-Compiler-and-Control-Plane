@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { OCFMcpAutomationServer } from '../server.js';
+import { AKCPAutomationServer } from '../server.js';
 import { OKFDocumentService } from '@ocf/core';
 
 vi.mock('better-sqlite3', () => {
@@ -25,13 +25,13 @@ vi.mock('better-sqlite3', () => {
 
 
 describe('Safety Controls', () => {
-  let server: OCFMcpAutomationServer;
+  let server: AKCPAutomationServer;
   const originalEnv = process.env;
 
   beforeEach(() => {
     vi.resetModules();
     process.env = { ...originalEnv };
-    server = new OCFMcpAutomationServer({} as OKFDocumentService);
+    server = new AKCPAutomationServer({} as OKFDocumentService);
   });
 
   afterEach(() => {

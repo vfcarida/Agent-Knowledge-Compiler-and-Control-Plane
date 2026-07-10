@@ -1,6 +1,6 @@
 # NIST AI RMF Mapping
 
-ContextOps implements the NIST AI Risk Management Framework (AI RMF) through architectural constraints.
+AKCP implements the NIST AI Risk Management Framework (AI RMF) through architectural constraints.
 
 ## 1. Govern
 - **Control:** Agent policies (`AgentPolicy`) are codified in TypeScript and version-controlled.

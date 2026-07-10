@@ -1,10 +1,10 @@
 # Agent-Ready Knowledge Benchmark
 
 ## Objective
-To empirically demonstrate the value of structuring knowledge into strictly governed Context Packs over exposing raw, unstructured documents to LLMs. This benchmark provides quantitative metrics to justify the adoption of ContextOps in enterprise environments.
+To empirically demonstrate the value of structuring knowledge into strictly governed Context Packs over exposing raw, unstructured documents to LLMs. This benchmark provides quantitative metrics to justify the adoption of AKCP in enterprise environments.
 
 ## Methodology
-The benchmark operates deterministically by running a suite of evaluations across 7 core enterprise and engineering tasks. Each scenario simulates an LLM's response trajectory, measuring baseline performance (raw repositories, OpenWiki docs, basic MCP tools) against the ContextOps treatment (OKF context packs, budget compression, and the Capability Registry).
+The benchmark operates deterministically by running a suite of evaluations across 7 core enterprise and engineering tasks. Each scenario simulates an LLM's response trajectory, measuring baseline performance (raw repositories, OpenWiki docs, basic MCP tools) against the AKCP treatment (OKF context packs, budget compression, and the Capability Registry).
 
 ### Evaluated Metrics
 - **Task Success Rate**: The probability of the agent successfully completing the end-to-end user goal.

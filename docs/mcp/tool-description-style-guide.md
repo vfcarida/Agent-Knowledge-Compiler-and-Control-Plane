@@ -2,7 +2,7 @@
 
 In Agentic architectures, the LLM relies entirely on tool descriptions (often mapped directly to its system prompt context window) to decide when and how to call tools. Poor descriptions lead to context flooding, hallucinated arguments, and unsafe side effects.
 
-All MCP Tools in ContextOps MUST follow this strict rubric. A Tool Smell test (`packages/evals/src/tool-smell.test.ts`) mathematically enforces these rules during CI.
+All MCP Tools in AKCP MUST follow this strict rubric. A Tool Smell test (`packages/evals/src/tool-smell.test.ts`) mathematically enforces these rules during CI.
 
 ## The Rubric
 

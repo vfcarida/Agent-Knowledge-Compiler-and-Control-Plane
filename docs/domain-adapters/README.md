@@ -1,6 +1,6 @@
-# ContextOps Domain Adapters
+# AKCP Domain Adapters
 
-ContextOps was designed to be domain-agnostic. While the reference implementation focuses on **Career** (the Open Career Format), the true power of Agent-Ready Knowledge lies in its ability to adapt to any vertical.
+AKCP was designed to be domain-agnostic. While the reference implementation focuses on **Career** (the Agent Knowledge Compiler and Control Plane (AKCP)), the true power of Agent-Ready Knowledge lies in its ability to adapt to any vertical.
 
 By utilizing **Domain Adapters**, enterprises can scaffold Agent-Ready environments instantly. A Domain Adapter is a template that provides:
 1. **Profile Schema**: Strict TypeScript/Zod definitions for the domain's entities.
@@ -11,7 +11,7 @@ By utilizing **Domain Adapters**, enterprises can scaffold Agent-Ready environme
 ## Available Adapters
 
 - `software-project`: (Recommended) Connects AI Coding Agents with Architecture Decision Records (ADRs) and Requirements.
-- `career`: The baseline Open Career Format.
+- `career`: The baseline Agent Knowledge Compiler and Control Plane (AKCP).
 - `it-operations`: Runbooks, incident reports, and system topology.
 - `compliance`: Audit trails, policies, and evidence logs.
 - `customer-support`: FAQs, macros, and ticket histories.
@@ -20,5 +20,5 @@ By utilizing **Domain Adapters**, enterprises can scaffold Agent-Ready environme
 
 You can initialize an adapter into your project via the CLI:
 ```bash
-npx agent-ready init --profile software-project ./my-agent-knowledge
+npx akcp init --profile software-project ./my-agent-knowledge
 ```

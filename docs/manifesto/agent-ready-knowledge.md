@@ -81,7 +81,7 @@ How ready is your organization for autonomous agents? Use this matrix to self-as
 | **Level 1** | **Structured docs** | Centralized Markdown repositories. | **Poor.** LLMs can read it, but metadata extraction is probabilistic. |
 | **Level 2** | **OKF-Style Bundles** | Strict Markdown with YAML frontmatter schemas. | **Good.** Deterministic parsing enables reliable RAG and indexing. |
 | **Level 3** | **MCP-Exposed Packs** | Context dynamically exposed via standard JSON-RPC. | **High.** Instant interoperability across multiple agent frameworks. |
-| **Level 4** | **Governed ContextOps** | HITL approval stores, explicit read/write scopes, OTel auditing. | **Enterprise Ready.** Security and risk teams can audit operations. |
+| **Level 4** | **Governed AKCP** | HITL approval stores, explicit read/write scopes, OTel auditing. | **Enterprise Ready.** Security and risk teams can audit operations. |
 | **Level 5** | **Evaluated Supply Chain** | CI/CD automated evals block regressions in agent comprehension. | **State of the Art.** Autonomous operations scale safely. |
 
 ---

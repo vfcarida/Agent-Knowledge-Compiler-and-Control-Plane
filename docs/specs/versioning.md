@@ -1,6 +1,6 @@
 # Versioning Policy
 
-ContextOps strictly adheres to Semantic Versioning (SemVer) 2.0.0. However, because ContextOps spans data payloads, network protocols, and CLI behavior, SemVer rules apply differently to each layer.
+AKCP strictly adheres to Semantic Versioning (SemVer) 2.0.0. However, because AKCP spans data payloads, network protocols, and CLI behavior, SemVer rules apply differently to each layer.
 
 ## 1. Context Pack Specification (OKF Base)
 The structure of a Context Pack (`.agent-context/` directory, mandatory frontmatter keys like `type`) is versioned globally.
@@ -19,7 +19,7 @@ This governs the JSON-RPC tool contracts exposed by the MCP Profile and Automati
 - **Minor (MINOR):** Adding an optional argument, appending data to the return object.
 
 ## 4. CLI Behavior
-- **Breaking (MAJOR):** Removing commands (e.g., `agent-ready validate`), changing exit codes for existing behaviors.
+- **Breaking (MAJOR):** Removing commands (e.g., `akcp validate`), changing exit codes for existing behaviors.
 - **Minor (MINOR):** Adding new commands or flags.
 
 ---

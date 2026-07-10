@@ -1,6 +1,6 @@
 # Agent Context Profiles (ACP) over OKF
 
-The Open Knowledge Format (OKF) provides a minimal standard for representing organizational knowledge that is both human-readable and agent-ready. By design, the base OKF spec §4.1 only requires the `type` field in the frontmatter.
+The Open Knowledge Format (OKF) provides a minimal standard for representing organizational knowledge that is both human-readable and akcp. By design, the base OKF spec §4.1 only requires the `type` field in the frontmatter.
 
 To make OKF practically useful for agents across different business domains, this repository introduces **Agent Context Profiles (ACP)**. 
 

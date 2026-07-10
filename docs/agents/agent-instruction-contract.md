@@ -1,6 +1,6 @@
 # Agent Instruction Contract
 
-This document defines the contract for initializing and maintaining AI agent instructions in a ContextOps environment. 
+This document defines the contract for initializing and maintaining AI agent instructions in a AKCP environment. 
 By adhering to this contract, all AI coding workflows (like GitHub Copilot, Cursor, Cline, or custom MCP clients) operate safely, efficiently, and predictably.
 
 ## Purpose
@@ -9,12 +9,12 @@ This contract forces these files to act as **pointers** to rigorous, structured 
 
 ## The Contract
 
-Every agent instruction file MUST contain a dynamically synchronized block demarcated by `<!-- agent-ready:start -->` and `<!-- agent-ready:end -->`. 
+Every agent instruction file MUST contain a dynamically synchronized block demarcated by `<!-- akcp:start -->` and `<!-- akcp:end -->`. 
 This block must declare the following sections:
 
 ### 1. Project Purpose
 A very brief statement defining what the project is.
-*Example: "This is a ContextOps Orchestrator built using TypeScript and MCP."*
+*Example: "This is a AKCP Orchestrator built using TypeScript and MCP."*
 
 ### 2. Architecture Boundaries
 Hard constraints on what technologies are permitted.
@@ -26,7 +26,7 @@ Pointers telling the agent exactly where to find the source of truth for its kno
 
 ### 4. Commands to Run
 Safe, deterministic commands the agent should use to build or validate its work.
-*Example: "To validate your work, run \`npx agent-ready validate\`."*
+*Example: "To validate your work, run \`npx akcp validate\`."*
 
 ### 5. Forbidden Actions
 Strict security boundaries or anti-patterns to avoid.
@@ -50,4 +50,4 @@ The formatting the agent should use for git operations.
 
 ## Synchronization
 
-The `agent-ready agents sync` command enforces this contract idempotently. It reads the local repository, updates the block between the delimiters, and preserves all user-provided context placed outside those bounds.
+The `akcp agents sync` command enforces this contract idempotently. It reads the local repository, updates the block between the delimiters, and preserves all user-provided context placed outside those bounds.

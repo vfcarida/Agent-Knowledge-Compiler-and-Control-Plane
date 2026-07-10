@@ -1,6 +1,6 @@
 /**
  * @module integrations/openwiki-importer
- * @description Bridges OpenWiki documentation to ContextOps OKF bundles.
+ * @description Bridges OpenWiki documentation to AKCP OKF bundles.
  */
 
 import path from 'node:path';

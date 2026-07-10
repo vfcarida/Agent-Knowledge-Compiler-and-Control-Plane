@@ -9,4 +9,4 @@ timestamp: 2026-07-08T12:00:00.000Z
 
 | Document | Type | Description |
 |----------|------|-------------|
-| [Open Career Format Orchestrator](./open-career-format.md) | Project | An enterprise-grade reference architecture for building agent-ready knowledge bases. |
+| [Agent Knowledge Compiler and Control Plane](./open-career-format.md) | Project | An enterprise-grade reference architecture for building akcp knowledge bases. |

@@ -35,9 +35,9 @@ Existing solutions either provide **Structure without Delivery** (OKF) or **Deli
 
 ---
 
-## 4. Proposed Architecture: ContextOps
+## 4. Proposed Architecture: AKCP
 
-The ContextOps orchestrator bridges this gap through a three-tier architecture:
+The AKCP orchestrator bridges this gap through a three-tier architecture:
 
 ```mermaid
 graph TD
@@ -57,14 +57,14 @@ graph TD
 
 ### 4.1. Context Pack Lifecycle
 1. **Authoring:** Domain experts write Markdown files with YAML frontmatter (`type: Runbook`, `type: ADR`).
-2. **Validation:** The `agent-ready validate` CLI enforces strict Zod schemas.
+2. **Validation:** The `akcp validate` CLI enforces strict Zod schemas.
 3. **Exposure:** The MCP Profile Server mounts the validated bundle.
 4. **Consumption:** The agent explicitly requests documents via `read_document(conceptId)`.
 
 ---
 
 ## 5. Governance Model
-ContextOps maps directly to the **NIST AI RMF** (Govern, Map, Measure, Manage). We categorize MCP capabilities into proportional autonomy levels:
+AKCP maps directly to the **NIST AI RMF** (Govern, Map, Measure, Manage). We categorize MCP capabilities into proportional autonomy levels:
 - **Observe (Low Risk):** Local read-only operations (`read_document`).
 - **Advise (Medium Risk):** Local write operations (`write_file`).
 - **Act-With-Approval (High Risk):** External mutations requiring Human-in-the-Loop (`confirm_application_submission`).
@@ -74,7 +74,7 @@ ContextOps maps directly to the **NIST AI RMF** (Govern, Map, Measure, Manage). 
 
 ## 6. Evaluation Methodology and Testable Claims
 
-To prove that ContextOps is superior to raw repository ingestion, we propose three falsifiable claims mapped to automated evaluations in our `@ocf/evals` harness.
+To prove that AKCP is superior to raw repository ingestion, we propose three falsifiable claims mapped to automated evaluations in our `@ocf/evals` harness.
 
 ### Claim 1: Context Packs reduce average prompt token cost by >40%.
 - **Eval Scenario:** `Token Budget Efficiency`.
@@ -83,7 +83,7 @@ To prove that ContextOps is superior to raw repository ingestion, we propose thr
 
 ### Claim 2: Strict Capability Registries increase tool selection accuracy by >20%.
 - **Eval Scenario:** `Tool Selection Ambiguity`.
-- **Methodology:** Present an agent with an ambiguous task and two similar tools. One tool uses a standard description, the other uses the ContextOps Rubric (explicit side-effects, constraints, and "When not to use" clauses).
+- **Methodology:** Present an agent with an ambiguous task and two similar tools. One tool uses a standard description, the other uses the AKCP Rubric (explicit side-effects, constraints, and "When not to use" clauses).
 - **Success Metric:** The agent selects the correct, safe tool 20% more often under the strict rubric.
 
 ### Claim 3: HitL Approval Queues reduce unsafe external actions to 0%.
@@ -94,7 +94,7 @@ To prove that ContextOps is superior to raw repository ingestion, we propose thr
 ---
 
 ## 7. Implementation Reference
-The reference implementation of this architecture is the **Open Career Format Orchestrator** repository, which includes:
+The reference implementation of this architecture is the **Agent Knowledge Compiler and Control Plane** repository, which includes:
 - `@ocf/core`: OKF validation and schema parsing.
 - `@ocf/mcp-profile-server` & `@ocf/mcp-automation-server`: The MCP delivery mechanism.
 - `@ocf/dashboard`: The React-based Operator Console for Approvals.
