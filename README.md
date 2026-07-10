@@ -95,8 +95,10 @@ AKCP provides practical, step-by-step playbooks to help organizations transition
 ## 8. Roadmap & Governance
 ContextOps evolves as a formal specification. To ensure a stable ecosystem for agent-ready context packs, we maintain strict versioning and compatibility guarantees.
 
-- **[Specification Governance](docs/specs/README.md):** Rules for semantic versioning, breaking changes, and deprecation.
-- **[RFC Process](docs/rfcs/README.md):** How we propose, discuss, and accept new Profiles and MCP Tools.
+- **[AKCP Specification (spec/)](spec/README.md):** Implementation-independent specification for AK-IR, build pipeline, Policy Cards, and conformance levels.
+- **[Whitepaper](docs/research/whitepaper.md):** The full problem statement, prior art, and architecture thesis.
+- **[Specification Governance ADR](docs/adrs/ADR-spec-governance.md):** How the spec is versioned and governed separately from the implementation.
+- **[RFC Process](docs/rfcs/README.md):** How we propose, discuss, and accept new Profiles, MCP Tools, and spec changes.
 
 See `CONTRIBUTING.md` for code-level guidelines. We strictly adhere to the NIST AI RMF and OWASP LLM Top 10.
 
