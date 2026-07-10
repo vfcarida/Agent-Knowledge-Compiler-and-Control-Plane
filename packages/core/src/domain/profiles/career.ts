@@ -94,7 +94,7 @@ export const ApplicationFrontmatterSchema = OKFFrontmatterSchema.extend({
   position: z.string().optional(),
   url: z.string().url().optional(),
   platform: z.string().optional(),
-  status: z.nativeEnum(ApplicationStatus).optional(),
+  applicationStatus: z.nativeEnum(ApplicationStatus).optional(),
   appliedAt: z.string().optional(),
   salary: z.string().optional(),
   location: z.string().optional(),

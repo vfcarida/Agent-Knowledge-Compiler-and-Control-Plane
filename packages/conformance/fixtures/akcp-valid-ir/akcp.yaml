@@ -1,0 +1,7 @@
+compile:
+  sources:
+    - type: okf-directory
+      path: .
+  targets:
+    - type: ir-json
+      out: dist/knowledge-ir.json

@@ -50,6 +50,20 @@ async function startMCPClients() {
   }
 }
 
+// Fetch Graph
+app.get('/api/manifest/graph', async (req: Request, res: Response) => {
+  try {
+    const graphPath = path.resolve(process.cwd(), '../../dist/knowledge-graph.json');
+    if (!fs.existsSync(graphPath)) {
+      return res.status(404).json({ error: 'Graph not found' });
+    }
+    const graphData = JSON.parse(fs.readFileSync(graphPath, 'utf-8'));
+    res.json(graphData);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // REST Endpoints
 app.post('/api/profile/validate', async (req, res) => {
   if (!profileClient) return res.status(503).json({ error: 'Profile server not ready' });
@@ -84,11 +98,11 @@ app.get('/api/automation/approvals', async (req, res) => {
 
 app.post('/api/automation/approve', async (req, res) => {
   if (!automationClient) return res.status(503).json({ error: 'Automation server not ready' });
-  const { approvalToken, jobUrl, dryRun } = req.body;
+  const { approvalToken, jobUrl, dryRun, approverIdentity } = req.body;
   try {
     const result = await automationClient.callTool({ 
       name: 'confirm_application_submission', 
-      arguments: { approvalToken, jobUrl, dryRun } 
+      arguments: { approvalToken, jobUrl, dryRun, approverIdentity } 
     });
     res.json(result);
   } catch (error: any) {
@@ -113,13 +127,56 @@ app.post('/api/automation/prepare', async (req, res) => {
 
 app.post('/api/automation/revoke', async (req, res) => {
   if (!automationClient) return res.status(503).json({ error: 'Automation server not ready' });
-  const { approvalToken } = req.body;
+  const { approvalToken, approverIdentity } = req.body;
   try {
     const result = await automationClient.callTool({ 
       name: 'revoke_approval', 
-      arguments: { approvalToken } 
+      arguments: { approvalToken, approverIdentity } 
     });
     res.json(result);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/api/audit/logs', async (req, res) => {
+  if (!automationClient) return res.status(503).json({ error: 'Automation server not ready' });
+  try {
+    const result = await automationClient.callTool({ 
+      name: 'list_audit_logs', 
+      arguments: { limit: 100 } 
+    });
+    res.json(result);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+import fs from 'node:fs';
+
+app.get('/api/evals/report', (req, res) => {
+  try {
+    const reportPath = path.resolve(__dirname, '../../../reports/benchmark-report.json');
+    if (fs.existsSync(reportPath)) {
+      const data = fs.readFileSync(reportPath, 'utf-8');
+      res.json(JSON.parse(data));
+    } else {
+      res.status(404).json({ error: 'Report not found' });
+    }
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/api/manifest', (req, res) => {
+  try {
+    const manifestPath = path.resolve(__dirname, '../../../dist/akcp-manifest.json');
+    if (fs.existsSync(manifestPath)) {
+      const data = fs.readFileSync(manifestPath, 'utf-8');
+      res.json(JSON.parse(data));
+    } else {
+      res.status(404).json({ error: 'Manifest not found. Run a compilation first.' });
+    }
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

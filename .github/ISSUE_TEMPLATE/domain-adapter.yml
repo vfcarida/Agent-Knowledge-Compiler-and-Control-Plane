@@ -1,0 +1,23 @@
+name: Submit Domain Adapter
+description: Propose a new Domain Adapter template for the examples/domains folder.
+title: "[Adapter]: "
+labels: ["enhancement", "domain-adapter", "good first issue"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Domain Adapters are pre-packaged templates that users can bootstrap via `agent-ready init --profile X`.
+  - type: input
+    id: adapter-name
+    attributes:
+      label: Adapter Name
+      description: What is the short-name of the adapter? (e.g., customer-support)
+    validations:
+      required: true
+  - type: textarea
+    id: content
+    attributes:
+      label: Included Documents
+      description: What sample `.md` files and schemas will be included in the `.agent-context/` template?
+    validations:
+      required: true

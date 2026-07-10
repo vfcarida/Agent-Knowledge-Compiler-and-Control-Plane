@@ -1,0 +1,47 @@
+# Agent Knowledge Compiler and Control Plane
+# Desired State Specification
+# Version: 1.0
+
+compile:
+  # The source repositories/directories containing the OKF Markdown documents
+  sources:
+    - path: "./sample-data/.okf"
+      format: "okf/markdown"
+      # Exclude drafts or specific patterns
+      exclude:
+        - "**/drafts/**"
+  
+  # Compilation target for the intermediate representation (IR)
+  target:
+    format: "ir/json"
+    out: "./dist/knowledge-ir.json"
+
+  # Optional limits on the compiled bundle
+  budgets:
+    maxTokens: 500000
+    maxDocuments: 1000
+
+controlPlane:
+  # Runtime governance policies
+  policies:
+    # Disable sensitive tool usage dynamically if required
+    disableDangerousTools: true
+    requireApprovalFor:
+      - "create_document"
+      - "update_document"
+      - "delete_document"
+
+  # Expose specific capabilities to the MCP profile/automation servers
+  mcp:
+    profileServer:
+      enabled: true
+      exportIR: "./dist/knowledge-ir.json"
+    automationServer:
+      enabled: false # Default disabled for safety
+
+  # Evaluation gates to pass before declaring success
+  evalGates:
+    - name: "no-broken-links"
+      strict: true
+    - name: "policy-compliance"
+      strict: true

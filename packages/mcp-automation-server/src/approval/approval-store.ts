@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
+import { runMigrations } from './migrations.js';
 
 export interface ApprovalPayload {
   toolName: string;
@@ -16,6 +17,7 @@ export interface PendingApproval {
   payloadHash: string;
   expiresAt: number;
   metadata?: Record<string, unknown>;
+  requesterIdentity?: string;
 }
 
 export class ApprovalStore {
@@ -33,27 +35,20 @@ export class ApprovalStore {
   }
 
   private initializeDatabase() {
-    this.db.exec(`
-      CREATE TABLE IF NOT EXISTS pending_approvals (
-        token TEXT PRIMARY KEY,
-        toolName TEXT NOT NULL,
-        payloadHash TEXT NOT NULL,
-        expiresAt INTEGER NOT NULL,
-        metadata TEXT
-      )
-    `);
+    runMigrations(this.db);
   }
 
-  generateToken(toolName: string, payload: unknown, metadata?: Record<string, unknown>, ttlMs = 15 * 60 * 1000): string {
+  generateToken(toolName: string, payload: unknown, metadata?: Record<string, unknown>, requesterIdentity?: string, ttlMs = 15 * 60 * 1000): string {
     const token = crypto.randomBytes(32).toString('hex');
     const payloadHash = this.hashPayload(payload);
     const expiresAt = Date.now() + ttlMs;
     const metaStr = metadata ? JSON.stringify(metadata) : null;
+    const reqId = requesterIdentity || null;
 
     const stmt = this.db.prepare(
-      `INSERT INTO pending_approvals (token, toolName, payloadHash, expiresAt, metadata) VALUES (?, ?, ?, ?, ?)`
+      `INSERT INTO pending_approvals (token, toolName, payloadHash, expiresAt, metadata, requesterIdentity) VALUES (?, ?, ?, ?, ?, ?)`
     );
-    stmt.run(token, toolName, payloadHash, expiresAt, metaStr);
+    stmt.run(token, toolName, payloadHash, expiresAt, metaStr, reqId);
     
     return token;
   }
@@ -71,11 +66,21 @@ export class ApprovalStore {
       toolName: row.toolName,
       payloadHash: row.payloadHash,
       expiresAt: row.expiresAt,
+      metadata: row.metadata ? JSON.parse(row.metadata) : undefined,
+      requesterIdentity: row.requesterIdentity
+    }));
+  }
+
+  getAuditLogs(limit = 100): any[] {
+    const stmt = this.db.prepare(`SELECT * FROM audit_logs ORDER BY timestamp DESC LIMIT ?`);
+    const rows = stmt.all(limit) as any[];
+    return rows.map(row => ({
+      ...row,
       metadata: row.metadata ? JSON.parse(row.metadata) : undefined
     }));
   }
 
-  validateAndConsume(token: string, toolName: string, payload: unknown): boolean {
+  validateAndConsume(token: string, toolName: string, payload: unknown, actorIdentity?: string): boolean {
     const now = Date.now();
     
     // Cleanup first
@@ -84,27 +89,47 @@ export class ApprovalStore {
     const stmt = this.db.prepare(`SELECT * FROM pending_approvals WHERE token = ?`);
     const record = stmt.get(token) as any;
 
-    if (!record) return false;
+    if (!record) {
+      this.logAudit('REJECTED_NOT_FOUND', toolName, this.hashPayload(payload), undefined, actorIdentity);
+      return false;
+    }
     
     // Check tool match
     if (record.toolName !== toolName) {
+      this.logAudit('REJECTED_TOOL_MISMATCH', toolName, this.hashPayload(payload), record.metadata, actorIdentity);
       return false;
     }
     
     // Check payload hash match
     const payloadHash = this.hashPayload(payload);
     if (record.payloadHash !== payloadHash) {
+      this.logAudit('REJECTED_HASH_MISMATCH', toolName, payloadHash, record.metadata, actorIdentity);
       return false;
     }
     
     // Consume token (One-time use)
     this.db.prepare(`DELETE FROM pending_approvals WHERE token = ?`).run(token);
+    this.logAudit('APPROVED', toolName, payloadHash, record.metadata, actorIdentity);
     return true;
   }
 
-  revokeToken(token: string): boolean {
-    const result = this.db.prepare(`DELETE FROM pending_approvals WHERE token = ?`).run(token);
-    return result.changes > 0;
+  revokeToken(token: string, actorIdentity?: string): boolean {
+    const stmt = this.db.prepare(`SELECT * FROM pending_approvals WHERE token = ?`);
+    const record = stmt.get(token) as any;
+    
+    if (record) {
+      this.db.prepare(`DELETE FROM pending_approvals WHERE token = ?`).run(token);
+      this.logAudit('REVOKED', record.toolName, record.payloadHash, record.metadata, actorIdentity);
+      return true;
+    }
+    return false;
+  }
+
+  private logAudit(action: string, toolName: string, payloadHash: string, metadata?: string, actorIdentity?: string) {
+    const stmt = this.db.prepare(
+      `INSERT INTO audit_logs (timestamp, action, toolName, payloadHash, metadata, actorIdentity) VALUES (?, ?, ?, ?, ?, ?)`
+    );
+    stmt.run(Date.now(), action, toolName, payloadHash, metadata || null, actorIdentity || null);
   }
 
   private hashPayload(payload: unknown): string {

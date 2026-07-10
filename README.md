@@ -1,41 +1,47 @@
-# 🌌 ContextOps for Agent-Ready Knowledge
+# 🌌 Agent Knowledge Compiler and Control Plane (AKCP)
 
 <p align="center">
   <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License Badge" />
   <img src="https://img.shields.io/badge/Node.js-%3E%3D%2020.0-emerald?style=for-the-badge" alt="Node.js Badge" />
   <img src="https://img.shields.io/badge/Spec-OKF%20v0.1-6366f1?style=for-the-badge" alt="OKF Spec Badge" />
   <img src="https://img.shields.io/badge/Protocol-MCP%20v1.0-06b6d4?style=for-the-badge" alt="MCP Protocol Badge" />
-  <img src="https://img.shields.io/badge/Monorepo-pnpm-a855f7?style=for-the-badge" alt="Pnpm Monorepo Badge" />
-  <img src="https://img.shields.io/badge/Tests-60%20Passed-22c55e?style=for-the-badge" alt="Tests Badge" />
 </p>
 
-<p align="center">
-  <strong>A standard toolkit for building governed, agent-ready context supply chains.</strong>
-</p>
+## 1. Category Thesis
 
----
+> **Agent Knowledge Compiler and Control Plane compiles organizational knowledge into governed, versioned, cost-efficient, agent-consumable artifacts and controls how agents discover, retrieve and act on them.**
 
-## 1. What is ContextOps?
-**ContextOps** is the discipline of transforming fragmented organizational knowledge into versioned, governed, and interoperable context packs for AI agents. 
+AI agents today suffer from structural hallucination: they lack deterministic grounding. 
+**AKCP** establishes a new product category by explicitly separating the lifecycle of agent knowledge into two operational planes:
 
-Rather than relying on probabilistic RAG retrieval or massive unchecked prompt inputs, ContextOps provides deterministic, strictly-typed data payloads. We leverage Google's lightweight **Open Knowledge Format (OKF)** specification, exposed securely via Anthropic's **Model Context Protocol (MCP)**.
+1. **Build Plane (Compiler):** Ingests raw organizational context, normalizes it, and compiles it into semantically dense, strictly-typed context packs.
+2. **Runtime Plane (Control Plane):** Governs how agents discover tools, budgets context retrieval, authorizes side-effects via Human-In-The-Loop (HITL), and provides full auditability.
 
-Read the [ContextOps Strategic Positioning](docs/strategy/positioning.md) and the [Manifesto: 10 Principles of Agent-Ready Knowledge](docs/manifesto/agent-ready-knowledge.md).
+Read the full narrative in the [Category Thesis](docs/product/category-thesis.md) and [Product Positioning](docs/product/positioning.md).
 
-## 2. The Wedge (Why You Need This)
-Agents today fail not because they lack reasoning, but because they lack **clean, deterministic context**. Developers and platform teams struggle to keep context synchronized across different agent frameworks (Cline, Cursor, Custom MCP clients).
+## 2. What this is (and what it is not)
 
-This project provides a **zero-setup CLI** (`validate`, `migrate`) and a pre-hardened **MCP Server** to instantly mount a governed, typed, Markdown-based directory as universal context for any agent. If you can write Markdown, you can supply context to an agent securely.
+**What this is:**
+- A robust semantic compiler transforming Markdown into type-safe bundles.
+- A runtime boundary (Control Plane) enforcing OWASP security controls over agentic execution.
+- A unified dashboard for operators to track contextual spend, capability risks, and pending approvals.
 
-## 3. Core Components
-- **OKF Core Validation & Migration CLI:** A suite of tools to enforce strict Markdown and YAML frontmatter typings for your organizational knowledge.
-- **MCP Profile Server:** A secure read-only API gateway mapping your OKF directories directly into MCP Resources and Tools.
-- **MCP Automation Server (HITL):** A safety boundary executing external agentic actions strictly governed by a local SQLite Approval Store. Prevents unauthorized AI mutations.
-- **Continuous Evals:** A dedicated evaluation harness (`@ocf/evals`) checking for Assurance against adversarial prompt injections and Trust Propagation risks.
+**What this is not:**
+- Not just a vector database or probabilistic RAG pipeline.
+- Not a generic framework for building AI agents.
+- Not an LLM prompt manager.
 
-## 4. Example Vertical: Career Context
-To demonstrate ContextOps in reality, this repository ships with the **Open Career Format (OCF)** Profile—a specialized implementation demonstrating how to map resumes, skills, and application data into OKF.
-- **It is an example vertical, not the limit.** You can adapt the exact same OKF schema principles to IT Architecture records, HR Policies, or Legal guidelines.
+## 3. The Enterprise Imperative (Why Alternatives Fall Short)
+
+Enterprises cannot afford unpredictable agentic behavior. Standard tools solve parts of the problem, but fail to provide a cohesive supply chain:
+- **Why not just OKF?** The Open Knowledge Format provides excellent static primitives, but it lacks a runtime mechanism to enforce who can read what, or how an agent triggers a side-effect.
+- **Why not just MCP?** The Model Context Protocol is a powerful RPC standard, but raw MCP exposes a massive attack surface. It lacks built-in semantic compiling, budgetary controls, and hitl approval boundaries.
+- **Why not just OpenWiki?** OpenWiki is an excellent upstream authoring tool for keeping docs fresh via CI. However, AKCP takes those fresh docs, compiles them into rigorous Context Packs, and exposes them through a governed runtime. OpenWiki *authors*; AKCP *compiles and controls*.
+
+## 4. Reference Domains (Career, IT Ops, Software)
+To prove the model-independent nature of the compiler, this repository ships with `examples/domains/`. 
+- **Career** is used as a vertical demo (resumes, skills, applications), demonstrating how human knowledge translates to agent context.
+- **IT Operations** and **Software Projects** are included to prove cross-industry extensibility.
 
 ## 5. Quickstart
 
@@ -76,7 +82,12 @@ Read the full [CLI Specification](docs/specs/cli.md) for advanced commands like 
 | **Observability** | Beta | OpenTelemetry instrumented spans |
 
 ## 7. Roadmap & Governance
-See `CONTRIBUTING.md` for our Spec-Driven Development (SDD) standards. We strictly adhere to the NIST AI RMF and OWASP LLM Top 10.
+ContextOps evolves as a formal specification. To ensure a stable ecosystem for agent-ready context packs, we maintain strict versioning and compatibility guarantees.
+
+- **[Specification Governance](docs/specs/README.md):** Rules for semantic versioning, breaking changes, and deprecation.
+- **[RFC Process](docs/rfcs/README.md):** How we propose, discuss, and accept new Profiles and MCP Tools.
+
+See `CONTRIBUTING.md` for code-level guidelines. We strictly adhere to the NIST AI RMF and OWASP LLM Top 10.
 
 - **Current focus:** Hardening the React Dashboard for real-time Human-In-The-Loop approvals.
 - **Next up:** Remote MCP exposure guidelines and Authentication flows.

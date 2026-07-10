@@ -4,7 +4,7 @@ import type { OKFDocument } from '@ocf/core';
 import {
   localDeveloperPolicy,
   regulatedEnterprisePolicy,
-  enforcePolicy,
+  PolicyEngine,
 } from '@ocf/core';
 import type { CapabilityManifest } from '@ocf/core';
 
@@ -99,19 +99,21 @@ describe('Governance Plane Tests', () => {
   describe('Autonomy Level Enforcement', () => {
     it('observe mode blocks all writes and submits', () => {
       const observePolicy = { ...localDeveloperPolicy, autonomyLevel: 'observe' as const };
+      const engine = new PolicyEngine(observePolicy);
       
       // confirm_application_submission is external-submit
-      expect(() => enforcePolicy('confirm_application_submission', mockCapabilities, observePolicy)).toThrow(/cannot execute write side-effect/);
+      expect(() => engine.validateExecution('confirm_application_submission', mockCapabilities, {})).toThrow(/cannot execute write side-effect/);
     });
 
     it('advise mode allows reads but blocks submits', () => {
       const advisePolicy = { ...localDeveloperPolicy, autonomyLevel: 'advise' as const };
+      const engine = new PolicyEngine(advisePolicy);
       
       // prepare_application is external-read, should not throw
-      expect(() => enforcePolicy('prepare_application', mockCapabilities, advisePolicy)).not.toThrow();
+      expect(() => engine.validateExecution('prepare_application', mockCapabilities, {})).not.toThrow();
 
       // confirm_application_submission is external-submit, should throw
-      expect(() => enforcePolicy('confirm_application_submission', mockCapabilities, advisePolicy)).toThrow(/cannot execute 'external-submit'/);
+      expect(() => engine.validateExecution('confirm_application_submission', mockCapabilities, {})).toThrow(/cannot execute 'external-submit'/);
     });
 
     it('act-with-approval blocks execution if tool is not whitelisted for approval', () => {
@@ -121,14 +123,16 @@ describe('Governance Plane Tests', () => {
         ...regulatedEnterprisePolicy,
         approvalRequiredFor: ['some_other_tool'], // Missing confirm_application_submission
       };
+      const engine = new PolicyEngine(strictApprovalPolicy);
 
-      expect(() => enforcePolicy('confirm_application_submission', mockCapabilities, strictApprovalPolicy)).toThrow(/does not whitelist it for approval-based execution/);
+      expect(() => engine.validateExecution('confirm_application_submission', mockCapabilities, {})).toThrow(/does not whitelist it for approval-based execution/);
     });
 
     it('explicit deny blocklist overrides autonomy levels', () => {
       const customPolicy = { ...localDeveloperPolicy, deniedTools: ['prepare_application'] };
+      const engine = new PolicyEngine(customPolicy);
       
-      expect(() => enforcePolicy('prepare_application', mockCapabilities, customPolicy)).toThrow(/explicitly denied/);
+      expect(() => engine.validateExecution('prepare_application', mockCapabilities, {})).toThrow(/explicitly denied/);
     });
   });
 });

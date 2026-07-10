@@ -1,0 +1,34 @@
+name: Propose MCP Capability
+description: Suggest a new tool for the Profile or Automation MCP Servers.
+title: "[MCP]: "
+labels: ["enhancement", "mcp"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Remember: All new tools must conform to our strict capability registry rubric.
+  - type: input
+    id: tool-name
+    attributes:
+      label: Tool Name
+      placeholder: e.g., generate_summary
+    validations:
+      required: true
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Proposed Risk Level
+      options:
+        - Low (local-read)
+        - Medium (local-write)
+        - High (external-read)
+        - Critical (external-write/submit)
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Tool Description
+      description: Provide the exact description string that LLMs will read (must include When to use, When not to use, and Side effects).
+    validations:
+      required: true

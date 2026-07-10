@@ -48,7 +48,7 @@ export interface CreateExperienceOptions {
 /** Options for creating an Application document. */
 export interface CreateApplicationOptions {
   platform?: string;
-  status?: string;
+  applicationStatus?: string;
   salary?: string;
   location?: string;
   tags?: string[];
@@ -218,7 +218,7 @@ export class OKFDocumentFactory {
       company,
       position,
       url,
-      status: options.status ?? ApplicationStatus.Applied,
+      applicationStatus: options.applicationStatus ?? ApplicationStatus.Applied,
       timestamp: new Date().toISOString(),
       ...(options.platform !== undefined && { platform: options.platform }),
       ...(options.salary !== undefined && { salary: options.salary }),

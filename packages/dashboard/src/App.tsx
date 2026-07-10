@@ -5,16 +5,19 @@
 
 import { useState } from 'react';
 import { MainLayout } from './components/layout/MainLayout.js';
-import { KanbanBoard } from './components/kanban/KanbanBoard.js';
-import { KnowledgeGraph } from './components/knowledge-graph/KnowledgeGraph.js';
-import { ChangeHistory } from './components/logs/ChangeHistory.js';
 import { ApprovalQueue } from './components/approvals/ApprovalQueue.js';
 import { SystemHealth } from './components/system/SystemHealth.js';
+import { EvalsSummary } from './components/evals/EvalsSummary.js';
 import { useOKFData } from './hooks/use-okf-data.js';
 import { FolderOpen, ArrowRight, ShieldCheck, Cpu } from 'lucide-react';
 
+import { AuditLog } from './components/audit/AuditLog.js';
+import { Documents } from './components/documents/Documents.js';
+import { ContextPacks } from './components/packs/ContextPacks.js';
+import { GraphReport } from './components/packs/GraphReport.js';
+
 export default function App() {
-  const [currentTab, setCurrentTab] = useState<string>('kanban');
+  const [currentTab, setCurrentTab] = useState<string>('health');
   const { data, loading, error, loadFromFiles, loadFromDirectory } = useOKFData();
 
   // Handle Directory Picker selection
@@ -34,18 +37,30 @@ export default function App() {
   const renderActiveTab = () => {
     if (!data) return null;
     switch (currentTab) {
-      case 'kanban':
-        return <KanbanBoard applications={data.applications} />;
+      case 'overview':
+        return <div className="text-zinc-400">Overview Placeholder</div>;
+      case 'health':
+        return <SystemHealth />;
+      case 'documents':
+        return <Documents data={data} />;
+      case 'packs':
+        return <ContextPacks data={data} />;
       case 'graph':
-        return <KnowledgeGraph data={data} />;
-      case 'logs':
-        return <ChangeHistory data={data} />;
+        return <GraphReport />;
+      case 'mcp':
+        return <div className="text-zinc-400">MCP Capabilities Placeholder</div>;
       case 'approvals':
         return <ApprovalQueue />;
-      case 'system':
-        return <SystemHealth />;
+      case 'audit':
+        return <AuditLog />;
+      case 'evals':
+        return <EvalsSummary />;
+      case 'governance':
+        return <div className="text-zinc-400">Governance Policies Placeholder</div>;
+      case 'settings':
+        return <div className="text-zinc-400">Settings Placeholder</div>;
       default:
-        return <KanbanBoard applications={data.applications} />;
+        return <div className="text-zinc-400">Placeholder</div>;
     }
   };
 

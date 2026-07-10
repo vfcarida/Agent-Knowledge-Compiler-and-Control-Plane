@@ -1,18 +1,33 @@
-# Contributing to OCF Reference Architecture
+# Contributing to ContextOps
 
-We welcome contributions! This project uses **Spec-Driven Development (SDD)** and expects all changes to be documented in the architecture prior to implementation.
+We welcome contributions that improve the safety, efficiency, and clarity of AI Agent context! 
+To keep the repository stable and easy to review, please follow these guidelines.
 
-## 1. Governance and Scope
-The goal is to maintain a concrete, testable Enterprise Architecture Blueprint.
-- Do not introduce abstractions unless they solve a demonstrated limitation.
-- Ensure any added features come with corresponding unit, integration, or contract tests.
+## 1. Small, Iterative PRs Only
+- Large, monolithic PRs that refactor multiple domains will be rejected. 
+- Break your changes down into small, trackable additions. 
+- Focus on one thing per PR (e.g., adding a single capability, or a single eval scenario).
 
-## 2. Commit Guidelines
-- Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
-- Ex: `feat: add types`, `fix: update parser`.
-- **CRITICAL**: Never credit or reference AI, agent, LLM, prompt, or code assistants in commit messages.
+## 2. Structured Outputs > Free Text
+ContextOps relies on structure. If you are adding new context, do not just dump markdown paragraphs. 
+You must define or use a Zod schema for the OKF Frontmatter.
 
-## 3. Pull Request Process
-1. Ensure your code passes all local checks: `pnpm test`, `pnpm lint`, `pnpm typecheck`, `pnpm build`.
-2. Ensure you have not bypassed the Automation Server's `sandbox` mode in your CI tests.
-3. Your PR must not degrade CLEAR eval metrics (Cost, Latency, Efficacy, Assurance, Reliability).
+## 3. Mandatory Testing
+- **Evals are our compass.** If you are changing how the CLI parses OKF or how MCP tools behave, you *must* add or update an eval scenario in `packages/evals/`.
+- Run `pnpm test` and `pnpm build` locally before submitting.
+
+## 4. Run the Dev Environment
+\`\`\`bash
+# Install dependencies
+pnpm install
+
+# Run full suite (build, format, lint, test)
+pnpm run build
+pnpm test
+\`\`\`
+
+## 5. "Good First Issues"
+Check our issue tracker for `good first issue` labels. We highly recommend starting by:
+- Creating a new `Domain Adapter`.
+- Submitting a new `Eval Scenario`.
+- Improving a tool description in the Capability Registry.

@@ -69,6 +69,15 @@ export interface OKFFrontmatter {
   tags?: string[];
   /** ISO 8601 last-modified timestamp. */
   timestamp?: string;
+  
+  // Lifecycle fields
+  priority?: 'low' | 'medium' | 'high' | 'critical';
+  owner?: string;
+  lastReviewedAt?: string;
+  reviewCadenceDays?: number;
+  status?: 'active' | 'stale' | 'deprecated' | 'archived';
+  successor?: string;
+
   /** Allow additional producer-defined fields. */
   [key: string]: unknown;
 }

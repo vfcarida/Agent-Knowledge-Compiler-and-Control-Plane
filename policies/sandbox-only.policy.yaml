@@ -1,0 +1,23 @@
+apiVersion: policy.ocf.dev/v1alpha1
+kind: PolicyCard
+metadata:
+  name: Sandbox Only
+  description: Permissive policy for local development and non-destructive experimentation.
+  version: 1.0.0
+spec:
+  allowedAgents:
+    - "*"
+  allowedContextPacks:
+    - "*"
+  allowedTools:
+    - "*"
+  forbiddenTools: []
+  sideEffectRules:
+    read: allow
+    write: allow
+    submit: allow
+  approvalRequirements: []
+  piiHandling: allow-with-audit
+  mappings:
+    nist_ai_rmf: []
+    owasp_llm: []

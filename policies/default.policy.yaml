@@ -1,0 +1,33 @@
+apiVersion: policy.ocf.dev/v1alpha1
+kind: PolicyCard
+metadata:
+  name: Default Governance Policy
+  description: A balanced policy for everyday agent usage.
+  version: 1.0.0
+spec:
+  allowedAgents:
+    - "*"
+  allowedContextPacks:
+    - "*"
+  allowedTools:
+    - "*"
+  forbiddenTools: []
+  maxContextBudget: 128000
+  sideEffectRules:
+    read: allow
+    write: approval
+    submit: approval
+  approvalRequirements:
+    - "create_document"
+    - "update_document"
+    - "delete_document"
+    - "commit_changes"
+  piiHandling: redact
+  evidenceRequirements:
+    - "Approval trace ID"
+  mappings:
+    nist_ai_rmf:
+      - GOVERN 1.1
+      - MAP 2.1
+    owasp_llm:
+      - LLM06: Excessive Agency

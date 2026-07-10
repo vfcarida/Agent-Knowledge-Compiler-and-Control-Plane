@@ -3,7 +3,7 @@
  * @description Sidebar navigation and real-time statistics aggregator.
  */
 
-import { Briefcase, Award, Activity, ShieldCheck, ServerCog } from 'lucide-react';
+import { LayoutDashboard, Activity, FileText, Package, Wrench, ShieldCheck, ScrollText, LineChart, Scale, Settings, Network } from 'lucide-react';
 import type { CareerBundleData } from '../../types/career.js';
 
 interface SidebarProps {
@@ -13,27 +13,26 @@ interface SidebarProps {
 }
 
 export function Sidebar({ currentTab, setCurrentTab, data }: SidebarProps) {
-  // Aggregate Stats
-  const totalApps = data?.applications.length ?? 0;
-  const interviewing = data?.applications.filter(
-    (a) => a.status.toLowerCase() === 'interview' || a.status.toLowerCase() === 'screening'
-  ).length ?? 0;
-  const offers = data?.applications.filter((a) => a.status.toLowerCase() === 'offer').length ?? 0;
-  const skillsCount = data?.skills.length ?? 0;
-
+  // Aggregate Stats (ContextOps metrics)
+  const totalDocs = data?.applications.length ?? 0 + (data?.skills.length ?? 0);
+  
   const stats = [
-    { label: 'Total Applications', value: totalApps, color: 'text-neon-indigo' },
-    { label: 'Active Pipeline', value: interviewing, color: 'text-neon-blue' },
-    { label: 'Offers Received', value: offers, color: 'text-emerald-400' },
-    { label: 'Registered Skills', value: skillsCount, color: 'text-neon-purple' },
+    { label: 'Bundle Size', value: `${totalDocs} docs`, color: 'text-neon-indigo' },
+    { label: 'Risk Level', value: 'Low', color: 'text-emerald-400' },
   ];
 
   const menuItems = [
-    { id: 'kanban', label: 'Kanban Board', icon: Briefcase },
-    { id: 'graph', label: 'Knowledge Graph', icon: Award },
-    { id: 'logs', label: 'Change History', icon: Activity },
-    { id: 'approvals', label: 'Approval Queue', icon: ShieldCheck },
-    { id: 'system', label: 'System Health', icon: ServerCog },
+    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { id: 'health', label: 'Bundle Health', icon: Activity },
+    { id: 'documents', label: 'Documents', icon: FileText },
+    { id: 'packs', label: 'Context Packs', icon: Package },
+    { id: 'graph', label: 'Graph & Impact', icon: Network },
+    { id: 'mcp', label: 'MCP Capabilities', icon: Wrench },
+    { id: 'approvals', label: 'Approvals', icon: ShieldCheck },
+    { id: 'audit', label: 'Audit Log', icon: ScrollText },
+    { id: 'evals', label: 'Evals', icon: LineChart },
+    { id: 'governance', label: 'Governance Policies', icon: Scale },
+    { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
   return (
@@ -41,10 +40,10 @@ export function Sidebar({ currentTab, setCurrentTab, data }: SidebarProps) {
       {/* Brand Header */}
       <div className="p-8 border-b border-dark-border">
         <h1 className="text-2xl font-bold bg-gradient-to-r from-neon-indigo via-neon-blue to-neon-purple bg-clip-text text-transparent tracking-tight">
-          OCF Orchestrator
+          ContextOps
         </h1>
         <p className="text-xs text-zinc-500 mt-1 uppercase tracking-widest">
-          Semantic Career Hub
+          Operator Console
         </p>
       </div>
 

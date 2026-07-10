@@ -52,7 +52,7 @@ describe('OKFDocumentFactory', () => {
     );
 
     expect(doc.frontmatter.type).toBe('Application');
-    expect(doc.frontmatter['status']).toBe('Applied');
+    expect(doc.frontmatter['applicationStatus']).toBe('Applied');
     expect(doc.frontmatter['company']).toBe('BigTech');
     expect(doc.frontmatter['position']).toBe('Staff Engineer');
     expect(doc.frontmatter['url']).toBe('https://careers.bigtech.com/12345');

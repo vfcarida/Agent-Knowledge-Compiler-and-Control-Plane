@@ -1,0 +1,29 @@
+name: Report Security Concern
+description: Report a governance, prompt injection, or capability bypass vulnerability.
+title: "[Security]: "
+labels: ["security", "critical"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If this is a critical zero-day that exposes active deployments to severe risk, please email the maintainers directly instead of opening a public issue.
+  - type: dropdown
+    id: threat-vector
+    attributes:
+      label: OWASP Top 10 Threat Vector
+      options:
+        - LLM01: Prompt Injection
+        - LLM02: Insecure Output Handling
+        - LLM06: Sensitive Information Disclosure
+        - LLM07: Insecure Plugin Design
+        - LLM08: Excessive Agency
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction Steps
+      description: How can an agent trigger this vulnerability?
+    validations:
+      required: true

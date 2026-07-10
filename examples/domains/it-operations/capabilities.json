@@ -1,0 +1,20 @@
+[
+  {
+    "name": "execute_runbook",
+    "version": "1.0.0",
+    "description": "Executes an automated runbook step for incident mitigation.",
+    "kind": "tool",
+    "riskLevel": "critical",
+    "sideEffectLevel": "external-write",
+    "requiredApproval": true
+  },
+  {
+    "name": "query_logs",
+    "version": "1.0.0",
+    "description": "Queries historical logs for the affected service.",
+    "kind": "tool",
+    "riskLevel": "medium",
+    "sideEffectLevel": "external-read",
+    "requiredApproval": false
+  }
+]

@@ -48,36 +48,77 @@ export const regulatedEnterprisePolicy: AgentPolicy = {
 
 import type { CapabilityManifest } from './capabilities.js';
 
-export function enforcePolicy(toolName: string, capabilities: CapabilityManifest[], policy?: AgentPolicy): void {
-  if (!policy) return; // Unrestricted if no policy
+export class PolicyEngine {
+  constructor(private policy: AgentPolicy) {}
 
-  // Check explicit block lists
-  if (policy.deniedTools.includes(toolName) || policy.deniedTools.includes('*')) {
-    throw new Error(`Policy Violation: Tool '${toolName}' is explicitly denied by policy '${policy.policyId}'.`);
+  /**
+   * Enforces NIST AI RMF and OWASP LLM controls dynamically
+   */
+  public validateExecution(toolName: string, capabilities: CapabilityManifest[], args: Record<string, any>): void {
+    // 1. Basic tool existence & blocklist checks
+    if (this.policy.deniedTools.includes(toolName) || this.policy.deniedTools.includes('*')) {
+      throw new Error(`[LLM06: Excessive Agency] Policy Violation: Tool '${toolName}' is explicitly denied by policy '${this.policy.policyId}'.`);
+    }
+
+    const capability = capabilities.find(c => c.name === toolName);
+    if (!capability) return;
+
+    // 2. Autonomy Level boundary checks
+    this.enforceAutonomyBoundaries(toolName, capability);
+
+    // 3. Payload inspection for OWASP Top 10 Risks
+    this.inspectPayload(toolName, args);
   }
 
-  // Check capabilities
-  const capability = capabilities.find(c => c.name === toolName);
-  if (!capability) return;
+  private enforceAutonomyBoundaries(toolName: string, capability: CapabilityManifest): void {
+    const { autonomyLevel } = this.policy;
+    const isWrite = capability.sideEffectLevel.includes('write') || capability.sideEffectLevel.includes('submit');
 
-  const { autonomyLevel } = policy;
-  const isWrite = capability.sideEffectLevel.includes('write') || capability.sideEffectLevel.includes('submit');
+    if (autonomyLevel === 'observe' && isWrite) {
+      throw new Error(`[LLM06: Excessive Agency] Policy Violation: Autonomy level 'observe' cannot execute write side-effect '${toolName}'.`);
+    }
 
-  if (autonomyLevel === 'observe') {
-    if (isWrite) {
-      throw new Error(`Policy Violation: Autonomy level 'observe' cannot execute write side-effect '${toolName}'.`);
+    if (autonomyLevel === 'advise') {
+      if (capability.sideEffectLevel === 'external-submit' || capability.sideEffectLevel === 'local-write' || capability.sideEffectLevel === 'external-write') {
+        throw new Error(`[LLM06: Excessive Agency] Policy Violation: Autonomy level 'advise' cannot execute '${capability.sideEffectLevel}' tool '${toolName}'.`);
+      }
     }
-  } else if (autonomyLevel === 'advise') {
-    if (capability.sideEffectLevel === 'external-submit' || capability.sideEffectLevel === 'local-write' || capability.sideEffectLevel === 'external-write') {
-      throw new Error(`Policy Violation: Autonomy level 'advise' cannot execute '${capability.sideEffectLevel}' tool '${toolName}'.`);
-    }
-  } else if (autonomyLevel === 'act-with-approval') {
-    // Requires an approval token (this is typically enforced inside the tool logic via ApprovalStore)
-    // But we can assert that if the tool requires approval, it MUST be in the approvalRequiredFor list or '*'.
-    if (capability.requiredApproval) {
-      const allowedToApprove = policy.approvalRequiredFor.includes(toolName) || policy.approvalRequiredFor.includes('*');
+
+    if (autonomyLevel === 'act-with-approval' && capability.requiredApproval) {
+      const allowedToApprove = this.policy.approvalRequiredFor.includes(toolName) || this.policy.approvalRequiredFor.includes('*');
       if (!allowedToApprove) {
-        throw new Error(`Policy Violation: Tool '${toolName}' requires approval, but policy '${policy.policyId}' does not whitelist it for approval-based execution.`);
+        throw new Error(`[LLM06: Excessive Agency] Policy Violation: Tool '${toolName}' requires approval, but policy '${this.policy.policyId}' does not whitelist it for approval-based execution.`);
+      }
+    }
+  }
+
+  private inspectPayload(toolName: string, args: Record<string, any>): void {
+    const payloadStr = JSON.stringify(args);
+
+    // [LLM01: Prompt Injection] Heuristic payload scanning
+    // A highly simplified mock of a WAF-like injection detector
+    const injectionPatterns = [
+      /ignore previous instructions/i,
+      /system prompt/i,
+      /you are now a/i,
+      /<\|im_start\|>/i
+    ];
+    for (const pattern of injectionPatterns) {
+      if (pattern.test(payloadStr)) {
+        throw new Error(`[LLM01: Prompt Injection] Policy Violation: Potential prompt injection payload detected in tool '${toolName}'. Execution halted.`);
+      }
+    }
+
+    // [LLM06: Sensitive Information Disclosure] PII Handling
+    if (this.policy.piiHandling === 'deny') {
+      const piiPatterns = [
+        /\b\d{3}-\d{2}-\d{4}\b/, // SSN format
+        /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/ // Basic email
+      ];
+      for (const pattern of piiPatterns) {
+        if (pattern.test(payloadStr)) {
+          throw new Error(`[LLM06: Sensitive Information] Policy Violation: PII detected in payload for tool '${toolName}' while policy dictates 'deny'.`);
+        }
       }
     }
   }

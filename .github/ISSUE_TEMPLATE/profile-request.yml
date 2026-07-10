@@ -1,0 +1,32 @@
+name: Request OKF Profile
+description: Request a new strictly typed Profile for a specific business domain.
+title: "[Profile]: "
+labels: ["enhancement", "profile"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for requesting a new Open Knowledge Format (OKF) Profile! 
+        Profiles define the Zod schema and mandatory fields for a specific type of knowledge.
+  - type: input
+    id: domain
+    attributes:
+      label: Target Domain
+      description: What industry or domain is this for? (e.g., Healthcare, IT Ops, Legal)
+      placeholder: e.g. IT Operations
+    validations:
+      required: true
+  - type: textarea
+    id: schemas
+    attributes:
+      label: Proposed Document Types
+      description: What types of documents would this profile validate? (e.g., Runbook, IncidentReport)
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Why is this needed?
+      description: Explain how agents struggle with this knowledge today without structured schemas.
+    validations:
+      required: true

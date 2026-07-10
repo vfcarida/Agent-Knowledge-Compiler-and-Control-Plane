@@ -1,0 +1,37 @@
+apiVersion: policy.ocf.dev/v1alpha1
+kind: PolicyCard
+metadata:
+  name: Strict Enterprise Governance
+  description: Highly restrictive policy for sensitive operations.
+  version: 1.0.0
+spec:
+  allowedAgents:
+    - "trusted-automation-agent"
+  allowedContextPacks:
+    - "compliance"
+    - "core-infrastructure"
+  allowedTools:
+    - "read_document"
+    - "list_documents"
+    - "search_knowledge"
+  forbiddenTools:
+    - "delete_document"
+    - "execute_command"
+  sideEffectRules:
+    read: audit
+    write: deny
+    submit: deny
+  approvalRequirements:
+    - "*"
+  piiHandling: deny
+  evidenceRequirements:
+    - "Full session recording"
+    - "JIRA Ticket ID"
+  mappings:
+    nist_ai_rmf:
+      - GOVERN 1.1
+      - GOVERN 2.2
+      - MEASURE 1.2
+    owasp_llm:
+      - LLM06: Excessive Agency
+      - LLM07: System Prompt Leakage

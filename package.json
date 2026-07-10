@@ -1,8 +1,8 @@
 {
-  "name": "agent-ready-knowledge-reference-architecture",
+  "name": "agent-knowledge-compiler-and-control-plane",
   "version": "0.1.0",
   "private": true,
-  "description": "Enterprise-grade reference architecture for building agent-ready knowledge bases using Open Knowledge Format (OKF) and Model Context Protocol (MCP).",
+  "description": "Agent Knowledge Compiler and Control Plane (AKCP). Compiles organizational knowledge into versioned, agent-consumable artifacts and controls how agents discover and act on them.",
   "author": "Vinicius Carida",
   "license": "MIT",
   "type": "module",

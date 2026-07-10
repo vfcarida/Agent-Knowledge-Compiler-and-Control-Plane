@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ShieldCheck, Check, Clock, AlertTriangle, XCircle, Key } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext.js';
 
 interface PendingApproval {
   token: string;
@@ -16,6 +17,7 @@ interface PendingApproval {
 }
 
 export function ApprovalQueue() {
+  const { user } = useAuth();
   const [approvals, setApprovals] = useState<PendingApproval[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,12 +54,16 @@ export function ApprovalQueue() {
   }, []);
 
   const handleApprove = async (token: string, jobUrl?: string) => {
+    if (!user) {
+      alert('You must be logged in to approve actions.');
+      return;
+    }
     setProcessing(token);
     try {
       const res = await fetch('/api/automation/approve', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ approvalToken: token, jobUrl, dryRun: false }),
+        body: JSON.stringify({ approvalToken: token, jobUrl, dryRun: false, approverIdentity: user.identity }),
       });
       const data = await res.json();
       if (data.isError || !res.ok) {
@@ -80,13 +86,17 @@ export function ApprovalQueue() {
 
   const handleRevoke = async (token: string) => {
     if (!confirm('Are you sure you want to revoke this approval token? The agent will not be able to execute this action.')) return;
+    if (!user) {
+      alert('You must be logged in to revoke actions.');
+      return;
+    }
     
     setProcessing(token);
     try {
       const res = await fetch('/api/automation/revoke', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ approvalToken: token }),
+        body: JSON.stringify({ approvalToken: token, approverIdentity: user.identity }),
       });
       const data = await res.json();
       if (data.isError || !res.ok) {
@@ -159,6 +169,18 @@ export function ApprovalQueue() {
                   <AlertTriangle className="w-3.5 h-3.5" />
                   {app.metadata?.sideEffectLevel || 'external-submit'}
                 </span>
+                
+                {/* Live vs Dry-Run Badge */}
+                {app.metadata?.dryRun ? (
+                  <span className="px-2.5 py-1 text-xs font-medium rounded-md bg-blue-500/20 text-blue-400 uppercase tracking-wider border border-blue-500/30">
+                    Simulation (Dry-Run)
+                  </span>
+                ) : (
+                  <span className="px-2.5 py-1 text-xs font-medium rounded-md bg-orange-500/20 text-orange-400 uppercase tracking-wider border border-orange-500/30 animate-pulse">
+                    LIVE ACTION
+                  </span>
+                )}
+
                 <span className="flex items-center gap-1.5 text-xs text-amber-400/80 font-medium ml-auto">
                   <Clock className="w-3.5 h-3.5" />
                   Expires in {Math.max(0, Math.round((app.expiresAt - Date.now()) / 1000))}s
@@ -182,6 +204,16 @@ export function ApprovalQueue() {
                 <code className="text-xs text-neon-blue font-mono bg-black/40 px-2 py-1 rounded truncate select-all">
                   {app.payloadHash || 'N/A'}
                 </code>
+                
+                {app.metadata?.payload && (
+                  <div className="mt-2 pt-2 border-t border-white/5">
+                    <span className="text-xs text-zinc-500 uppercase tracking-wider font-semibold block mb-2">Complete Payload Data</span>
+                    <pre className="text-[10px] text-zinc-400 font-mono bg-black/40 p-2 rounded overflow-x-auto max-h-32">
+                      {JSON.stringify(app.metadata.payload, null, 2)}
+                    </pre>
+                  </div>
+                )}
+                
                 <p className="text-[10px] text-zinc-500 mt-1 leading-relaxed">
                   This hash guarantees the agent cannot alter the data payload after this token is generated. Inspecting this hash matches the exact payload computed in the CLI or audit log.
                 </p>

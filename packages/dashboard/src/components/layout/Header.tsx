@@ -6,6 +6,7 @@
 import { useRef } from 'react';
 import { FolderOpen, AlertTriangle } from 'lucide-react';
 import type { CareerBundleData } from '../../types/career.js';
+import { useAuth } from '../../contexts/AuthContext.js';
 
 interface HeaderProps {
   data: CareerBundleData | null;
@@ -23,6 +24,7 @@ export function Header({
   loadFromDirectory,
 }: HeaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { user, login, logout } = useAuth();
 
   // Handle Directory Picker selection (Chrome/Edge/Opera supported)
   const handleDirectoryPicker = async () => {
@@ -107,6 +109,31 @@ export function Header({
           directory="true"
           multiple
         />
+
+        {/* Mock Auth UI */}
+        <div className="flex items-center gap-2 border-r border-dark-border pr-4 mr-2">
+          {user ? (
+            <div className="flex items-center gap-2">
+              <div className="text-right">
+                <p className="text-xs font-semibold text-zinc-200">{user.name}</p>
+                <p className="text-[10px] text-zinc-500">{user.identity}</p>
+              </div>
+              <button 
+                onClick={logout}
+                className="text-xs bg-dark-bg border border-dark-border px-3 py-1.5 rounded-md hover:bg-zinc-800 transition-colors"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <button 
+              onClick={() => login('admin@corp.com', 'Admin User', 'admin')}
+              className="text-xs bg-dark-border border border-zinc-700 px-3 py-1.5 rounded-md hover:bg-zinc-800 transition-colors text-zinc-300"
+            >
+              Simulate Login
+            </button>
+          )}
+        </div>
 
         <button
           onClick={handleDirectoryPicker}

@@ -10,7 +10,9 @@
     "evals": "node dist/index.js"
   },
   "dependencies": {
-    "@ocf/core": "workspace:*"
+    "@ocf/core": "workspace:*",
+    "@ocf/mcp-profile-server": "workspace:*",
+    "@ocf/mcp-automation-server": "workspace:*"
   },
   "devDependencies": {
     "typescript": "catalog:",

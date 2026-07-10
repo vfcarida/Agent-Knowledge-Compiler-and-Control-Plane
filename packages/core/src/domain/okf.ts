@@ -14,5 +14,11 @@ export const OKFFrontmatterSchema = z
     timestamp: z.string().optional(),
     schemaVersion: z.string().optional(),
     bundleVersion: z.string().optional(),
+    priority: z.enum(['low', 'medium', 'high', 'critical']).optional(),
+    owner: z.string().optional(),
+    lastReviewedAt: z.string().optional(),
+    reviewCadenceDays: z.number().int().positive().optional(),
+    status: z.enum(['active', 'stale', 'deprecated', 'archived']).optional(),
+    successor: z.string().optional(),
   })
   .passthrough();

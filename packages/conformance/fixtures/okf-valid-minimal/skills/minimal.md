@@ -1,0 +1,4 @@
+---
+type: Skill
+---
+# Minimal Skill

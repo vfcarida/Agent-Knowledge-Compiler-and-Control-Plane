@@ -67,7 +67,7 @@ const APPLICATION_CONTENT = [
   'company: BigTech',
   'position: Staff Engineer',
   'url: https://careers.bigtech.com/12345',
-  'status: Applied',
+  'applicationStatus: Applied',
   'platform: LinkedIn',
   '---',
   '',

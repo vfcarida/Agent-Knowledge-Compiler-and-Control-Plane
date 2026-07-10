@@ -1,0 +1,26 @@
+name: Submit Eval Scenario
+description: Add a new benchmark test to the Evals Harness to measure tool or context accuracy.
+title: "[Eval]: "
+labels: ["test", "evals", "good first issue"]
+body:
+  - type: textarea
+    id: scenario
+    attributes:
+      label: Scenario Description
+      description: What agent behavior are we testing? (e.g., "Agent avoids dangerous tool when constraints are present")
+    validations:
+      required: true
+  - type: textarea
+    id: baseline
+    attributes:
+      label: Baseline Metrics
+      description: How does an agent perform today WITHOUT ContextOps?
+    validations:
+      required: true
+  - type: textarea
+    id: treatment
+    attributes:
+      label: Expected Improvement
+      description: How should the metrics (Token Cost, Success Rate, Hallucination) improve with ContextOps?
+    validations:
+      required: true

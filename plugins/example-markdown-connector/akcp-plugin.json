@@ -1,0 +1,10 @@
+{
+  "akcpPluginVersion": "1.0.0",
+  "name": "example-markdown-connector",
+  "version": "0.1.0",
+  "description": "An example connector that reads markdown files.",
+  "type": "source-connector",
+  "permissions": ["fs:read"],
+  "entrypoint": "index.js",
+  "author": "AKCP Team"
+}

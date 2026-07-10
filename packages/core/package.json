@@ -24,6 +24,7 @@
     "@opentelemetry/auto-instrumentations-node": "^0.78.0",
     "@opentelemetry/sdk-node": "^0.220.0",
     "gray-matter": "^4.0.3",
+    "yaml": "^2.9.0",
     "zod": "catalog:"
   },
   "devDependencies": {

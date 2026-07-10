@@ -12,6 +12,7 @@ import { SoftwareProjectFrontmatterSchema } from './profiles/software-project.js
  * Profile Registry to dynamically resolve Zod schemas based on the target profile.
  */
 export const ProfileRegistry = {
+
   getProfileSchema(profileName: string): z.ZodTypeAny {
     switch (profileName.toLowerCase()) {
       case 'career':
