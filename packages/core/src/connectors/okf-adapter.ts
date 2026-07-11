@@ -7,15 +7,21 @@ import type {
   SourceDocument,
   NormalizedKnowledgeDocument,
   SourceAdapter,
-  SourceProvenanceRecord
+  SourceProvenanceRecord,
 } from "./types.js";
 
-function extractFrontmatter(content: string): { frontmatter: any, markdown: string } {
+function extractFrontmatter(content: string): {
+  frontmatter: any;
+  markdown: string;
+} {
   const frontmatterRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
   const match = content.match(frontmatterRegex);
   if (match) {
     try {
-      return { frontmatter: yaml.load(match[1] as string) || {}, markdown: (match[2] as string).trim() };
+      return {
+        frontmatter: yaml.load(match[1] as string) || {},
+        markdown: (match[2] as string).trim(),
+      };
     } catch (e) {
       return { frontmatter: {}, markdown: content };
     }
@@ -31,16 +37,28 @@ export class OkfAdapter implements SourceAdapter {
     try {
       const stats = await fs.promises.stat(inputPath);
       if (!stats.isDirectory()) {
-        return { isSupported: false, confidence: 0, reason: "Input must be a directory" };
+        return {
+          isSupported: false,
+          confidence: 0,
+          reason: "Input must be a directory",
+        };
       }
-      
+
       const files = await fs.promises.readdir(inputPath);
       const hasIndex = files.includes("index.md");
-      
+
       if (hasIndex) {
-        return { isSupported: true, confidence: 1.0, reason: "Directory contains OKF index.md" };
+        return {
+          isSupported: true,
+          confidence: 1.0,
+          reason: "Directory contains OKF index.md",
+        };
       }
-      return { isSupported: false, confidence: 0.5, reason: "No index.md found, but might be an incomplete OKF directory" };
+      return {
+        isSupported: false,
+        confidence: 0.5,
+        reason: "No index.md found, but might be an incomplete OKF directory",
+      };
     } catch (e: any) {
       return { isSupported: false, confidence: 0, reason: e.message };
     }
@@ -48,7 +66,7 @@ export class OkfAdapter implements SourceAdapter {
 
   async scan(inputPath: string): Promise<SourceDocument[]> {
     const documents: SourceDocument[] = [];
-    
+
     async function walk(dir: string) {
       const entries = await fs.promises.readdir(dir, { withFileTypes: true });
       for (const entry of entries) {
@@ -61,25 +79,29 @@ export class OkfAdapter implements SourceAdapter {
           documents.push({
             sourceUri: `file://${fullPath.replace(/\\/g, "/")}`,
             rawContent,
-            hash
+            hash,
           });
         }
       }
     }
-    
+
     await walk(inputPath);
     return documents;
   }
 
-  async normalize(document: SourceDocument): Promise<NormalizedKnowledgeDocument> {
+  async normalize(
+    document: SourceDocument,
+  ): Promise<NormalizedKnowledgeDocument> {
     const { frontmatter, markdown } = extractFrontmatter(document.rawContent);
-    
+
     // OKF specific normalizations
     if (!frontmatter.type) {
       frontmatter.type = "UnknownType";
     }
 
-    const targetDocumentId = frontmatter.id || createHash("md5").update(document.sourceUri).digest("hex");
+    const targetDocumentId =
+      frontmatter.id ||
+      createHash("md5").update(document.sourceUri).digest("hex");
 
     const provenance: SourceProvenanceRecord = {
       sourceUri: document.sourceUri,
@@ -88,14 +110,14 @@ export class OkfAdapter implements SourceAdapter {
       importedAt: new Date().toISOString(),
       adapterName: this.name,
       adapterVersion: this.version,
-      targetDocumentId
+      targetDocumentId,
     };
 
     return {
       type: frontmatter.type,
       frontmatter,
       markdown,
-      provenance
+      provenance,
     };
   }
 }

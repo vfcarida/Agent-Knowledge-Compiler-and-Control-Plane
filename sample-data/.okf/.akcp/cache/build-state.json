@@ -3,119 +3,119 @@
     "sourceHash": "ad863b2ac7598feaa6ac8db88f0cb6bbf48f7836b5c903ed9e539d20ae907100",
     "normalizedHash": "",
     "artifactHash": "../dummy",
-    "lastCompiledAt": "2026-07-10T20:10:51.323Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.530Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\applications\\2026-07-03-beta-inc.md": {
     "sourceHash": "172e26709e2c113d396c902bb9e0f5ab1bc3943c0ba03599736292f34f964004",
     "normalizedHash": "",
     "artifactHash": "../dummy",
-    "lastCompiledAt": "2026-07-10T20:10:51.326Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.533Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\applications\\index.md": {
     "sourceHash": "77b7f65ec67b390f45349bf425aa239d0415b05404cacdefe439269353ef91e8",
     "normalizedHash": "",
     "artifactHash": "../dummy",
-    "lastCompiledAt": "2026-07-10T20:10:51.327Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.534Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\certificates\\aws-solutions-architect.md": {
     "sourceHash": "622de7f7ced06ea16236019dd86dcd142d9dc6c6e321b7c76776d50bac330f53",
     "normalizedHash": "",
     "artifactHash": "../dummy",
-    "lastCompiledAt": "2026-07-10T20:10:51.328Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.535Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\certificates\\index.md": {
     "sourceHash": "d9072a662a429fa05a8e56e66fb6fc52c7f5b81e95c5453dad517c0d2f6675af",
     "normalizedHash": "",
     "artifactHash": "certificates\\index",
-    "lastCompiledAt": "2026-07-10T20:10:51.330Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.538Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\education\\computer-science-usp.md": {
     "sourceHash": "0eb602b49a9cb50fead65355fb1ebb881ffda6af68ddff9dd437efaefabc498b",
     "normalizedHash": "",
     "artifactHash": "../dummy",
-    "lastCompiledAt": "2026-07-10T20:10:51.331Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.539Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\education\\index.md": {
     "sourceHash": "48bff176c331c3e3fd4cd786537d1e48601a404159bc824d8b599b609febf687",
     "normalizedHash": "",
     "artifactHash": "education\\index",
-    "lastCompiledAt": "2026-07-10T20:10:51.332Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.540Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\experiences\\index.md": {
     "sourceHash": "dc5898f36f185e3c257e2bcfe82b9dc93ab8f28d2ed5655add156351da3d8116",
     "normalizedHash": "",
     "artifactHash": "../dummy",
-    "lastCompiledAt": "2026-07-10T20:10:51.332Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.540Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\experiences\\senior-dev-acme.md": {
     "sourceHash": "5bdea69cfcf49ff2ed276e258eaaaff762d4c7c9bfb511c0e4efc7ab09836937",
     "normalizedHash": "",
     "artifactHash": "../dummy",
-    "lastCompiledAt": "2026-07-10T20:10:51.333Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.541Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\index.md": {
     "sourceHash": "9cf3c2d9fe4525bf9dd5131a818e212572d55c7086e684db060b1bd768973d6a",
     "normalizedHash": "",
     "artifactHash": "../dummy",
-    "lastCompiledAt": "2026-07-10T20:10:51.334Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.542Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\log.md": {
     "sourceHash": "7c9e990ff309708efa26bfb80a8b04762b976b0d92dcd64c0622d1809d7c5ac1",
     "normalizedHash": "",
     "artifactHash": "../dummy",
-    "lastCompiledAt": "2026-07-10T20:10:51.334Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.542Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\preferences\\job-search.md": {
     "sourceHash": "53124aabdc7449a968b89bb8c22ff1c40173f9c62141817a9258a779aeb23a92",
     "normalizedHash": "",
     "artifactHash": "../dummy",
-    "lastCompiledAt": "2026-07-10T20:10:51.335Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.543Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\projects\\index.md": {
     "sourceHash": "684ffdbc038d59fa78bf23a4288f7dbdc299d787c306ff6bcdd606475f8b76b0",
     "normalizedHash": "",
     "artifactHash": "projects\\index",
-    "lastCompiledAt": "2026-07-10T20:10:51.335Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.543Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\projects\\open-career-format.md": {
     "sourceHash": "726f541b828de2f860923f0f04d72b8d2d897a1659d0d9f6469a0086775d7f2d",
     "normalizedHash": "",
     "artifactHash": "../dummy",
-    "lastCompiledAt": "2026-07-10T20:10:51.336Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.544Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\skills\\index.md": {
     "sourceHash": "070815c0ec32e117b92c358b8b936ccd585bc592ce17f0a667a18dc7a8e9c2ac",
     "normalizedHash": "",
     "artifactHash": "../dummy",
-    "lastCompiledAt": "2026-07-10T20:10:51.336Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.544Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\skills\\react.md": {
     "sourceHash": "99f605fedd94275b720d9460cabb377048492362b5fb58e3e20e9125e8dc793f",
     "normalizedHash": "",
     "artifactHash": "../dummy",
-    "lastCompiledAt": "2026-07-10T20:10:51.337Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.546Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\sample-data\\.okf\\skills\\typescript.md": {
     "sourceHash": "35462415dcefd7a65d2e2531d4475474e1ff1aa571ed1262a3cc63b5ae73b3c2",
     "normalizedHash": "",
     "artifactHash": "../dummy",
-    "lastCompiledAt": "2026-07-10T20:10:51.338Z",
+    "lastCompiledAt": "2026-07-11T00:27:35.546Z",
     "dependencies": []
   }
 }

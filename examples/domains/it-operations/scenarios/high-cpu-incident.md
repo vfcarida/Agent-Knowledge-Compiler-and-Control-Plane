@@ -3,6 +3,7 @@
 This scenario demonstrates the safety boundaries enforced by AKCP during an autonomous agent's incident response workflow.
 
 ## The Trigger
+
 An alert fires: `PaymentService - CPU Utilization > 90% for 5m`.
 
 ## The Agent Workflow
@@ -16,7 +17,7 @@ An alert fires: `PaymentService - CPU Utilization > 90% for 5m`.
    - MCP returns the `runbook-high-cpu` artifact.
 
 3. **Diagnosis**
-   - The agent reads the runbook: *If the load is anomalous and localized to one pod, restart the affected instance.*
+   - The agent reads the runbook: _If the load is anomalous and localized to one pod, restart the affected instance._
    - Agent uses sandboxed telemetry tools (not shown here) and confirms it's a localized anomaly on pod `pay-svc-xyz`.
 
 4. **Action Proposal**

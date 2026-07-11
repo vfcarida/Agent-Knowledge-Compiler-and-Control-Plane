@@ -11,7 +11,8 @@ Verify that the `akcp.yaml` is structurally sound.
 ```bash
 pnpm akcp config validate --file examples/domains/it-operations/akcp.yaml
 ```
-*Expected Output*: `[OK] Configuration is valid.`
+
+_Expected Output_: `[OK] Configuration is valid.`
 
 ## 2. Compile the Knowledge Graph
 
@@ -20,7 +21,8 @@ Compile the raw IT Operations knowledge (services, runbooks, incidents) into the
 ```bash
 pnpm akcp compile --bundle examples/domains/it-operations --target all --provenance
 ```
-*Expected Output*: Manifest written to `dist/akcp-manifest.json` along with `agent-knowledge-ir.json` and `mcp-resources.json`.
+
+_Expected Output_: Manifest written to `dist/akcp-manifest.json` along with `agent-knowledge-ir.json` and `mcp-resources.json`.
 
 ## 3. Inspect the Compiled Artifact
 
@@ -29,7 +31,8 @@ Review the generated cryptographic manifest to ensure all targets were built.
 ```bash
 pnpm akcp inspect-artifact examples/domains/it-operations/dist/akcp-manifest.json
 ```
-*Expected Output*: A list of targets (IR JSON, MCP resources, okf bundle, etc.) with their SHA hashes and byte sizes.
+
+_Expected Output_: A list of targets (IR JSON, MCP resources, okf bundle, etc.) with their SHA hashes and byte sizes.
 
 ## 4. Validate Policies
 
@@ -38,7 +41,8 @@ Ensure that the HITL policies (e.g., `restart_service.policy.yaml`) are correctl
 ```bash
 pnpm akcp policy validate examples/domains/it-operations/policies/restart_service.policy.yaml
 ```
-*Expected Output*: `[OK] Policy is structurally valid and well-formed.`
+
+_Expected Output_: `[OK] Policy is structurally valid and well-formed.`
 
 ## 5. Serve via MCP
 
@@ -47,7 +51,8 @@ Launch the local MCP Profile Server, mounting the compiled IT Operations context
 ```bash
 pnpm akcp serve:mcp examples/domains/it-operations --ir examples/domains/it-operations/dist/agent-knowledge-ir.json
 ```
-*Expected Behavior*: The MCP server starts and listens on standard input/output (stdio), ready to connect to Claude Desktop or any MCP-compatible agent client.
+
+_Expected Behavior_: The MCP server starts and listens on standard input/output (stdio), ready to connect to Claude Desktop or any MCP-compatible agent client.
 
 ## 6. Run Evaluations
 
@@ -56,4 +61,5 @@ Measure the operational readiness of the knowledge pack by running the IT Operat
 ```bash
 pnpm test -- --run
 ```
-*(Currently implemented as part of the core vitest runner).*
+
+_(Currently implemented as part of the core vitest runner)._

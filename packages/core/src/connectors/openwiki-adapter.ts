@@ -7,16 +7,22 @@ import type {
   SourceDocument,
   NormalizedKnowledgeDocument,
   SourceAdapter,
-  SourceProvenanceRecord
+  SourceProvenanceRecord,
 } from "./types.js";
 
 // Helper to check if it has YAML frontmatter
-function extractFrontmatter(content: string): { frontmatter: any, markdown: string } {
+function extractFrontmatter(content: string): {
+  frontmatter: any;
+  markdown: string;
+} {
   const frontmatterRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
   const match = content.match(frontmatterRegex);
   if (match) {
     try {
-      return { frontmatter: yaml.load(match[1] as string) || {}, markdown: (match[2] as string).trim() };
+      return {
+        frontmatter: yaml.load(match[1] as string) || {},
+        markdown: (match[2] as string).trim(),
+      };
     } catch (e) {
       return { frontmatter: {}, markdown: content };
     }
@@ -32,16 +38,28 @@ export class OpenWikiAdapter implements SourceAdapter {
     try {
       const stats = await fs.promises.stat(inputPath);
       if (!stats.isDirectory()) {
-        return { isSupported: false, confidence: 0, reason: "Input must be a directory" };
+        return {
+          isSupported: false,
+          confidence: 0,
+          reason: "Input must be a directory",
+        };
       }
       // Check for common openwiki markers (e.g. index.md, README.md, .github)
       const files = await fs.promises.readdir(inputPath);
-      const hasMarkdown = files.some(f => f.endsWith(".md"));
-      
+      const hasMarkdown = files.some((f) => f.endsWith(".md"));
+
       if (hasMarkdown) {
-        return { isSupported: true, confidence: 0.8, reason: "Directory contains Markdown files typical of OpenWiki" };
+        return {
+          isSupported: true,
+          confidence: 0.8,
+          reason: "Directory contains Markdown files typical of OpenWiki",
+        };
       }
-      return { isSupported: false, confidence: 0, reason: "No Markdown files found" };
+      return {
+        isSupported: false,
+        confidence: 0,
+        reason: "No Markdown files found",
+      };
     } catch (e: any) {
       return { isSupported: false, confidence: 0, reason: e.message };
     }
@@ -49,7 +67,7 @@ export class OpenWikiAdapter implements SourceAdapter {
 
   async scan(inputPath: string): Promise<SourceDocument[]> {
     const documents: SourceDocument[] = [];
-    
+
     async function walk(dir: string) {
       const entries = await fs.promises.readdir(dir, { withFileTypes: true });
       for (const entry of entries) {
@@ -62,25 +80,29 @@ export class OpenWikiAdapter implements SourceAdapter {
           documents.push({
             sourceUri: `file://${fullPath.replace(/\\/g, "/")}`,
             rawContent,
-            hash
+            hash,
           });
         }
       }
     }
-    
+
     await walk(inputPath);
     return documents;
   }
 
-  async normalize(document: SourceDocument): Promise<NormalizedKnowledgeDocument> {
+  async normalize(
+    document: SourceDocument,
+  ): Promise<NormalizedKnowledgeDocument> {
     const { frontmatter, markdown } = extractFrontmatter(document.rawContent);
-    
+
     // Fallback logic for Document type
     if (!frontmatter.type) {
       frontmatter.type = "Document";
     }
 
-    const targetDocumentId = frontmatter.id || createHash("md5").update(document.sourceUri).digest("hex");
+    const targetDocumentId =
+      frontmatter.id ||
+      createHash("md5").update(document.sourceUri).digest("hex");
 
     const provenance: SourceProvenanceRecord = {
       sourceUri: document.sourceUri,
@@ -89,14 +111,14 @@ export class OpenWikiAdapter implements SourceAdapter {
       importedAt: new Date().toISOString(),
       adapterName: this.name,
       adapterVersion: this.version,
-      targetDocumentId
+      targetDocumentId,
     };
 
     return {
       type: frontmatter.type,
       frontmatter,
       markdown,
-      provenance
+      provenance,
     };
   }
 }

@@ -27,7 +27,7 @@ export type NormalizedKnowledgeDocument = {
 export interface SourceAdapter {
   name: string;
   version: string;
-  
+
   detect(inputPath: string): Promise<DetectionResult>;
   scan(inputPath: string): Promise<SourceDocument[]>;
   normalize(document: SourceDocument): Promise<NormalizedKnowledgeDocument>;
@@ -59,6 +59,7 @@ export type ImportReport = {
 ```
 
 ## Provenance Tracking
+
 `ProvenanceRecord` ensures a cryptographic trail from the original source file to the normalized IR representation.
 
 ```ts

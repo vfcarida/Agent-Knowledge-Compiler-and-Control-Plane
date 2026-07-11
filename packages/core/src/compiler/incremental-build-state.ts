@@ -16,7 +16,12 @@ export class IncrementalCompiler {
   private state: BuildStateCache = {};
 
   constructor(workspaceDir: string) {
-    this.stateFile = path.join(workspaceDir, ".akcp", "cache", "build-state.json");
+    this.stateFile = path.join(
+      workspaceDir,
+      ".akcp",
+      "cache",
+      "build-state.json",
+    );
     this.loadState();
   }
 
@@ -37,7 +42,11 @@ export class IncrementalCompiler {
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
-      fs.writeFileSync(this.stateFile, JSON.stringify(this.state, null, 2), "utf-8");
+      fs.writeFileSync(
+        this.stateFile,
+        JSON.stringify(this.state, null, 2),
+        "utf-8",
+      );
     } catch (e) {
       console.warn("[WARN] Failed to save incremental build state.", e);
     }
@@ -49,13 +58,18 @@ export class IncrementalCompiler {
     return cached.sourceHash !== currentHash;
   }
 
-  public updateState(fileUri: string, currentHash: string, artifactHash: string, dependencies: string[] = []) {
+  public updateState(
+    fileUri: string,
+    currentHash: string,
+    artifactHash: string,
+    dependencies: string[] = [],
+  ) {
     this.state[fileUri] = {
       sourceHash: currentHash,
       normalizedHash: "", // reserved for mid-step hashing
       artifactHash,
       lastCompiledAt: new Date().toISOString(),
-      dependencies
+      dependencies,
     };
   }
 

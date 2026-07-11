@@ -1,0 +1,44 @@
+{
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\auth-service.md": {
+    "sourceHash": "863ccf6ad5b2b466377f47cefff2b02875d5bc48b2b186cd8a24fc8bff3d7b9f",
+    "normalizedHash": "",
+    "artifactHash": "../dummy",
+    "lastCompiledAt": "2026-07-11T00:27:24.013Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\payment-service.md": {
+    "sourceHash": "1043e32f6296e6d08193468d9a46bbac0ce5b76e21d6497e867075924d4aaf13",
+    "normalizedHash": "",
+    "artifactHash": "../dummy",
+    "lastCompiledAt": "2026-07-11T00:27:24.014Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\runbooks\\failed-deploy.md": {
+    "sourceHash": "30d762189d5276b8f6f15736cf83415c17aa7f31309a11214319ec535c29d13e",
+    "normalizedHash": "",
+    "artifactHash": "../dummy",
+    "lastCompiledAt": "2026-07-11T00:27:24.014Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\runbooks\\high-cpu.md": {
+    "sourceHash": "8fb5452ca9f6f27956087a60f1bf3be6215a672469bedb2894b8715539c85a02",
+    "normalizedHash": "",
+    "artifactHash": "../dummy",
+    "lastCompiledAt": "2026-07-11T00:27:24.015Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\incidents\\p1-procedure.md": {
+    "sourceHash": "381b1fbafb907d2faea5884eec10734e26cef2fedf4a873c80ba1af8bd624ae8",
+    "normalizedHash": "",
+    "artifactHash": "../dummy",
+    "lastCompiledAt": "2026-07-11T00:27:24.015Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\policies\\slo-payment.md": {
+    "sourceHash": "0f2681af3c1e3d9e60cbde077e9f8f36e1bf6b300dd45c17af08251fdb59b06c",
+    "normalizedHash": "",
+    "artifactHash": "../dummy",
+    "lastCompiledAt": "2026-07-11T00:27:24.015Z",
+    "dependencies": []
+  }
+}

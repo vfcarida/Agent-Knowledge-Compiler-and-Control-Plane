@@ -37,31 +37,39 @@ export async function buildKnowledgeIR(
 
   for (const sourceConfig of sourcesToIngest) {
     let items: RawKnowledgeItem[] = [];
-    switch (sourceConfig.type) {
+    const resolvedConfig = { ...sourceConfig };
+    if (resolvedConfig.path) {
+      resolvedConfig.path = path.resolve(bundlePath, resolvedConfig.path);
+    }
+
+    switch (resolvedConfig.type) {
       case "okf-directory":
-        items = await new OKFDirectoryConnector(fsAdapter).ingest(sourceConfig);
+        items = await new OKFDirectoryConnector(fsAdapter).ingest(
+          resolvedConfig,
+        );
         break;
       case "markdown-directory":
         items = await new MarkdownDirectoryConnector(fsAdapter).ingest(
-          sourceConfig,
+          resolvedConfig,
         );
         break;
       case "openwiki":
-        items = await new OpenWikiConnector(fsAdapter).ingest(sourceConfig);
+        items = await new OpenWikiConnector(fsAdapter).ingest(resolvedConfig);
         break;
       case "openapi":
-        items = await new OpenApiConnector(fsAdapter).ingest(sourceConfig);
+        items = await new OpenApiConnector(fsAdapter).ingest(resolvedConfig);
         break;
       default:
         console.warn(
-          `[WARN] Unknown source type '${sourceConfig.type}', skipping.`,
+          `[WARN] Unknown source type '${resolvedConfig.type}', skipping.`,
         );
     }
     allRawItems.push(...items);
   }
 
   // Attempt to load previous IR for incremental build
-  const { IncrementalCompiler } = await import("../compiler/incremental-build-state.js");
+  const { IncrementalCompiler } =
+    await import("../compiler/incremental-build-state.js");
   const incrementalCompiler = new IncrementalCompiler(bundlePath);
 
   let previousIr: AgentKnowledgeIR | null = null;
@@ -80,12 +88,16 @@ export async function buildKnowledgeIR(
   const concepts: IRConcept[] = allRawItems.map((item) => {
     sourceHashes[item.sourceUri] = item.contentHash;
 
-    if (!incrementalCompiler.shouldCompile(item.sourceUri, item.contentHash) && previousIr) {
+    if (
+      !incrementalCompiler.shouldCompile(item.sourceUri, item.contentHash) &&
+      previousIr
+    ) {
       const prevConcept = previousIr.concepts.find(
         (c) =>
           c.source.filePath === item.sourceUri ||
           c.source.filePath === item.metadata?.relativePath ||
-          c.source.filePath === item.metadata?.relativePath?.replace(/\\/g, "/"),
+          c.source.filePath ===
+            item.metadata?.relativePath?.replace(/\\/g, "/"),
       );
       if (prevConcept) {
         skippedCount++;
@@ -94,7 +106,11 @@ export async function buildKnowledgeIR(
     }
 
     const concept = normalizeRawItem(item);
-    incrementalCompiler.updateState(item.sourceUri, item.contentHash, concept.conceptId);
+    incrementalCompiler.updateState(
+      item.sourceUri,
+      item.contentHash,
+      concept.conceptId,
+    );
 
     // Evaluate Lifecycle Freshness
     concept.status = Freshness.getEffectiveStatus(concept.frontmatter);

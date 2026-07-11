@@ -3,11 +3,13 @@
 This document outlines the release process for the Agent Knowledge Compiler and Control Plane (AKCP).
 
 ## Current Release Status
-The repository is currently in an **internal development** phase. Many core packages are marked as `"private": true` and are **not** published to the public NPM registry. 
+
+The repository is currently in an **internal development** phase. Many core packages are marked as `"private": true` and are **not** published to the public NPM registry.
 
 While the CI/CD pipeline contains a `.github/workflows/release.yml` file, it currently acts as a **draft/manual** mechanism that simply compiles the code and generates a GitHub Release tag. **It does not perform an automated `npm publish`.**
 
 ## Preparing for Public Release
+
 When the project matures to a state where public distribution is required, the following steps must be taken to harden the release pipeline:
 
 1. **Remove `private: true`**:

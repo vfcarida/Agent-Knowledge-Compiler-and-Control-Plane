@@ -13,5 +13,6 @@ tier: 1
 The Auth Service manages JWT issuance, validation, and user sessions.
 
 ## Architecture
+
 - Written in Rust for high performance.
 - Uses Redis for session caching.
