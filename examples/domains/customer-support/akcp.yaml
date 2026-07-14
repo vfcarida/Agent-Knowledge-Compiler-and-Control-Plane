@@ -1,0 +1,34 @@
+compile:
+  profile: "customer-support"
+
+  sources:
+    - type: okf-directory
+      path: ./policies
+    - type: okf-directory
+      path: ./macros
+    - type: okf-directory
+      path: ./knowledge-base
+
+  targets:
+    - type: context-pack
+      out: dist/agent-knowledge-ir.json
+    - type: mcp-resources
+      out: dist/mcp-resources.json
+    - type: openwiki
+      out: dist/openwiki
+    - type: dashboard-metadata
+      out: dist/dashboard-meta.json
+
+controlPlane:
+  policies:
+    disableDangerousTools: true
+    requireApprovalFor:
+      - issue_refund
+      - delete_customer_data
+    disableInLogs:
+      - "ssn"
+      - "credit_card"
+      - "password"
+      - "auth_token"
+      - "email"
+      - "phone_number"

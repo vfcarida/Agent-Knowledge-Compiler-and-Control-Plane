@@ -1,0 +1,44 @@
+{
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\policies\\pii-policy.md": {
+    "sourceHash": "68ee4a9623efd63fdf3c8cc31e316691580e66edd5c2ab863028184174636a74",
+    "normalizedHash": "",
+    "artifactHash": "policies/pii-policy",
+    "lastCompiledAt": "2026-07-14T20:18:22.356Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\policies\\refund-policy.md": {
+    "sourceHash": "d2a337bac4635b99aeabb616f4840965e51dfebe5f8a07df1096ceab1c8099a3",
+    "normalizedHash": "",
+    "artifactHash": "policies/refund-policy",
+    "lastCompiledAt": "2026-07-14T20:18:22.356Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\macros\\delete-customer-data.md": {
+    "sourceHash": "27c9626571904ab9d562be4d10607224ca589d52cfe0e1f917bed03167facdcd",
+    "normalizedHash": "",
+    "artifactHash": "macros/delete-customer-data",
+    "lastCompiledAt": "2026-07-14T20:18:22.355Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\knowledge-base\\faq-billing.md": {
+    "sourceHash": "a7ce20d6fd501e03ad1c25e8e11f98d27121fca4cad3911b45a5d0ccb7086207",
+    "normalizedHash": "",
+    "artifactHash": "knowledge-base/faq-billing",
+    "lastCompiledAt": "2026-07-14T20:18:22.354Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\README.md": {
+    "sourceHash": "770404069684a6d2f45a4deb73376bfe380cbe784d77c40612151fb522c6350a",
+    "normalizedHash": "",
+    "artifactHash": "README",
+    "lastCompiledAt": "2026-07-14T20:18:22.353Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\WALKTHROUGH.md": {
+    "sourceHash": "dae4a202b8370396f38164464835cffae0853977bb4ecad51825ca19c8c8def8",
+    "normalizedHash": "",
+    "artifactHash": "WALKTHROUGH",
+    "lastCompiledAt": "2026-07-14T20:18:22.353Z",
+    "dependencies": []
+  }
+}
