@@ -74,6 +74,17 @@ Look for issues labelled `good first issue`. The easiest entry points are:
 
 ---
 
+## Contribution Guides
+
+For detailed instructions on contributing specific components, please read our dedicated guides:
+- **[Domain Adapters](docs/contributing/domain-adapters.md)**: How to propose and build a new flagship domain.
+- **[Compile Targets](docs/contributing/compile-targets.md)**: How to add a new build-time output target.
+- **[Security Review](docs/contributing/security-review.md)**: How to navigate the threat model and security review for core Engine/Control Plane changes.
+
+For release policies, SemVer, and compatibility, see the [Release Policy](docs/governance/release-policy.md).
+
+---
+
 ## Community Standards
 
 All contributors must follow our [Code of Conduct](CODE_OF_CONDUCT.md). We are committed to building an inclusive, respectful community. We strictly adhere to NIST AI RMF and OWASP LLM Top 10 guidelines in all technical decisions.

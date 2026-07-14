@@ -155,9 +155,16 @@ For evaluation frameworks, see the [Evals Documentation](docs/testing/evals.md).
 
 See the [Community Roadmap](docs/community/roadmap.md).
 
-## Contributing
+## Contributing & Community
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for code-level guidelines.
+AKCP is an open specification and ecosystem. We actively welcome community contributions, particularly:
+- **New Domain Profiles**: specialized OKF mappings for new industries.
+- **Compile Targets**: exporters for new vector databases or doc formats.
+- **Connectors**: plugins to sync knowledge from external systems.
+- **Policy Cards**: governance templates for specific compliance frameworks.
+- **Eval Suites & Conformance Tests**: ensuring safety and standards.
+
+To get started, please read [CONTRIBUTING.md](CONTRIBUTING.md) and review our [Governance and Specification Process](docs/governance/spec-governance.md).
 
 ## Backwards Compatibility & Migration
 

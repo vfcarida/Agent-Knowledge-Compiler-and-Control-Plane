@@ -36,7 +36,14 @@ body:
   - type: input
     id: version
     attributes:
-      label: Package / Version
-      description: Which package and version are you running? (e.g. @akcp/mcp-server v0.1.0)
+      label: AKCP CLI / Package Version
+      description: Which version are you running? (e.g. akcp v0.1.0)
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      description: What OS are you running? (e.g. macOS 14.1, Windows 11)
     validations:
       required: true
