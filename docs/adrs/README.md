@@ -1,6 +1,6 @@
 # Architectural Decision Records (ADRs)
 
-While the [RFC Process](../rfcs/README.md) governs changes to the public standard, protocols, and schemas, Architectural Decision Records (ADRs) are used to document **internal engineering decisions**.
+While the [RFC Process](../governance/rfc-process.md) governs changes to the public standard, protocols, and schemas, Architectural Decision Records (ADRs) are used to document **internal engineering decisions**.
 
 ## When to use an ADR
 

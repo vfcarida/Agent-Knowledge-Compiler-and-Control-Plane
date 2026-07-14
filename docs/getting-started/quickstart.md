@@ -37,6 +37,6 @@ pnpm akcp serve mcp --profile career
 
 ## Next Steps
 
-- Explore the [Enterprise Domain Adapters](enterprise/domain-adapter-guide.md).
-- Learn about [Policy Cards](../reference/policy-cards.md).
+- Explore the [Enterprise Domain Adapters](../guides/create-domain-adapter.md).
+- Learn about [Policy Cards](../specs/policy-cards.md).
 - Dig into [MCP Security](../security/mcp-security.md).

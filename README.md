@@ -41,17 +41,17 @@ flowchart LR
 ## Compiler Pipeline
 
 The AKCP compiler treats organizational knowledge like source code:
-1. **Source**: Knowledge is structured using [OKF (Open Knowledge Format)](docs/integrations/okf.md).
-2. **IR**: It parses into the [Agent Knowledge IR (AK-IR)](docs/reference/agent-knowledge-ir.md) for AST-level validation and linkage.
+1. **Source**: Knowledge is structured using [OKF (Open Knowledge Format)](docs/concepts/okf.md).
+2. **IR**: It parses into the [Agent Knowledge IR (AK-IR)](docs/concepts/ak-ir.md) for AST-level validation and linkage.
 3. **Target**: It generates optimized outputs via [Compile Targets](docs/reference/compile-targets.md) tailored for different agents and systems.
 
 ## Control Plane Model
 
 At runtime, the Control Plane ensures safe agent execution:
 1. **Capability Registry**: Maps tools and resources.
-2. **Policy Cards**: Define strict constraints (e.g., [Policy Cards Spec](docs/reference/policy-cards.md)).
+2. **Policy Cards**: Define strict constraints (e.g., [Policy Cards Spec](docs/specs/policy-cards.md)).
 3. **Approvals**: Pauses execution for Human-In-The-Loop confirmation.
-4. **Telemetry & Audit**: Logs every token and action for [Audit Evidence](docs/observability/telemetry.md).
+4. **Telemetry & Audit**: Logs every token and action for [Audit Evidence](docs/concepts/control-plane.md).
 
 ## Flagship Domains
 
@@ -108,7 +108,7 @@ The `akcp` CLI manages your knowledge bundles:
 | `akcp validate`  | Validate bundle/spec/config            | `akcp validate --bundle examples/career`            |
 | `akcp serve mcp` | Serve compiled artifacts through MCP   | `akcp serve mcp --profile career`                   |
 
-For full details, see [CLI Usage](docs/cli/usage.md).
+For full details, see [CLI Usage](docs/reference/cli.md).
 
 ## Repository Structure
 
@@ -122,16 +122,16 @@ For full details, see [CLI Usage](docs/cli/usage.md).
 ## Specs and Standards
 
 AKCP relies on Spec-Driven Development:
-- [Agent Knowledge IR (AK-IR)](docs/reference/agent-knowledge-ir.md)
-- [AKCP Configuration (`akcp.yaml`)](docs/reference/akcp-yaml.md)
+- [Agent Knowledge IR (AK-IR)](docs/concepts/ak-ir.md)
+- [AKCP Configuration (`akcp.yaml`)](docs/specs/akcp-yaml.md)
 - [Compile Targets & Manifests](docs/reference/compile-targets.md)
-- [Policy Cards](docs/reference/policy-cards.md)
-- [Conformance Specification](docs/reference/conformance.md)
+- [Policy Cards](docs/specs/policy-cards.md)
+- [Conformance Specification](docs/specs/conformance.md)
 
 ## MCP and OKF Compatibility
 
-- AKCP natively supports the Model Context Protocol. See [MCP Security](docs/security/mcp-security.md) and [Tool Contracts](docs/reference/mcp-tool-contracts.md).
-- AKCP acts as the orchestrator for [Open Knowledge Format (OKF)](docs/integrations/okf.md).
+- AKCP natively supports the Model Context Protocol. See [MCP Security](docs/security/mcp-security.md) and [Tool Contracts](docs/specs/mcp-tool-contracts.md).
+- AKCP acts as the orchestrator for [Open Knowledge Format (OKF)](docs/concepts/okf.md).
 
 ## Security and Governance
 
@@ -149,11 +149,11 @@ pnpm test -- --run
 pnpm check:docs
 pnpm check:links
 ```
-For evaluation frameworks, see the [Evals Documentation](docs/testing/evals.md).
+For evaluation frameworks, see the [Evals Documentation](docs/guides/testing.md).
 
 ## Roadmap
 
-See the [Community Roadmap](docs/community/roadmap.md).
+See the [Community Roadmap](docs/governance/roadmap.md).
 
 ## Contributing & Community
 

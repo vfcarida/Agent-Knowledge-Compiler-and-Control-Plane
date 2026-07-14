@@ -47,4 +47,4 @@ To safely deploy Customer Support agents, AKCP will enforce the following contro
 - **Tenant isolation in enterprise settings:** Ensuring data from one customer cannot leak into another's context.
 
 ---
-_For the roadmap and implementation phases, please refer to the [Product Roadmap](../product/roadmap.md)._
+_For the roadmap and implementation phases, please refer to the [Product Roadmap](../governance/roadmap.md)._

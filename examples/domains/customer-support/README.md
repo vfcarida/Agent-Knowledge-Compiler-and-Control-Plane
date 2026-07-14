@@ -15,4 +15,4 @@ Customer Support will be the enterprise flagship demonstrating policy-aware, pri
 
 ## Roadmap
 
-This domain is slated for implementation in Phase 4 of the AKCP roadmap. For architectural details and the planned domain model, please see the [Customer Support Architecture](../../../docs/architecture/customer-support.md) document.
+This domain is slated for implementation in Phase 4 of the AKCP roadmap. For architectural details and the planned domain model, please see the [Customer Support Architecture](../../../docs/walkthroughs/customer-support-planned.md) document.

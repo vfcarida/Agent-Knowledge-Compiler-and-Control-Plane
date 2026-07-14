@@ -15,7 +15,7 @@ It is designed to be fully functional without an LLM (relying purely on strict s
 
 ## Commands
 
-See [docs/cli/usage.md](../cli/usage.md) and [docs/cli/command-inventory.md](../cli/command-inventory.md) for a complete list of all 22 implemented commands. Below are the core operational commands defined by this specification.
+See [docs/cli/usage.md](../reference/cli.md) and [docs/cli/command-inventory.md](../reference/cli.md) for a complete list of all 22 implemented commands. Below are the core operational commands defined by this specification.
 
 ### `init [directory]`
 

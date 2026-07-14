@@ -1,4 +1,18 @@
-# MCP Security and Hardening
+# MCP Security and Threat Model
+
+This document outlines the security architecture for the Agent Knowledge Compiler and Control Plane (AKCP) when exposing Model Context Protocol (MCP) capabilities to autonomous agents.
+
+```mermaid
+flowchart TD
+    A[Agent Action] --> B[MCP Gateway Route]
+    B --> C{Risk Level?}
+    C -->|LOW| D[Execute Directly]
+    C -->|MEDIUM| E[Audit & Rate Limit]
+    E --> D
+    C -->|HIGH| F{Approved?}
+    F -->|Yes| D
+    F -->|No| G[Block & Notify Human]
+```
 
 AKCP provides a highly robust, governed Model Context Protocol (MCP) layer. Security is built-in at both the schema and runtime levels.
 

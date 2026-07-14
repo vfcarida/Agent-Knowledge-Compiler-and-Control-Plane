@@ -1,5 +1,18 @@
 # The AKCP Compiler Pipeline
 
+The Compiler Pipeline is the heart of AKCP. It translates raw, human-authored documents into deterministic artifacts that AI agents can consume.
+
+```mermaid
+flowchart TD
+    A[Knowledge Sources] --> B[Connectors]
+    B --> C[OKF Bundles]
+    C --> D[AK-IR Normalization]
+    D --> E[Policy & Provenance]
+    E --> F[Compiler Targets]
+    F --> G[MCP Resources]
+    F --> H[Context Packs]
+```
+
 AKCP transforms OKF knowledge sources into agent-ready artifacts through a deterministic 10-step pipeline.
 
 ## 1. Read Sources

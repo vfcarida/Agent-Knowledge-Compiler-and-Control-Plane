@@ -89,7 +89,7 @@ pnpm akcp inspect examples/domains/it-operations/dist/agent-knowledge-ir.json
 
 ### 4. Review the Walkthrough
 
-See [docs/walkthroughs/it-ops.md](../../docs/walkthroughs/it-ops.md) for the full end-to-end tutorial including:
+See [docs/walkthroughs/it-ops.md](../../../docs/walkthroughs/it-ops.md) for the full end-to-end tutorial including:
 
 - Starting the MCP Profile Server
 - Simulating an incident triage session

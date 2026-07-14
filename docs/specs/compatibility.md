@@ -26,7 +26,7 @@ The following changes are **breaking** and require a MAJOR version bump:
 
 Any breaking change MUST be accompanied by:
 
-1. An approved [RFC](../rfcs/README.md).
+1. An approved [RFC](../governance/rfc-process.md).
 2. A CLI migration path (e.g., `akcp migrate --to v2`).
 
 ## 3. Deprecation Timeline

@@ -2,6 +2,15 @@
 
 Domain Adapters are pre-configured bundles of OKF schemas, policies, and sample data that demonstrate how AKCP operates in a specific industry or use case (e.g., IT Operations, Customer Support, Legal Discovery).
 
+```mermaid
+flowchart TD
+    A[Domain Adapter] --> B[Zod Schemas]
+    A --> C[Sample OKF Documents]
+    A --> D[.policy.yaml Files]
+    A --> E[capabilities.json]
+    A --> F[Evals Dataset]
+```
+
 ## How to add a new Flagship Domain
 
 1. **Open an Issue:** Start by proposing the domain using the `Domain Adapter Proposal` issue template. We want to ensure it highlights a unique capability of AKCP.

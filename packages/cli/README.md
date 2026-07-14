@@ -32,4 +32,5 @@ akcp conformance run
 akcp docs doctor
 ```
 
-For full documentation, see [CLI Usage](../../docs/cli/usage.md).
+This is the main entry point for the Agent Knowledge Compiler and Control Plane (AKCP).
+For full usage documentation, see [CLI Reference](../../docs/reference/cli.md).

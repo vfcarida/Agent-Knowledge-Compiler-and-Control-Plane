@@ -15,11 +15,25 @@ To bypass this integration debt, AKCP integrates two core industry standards:
 
 ### 1.1 The Practical Materialization: Agent Knowledge Compiler and Control Plane (AKCP)
 
-While the combined pattern of OKF and MCP is vertical-agnostic (applicable to finance, medical records, or IT operations), the **Agent Knowledge Compiler and Control Plane (AKCP)** serves as the reference implementation. AKCP maps a candidate's complete professional journey, including skills, experiences, target job preferences, and application funnels, allowing autonomous agents to evaluate vacancies, tailor resumes, and execute browser automation securely.
+# The Control Plane
+
+The Control Plane intercepts all agent actions before they hit the underlying systems, enforcing policies, acquiring human approvals, and logging evidence.
+
+```mermaid
+flowchart LR
+    A[Agent] -->|Requests Tool| B[MCP Gateway]
+    B --> C{Policy Evaluator}
+    C -->|Blocked| D[Reject]
+    C -->|Requires HITL| E[Approval Store]
+    C -->|Allowed| F[Execute Capability]
+    F --> G[Audit Log]
+```
+
+While the combined pattern of OKF and MCP is vertical-agnostic, the **Agent Knowledge Compiler and Control Plane (AKCP)** serves as the reference implementation. AKCP compiles organizational knowledge into governed artifacts, allowing autonomous agents to act on that knowledge safely.
 
 ---
 
-## 🔌 2. Technical Deep Dive: Model Context Protocol (MCP)
+## 2. Core Pillars of the Control Plane: Model Context Protocol (MCP)
 
 MCP shifts integration responsibilities away from the core orchestrator application into modular, independent server instances.
 

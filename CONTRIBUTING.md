@@ -10,7 +10,7 @@ The project is organized into the following workstreams. Pick the one that match
 | ----------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
 | **compiler**      | The core compilation pipeline: OKF parsing, IR construction, emission targets.  | Add a new output target (e.g., `llms-txt`)                                           |
 | **control-plane** | MCP Gateway, Policy evaluation, HITL approvals, Audit logging.                  | Add a new rule type to the Policy Card evaluator                                     |
-| **connectors**    | Plugins that pull knowledge from external systems (Notion, Confluence, GitHub). | See [How to Contribute a Connector](docs/community/how-to-contribute-a-connector.md) |
+| **connectors**    | Plugins that pull knowledge from external systems (Notion, Confluence, GitHub). | See [How to Contribute a Connector](docs/guides/create-connector.md) |
 | **policies**      | Policy Pack authoring, governance templates, NIST AI RMF mappings.              | Author a new governance policy template                                              |
 | **evals**         | Evaluation datasets, grounding benchmarks, adversarial scenarios.               | Add a prompt injection eval scenario                                                 |
 | **docs**          | Technical documentation, spec improvements, tutorials, examples.                | Improve a spec section with a concrete example                                       |
@@ -36,7 +36,7 @@ The project is organized into the following workstreams. Pick the one that match
 
 - **Small, iterative PRs.** A single PR should do one thing. Large monolithic PRs will be rejected.
 - **Tests are mandatory.** All changes to `packages/core` or `packages/cli` require corresponding unit tests. Coverage must not decrease.
-- **Spec changes require an RFC.** Any normative change to `spec/` requires a formal RFC. See [docs/rfcs/README.md](docs/rfcs/README.md).
+- **Spec changes require an RFC.** Any normative change to `spec/` requires a formal RFC. See [docs/rfcs/README.md](docs/governance/rfc-process.md).
 - **Conventional Commits.** PR titles and commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/). Examples: `feat: add eval-dataset target`, `fix: correct policy deny logic`, `docs: improve IR spec examples`.
 - **Do not credit AI in commits.** Commit messages must read as standard developer-authored notes.
 
@@ -77,9 +77,9 @@ Look for issues labelled `good first issue`. The easiest entry points are:
 ## Contribution Guides
 
 For detailed instructions on contributing specific components, please read our dedicated guides:
-- **[Domain Adapters](docs/contributing/domain-adapters.md)**: How to propose and build a new flagship domain.
-- **[Compile Targets](docs/contributing/compile-targets.md)**: How to add a new build-time output target.
-- **[Security Review](docs/contributing/security-review.md)**: How to navigate the threat model and security review for core Engine/Control Plane changes.
+- **[Domain Adapters](docs/guides/create-domain-adapter.md)**: How to propose and build a new flagship domain.
+- **[Compile Targets](docs/guides/create-compile-target.md)**: How to add a new build-time output target.
+- **[Security Review](docs/security/security-review.md)**: How to navigate the threat model and security review for core Engine/Control Plane changes.
 
 For release policies, SemVer, and compatibility, see the [Release Policy](docs/governance/release-policy.md).
 

@@ -9,6 +9,6 @@ This directory contains the normative specifications for AKCP. Because AKCP prov
 
 ## Governance Process
 
-Changes to these specifications or the introduction of new core features MUST go through the [RFC Process](../rfcs/README.md).
+Changes to these specifications or the introduction of new core features MUST go through the [RFC Process](../governance/rfc-process.md).
 
 Minor internal engineering decisions that do not affect the public protocol or schemas should be documented via [ADRs](../adrs/README.md).

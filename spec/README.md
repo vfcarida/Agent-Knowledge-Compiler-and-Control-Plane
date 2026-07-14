@@ -38,4 +38,4 @@ The spec version (`0.1.0-draft`) is independent of implementation package versio
 
 ## Governance
 
-Changes to this specification MUST follow the RFC process defined in [`docs/rfcs/README.md`](../docs/rfcs/README.md). See also [`docs/adrs/ADR-spec-governance.md`](../docs/adrs/ADR-spec-governance.md).
+All normative changes to the schema must follow the [RFC Process](../docs/governance/rfc-process.md). See also [`docs/adrs/ADR-spec-governance.md`](../docs/adrs/ADR-spec-governance.md).

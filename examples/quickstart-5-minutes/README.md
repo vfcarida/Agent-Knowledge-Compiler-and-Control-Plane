@@ -54,5 +54,5 @@ Check your `AGENTS.md` file! The CLI has injected a strictly governed instructio
 
 You have just structured your first Agent-Ready Knowledge base.
 
-- See [MCP Tool Contracts](../../docs/reference/mcp-tool-contracts.md) for more details.
-- Want to apply this to HR, Compliance, or IT? Read about [Domain Adapters](../../docs/domain-adapters/README.md).
+- See [MCP Tool Contracts](../../docs/specs/mcp-tool-contracts.md) for more details.
+- Want to apply this to HR, Compliance, or IT? Read about [Domain Adapters](../../docs/guides/create-domain-adapter.md).

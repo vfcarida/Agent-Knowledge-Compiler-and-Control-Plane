@@ -24,4 +24,4 @@ We support security research conducted in good faith. If you discover a security
 
 If you are contributing changes to the **Control Plane, Policy Engine, Capability Registry**, or any other security-sensitive area of AKCP, your PR will require a formal security review. 
 
-We evaluate all engine changes against the **NIST AI RMF** and the **OWASP LLM Top 10** frameworks. Please read the [Security Review Contribution Guide](docs/contributing/security-review.md) before submitting your PR to understand our threat model and required safeguards.
+We evaluate all engine changes against the **NIST AI RMF** and the **OWASP LLM Top 10** frameworks. Please read the [Security Review Contribution Guide](docs/security/security-review.md) before submitting your PR to understand our threat model and required safeguards.

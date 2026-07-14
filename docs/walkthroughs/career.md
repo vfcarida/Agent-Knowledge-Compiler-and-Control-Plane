@@ -35,7 +35,7 @@ pnpm akcp validate examples/domains/career
 
 ## 3. Compile the Artifacts
 
-Compile the raw knowledge into agent-ready artifacts (MCP resources, context packs, OpenWiki docs).
+Compile the raw knowledge into compiled artifacts (MCP resources, context packs, OpenWiki docs).
 
 \\\ash
 pnpm akcp compile examples/domains/career

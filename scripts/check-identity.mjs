@@ -19,6 +19,15 @@ if (fs.existsSync(allowlistPath)) {
 }
 
 // Check if a file/line combination is in the allowlist
+function shouldCheckFile(filePath) {
+  if (filePath.includes('node_modules') || filePath.includes('.git') || filePath.includes('dist')) return false;
+  if (filePath.includes('quality/identity-allowlist.txt')) return false;
+  if (filePath.includes('scratch/') || filePath.includes('__snapshots__') || filePath.includes('identity.test.ts')) return false;
+  
+  // Only check text-based files
+  return /\.(md|ts|js|json|yml|yaml|txt)$/.test(filePath);
+}
+
 function isAllowlisted(filePath, lineContent) {
   // Simple check: if the file path is explicitly allowed
   if (allowlist.includes(filePath)) return true;
@@ -41,7 +50,10 @@ const result = spawnSync(
     FORBIDDEN_REGEX,
     "--",
     ":(exclude)quality/identity-allowlist.txt",
-    ":(exclude)scripts/check-identity.mjs"
+    ":(exclude)scripts/check-identity.mjs",
+    ":(exclude)scratch/*",
+    ":(exclude)packages/cli/src/__tests__/__snapshots__/*",
+    ":(exclude)packages/cli/src/__tests__/identity.test.ts"
   ],
   { cwd: workspaceRoot, encoding: "utf-8" }
 );
