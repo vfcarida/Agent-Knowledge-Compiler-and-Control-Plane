@@ -54,6 +54,15 @@ export function useOKFData() {
           continue;
         }
 
+        if (fileName === "akcp-manifest.json") {
+          try {
+            bundle.manifest = JSON.parse(content);
+          } catch(e) {
+            console.warn("Failed to parse manifest");
+          }
+          continue;
+        }
+
         if (fileName === "index.md") {
           continue; // skip indexes
         }
@@ -116,34 +125,55 @@ export function useOKFData() {
           category: string,
         ) {
           for await (const entry of (handle as any).values()) {
-            if (entry.kind === "directory") {
+            if (entry.kind === "directory" && entry.name === "dist") {
+              const distDir = await handle.getDirectoryHandle("dist");
+              try {
+                const manifestFile = await distDir.getFileHandle("akcp-manifest.json");
+                const file = await manifestFile.getFile();
+                bundle.manifest = JSON.parse(await file.text());
+              } catch(e) {
+                // dist might not contain manifest
+              }
+            } else if (entry.kind === "directory") {
               await walk(entry, entry.name);
-            } else if (entry.kind === "file" && entry.name.endsWith(".md")) {
-              const file = await entry.getFile();
-              const content = await file.text();
-
-              if (entry.name === "log.md") {
-                bundle.logEntries = parseLogEntries(content);
+            } else if (entry.kind === "file") {
+              if (entry.name === "akcp-manifest.json") {
+                try {
+                  const file = await entry.getFile();
+                  bundle.manifest = JSON.parse(await file.text());
+                } catch(e) {
+                  console.warn("Failed to parse root manifest");
+                }
                 continue;
               }
 
-              if (entry.name === "index.md") {
-                continue;
-              }
+              if (entry.name.endsWith(".md")) {
+                const file = await entry.getFile();
+                const content = await file.text();
 
-              const parsed = parseOKFContent(content, entry.name, category);
-              const type = parsed.frontmatter.type?.toLowerCase();
+                if (entry.name === "log.md") {
+                  bundle.logEntries = parseLogEntries(content);
+                  continue;
+                }
 
-              if (type === "skill") {
-                bundle.skills.push(parsed as SkillDoc);
-              } else if (type === "experience") {
-                bundle.experiences.push(parsed as ExperienceDoc);
-              } else if (type === "preference") {
-                bundle.preferences.push(parsed as PreferenceDoc);
-              } else if (type === "application") {
-                bundle.applications.push(parsed as ApplicationDoc);
-              } else {
-                bundle.other.push(parsed);
+                if (entry.name === "index.md") {
+                  continue;
+                }
+
+                const parsed = parseOKFContent(content, entry.name, category);
+                const type = parsed.frontmatter.type?.toLowerCase();
+
+                if (type === "skill") {
+                  bundle.skills.push(parsed as SkillDoc);
+                } else if (type === "experience") {
+                  bundle.experiences.push(parsed as ExperienceDoc);
+                } else if (type === "preference") {
+                  bundle.preferences.push(parsed as PreferenceDoc);
+                } else if (type === "application") {
+                  bundle.applications.push(parsed as ApplicationDoc);
+                } else {
+                  bundle.other.push(parsed);
+                }
               }
             }
           }

@@ -247,6 +247,26 @@ program
       });
       const configHashStr = options.provenance ? hashConfig(config) : "none";
 
+      const crypto = await import("crypto");
+      const irSourceHashesStr = JSON.stringify(ir.sourceHashes || {});
+      const compileRunHash = crypto.createHash("sha256").update(configHashStr + "_" + irSourceHashesStr).digest("hex");
+
+      const manifestPath = "dist/akcp-manifest.json";
+      const fullManifestPath = path.resolve(targetDir, manifestPath);
+      let skipTargetGeneration = false;
+
+      if (fs.existsSync(fullManifestPath)) {
+        try {
+          const oldManifest = JSON.parse(fs.readFileSync(fullManifestPath, "utf-8"));
+          if (oldManifest.source && oldManifest.source.hash === compileRunHash) {
+            console.log("[INFO] Intelligent Incremental Build: No changes detected in sources or config. Skipping target generation.");
+            skipTargetGeneration = true;
+          }
+        } catch (e) {
+          // ignore parsing error
+        }
+      }
+
       // 2. Select targets
       let targetsToRun: any[] = config.compile?.targets || [];
       if (options.target !== "all") {
@@ -292,38 +312,39 @@ program
         "dashboard-metadata": new DashboardMetadataTarget(),
       };
 
-      for (const targetConf of targetsToRun) {
-        if (["mcp-tools", "mcp-prompts"].includes(targetConf.type)) {
-          manifestBuilder.addWarning(`[WARN] Target type '${targetConf.type}' is experimental and currently unimplemented.`);
-          console.warn(`[WARN] Target type '${targetConf.type}' is experimental and currently unimplemented.`);
-          continue;
+      if (!skipTargetGeneration) {
+        for (const targetConf of targetsToRun) {
+          if (["mcp-tools", "mcp-prompts"].includes(targetConf.type)) {
+            manifestBuilder.addWarning(`[WARN] Target type '${targetConf.type}' is experimental and currently unimplemented.`);
+            console.warn(`[WARN] Target type '${targetConf.type}' is experimental and currently unimplemented.`);
+            continue;
+          }
+
+          const targetImpl = targetInstances[targetConf.type];
+          if (targetImpl) {
+            console.log(
+              `[INFO] Running target: ${targetConf.type} -> ${targetConf.out}`,
+            );
+            const output = await targetImpl.compile(ir, targetConf);
+            manifestBuilder.addOutput(output);
+          } else {
+            console.error(`[ERROR] Unsupported target type: ${targetConf.type}`);
+            process.exit(1);
+          }
         }
 
-        const targetImpl = targetInstances[targetConf.type];
-        if (targetImpl) {
-          console.log(
-            `[INFO] Running target: ${targetConf.type} -> ${targetConf.out}`,
-          );
-          const output = await targetImpl.compile(ir, targetConf);
-          manifestBuilder.addOutput(output);
-        } else {
-          console.error(`[ERROR] Unsupported target type: ${targetConf.type}`);
-          process.exit(1);
-        }
+        // 4. Write manifest
+        await manifestBuilder.writeManifest(
+          ir,
+          fullManifestPath,
+          compileRunHash,
+          program.version() || "unknown",
+          targetDir
+        );
+        console.log(
+          `[OK] Compilation complete. Manifest written to ${fullManifestPath}`,
+        );
       }
-
-      // 4. Write manifest
-      const manifestPath = "dist/akcp-manifest.json";
-      await manifestBuilder.writeManifest(
-        ir,
-        manifestPath,
-        configHashStr,
-        program.version() || "unknown",
-        targetDir
-      );
-      console.log(
-        `[OK] Compilation complete. Manifest written to ${manifestPath}`,
-      );
     } catch (err: any) {
       console.error(`[ERROR] Compilation failed: ${err.message}`);
       process.exit(1);
@@ -565,9 +586,26 @@ const evalsCmd = program
 evalsCmd
   .command("run")
   .description("Run evaluation suite")
-  .requiredOption("--suite <type>", "Suite to run (e.g., career, it-ops)")
-  .action((options) => {
-    console.log(`[INFO] Evals suite is currently experimental. Suite: ${options.suite}`);
+  .requiredOption("--bundle <path>", "Path to the compiled OKF bundle")
+  .action(async (options) => {
+    console.log(`[INFO] Starting Evals Pipeline for bundle: ${options.bundle}`);
+    try {
+      const { EvalsHarness } = await import("@akcp/evals");
+      const { runScenarios } = await import("@akcp/evals/dist/scenarios.js");
+      const harness = new EvalsHarness();
+      await runScenarios(harness);
+      
+      const path = await import("path");
+      const fs = await import("fs");
+      const reportDir = path.resolve(process.cwd(), "reports");
+      if (!fs.existsSync(reportDir)) {
+        fs.mkdirSync(reportDir, { recursive: true });
+      }
+      harness.generateReport(reportDir);
+    } catch (err: any) {
+      console.error(`[ERROR] Evals run failed: ${err.message}`);
+      process.exit(1);
+    }
   });
 
 

@@ -51,7 +51,11 @@ export function ApprovalQueue() {
 
   const fetchApprovals = async () => {
     try {
-      const res = await fetch("/api/automation/approvals");
+      const res = await fetch("/api/automation/approvals", {
+        headers: {
+          "Authorization": user ? `Bearer ${user.identity}` : ""
+        }
+      });
       if (!res.ok) throw new Error("Failed to fetch approvals from server");
       const data = await res.json();
 
@@ -97,7 +101,10 @@ export function ApprovalQueue() {
         try {
           const res = await fetch("/api/automation/approve", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${user.identity}` 
+            },
             body: JSON.stringify({
               approvalToken: token,
               jobUrl,
@@ -144,7 +151,10 @@ export function ApprovalQueue() {
         try {
           const res = await fetch("/api/automation/revoke", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${user.identity}`
+            },
             body: JSON.stringify({
               approvalToken: token,
               approverIdentity: user.identity,

@@ -53,4 +53,5 @@ export interface CareerBundleData {
     conceptId: string;
     details?: string;
   }>;
+  manifest?: any;
 }

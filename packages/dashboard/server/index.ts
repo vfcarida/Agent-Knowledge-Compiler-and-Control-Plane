@@ -12,6 +12,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Auth Middleware: Decodes simulated Bearer JWT tokens
+const authMiddleware = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.split(" ")[1];
+    // In a real app, verify JWT here. For MVP, we trust the token string as the identity.
+    (req as any).user = { identity: token };
+  } else {
+    (req as any).user = { identity: "anonymous" };
+  }
+  next();
+};
+
+app.use(authMiddleware);
+
 const PORT = process.env.PORT || 3001;
 
 // Initialize MCP Clients
@@ -125,7 +140,8 @@ app.get("/api/automation/approvals", async (req, res) => {
 app.post("/api/automation/approve", async (req, res) => {
   if (!automationClient)
     return res.status(503).json({ error: "Automation server not ready" });
-  const { approvalToken, jobUrl, dryRun, approverIdentity } = req.body;
+  const { approvalToken, jobUrl, dryRun, approverIdentity: providedIdentity } = req.body;
+  const approverIdentity = providedIdentity || (req as any).user?.identity;
   try {
     const result = await automationClient.callTool({
       name: "confirm_application_submission",
@@ -140,7 +156,8 @@ app.post("/api/automation/approve", async (req, res) => {
 app.post("/api/automation/approve-token", async (req, res) => {
   if (!automationClient)
     return res.status(503).json({ error: "Automation server not ready" });
-  const { approvalToken, approverIdentity } = req.body;
+  const { approvalToken, approverIdentity: providedIdentity } = req.body;
+  const approverIdentity = providedIdentity || (req as any).user?.identity;
   try {
     const result = await automationClient.callTool({
       name: "approve_pending_token",
@@ -186,10 +203,12 @@ app.post("/api/automation/revoke", async (req, res) => {
 app.get("/api/audit/logs", async (req, res) => {
   if (!automationClient)
     return res.status(503).json({ error: "Automation server not ready" });
+  
+  const limit = parseInt(req.query.limit as string) || 100;
   try {
     const result = await automationClient.callTool({
       name: "list_audit_logs",
-      arguments: { limit: 100 },
+      arguments: { limit },
     });
     res.json(result);
   } catch (error: any) {

@@ -11,8 +11,10 @@
     "typecheck": "tsc --noEmit",
     "start": "node dist/index.js",
     "start:http": "node dist/http-server.js",
+    "start:sse": "node dist/index-sse.js",
     "dev": "tsx src/index.ts",
     "dev:http": "tsx src/http-server.ts",
+    "dev:sse": "tsx src/index-sse.ts",
     "clean": "node -e \"fs.rmSync('dist', {recursive:true,force:true}); fs.rmSync('*.tsbuildinfo', {force:true})\""
   },
   "dependencies": {

@@ -25,21 +25,39 @@ export interface AuditEvent {
   };
 }
 
+import { useAuth } from "../../contexts/AuthContext.js";
+
 export function AuditLog() {
   const [logs, setLogs] = useState<AuditEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const response = await fetch("/data/audit-log.jsonl");
+        const token = user ? user.identity : "anonymous";
+        const response = await fetch("http://localhost:3001/api/audit/logs", {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
         if (!response.ok) {
-          throw new Error("No audit logs found (or failed to fetch /data/audit-log.jsonl)");
+          throw new Error("No audit logs found (or failed to fetch /api/audit/logs)");
         }
-        const text = await response.text();
-        const lines = text.split("\n").filter(l => l.trim().length > 0);
-        const parsedLogs = lines.map(l => JSON.parse(l) as AuditEvent);
+        const data = await response.json();
+        
+        // Parse the MCP tool response format
+        let parsedLogs: AuditEvent[] = [];
+        if (data.content && data.content[0] && data.content[0].text) {
+          const toolResult = JSON.parse(data.content[0].text);
+          if (toolResult.data && toolResult.data.logs) {
+            parsedLogs = toolResult.data.logs;
+          } else if (toolResult.status === "error") {
+             throw new Error(toolResult.error?.message || "Error fetching logs");
+          }
+        }
+
         // Sort newest first
         parsedLogs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
         setLogs(parsedLogs);

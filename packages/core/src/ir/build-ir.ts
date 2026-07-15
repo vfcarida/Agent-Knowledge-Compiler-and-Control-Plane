@@ -12,7 +12,7 @@ import { normalizeRawItem } from "../normalizers/normalize.js";
 import { Freshness } from "../lifecycle/freshness.js";
 import { LifecycleValidator } from "../validation/lifecycle-rules.js";
 import type { ConnectorConfig, RawKnowledgeItem } from "../connectors/types.js";
-import { PiiRedactor, PiiReport } from "../privacy/index.js";
+import { PiiRedactor, PiiReport, HttpSecurityGateway } from "../privacy/index.js";
 
 export interface BuildOptions {
   bundleId?: string;
@@ -87,7 +87,10 @@ export async function buildKnowledgeIR(
   let skippedCount = 0;
   const sourceHashes: Record<string, string> = {};
 
-  const piiRedactor = new PiiRedactor();
+  let piiRedactor: any = new PiiRedactor();
+  if (options.privacy?.gatewayUrl) {
+    piiRedactor = new HttpSecurityGateway(options.privacy.gatewayUrl, options.privacy.redactionTokenFormat);
+  }
   const piiReport = new PiiReport();
 
   const concepts: IRConcept[] = [];
@@ -114,6 +117,17 @@ export async function buildKnowledgeIR(
     }
 
     let concept = normalizeRawItem(item);
+    
+    // Auto-summarization for Context Compression
+    if (!concept.frontmatter.summary && concept.body && concept.body.length > 500) {
+      // Very naive extractive summary (first paragraph or first 500 chars)
+      const firstParagraph = concept.body.split("\n\n").find(p => p.trim().length > 20 && !p.startsWith("#"));
+      if (firstParagraph) {
+        concept.frontmatter.summary = firstParagraph.substring(0, 300).trim() + (firstParagraph.length > 300 ? "..." : "");
+      } else {
+        concept.frontmatter.summary = concept.body.substring(0, 300).replace(/\n/g, " ").trim() + "...";
+      }
+    }
     
     // PII Redaction
     if (options.privacy) {

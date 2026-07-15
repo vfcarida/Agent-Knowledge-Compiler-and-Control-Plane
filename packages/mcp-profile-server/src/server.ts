@@ -74,12 +74,13 @@ export class AKCPProfileServer {
           description: `Knowledge asset: ${concept.conceptId} (Type: ${concept.type})`,
         },
         async () => {
+          const summaryStr = concept.frontmatter.summary ? `\n> Summary: ${concept.frontmatter.summary}\n` : "";
           return {
             contents: [
               {
                 uri,
                 mimeType: "text/markdown",
-                text: `---\n${JSON.stringify(concept.frontmatter, null, 2)}\n---\n\n${concept.body}`,
+                text: `---\n${JSON.stringify(concept.frontmatter, null, 2)}\n---${summaryStr}\n\n${concept.body}`,
               },
             ],
           };
@@ -99,8 +100,50 @@ export class AKCPProfileServer {
 
     if (tools.length === 0) {
       console.warn("[AKCP Profile Server] No tool capabilities found in IR.");
-      return;
     }
+
+    // Add read_document_chunk tool for Context Pagination
+    this.server.tool(
+      "read_document_chunk",
+      "Read a paginated chunk of a specific knowledge concept to avoid context window collapse.",
+      {
+        conceptId: z.string().describe("The conceptId of the document to read"),
+        offset: z.number().default(0).describe("Character offset to start reading from"),
+        limit: z.number().default(4000).describe("Maximum number of characters to read (chunk size)"),
+      },
+      async ({ conceptId, offset, limit }) => {
+        mcpToolCallsCounter.add(1);
+        const concept = this.ir.concepts?.find((c) => c.conceptId === conceptId);
+        
+        if (!concept) {
+          mcpToolFailuresCounter.add(1);
+          return {
+            isError: true,
+            content: [{ type: "text", text: `Error: Concept ${conceptId} not found.` }],
+          };
+        }
+
+        const fullText = `---\n${JSON.stringify(concept.frontmatter, null, 2)}\n---\n\n${concept.body}`;
+        const chunk = fullText.slice(offset, offset + limit);
+        const hasMore = offset + limit < fullText.length;
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                conceptId,
+                offset,
+                limit,
+                totalLength: fullText.length,
+                hasMore,
+                chunk,
+              }, null, 2),
+            },
+          ],
+        };
+      }
+    );
 
     for (const cap of tools) {
       if (cap.name) {

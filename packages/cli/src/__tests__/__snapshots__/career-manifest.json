@@ -20,7 +20,7 @@
   "schemaVersion": "akcp.artifact-manifest/v1",
   "source": {
     "config": "akcp.yaml",
-    "hash": "none",
+    "hash": "1e74b1222b19b1c34b9ee79ac09ef61c96716d41b27a93a681299c3558521966",
     "root": "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\career",
   },
   "targets": [
@@ -30,7 +30,7 @@
       "outputs": [
         "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\career\dist\context-pack.json",
       ],
-      "sizeBytes": 6294,
+      "sizeBytes": 6913,
       "status": "success",
     },
     {
@@ -39,7 +39,7 @@
       "outputs": [
         "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\career\dist\openwiki",
       ],
-      "sizeBytes": 3352,
+      "sizeBytes": 3969,
       "status": "success",
     },
     {

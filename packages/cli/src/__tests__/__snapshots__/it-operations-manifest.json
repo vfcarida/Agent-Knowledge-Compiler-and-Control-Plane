@@ -8,7 +8,7 @@
     "checks": [
       {
         "file": "file://C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\it-operations\README.md",
-        "message": "Broken dependency link: ../../docs/walkthroughs/it-ops",
+        "message": "Broken dependency link: ../../../docs/walkthroughs/it-ops",
         "ruleId": "AKCP-GRAPH-INTEGRITY",
         "type": "warning",
       },
@@ -20,7 +20,7 @@
   "schemaVersion": "akcp.artifact-manifest/v1",
   "source": {
     "config": "akcp.yaml",
-    "hash": "none",
+    "hash": "88018482d403b5d05011ed9e9ebb246bfd6fb2193d09415c9b50f9b06e68ac0b",
     "root": "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\it-operations",
   },
   "targets": [
@@ -30,7 +30,7 @@
       "outputs": [
         "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\it-operations\dist\agent-knowledge-ir.json",
       ],
-      "sizeBytes": 41435,
+      "sizeBytes": 43722,
       "status": "success",
     },
     {
@@ -48,7 +48,7 @@
       "outputs": [
         "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\it-operations\dist\openwiki",
       ],
-      "sizeBytes": 27880,
+      "sizeBytes": 30115,
       "status": "success",
     },
     {
