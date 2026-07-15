@@ -1,0 +1,12 @@
+id: support-pii-policy
+name: "Customer Support PII Handling"
+description: "Safeguards for handling sensitive customer data during agent sessions."
+rules:
+  - id: enforce-pii-redaction
+    effect: deny
+    condition: "resource.readsPII == true && session.piiHandling != 'redact'"
+    description: "Tools that read PII must run in a session with PII redaction enabled."
+  - id: require-approval-refund
+    effect: deny
+    condition: "resource.id == 'issue_refund' && autonomyLevel == 'autonomous'"
+    description: "Refunds always require Human-In-The-Loop approval."

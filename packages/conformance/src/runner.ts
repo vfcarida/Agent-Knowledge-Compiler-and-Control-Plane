@@ -40,6 +40,7 @@ export class ConformanceRunner {
           file === "log.md" ||
           file === "README.md" ||
           file === "WALKTHROUGH.md" ||
+          file === "walkthrough.md" ||
           file === "FLAGSHIP_AUDIT.md" ||
           file === "scorecard.md" ||
           file.includes(path.sep + "dist" + path.sep) ||

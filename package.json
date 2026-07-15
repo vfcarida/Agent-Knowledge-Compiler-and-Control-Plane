@@ -11,6 +11,7 @@
     "pnpm": ">=9.0.0"
   },
   "scripts": {
+    "check:metadata": "node scripts/check-metadata.mjs",
     "check:identity": "node scripts/check-identity.mjs",
     "check:links": "node scripts/check-links.mjs",
     "check:docs": "node scripts/check-docs.mjs",
@@ -20,10 +21,12 @@
     "test:unit": "pnpm -r run test -- --run",
     "test:integration": "pnpm -r run test -- --run",
     "test:contract": "vitest run packages/mcp-profile-server packages/mcp-automation-server",
-    "test:security": "vitest run packages/mcp-profile-server/src/__tests__/security",
+    "test:security": "vitest run packages/mcp-profile-server/src/__tests__/security packages/mcp-automation-server/src/__tests__/security packages/core/src/__tests__/privacy",
     "test:mcp": "pnpm run test:contract && pnpm run test:security",
     "test:e2e": "pnpm --filter @akcp/dashboard exec playwright install chromium && pnpm --filter @akcp/dashboard exec playwright test",
     "test:conformance": "pnpm --filter @akcp/conformance run test",
+    "test:coverage": "vitest run --coverage",
+    "quality:gate": "pnpm run test && pnpm run test:coverage && pnpm run test:contract && pnpm run test:security && pnpm run test:conformance",
     "smoke:quickstart": "node packages/cli/dist/index.js validate --bundle examples/domains/career --profile career && node packages/cli/dist/index.js compile --config examples/domains/career/akcp.yaml",
     "coverage": "vitest run --coverage",
     "lint": "pnpm -r run lint",
@@ -50,5 +53,13 @@
     "prettier": "^3.5.0",
     "typescript": "^5.8.0",
     "vitest": "^3.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane.git"
+  },
+  "homepage": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane#readme",
+  "bugs": {
+    "url": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane/issues"
   }
 }

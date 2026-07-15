@@ -1,6 +1,8 @@
 id: career-starter-policy
 name: "Career Domain Starter Policy"
 description: "Safeguards for career-related MCP tools, enforcing read-only behavior for personal knowledge."
+defaultAutonomyLevel: read-only
+piiHandling: allow
 rules:
   - id: prevent-writes
     effect: deny
@@ -10,3 +12,7 @@ rules:
     effect: allow
     condition: "resource.riskLevel == 'low' || resource.riskLevel == 'medium'"
     description: "Allow analysis and summarization tools without human approval."
+  - id: deny-critical-risk
+    effect: deny
+    condition: "resource.riskLevel == 'critical'"
+    description: "Career tools should not have critical risk."

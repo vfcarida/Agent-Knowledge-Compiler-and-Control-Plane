@@ -7,7 +7,7 @@ bundle:
 compile:
   sources:
     - type: okf-directory
-      path: knowledge
+      path: sources
   targets:
     - type: context-pack
       out: dist/context-pack.json
@@ -21,7 +21,7 @@ compile:
 policy:
   defaultAutonomyLevel: read-only
   policies:
-    - career.policy.yaml
+    - policies/career.policy.yaml
 
 conformance:
   level: "AKCP-control-plane-compatible"

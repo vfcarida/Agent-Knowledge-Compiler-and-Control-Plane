@@ -43,7 +43,7 @@
     "id": "customer-support.issue_refund",
     "name": "issue_refund",
     "version": "1.0.0",
-    "description": "Issues a refund to a customer. This is a high-risk action requiring HITL approval.",
+    "description": "[EXPERIMENTAL SKELETON - UNIMPLEMENTED] Issues a refund to a customer. This is a high-risk action requiring HITL approval.",
     "kind": "tool",
     "riskLevel": "critical",
     "sideEffects": "external-write",
@@ -81,6 +81,26 @@
         "handoffNotes": { "type": "string" }
       },
       "required": ["ticketId", "targetTier", "handoffNotes"]
+    }
+  },
+  {
+    "id": "customer-support.delete_account",
+    "name": "delete_account",
+    "version": "1.0.0",
+    "description": "[EXPERIMENTAL SKELETON - UNIMPLEMENTED] Permanently deletes a customer account.",
+    "kind": "tool",
+    "riskLevel": "critical",
+    "sideEffects": "external-write",
+    "requiresApproval": true,
+    "readsPII": true,
+    "writesPII": true,
+    "inputsSchema": {
+      "type": "object",
+      "properties": {
+        "customerId": { "type": "string" },
+        "reason": { "type": "string" }
+      },
+      "required": ["customerId", "reason"]
     }
   }
 ]

@@ -1,5 +1,7 @@
 # Agent Knowledge Compiler and Control Plane (AKCP)
 
+[![CI](https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane/actions/workflows/ci.yml/badge.svg)](https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane/actions/workflows/ci.yml)
+
 Agent Knowledge Compiler and Control Plane (AKCP) is an open-source system for compiling organizational knowledge into governed, versioned, testable, cost-aware, agent-consumable artifacts, and for controlling how agents discover, retrieve, use, and act on that knowledge through MCP-compatible capabilities.
 
 📖 **[Full Documentation →](docs/README.md)** | [Quickstart](docs/getting-started/quickstart.md) | [Architecture](docs/architecture/README.md) | [Glossary](docs/glossary.md)
@@ -143,11 +145,14 @@ AKCP relies on Spec-Driven Development:
 
 ## Security and Governance
 
-Security is embedded at the architectural level:
+Security is embedded at the architectural level to mitigate MCP threats (like Tool Poisoning, SSRF, and Prompt Injection):
 - [Threat Model](docs/security/threat-model.md)
 - [Automation Safety](docs/security/automation-safety.md)
+- [MCP Hardening](docs/security/mcp-hardening.md)
 - [NIST AI RMF Mapping](docs/governance/nist-ai-rmf-mapping.md)
 - [OWASP LLM Controls](docs/governance/owasp-llm-controls.md)
+
+See [SECURITY.md](SECURITY.md) for incident response and vulnerability reporting.
 
 ## Testing and Conformance
 

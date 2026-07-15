@@ -1,0 +1,13 @@
+apiVersion: akcp.policy/v1
+kind: Policy
+metadata:
+  name: "draft_response"
+  description: "Allows the agent to draft responses but not send them directly to the customer"
+spec:
+  effect: allow
+  actions:
+    - mcp:call_tool:customer-support.draft_response
+  conditions:
+    - field: riskLevel
+      operator: in
+      value: ["low"]

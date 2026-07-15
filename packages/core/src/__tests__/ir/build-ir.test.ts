@@ -3,10 +3,16 @@ import path from "path";
 import { buildKnowledgeIR } from "../../ir/build-ir.js";
 import { AgentKnowledgeIRSchema } from "../../ir/schema.js";
 
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 describe("buildKnowledgeIR", () => {
   const sampleBundlePath = path.resolve(
-    process.cwd(),
-    "../../examples/domains/career",
+    __dirname,
+    "../../../../../examples/domains/career",
   );
 
   it("should compile sample-data/.okf into valid IR", async () => {

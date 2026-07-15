@@ -61,4 +61,11 @@ describe("ConformanceRunner", () => {
     expect(report.failed).toBe(0);
     expect(report.conformanceLevel).toBe("AKCP-control-plane-compatible");
   });
+
+  it("passes all levels for the Customer Support flagship domain", async () => {
+    const runner = new ConformanceRunner(path.resolve(__dirname, "../../../../examples/domains/customer-support"));
+    const report = await runner.run();
+    expect(report.failed).toBe(0);
+    expect(report.conformanceLevel).toBe("AKCP-control-plane-compatible");
+  });
 });

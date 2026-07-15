@@ -3,8 +3,14 @@ import path from "node:path";
 import { importSource } from "../integrations/importer.js";
 import fs from "node:fs";
 
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 describe("Source Importers", () => {
-  const fixturesDir = path.resolve(process.cwd(), "../test-fixtures");
+  const fixturesDir = path.resolve(__dirname, "../../../test-fixtures");
 
   describe("OpenWiki Adapter", () => {
     it("detects and imports openwiki basic", async () => {
@@ -12,6 +18,7 @@ describe("Source Importers", () => {
       const outputDir = path.join(fixturesDir, "out-openwiki-basic");
 
       const report = await importSource("openwiki", inputDir, outputDir, true); // dry run
+      if (!report.ok) console.error("DIAGNOSTICS:", report.diagnostics);
       expect(report.ok).toBe(true);
       expect(report.documentsImported).toBe(1);
       expect(report.diagnostics.length).toBeGreaterThan(0);
@@ -24,6 +31,7 @@ describe("Source Importers", () => {
       const outputDir = path.join(fixturesDir, "out-openwiki-frontmatter");
 
       const report = await importSource("openwiki", inputDir, outputDir, true);
+      if (!report.ok) console.error("DIAGNOSTICS:", report.diagnostics);
       expect(report.ok).toBe(true);
       expect(report.documentsImported).toBe(1);
     });
@@ -35,6 +43,7 @@ describe("Source Importers", () => {
       const outputDir = path.join(fixturesDir, "out-okf-basic");
 
       const report = await importSource("okf", inputDir, outputDir, true);
+      if (!report.ok) console.error("DIAGNOSTICS:", report.diagnostics);
       expect(report.ok).toBe(true);
       expect(report.documentsImported).toBe(1);
       expect(report.provenance[0].sourceType).toBe("okf");
@@ -45,6 +54,7 @@ describe("Source Importers", () => {
       const outputDir = path.join(fixturesDir, "out-okf-unknown-types");
 
       const report = await importSource("okf", inputDir, outputDir, true);
+      if (!report.ok) console.error("DIAGNOSTICS:", report.diagnostics);
       expect(report.ok).toBe(true);
       expect(report.documentsImported).toBe(1);
     });
@@ -54,6 +64,7 @@ describe("Source Importers", () => {
       const outputDir = path.join(fixturesDir, "out-okf-unknown-keys");
 
       const report = await importSource("okf", inputDir, outputDir, true);
+      if (!report.ok) console.error("DIAGNOSTICS:", report.diagnostics);
       expect(report.ok).toBe(true);
       expect(report.documentsImported).toBe(1);
     });

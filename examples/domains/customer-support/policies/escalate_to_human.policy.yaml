@@ -1,0 +1,13 @@
+apiVersion: akcp.policy/v1
+kind: Policy
+metadata:
+  name: "escalate_to_human"
+  description: "Allows the agent to escalate the ticket to a human queue"
+spec:
+  effect: allow
+  actions:
+    - mcp:call_tool:customer-support.escalate_ticket
+  conditions:
+    - field: riskLevel
+      operator: in
+      value: ["medium"]

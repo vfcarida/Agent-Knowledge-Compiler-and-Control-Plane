@@ -1,0 +1,90 @@
+{
+  "version": "1.0",
+  "bundleId": "it-operations",
+  "resources": [
+    {
+      "uri": "knowledge://it-operations/alert-high-cpu-payment",
+      "name": "alert-high-cpu-payment",
+      "mimeType": "text/markdown",
+      "description": "Knowledge asset: alert-high-cpu-payment (Type: Alert)"
+    },
+    {
+      "uri": "knowledge://it-operations/auth-service",
+      "name": "auth-service",
+      "mimeType": "text/markdown",
+      "description": "Knowledge asset: auth-service (Type: Service)"
+    },
+    {
+      "uri": "knowledge://it-operations/change-window-payments",
+      "name": "change-window-payments",
+      "mimeType": "text/markdown",
+      "description": "Knowledge asset: change-window-payments (Type: ChangeWindow)"
+    },
+    {
+      "uri": "knowledge://it-operations/escalation-policy-payments",
+      "name": "escalation-policy-payments",
+      "mimeType": "text/markdown",
+      "description": "Knowledge asset: escalation-policy-payments (Type: EscalationPolicy)"
+    },
+    {
+      "uri": "knowledge://it-operations/owner-team-payments",
+      "name": "owner-team-payments",
+      "mimeType": "text/markdown",
+      "description": "Knowledge asset: owner-team-payments (Type: Owner)"
+    },
+    {
+      "uri": "knowledge://it-operations/payment-service",
+      "name": "payment-service",
+      "mimeType": "text/markdown",
+      "description": "Knowledge asset: payment-service (Type: Service)"
+    },
+    {
+      "uri": "knowledge://it-operations/slo-payment-availability",
+      "name": "slo-payment-availability",
+      "mimeType": "text/markdown",
+      "description": "Knowledge asset: slo-payment-availability (Type: SLO)"
+    },
+    {
+      "uri": "knowledge://it-operations/failed-deploy",
+      "name": "failed-deploy",
+      "mimeType": "text/markdown",
+      "description": "Knowledge asset: failed-deploy (Type: Runbook)"
+    },
+    {
+      "uri": "knowledge://it-operations/high-cpu",
+      "name": "high-cpu",
+      "mimeType": "text/markdown",
+      "description": "Knowledge asset: high-cpu (Type: Runbook)"
+    },
+    {
+      "uri": "knowledge://it-operations/remediation-rollback-deployment",
+      "name": "remediation-rollback-deployment",
+      "mimeType": "text/markdown",
+      "description": "Knowledge asset: remediation-rollback-deployment (Type: RemediationAction)"
+    },
+    {
+      "uri": "knowledge://it-operations/inc-2026-001",
+      "name": "inc-2026-001",
+      "mimeType": "text/markdown",
+      "description": "Knowledge asset: inc-2026-001 (Type: Incident)"
+    },
+    {
+      "uri": "knowledge://it-operations/p1-procedure",
+      "name": "p1-procedure",
+      "mimeType": "text/markdown",
+      "description": "Knowledge asset: p1-procedure (Type: Incident)"
+    },
+    {
+      "uri": "knowledge://it-operations/postmortem-2026-001",
+      "name": "postmortem-2026-001",
+      "mimeType": "text/markdown",
+      "description": "Knowledge asset: postmortem-2026-001 (Type: Postmortem)"
+    },
+    {
+      "uri": "knowledge://it-operations/slo-payment",
+      "name": "slo-payment",
+      "mimeType": "text/markdown",
+      "description": "Knowledge asset: slo-payment (Type: SLO)"
+    }
+  ]
+}

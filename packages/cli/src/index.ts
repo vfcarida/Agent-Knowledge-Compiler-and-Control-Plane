@@ -228,7 +228,10 @@ program
 
       const config = loadAkcpConfig(configPath);
 
-      const capabilitiesPath = path.join(targetDir, "capabilities.json");
+      let capabilitiesPath = path.join(targetDir, "capabilities.json");
+      if (!fs.existsSync(capabilitiesPath)) {
+        capabilitiesPath = path.join(targetDir, "capabilities", "capabilities.json");
+      }
       let capabilities = [];
       if (fs.existsSync(capabilitiesPath)) {
         try {

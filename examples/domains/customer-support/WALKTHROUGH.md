@@ -1,6 +1,10 @@
 # Customer Support Domain Walkthrough
 
-This walkthrough demonstrates how an autonomous agent, equipped with the compiled Customer Support context pack and MCP resources, interacts with a simulated user while strictly adhering to the configured policies (PII redaction and HITL approvals).
+> **Status:** Experimental / Planned
+>
+> **Note:** The Customer Support Flagship is currently an experimental readiness bridge. Its capabilities (like refunds) are skeletal placeholders to demonstrate policy-gated architecture and PII redaction.
+
+This walkthrough outlines how an autonomous agent, equipped with the compiled Customer Support context pack and MCP resources, interacts with a simulated user while strictly adhering to the configured policies (PII redaction and HITL approvals).
 
 ## 1. Context and Tool Discovery
 

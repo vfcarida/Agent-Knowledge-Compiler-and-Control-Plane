@@ -1,0 +1,15 @@
+apiVersion: akcp.policy/v1
+kind: Policy
+metadata:
+  name: "autonomous_actions"
+  description: "Rejects autonomous actions for refunds and account changes"
+spec:
+  effect: deny
+  actions:
+    - mcp:call_tool:customer-support.issue_refund
+    - mcp:call_tool:customer-support.delete_account
+    - mcp:call_tool:customer-support.change_account
+  conditions:
+    - field: riskLevel
+      operator: in
+      value: ["high", "critical"]

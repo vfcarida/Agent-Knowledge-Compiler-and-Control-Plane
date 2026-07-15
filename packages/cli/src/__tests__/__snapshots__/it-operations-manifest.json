@@ -7,20 +7,20 @@
   "conformance": {
     "checks": [
       {
-        "file": "file://C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\it-operations\README.md",
-        "message": "Broken dependency link: ../../../docs/walkthroughs/it-ops",
-        "ruleId": "AKCP-GRAPH-INTEGRITY",
-        "type": "warning",
+        "file": "walkthrough.md",
+        "message": "OKF Parse Error: OKF Validation Error: Frontmatter validation failed: type: Required. Ensure the document has valid YAML frontmatter with at least a "type" field. See OKF v0.1 spec §4.1 for required fields.",
+        "ruleId": "OKF-V0.1-3.2",
+        "type": "error",
       },
     ],
-    "level": "AKCP-control-plane-compatible",
+    "level": "none",
   },
   "createdAt": "2026-01-01T00:00:00.000Z",
   "diagnostics": [],
   "schemaVersion": "akcp.artifact-manifest/v1",
   "source": {
     "config": "akcp.yaml",
-    "hash": "9dfb00a3ab5e34508a00b328da3f51dcace67c9e66f35b5cc5ad0c648f9108da",
+    "hash": "5150be5f5eb0f26334a42fca8ed99ef5b942a5c842d7b5bae0798320b9576f7a",
     "root": "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\it-operations",
   },
   "targets": [
@@ -30,7 +30,7 @@
       "outputs": [
         "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\it-operations\dist\agent-knowledge-ir.json",
       ],
-      "sizeBytes": 43870,
+      "sizeBytes": 42244,
       "status": "success",
     },
     {
@@ -39,7 +39,7 @@
       "outputs": [
         "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\it-operations\dist\mcp-resources.json",
       ],
-      "sizeBytes": 3153,
+      "sizeBytes": 3761,
       "status": "success",
     },
     {
@@ -48,7 +48,7 @@
       "outputs": [
         "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\it-operations\dist\openwiki",
       ],
-      "sizeBytes": 30206,
+      "sizeBytes": 33020,
       "status": "success",
     },
     {
@@ -57,7 +57,7 @@
       "outputs": [
         "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\it-operations\dist\dashboard-meta.json",
       ],
-      "sizeBytes": 6890,
+      "sizeBytes": 2286,
       "status": "success",
     },
   ],

@@ -10,9 +10,12 @@ This document describes the steps required to cut a new AKCP release. Follow thi
 
 - [ ] All CI checks pass on `main` (green badge)
 - [ ] No open `P0` / `P1` security issues
+- [ ] `pnpm check:metadata` passes (all package properties are AKCP-compliant)
 - [ ] `pnpm check:identity` passes (no legacy OCF references)
 - [ ] `pnpm check:docs` passes (required docs present)
 - [ ] `pnpm check:links` passes (no broken markdown links)
+- [ ] Maturity matrix is correctly applied (e.g. experimental features are marked as such)
+- [ ] Check repository metadata against `docs/release/repository-metadata.md`
 
 ### 2. Test Suite
 

@@ -41,12 +41,24 @@ The repository orchestrates tests via standard scripts. If a package does not im
 - pnpm test:security: Tests HITL, Policy, and Privacy features.
 - pnpm test:e2e: Runs Playwright E2E suites.
 - pnpm test:conformance: Runs the AKCP validation suite.
-- pnpm evals: Generates the enchmark-report.md.
-- pnpm coverage: Generates a Vitest v8 coverage report.
+- pnpm test:coverage: Generates a Vitest v8 coverage report.
+- pnpm quality:gate: Runs the combined release-blocking suite (`test`, `test:coverage`, `test:contract`, `test:security`, `test:conformance`).
+- pnpm evals: Generates the benchmark-report.md (Not part of the quality gate).
+
+## Coverage Thresholds and Quality Gates
+
+AKCP enforces strict coverage thresholds across the monorepo to ensure quality regression does not occur. These thresholds are defined in the `vitest.config.ts` files of each package and at the monorepo root.
+
+- **`@akcp/core`**: 80% minimum coverage.
+- **`@akcp/cli`, `@akcp/mcp-profile-server`, `@akcp/mcp-automation-server`, `@akcp/conformance`**: Target minimums (e.g. 50-60%) set initially, incrementing over time.
+
+The **Quality Gate** (`pnpm quality:gate`) acts as a single point of failure in our CI pipeline. If coverage drops below the threshold, or any security, conformance, or contract test fails, the CI build will fail.
+
+> [!NOTE]
+> Evals are inherently non-deterministic due to LLM variability and thus are decoupled from the strict `quality:gate`. They are executed separately via `pnpm evals`. E2E tests are also separate to avoid requiring a browser environment in all standard validation runs.
 
 ## Evals Design Principles
 
 1. **Deterministic Config:** Evals must support offline, deterministic modes for default CI pipelines.
 2. **Provider Isolation:** LLM provider specifics must be abstracted behind our control plane wrappers.
-3. **No Paid APIs on Default CI:** We do not block standard PRs on paid API calls.
 

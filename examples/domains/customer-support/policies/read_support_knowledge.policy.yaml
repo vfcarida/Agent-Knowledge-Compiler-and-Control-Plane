@@ -1,0 +1,14 @@
+apiVersion: akcp.policy/v1
+kind: Policy
+metadata:
+  name: "read_support_knowledge"
+  description: "Allows the agent to read support knowledge base articles"
+spec:
+  effect: allow
+  actions:
+    - mcp:call_tool:customer-support.search_knowledge_base
+    - mcp:read_resource:*
+  conditions:
+    - field: riskLevel
+      operator: in
+      value: ["low"]

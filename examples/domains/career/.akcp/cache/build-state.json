@@ -1,9 +1,9 @@
 {
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\README.md": {
-    "sourceHash": "9966fdcd62b2a7a373a65dc6b0fb59606180c3b37bd1abf42ddb7470d33acd70",
+    "sourceHash": "12ad58ef4fc5fef0360292315d8905d3b138a0d338a8728d1d9c30188a8434a5",
     "normalizedHash": "",
     "artifactHash": "README",
-    "lastCompiledAt": "2026-07-15T03:44:04.994Z",
+    "lastCompiledAt": "2026-07-15T13:10:09.272Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\dist\\openwiki\\README.md": {
@@ -66,21 +66,49 @@
     "sourceHash": "2b7ec7e07deca47458342f1d6f35e176f6849da677073329984d8ecfd7198ca9",
     "normalizedHash": "",
     "artifactHash": "knowledge/experience-acmecorp",
-    "lastCompiledAt": "2026-07-15T03:44:04.994Z",
+    "lastCompiledAt": "2026-07-15T12:19:32.895Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\knowledge\\preferences.md": {
     "sourceHash": "161d4fafda506925e674226de71cbd063b25d67dd66e82cf025459d7c9a7558c",
     "normalizedHash": "",
     "artifactHash": "knowledge/preferences",
-    "lastCompiledAt": "2026-07-15T03:44:04.994Z",
+    "lastCompiledAt": "2026-07-15T12:19:32.895Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\knowledge\\profile.md": {
     "sourceHash": "f98c47310fa7cf27f0515b90492cbfe647a9d7cbfd6a4aed402d0e8b5efcbe58",
     "normalizedHash": "",
     "artifactHash": "knowledge/profile",
-    "lastCompiledAt": "2026-07-15T03:44:04.994Z",
+    "lastCompiledAt": "2026-07-15T12:19:32.895Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\sources\\experience-acmecorp.md": {
+    "sourceHash": "2b7ec7e07deca47458342f1d6f35e176f6849da677073329984d8ecfd7198ca9",
+    "normalizedHash": "",
+    "artifactHash": "sources/experience-acmecorp",
+    "lastCompiledAt": "2026-07-15T13:10:09.272Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\sources\\preferences.md": {
+    "sourceHash": "161d4fafda506925e674226de71cbd063b25d67dd66e82cf025459d7c9a7558c",
+    "normalizedHash": "",
+    "artifactHash": "sources/preferences",
+    "lastCompiledAt": "2026-07-15T13:10:09.272Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\sources\\profile.md": {
+    "sourceHash": "f98c47310fa7cf27f0515b90492cbfe647a9d7cbfd6a4aed402d0e8b5efcbe58",
+    "normalizedHash": "",
+    "artifactHash": "sources/profile",
+    "lastCompiledAt": "2026-07-15T13:10:09.272Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\walkthrough.md": {
+    "sourceHash": "d10295befd857e0ac6b52721c2e53d2261d32d0d938a140751fa52eea35e55d9",
+    "normalizedHash": "",
+    "artifactHash": "walkthrough",
+    "lastCompiledAt": "2026-07-15T13:10:09.273Z",
     "dependencies": []
   }
 }

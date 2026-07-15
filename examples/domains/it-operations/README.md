@@ -1,5 +1,6 @@
 # IT Operations / Incident Response — Enterprise Flagship Domain
 
+**Maturity Status:** Beta | **Type:** Enterprise Flagship
 > **This is the enterprise flagship domain for AKCP.**
 >
 > It demonstrates how AKCP's governance, policy-gated approvals, audit evidence, and MCP capabilities function in a real-world operational context: incident triage, safe remediation, escalation, and post-incident learning.
@@ -20,81 +21,39 @@
 
 ---
 
-## Domain Model
+## Domain Structure
 
-```
-System (sys-commerce)
-  └── Service (svc-payment)
-        ├── Owner (owner-team-payments)
-        ├── SLO (slo-payment-availability)
-        ├── EscalationPolicy (escalation-policy-payments)
-        ├── ChangeWindow (change-window-payments)
-        ├── Alert (alert-high-cpu-payment)
-        └── Runbooks
-              ├── runbook-high-cpu
-              └── runbook-failed-deploy
-                    └── RemediationAction (remediation-rollback-deployment)
-  └── Service (svc-auth)
-        └── Owner (owner-team-security)
+- `sources/`: The raw OKF-compatible source markdown files (Services, Runbooks, Incidents, Scenarios).
+- `capabilities/`: The MCP tools associated with this domain.
+- `policies/`: The policies enforcing that remediation actions are strictly gated by human approval.
+- `evals/`: The baseline evaluation dataset to test agent accuracy on this domain.
+- `expected-output/`: Golden output snapshots from successful compile/serve.
+- `akcp.yaml`: The compiler configuration bundle mapping sources to targets.
 
-Incidents
-  └── inc-2026-001 (SEV-1, Closed)
-        └── postmortem-2026-001
+## Expected Outputs
 
-Policies
-  ├── incident-response.policy.yaml  (master policy)
-  ├── execute_remediation.policy.yaml
-  ├── restart_service.policy.yaml
-  ├── deploy_service.policy.yaml
-  └── execute_command.policy.yaml
-```
+Once compiled, you can expect:
+- A `context-pack.json` (AK-IR) containing the parsed and budgeted OKF documents.
+- An `mcp-resources.json` for MCP resource serving.
+- A static HTML OpenWiki in `dist/openwiki`.
+- A dashboard metadata file in `dist/dashboard-meta.json`.
 
 ---
 
-## Quick Start
+## Commands
 
-### 1. Validate the Domain Bundle
-
-```bash
-pnpm akcp validate examples/domains/it-operations
-```
-
-Expected output:
-```
-✓ Validated 14 documents
-✓ Profile: it-operations
-✓ No schema errors
-```
-
-### 2. Compile the Domain
+Follow the steps in [Walkthrough](walkthrough.md), or run these quick commands:
 
 ```bash
+# 1. Validate the knowledge bundle
+pnpm akcp validate --bundle examples/domains/it-operations --profile it-operations
+
+# 2. Compile the bundle into Agent Knowledge IR (AK-IR)
 pnpm akcp compile --config examples/domains/it-operations/akcp.yaml
+
+# 3. Serve the bundle as MCP resources
+pnpm akcp serve mcp --profile it-operations
 ```
-
-Expected output:
-```
-✓ Compilation complete
-  → dist/agent-knowledge-ir.json  (context pack)
-  → dist/mcp-resources.json       (MCP resources)
-  → dist/openwiki/                (OpenWiki docs)
-  → dist/dashboard-meta.json      (dashboard metadata)
-```
-
-### 3. Inspect the Context Pack
-
-```bash
-pnpm akcp inspect examples/domains/it-operations/dist/agent-knowledge-ir.json
-```
-
-### 4. Review the Walkthrough
-
-See [docs/walkthroughs/it-ops.md](../../../docs/walkthroughs/it-ops.md) for the full end-to-end tutorial including:
-
-- Starting the MCP Profile Server
-- Simulating an incident triage session
-- Requesting and approving a remediation action
-- Verifying the audit log
 
 ---
 
@@ -133,22 +92,17 @@ The `evals/it-operations.yaml` file contains 7 evaluation scenarios:
 
 ---
 
-## Files
+## Files mapped in Sources
 
-| Path                                        | Document Type       |
-|---------------------------------------------|---------------------|
-| `services/payment-service.md`               | Service             |
-| `services/auth-service.md`                  | Service             |
-| `services/owner-team-payments.md`           | Owner               |
-| `services/slo-payment-availability.md`      | SLO                 |
-| `services/escalation-policy-payments.md`    | EscalationPolicy    |
-| `services/change-window-payments.md`        | ChangeWindow        |
-| `services/alert-high-cpu-payment.md`        | Alert               |
-| `runbooks/high-cpu.md`                      | Runbook             |
-| `runbooks/failed-deploy.md`                 | Runbook             |
-| `runbooks/remediation-rollback-deployment.md` | RemediationAction |
-| `incidents/inc-2026-001.md`                 | Incident            |
-| `incidents/postmortem-2026-001.md`          | Postmortem          |
-| `policies/incident-response.policy.yaml`    | Policy              |
-| `policies/execute_remediation.policy.yaml`  | Policy              |
-| `evals/it-operations.yaml`                  | Eval dataset        |
+| Document Type       | Purpose |
+|---------------------|---------|
+| Service             | Describes a microservice boundaries |
+| Owner               | Defines the owning team |
+| SLO                 | Defines the Service Level Objective |
+| EscalationPolicy    | Escalation path mapping |
+| ChangeWindow        | Allowed deployment windows |
+| Alert               | Mapping metrics to alerts |
+| Runbook             | Mitigation steps for alerts |
+| RemediationAction   | Automated commands for mitigation |
+| Incident            | Historical incident record |
+| Postmortem          | Post-incident review document |

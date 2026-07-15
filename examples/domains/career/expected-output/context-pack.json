@@ -1,0 +1,144 @@
+{
+  "irVersion": "1.0.0",
+  "okfVersion": "0.1.0",
+  "bundleId": "career",
+  "buildId": "bld_ce755f37",
+  "timestamp": "2026-07-15T12:18:45.690Z",
+  "concepts": [
+    {
+      "conceptId": "experience-acmecorp",
+      "type": "Experience",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\knowledge\\experience-acmecorp.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "Experience",
+        "id": "exp-acmecorp",
+        "organization": "Acme Corp",
+        "role": "Senior Software Engineer",
+        "startDate": "2021-03-01",
+        "endDate": "2024-06-30",
+        "location": "Remote",
+        "summary": "- Led a team of 4 engineers to migrate the legacy monolithic API to a modern, event-driven microservices architecture using Node.js and Apache Kafka.\n- Improved API response times by 40% (P95 latency dropped from 300ms to 180ms) by introducing Redis caching and optimizing Postgres queries.\n- Designe..."
+      },
+      "body": "# Senior Software Engineer at Acme Corp\n\n## Responsibilities & Impact\n\n- Led a team of 4 engineers to migrate the legacy monolithic API to a modern, event-driven microservices architecture using Node.js and Apache Kafka.\n- Improved API response times by 40% (P95 latency dropped from 300ms to 180ms) by introducing Redis caching and optimizing Postgres queries.\n- Designed and implemented a robust CI/CD pipeline using GitHub Actions, reducing deployment time from 45 minutes to under 10 minutes.\n- Mentored junior engineers, conducting weekly pair-programming sessions and driving best practices for testing (Jest) and code quality.\n\n## Tech Stack\n- Node.js, TypeScript, Express\n- PostgreSQL, Redis, Kafka\n- AWS (ECS, S3, RDS), GitHub Actions",
+      "budget": {
+        "byteSize": 743,
+        "estimatedTokens": 186
+      },
+      "status": "active",
+      "isStale": false
+    },
+    {
+      "conceptId": "preferences",
+      "type": "Preference",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\knowledge\\preferences.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "Preference",
+        "id": "pref-001",
+        "roleTypes": [
+          "Senior Software Engineer",
+          "Lead Backend Engineer"
+        ],
+        "workSettings": [
+          "Remote",
+          "Hybrid"
+        ],
+        "targetCompensation": 180000,
+        "currency": "USD"
+      },
+      "body": "# Career Preferences\n\nI am looking for roles that allow me to focus on building robust backend systems and improving developer experience. \n\n## Non-Negotiables\n- Must be a fully remote or hybrid (max 2 days/week on-site) role.\n- Engineering culture must prioritize testing, code review, and healthy work-life balance.\n\n## Nice to Haves\n- Opportunities to work on open-source projects.\n- Involvement in system architecture and technical design.\n- A team that values asynchronous communication.",
+      "budget": {
+        "byteSize": 492,
+        "estimatedTokens": 123
+      },
+      "status": "active",
+      "isStale": false
+    },
+    {
+      "conceptId": "profile",
+      "type": "Profile",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\knowledge\\profile.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "Profile",
+        "title": "Senior Software Engineer",
+        "id": "profile-adoe",
+        "name": "Alex Doe",
+        "location": "New York, NY (Remote OK)",
+        "email": "alex.doe@example.com",
+        "summary": "I am a Senior Software Engineer with 8 years of experience building scalable backend services and data pipelines. I specialize in TypeScript, Node.js, and cloud infrastructure (AWS/GCP). I am passionate about developer tooling, observability, and open-source software."
+      },
+      "body": "# Professional Summary\n\nI am a Senior Software Engineer with 8 years of experience building scalable backend services and data pipelines. I specialize in TypeScript, Node.js, and cloud infrastructure (AWS/GCP). I am passionate about developer tooling, observability, and open-source software.\n\n## Core Skills\n\n- **Languages:** TypeScript, JavaScript, Python, Go\n- **Frameworks:** Node.js, Express, React\n- **Cloud & DevOps:** AWS, Google Cloud, Docker, Kubernetes, GitHub Actions\n- **Databases:** PostgreSQL, Redis, MongoDB\n\n## Education\n\n- **B.S. in Computer Science** - State University (2014 - 2018)",
+      "budget": {
+        "byteSize": 602,
+        "estimatedTokens": 151
+      },
+      "status": "active",
+      "isStale": false
+    }
+  ],
+  "links": [],
+  "capabilities": [
+    {
+      "id": "career.summarize_experience",
+      "kind": "tool",
+      "name": "summarize_experience",
+      "description": "Summarizes the user's career experience and highlights key achievements.",
+      "version": "1.0.0",
+      "riskLevel": "low",
+      "sideEffects": "none",
+      "requiresApproval": false,
+      "readsPII": true,
+      "writesPII": false,
+      "inputsSchema": {
+        "type": "object",
+        "properties": {
+          "focusArea": {
+            "type": "string",
+            "description": "Optional specific tech stack or skill to focus on."
+          }
+        }
+      }
+    },
+    {
+      "id": "career.analyze_job_fit",
+      "kind": "tool",
+      "name": "analyze_job_fit",
+      "description": "Analyzes how well the user's profile and preferences match a given job description.",
+      "version": "1.0.0",
+      "riskLevel": "medium",
+      "sideEffects": "none",
+      "requiresApproval": false,
+      "readsPII": true,
+      "writesPII": false,
+      "inputsSchema": {
+        "type": "object",
+        "properties": {
+          "jobDescription": {
+            "type": "string",
+            "description": "The target job description text."
+          }
+        },
+        "required": [
+          "jobDescription"
+        ]
+      }
+    }
+  ],
+  "targets": [
+    "mcp-profile-server",
+    "mcp-automation-server"
+  ],
+  "sourceHashes": {
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\knowledge\\experience-acmecorp.md": "2b7ec7e07deca47458342f1d6f35e176f6849da677073329984d8ecfd7198ca9",
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\knowledge\\preferences.md": "161d4fafda506925e674226de71cbd063b25d67dd66e82cf025459d7c9a7558c",
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\knowledge\\profile.md": "f98c47310fa7cf27f0515b90492cbfe647a9d7cbfd6a4aed402d0e8b5efcbe58"
+  }
+}

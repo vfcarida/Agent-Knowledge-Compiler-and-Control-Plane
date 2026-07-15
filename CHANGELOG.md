@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Releases use standard SemVer conventions (e.g. `v0.1.0` or `v0.1.0-alpha.1`) without separate codenames.
 
 For detailed information on our deprecation and backwards compatibility policies, please see the [Release Policy](docs/governance/release-policy.md).
 

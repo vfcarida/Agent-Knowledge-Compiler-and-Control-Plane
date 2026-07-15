@@ -13,8 +13,9 @@ Only the latest release of the Agent Knowledge Compiler and Control Plane (AKCP)
 We take the security of organizational knowledge and automated agent credentials seriously. If you discover a vulnerability, please report it to us following these guidelines:
 
 1.  **Do Not File Public Issues**: Avoid filing public issues for potential security vulnerabilities.
-2.  **Submit a Security Report**: Send a detailed description of the vulnerability, including steps to reproduce, to the project maintainers via GitHub Security Advisories or a direct email if provided in the maintainers list.
-3.  **Coordinated Disclosure**: We aim to resolve vulnerabilities within 30 days of receipt before releasing details publicly.
+2.  **Submit a Security Report**: Send a detailed description of the vulnerability, including steps to reproduce, to the project maintainers via GitHub Security Advisories or a direct email to `security@example.com`.
+3.  **Coordinated Disclosure**: We aim to acknowledge receipt within 48 hours and resolve vulnerabilities within 30 days of receipt before releasing details publicly.
+4.  **Incident Response**: Critical vulnerabilities that impact data privacy or agent autonomy will trigger an immediate out-of-band release and a security advisory.
 
 ## Safe Harbor
 

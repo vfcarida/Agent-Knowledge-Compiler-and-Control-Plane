@@ -1,0 +1,23 @@
+{
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\packages\\evals\\benchmarks\\agent-knowledge-readiness\\sample-bundle\\index.md": {
+    "sourceHash": "968b2767647bf0eed59957f459bcf8489f58adade987bdcd64766978050016c4",
+    "normalizedHash": "",
+    "artifactHash": "index",
+    "lastCompiledAt": "2026-07-15T11:56:16.426Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\packages\\evals\\benchmarks\\agent-knowledge-readiness\\sample-bundle\\log.md": {
+    "sourceHash": "2f4147b1db067daa6d814f0a888bf3723a11ca43d3bcf697a6fd3b4e8e991aa8",
+    "normalizedHash": "",
+    "artifactHash": "log",
+    "lastCompiledAt": "2026-07-15T11:56:16.429Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\packages\\evals\\benchmarks\\agent-knowledge-readiness\\sample-bundle\\skills\\typescript.md": {
+    "sourceHash": "ec24dd6616576501e7d145e44d0c53e592d1ecf73f1e04f54405c86bef416605",
+    "normalizedHash": "",
+    "artifactHash": "skills/typescript",
+    "lastCompiledAt": "2026-07-15T11:56:16.430Z",
+    "dependencies": []
+  }
+}

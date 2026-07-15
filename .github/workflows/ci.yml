@@ -51,17 +51,8 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Unit Tests & Coverage
-        run: pnpm coverage
-
-      - name: Security Tests
-        run: pnpm test:security
-
-      - name: Contract Tests
-        run: pnpm test:contract
-
-      - name: Conformance Tests
-        run: pnpm test:conformance
+      - name: Quality Gate (Coverage, Security, Contract, Conformance)
+        run: pnpm quality:gate
 
       - name: Validate Career Bundle
         run: pnpm akcp validate --config examples/domains/career/akcp.yaml
