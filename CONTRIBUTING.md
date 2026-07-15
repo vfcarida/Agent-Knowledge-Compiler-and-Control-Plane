@@ -6,15 +6,15 @@ Welcome! The **Agent Knowledge Compiler and Control Plane (AKCP)** is an open, s
 
 The project is organized into the following workstreams. Pick the one that matches your skills and interests:
 
-| Workstream        | Description                                                                     | Good First Task                                                                      |
-| ----------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| **compiler**      | The core compilation pipeline: OKF parsing, IR construction, emission targets.  | Add a new output target (e.g., `llms-txt`)                                           |
-| **control-plane** | MCP Gateway, Policy evaluation, HITL approvals, Audit logging.                  | Add a new rule type to the Policy Card evaluator                                     |
+| Workstream        | Description                                                                     | Good First Task                                                      |
+| ----------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| **compiler**      | The core compilation pipeline: OKF parsing, IR construction, emission targets.  | Add a new output target (e.g., `llms-txt`)                           |
+| **control-plane** | MCP Gateway, Policy evaluation, HITL approvals, Audit logging.                  | Add a new rule type to the Policy Card evaluator                     |
 | **connectors**    | Plugins that pull knowledge from external systems (Notion, Confluence, GitHub). | See [How to Contribute a Connector](docs/guides/create-connector.md) |
-| **policies**      | Policy Pack authoring, governance templates, NIST AI RMF mappings.              | Author a new governance policy template                                              |
-| **evals**         | Evaluation datasets, grounding benchmarks, adversarial scenarios.               | Add a prompt injection eval scenario                                                 |
-| **docs**          | Technical documentation, spec improvements, tutorials, examples.                | Improve a spec section with a concrete example                                       |
-| **examples**      | Real-world bundle examples for different domains.                               | Add a new domain example under `examples/domains/`                                   |
+| **policies**      | Policy Pack authoring, governance templates, NIST AI RMF mappings.              | Author a new governance policy template                              |
+| **evals**         | Evaluation datasets, grounding benchmarks, adversarial scenarios.               | Add a prompt injection eval scenario                                 |
+| **docs**          | Technical documentation, spec improvements, tutorials, examples.                | Improve a spec section with a concrete example                       |
+| **examples**      | Real-world bundle examples for different domains.                               | Add a new domain example under `examples/domains/`                   |
 
 ---
 
@@ -28,11 +28,17 @@ The project is organized into the following workstreams. Pick the one that match
    pnpm -r run test -- --run
    pnpm -r run build
    ```
-4. **Run linting**: Ensure no lint errors before submitting.
+3. **Run linting**: Ensure no lint errors before submitting.
    ```bash
    pnpm lint
    ```
-3. **Open an issue first**: For non-trivial changes, open an issue using the appropriate template to discuss your approach before submitting a PR.
+4. **Open an issue first**: For non-trivial changes, open an issue using the appropriate template to discuss your approach before submitting a PR.
+5. **Pre-commit hooks are active**: The repository uses Husky + lint-staged. On every commit:
+   - TypeScript files are linted (ESLint) and formatted (Prettier)
+   - Other files (JSON, YAML, MD) are formatted
+   - Commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/)
+
+   If a hook fails, fix the issue and retry. Do NOT use `--no-verify`.
 
 ---
 
@@ -82,6 +88,7 @@ Look for issues labelled `good first issue`. The easiest entry points are:
 ## Contribution Guides
 
 For detailed instructions on contributing specific components, please read our dedicated guides:
+
 - **[Domain Adapters](docs/guides/create-domain-adapter.md)**: How to propose and build a new flagship domain.
 - **[Compile Targets](docs/guides/create-compile-target.md)**: How to add a new build-time output target.
 - **[Security Review](docs/security/security-review.md)**: How to navigate the threat model and security review for core Engine/Control Plane changes.

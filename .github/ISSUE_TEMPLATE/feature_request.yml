@@ -6,6 +6,8 @@ body:
   - type: markdown
     attributes:
       value: |
+        **Tip**: For early-stage ideas or brainstorming, consider posting in [Discussions](https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane/discussions/categories/ideas) first.
+
         **Note:** For minor enhancements, use this form. For major architectural changes, new compile targets, or normative spec changes, please submit an RFC instead by reading the [RFC Process](docs/governance/rfc-process.md).
   - type: textarea
     id: feature-description
