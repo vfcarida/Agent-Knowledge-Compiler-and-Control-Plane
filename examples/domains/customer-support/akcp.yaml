@@ -4,6 +4,9 @@ compile:
   sources:
     - type: okf-directory
       path: ./sources
+    - type: mock-zendesk
+      ticketCount: 150
+      seed: "akcp-demo-2026"
 
   targets:
     - type: context-pack

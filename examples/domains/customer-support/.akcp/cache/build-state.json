@@ -3,14 +3,14 @@
     "sourceHash": "6032966b4e8f370a1e4e4d1f33919e2d292f46b79a4e254afada764ee1a33a8e",
     "normalizedHash": "",
     "artifactHash": "policies/pii-policy",
-    "lastCompiledAt": "2026-07-21T14:07:44.170Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.934Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\policies\\refund-policy.md": {
     "sourceHash": "c7da0219883c0265340571b964365e35469b26c0ce7be1f24e94a972d980dc3b",
     "normalizedHash": "",
     "artifactHash": "policies/refund-policy",
-    "lastCompiledAt": "2026-07-21T14:07:44.171Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.934Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\macros\\delete-customer-data.md": {
@@ -28,59 +28,59 @@
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\README.md": {
-    "sourceHash": "26d92c00a2b0f982c19892abe1d08d4100326094843fd3f1902d8d0ccfc9ed9a",
+    "sourceHash": "8d19e6bc0af044be121772ba99aa9490ed5b585c3193f8809427491ac452d701",
     "normalizedHash": "",
     "artifactHash": "README",
-    "lastCompiledAt": "2026-07-21T14:07:44.169Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.933Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\WALKTHROUGH.md": {
     "sourceHash": "6933afe10b52983b5ce6a43ad3b835c6344f80f7053ac2ae79b3cefd36c8ecfc",
     "normalizedHash": "",
     "artifactHash": "WALKTHROUGH",
-    "lastCompiledAt": "2026-07-21T14:07:44.170Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.933Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\article-refunds.md": {
     "sourceHash": "5fa438016cf017c2ced7aa67e51e27f014b46e44ae7daf37b9716a87df054e9a",
     "normalizedHash": "",
     "artifactHash": "sources/article-refunds",
-    "lastCompiledAt": "2026-07-21T14:07:44.172Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.936Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\escalation-tier2.md": {
     "sourceHash": "8dc6c8868310138e9492d77d8c258c6c9e8c3eb1353087a4a075267ce8492eec",
     "normalizedHash": "",
     "artifactHash": "sources/escalation-tier2",
-    "lastCompiledAt": "2026-07-21T14:07:44.173Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.936Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\issue-login.md": {
     "sourceHash": "8213ad75cf8e596ccc141e5f0e0933c587a863cf9f6ba554eb411bb6ef3b74a3",
     "normalizedHash": "",
     "artifactHash": "sources/issue-login",
-    "lastCompiledAt": "2026-07-21T14:07:44.173Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.936Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\profile-johndoe.md": {
     "sourceHash": "14c08a350be1ffa32a19c1b40a0d5b657c914a085c9508ab068bcea4f38d6cdf",
     "normalizedHash": "",
     "artifactHash": "sources/profile-johndoe",
-    "lastCompiledAt": "2026-07-21T14:07:44.175Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.940Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\sla-standard.md": {
     "sourceHash": "bf55d8d0edaaeb3b2d731dd5e8a79ada9a32e1fb3ac6ea6fe2b2e2a1012feed8",
     "normalizedHash": "",
     "artifactHash": "sources/sla-standard",
-    "lastCompiledAt": "2026-07-21T14:07:44.176Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.940Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\ticket-101.md": {
     "sourceHash": "67780fe1f91f5eb18e4c63ab865d144f91a9db4679ce5a417f2a2379257961b2",
     "normalizedHash": "",
     "artifactHash": "sources/ticket-101",
-    "lastCompiledAt": "2026-07-21T14:07:44.176Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.940Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\walkthrough.md": {
@@ -94,56 +94,546 @@
     "sourceHash": "91c0b113d56d9cd618cb80eba86abe10aa8dc3ed078658ffd75432a1765d52a0",
     "normalizedHash": "",
     "artifactHash": "sources/ticket-102",
-    "lastCompiledAt": "2026-07-21T14:07:44.177Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.941Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\ticket-103.md": {
     "sourceHash": "89e6e79c8b74240a2abdacbed0e0b03f1ebd0985ae6566567ea45fac2e330605",
     "normalizedHash": "",
     "artifactHash": "sources/ticket-103",
-    "lastCompiledAt": "2026-07-21T14:07:44.177Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.941Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\article-billing-dispute.md": {
-    "sourceHash": "87695fad371e1be9cd2abba909382b620eee4a4bf11e0a0dd22839edd30f225b",
+    "sourceHash": "6875d0877224f1d0a0767f0532bd4bcb52edca548de981fe80c407604267943a",
     "normalizedHash": "",
     "artifactHash": "sources/article-billing-dispute",
-    "lastCompiledAt": "2026-07-21T14:07:44.171Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.935Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\article-cancellation.md": {
-    "sourceHash": "28a943ea3011290537cbe1ae115d83df7d59690ba435339ec6b8b2db17ca9e83",
+    "sourceHash": "62529a79cd7f10e4065c0bed621cd1206bfd87d7163b997cd0629bf8ccf210a8",
     "normalizedHash": "",
     "artifactHash": "sources/article-cancellation",
-    "lastCompiledAt": "2026-07-21T14:07:44.171Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.935Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\macro-account-unlock.md": {
-    "sourceHash": "4c005954fe946584976daf2066b51a48b7be794187774e28d7c2b5d5fda63a1e",
+    "sourceHash": "76e103d22d7f8b6afea16681a71fafc31532d1ac1097034974ac11acf9971295",
     "normalizedHash": "",
     "artifactHash": "sources/macro-account-unlock",
-    "lastCompiledAt": "2026-07-21T14:07:44.173Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.937Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\macro-password-reset.md": {
-    "sourceHash": "61680cb30417e1b1ae1f1f61971b0110ebb967ba0aacb3d55afc91c3bb2fe665",
+    "sourceHash": "5e67c9272ea4eddf25f0d5e64135dee861abd2aa5d5ca7bba26058b8d99f529c",
     "normalizedHash": "",
     "artifactHash": "sources/macro-password-reset",
-    "lastCompiledAt": "2026-07-21T14:07:44.174Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.939Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\macro-refund-processing.md": {
-    "sourceHash": "270bda6b3415d510d81942e3c1cb7783cbd4c683212f0f090a8555bfc2e6e603",
+    "sourceHash": "e54b3d4e6be8c17f24e8a0391a2464a4c2345c9cf77f7ebed1079c2660e19568",
     "normalizedHash": "",
     "artifactHash": "sources/macro-refund-processing",
-    "lastCompiledAt": "2026-07-21T14:07:44.174Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.939Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\product-overview.md": {
-    "sourceHash": "99e34da1cd346da8d40db0095a299431ff2a9265c9b55a23925050c283eacc8d",
+    "sourceHash": "95b89cf32112dcf651cbf7dad0224a7c870359ba0d1b0227f64160eac6d6bf92",
     "normalizedHash": "",
     "artifactHash": "sources/product-overview",
-    "lastCompiledAt": "2026-07-21T14:07:44.174Z",
+    "lastCompiledAt": "2026-07-21T14:18:03.939Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-1": {
+    "sourceHash": "8481897a4353e693d846ebee5f58aa42b8314860ba04acc5ff0b6765b481e7f3",
+    "normalizedHash": "",
+    "artifactHash": "item-8481897a",
+    "lastCompiledAt": "2026-07-21T14:18:03.874Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-2": {
+    "sourceHash": "9c87b781d198c310504766aec12bdf59f0532ad0abe75a8807c6678886c106b3",
+    "normalizedHash": "",
+    "artifactHash": "item-9c87b781",
+    "lastCompiledAt": "2026-07-21T14:18:03.874Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-3": {
+    "sourceHash": "85a27474a0612a37b9913a1163b0938a243c6ae8f48baca4b920419e8c3dae04",
+    "normalizedHash": "",
+    "artifactHash": "item-85a27474",
+    "lastCompiledAt": "2026-07-21T14:18:03.874Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-4": {
+    "sourceHash": "6a21c783932bd7477904531fe0a4a17e52bfda294c1b1040313b2373b2653cf6",
+    "normalizedHash": "",
+    "artifactHash": "item-6a21c783",
+    "lastCompiledAt": "2026-07-21T14:18:03.874Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-5": {
+    "sourceHash": "3f7df03cb872d9d69a98c14f16e347340b305104b283d4c358ff857d9c92d69a",
+    "normalizedHash": "",
+    "artifactHash": "item-3f7df03c",
+    "lastCompiledAt": "2026-07-21T14:18:03.874Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-6": {
+    "sourceHash": "0c9bf450680834d70ebafb98fc4e4a19048e17a6e8ab391304b257737164a2b5",
+    "normalizedHash": "",
+    "artifactHash": "item-0c9bf450",
+    "lastCompiledAt": "2026-07-21T14:18:03.874Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-7": {
+    "sourceHash": "dab647a433a4b32b7b8f32ba2e9d71e16bbeda41b7f023a8e4581d9833fd9615",
+    "normalizedHash": "",
+    "artifactHash": "item-dab647a4",
+    "lastCompiledAt": "2026-07-21T14:18:03.874Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-8": {
+    "sourceHash": "97cfdecc45e8894c6375f1539a6472341f962b05b3332318189735220e25d856",
+    "normalizedHash": "",
+    "artifactHash": "item-97cfdecc",
+    "lastCompiledAt": "2026-07-21T14:18:03.874Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-9": {
+    "sourceHash": "d37420d20e2a7cea14ce35d917bae9ebb0784ca52dc7a945fa731ce907879e22",
+    "normalizedHash": "",
+    "artifactHash": "item-d37420d2",
+    "lastCompiledAt": "2026-07-21T14:18:03.874Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-10": {
+    "sourceHash": "883a78925588fac52a714c80126be49774d50e5b8dd1825361b16a7d6e010e60",
+    "normalizedHash": "",
+    "artifactHash": "item-883a7892",
+    "lastCompiledAt": "2026-07-21T14:18:03.874Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-11": {
+    "sourceHash": "412b4aff2d62abba85bafd33ba320cf97d76623e3ac506192d578b005972a26b",
+    "normalizedHash": "",
+    "artifactHash": "item-412b4aff",
+    "lastCompiledAt": "2026-07-21T14:18:03.874Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-12": {
+    "sourceHash": "41e5dbe0a692601b3dcdb51d37492bb434bab91c0c30ef770ab56581e02c288e",
+    "normalizedHash": "",
+    "artifactHash": "item-41e5dbe0",
+    "lastCompiledAt": "2026-07-21T14:18:03.874Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-13": {
+    "sourceHash": "7cdee45902a16f7a825d8cd0b260a21f84f3f540b4e61ba26a615b131d7de9c6",
+    "normalizedHash": "",
+    "artifactHash": "item-7cdee459",
+    "lastCompiledAt": "2026-07-21T14:18:03.874Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-14": {
+    "sourceHash": "69341f1ced624c088484122a6458bd1b686dc4400d8cbe6bafe318c476511658",
+    "normalizedHash": "",
+    "artifactHash": "item-69341f1c",
+    "lastCompiledAt": "2026-07-21T14:18:03.874Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-15": {
+    "sourceHash": "503872461b156124a47977cdde3fca310b9f18446cfbd68437e2ef5f5505ae5b",
+    "normalizedHash": "",
+    "artifactHash": "item-50387246",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-16": {
+    "sourceHash": "a47f12f199b910a9324e555d995408ed6586c60befe681e39eac4263b441ba94",
+    "normalizedHash": "",
+    "artifactHash": "item-a47f12f1",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-17": {
+    "sourceHash": "68eb4c7d2878ef69544d9b142405376eb6023ba140a54a0905dc90e0144edccd",
+    "normalizedHash": "",
+    "artifactHash": "item-68eb4c7d",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-18": {
+    "sourceHash": "2b9b18598ed996641936c7f4ec9aedea049f94d8dfc6a0781f2f06ae7270bf0f",
+    "normalizedHash": "",
+    "artifactHash": "item-2b9b1859",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-19": {
+    "sourceHash": "cf23f769443db9bda6f74b755fa0eba65a2bd22f288f5a6b3d2b77060c1c876a",
+    "normalizedHash": "",
+    "artifactHash": "item-cf23f769",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-20": {
+    "sourceHash": "d8117d4a6ed3c3e1e14421dbbd225cbbdc340ff89bc7dab0a4eae3cd2915b574",
+    "normalizedHash": "",
+    "artifactHash": "item-d8117d4a",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-21": {
+    "sourceHash": "22db65239a104e3e9f7c3eae3273cc2f372cbbf151defa593d32117909badb2d",
+    "normalizedHash": "",
+    "artifactHash": "item-22db6523",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-22": {
+    "sourceHash": "70187e93d93108bb9d815ce38853f17d05de17eea393681d6d81e65b5871831b",
+    "normalizedHash": "",
+    "artifactHash": "item-70187e93",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-23": {
+    "sourceHash": "b3006057b6bb5d8520cba126659d43df6c216dc29a914b496fff9bdac699bf92",
+    "normalizedHash": "",
+    "artifactHash": "item-b3006057",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-24": {
+    "sourceHash": "02ace7c0938d55a4d14772e9f64354ac0a155936b4306fb90ee2676a0eadf544",
+    "normalizedHash": "",
+    "artifactHash": "item-02ace7c0",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-25": {
+    "sourceHash": "c87715f8a9a88730fa670df9c4cdc8264ae0c2cfb4bf279bfaf55be2e84bcc36",
+    "normalizedHash": "",
+    "artifactHash": "item-c87715f8",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-26": {
+    "sourceHash": "5ec513044dc4e0a97d369fc55f2ddc8e507a439b654741a4d87e7ea77aade23a",
+    "normalizedHash": "",
+    "artifactHash": "item-5ec51304",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-27": {
+    "sourceHash": "2544354cd7dd06b4c99b39362d18ab7378b2edbaa3f64388b0906b16a2914e48",
+    "normalizedHash": "",
+    "artifactHash": "item-2544354c",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-28": {
+    "sourceHash": "ca7daf91412eedd08229513d04eb18df97f50f8fe861e5da09cec1561a37e7ce",
+    "normalizedHash": "",
+    "artifactHash": "item-ca7daf91",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-29": {
+    "sourceHash": "2412c89cf284415b095a2938d57f56d89889075bb41ebf611ab409218b533f55",
+    "normalizedHash": "",
+    "artifactHash": "item-2412c89c",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-30": {
+    "sourceHash": "a64b89ab715f21925837fa50997041c37b70f29bee27c17646f4a6de92feac55",
+    "normalizedHash": "",
+    "artifactHash": "item-a64b89ab",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-31": {
+    "sourceHash": "989898ea1fdad525cd5657c72f0b0abd58b38eff564477f7d61148f8cc443c91",
+    "normalizedHash": "",
+    "artifactHash": "item-989898ea",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-32": {
+    "sourceHash": "4da132b3ea5ac8affc16590048449b6ce496ca8183684d5e8ea858caa3d6901f",
+    "normalizedHash": "",
+    "artifactHash": "item-4da132b3",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-33": {
+    "sourceHash": "e644f636de92dd28a00bd12dff08167a371f40febd53b86fe77f22f13f7beef7",
+    "normalizedHash": "",
+    "artifactHash": "item-e644f636",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-34": {
+    "sourceHash": "5f501ddfe70d30ca8695d1b836e46e816c4c9794cc851aa6f44ea15347f00c8a",
+    "normalizedHash": "",
+    "artifactHash": "item-5f501ddf",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-35": {
+    "sourceHash": "566c86ccbbc2af2229824581c45d36ac305f955c20d12f2f4b0d0082fceba6e6",
+    "normalizedHash": "",
+    "artifactHash": "item-566c86cc",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-36": {
+    "sourceHash": "702672b2223646dd69da3a24deb076b1df4c821e214a16fb53d850ae6282fa7c",
+    "normalizedHash": "",
+    "artifactHash": "item-702672b2",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-37": {
+    "sourceHash": "aeec42c02b1dddacb10e7c7ba0cc0fc30adb18cbc879b185b5253ecc50def877",
+    "normalizedHash": "",
+    "artifactHash": "item-aeec42c0",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-38": {
+    "sourceHash": "09d0b020ff95ec6027318ac0cb251edeeb22bb68244916652d4b05b63f00d448",
+    "normalizedHash": "",
+    "artifactHash": "item-09d0b020",
+    "lastCompiledAt": "2026-07-21T14:18:03.875Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-39": {
+    "sourceHash": "ed7a08964c24f9064da17f90d71aa2cfbb4c2694f7350f161ee558ffa3545077",
+    "normalizedHash": "",
+    "artifactHash": "item-ed7a0896",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-40": {
+    "sourceHash": "ea24324d6d15797cc6baf8ee97324b3bc4a8a75454ea9d1b9cbfc5d10c50d0ff",
+    "normalizedHash": "",
+    "artifactHash": "item-ea24324d",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-41": {
+    "sourceHash": "c9151a03787ab3bfb49121665305d3f0d75e792dde578ab0830fdc9e467f2063",
+    "normalizedHash": "",
+    "artifactHash": "item-c9151a03",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-42": {
+    "sourceHash": "2d5695884216d414987b006601490efee7d244e4dfb12eec5a5439ae259306b2",
+    "normalizedHash": "",
+    "artifactHash": "item-2d569588",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-43": {
+    "sourceHash": "d02e21a77a5049322594cfedc62c0739a8f85cb50f37b91ab04210e6844f7d14",
+    "normalizedHash": "",
+    "artifactHash": "item-d02e21a7",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-44": {
+    "sourceHash": "f50eda35df8404e7f61f7ac9d42ddd761123d925311dacf6ebc84b8de7a9e18f",
+    "normalizedHash": "",
+    "artifactHash": "item-f50eda35",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-45": {
+    "sourceHash": "ffab01fc48fced2b143417e72932e8329cd9f86abf08928407a80cf32f8a0e1a",
+    "normalizedHash": "",
+    "artifactHash": "item-ffab01fc",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-46": {
+    "sourceHash": "b24c03ea696f43cf6791fda09d70a2ddacdd41a064ad720851bd06e9b65de469",
+    "normalizedHash": "",
+    "artifactHash": "item-b24c03ea",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-47": {
+    "sourceHash": "0a7bf162e0c4452e7d7d8fe30a0aa0dd499a94fe95c00a419773b3aa066a39ea",
+    "normalizedHash": "",
+    "artifactHash": "item-0a7bf162",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-48": {
+    "sourceHash": "d99957bbe4e3edf735e9ee730a5de9a1e3363b17c7fd17a300ad096ad953fba5",
+    "normalizedHash": "",
+    "artifactHash": "item-d99957bb",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-49": {
+    "sourceHash": "705b53ebdb04a03413790592e94e3729fe01a748941ec09c1ebc15a244a9960f",
+    "normalizedHash": "",
+    "artifactHash": "item-705b53eb",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://tkt-mock-50": {
+    "sourceHash": "2712bd83af5275d7f918abe08c1d6ca0fed55cf9289e46972be2ae9c0238b751",
+    "normalizedHash": "",
+    "artifactHash": "item-2712bd83",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-1": {
+    "sourceHash": "4069b140cefd760ddda733f2cea17d20e0fcd2add2a36971472cbde4476707f3",
+    "normalizedHash": "",
+    "artifactHash": "item-4069b140",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-2": {
+    "sourceHash": "18031ea866f10f1c2cd302d71aa5198c675bda23d15abbc400d9f484e432890e",
+    "normalizedHash": "",
+    "artifactHash": "item-18031ea8",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-3": {
+    "sourceHash": "a10bab5f0294791aed732aa2efb358655a915ff1393fd3fd1f2966b80c18b057",
+    "normalizedHash": "",
+    "artifactHash": "item-a10bab5f",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-4": {
+    "sourceHash": "6aa785923a5878aec30e74b507c69fea50673f894634f0d3e935302383e17c5c",
+    "normalizedHash": "",
+    "artifactHash": "item-6aa78592",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-5": {
+    "sourceHash": "7d58223b570700dac7b805a5619c69cedc30e3bb0fc72cbee09c537eedb9257a",
+    "normalizedHash": "",
+    "artifactHash": "item-7d58223b",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-6": {
+    "sourceHash": "a9d25c838689000abbb85e96439ce280540a22abd67b96d8567d4217073cce3e",
+    "normalizedHash": "",
+    "artifactHash": "item-a9d25c83",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-7": {
+    "sourceHash": "bfe2545746ac345ed1b435f613333f95ac7a031ac84b1c710f5de0b2835314e7",
+    "normalizedHash": "",
+    "artifactHash": "item-bfe25457",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-8": {
+    "sourceHash": "0644406f347673aa2cff6388927ead21581ad9c32c4bd19fe21eaa3c1d8e893d",
+    "normalizedHash": "",
+    "artifactHash": "item-0644406f",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-9": {
+    "sourceHash": "6507175b87e72400cb9579620d3d6c6421669d9c9e0f16804b766d597ba5d1a5",
+    "normalizedHash": "",
+    "artifactHash": "item-6507175b",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-10": {
+    "sourceHash": "2815c58cd90e1f15ab783451d164c7eb66af09f97dd368ddc13f6788ab1ecb5f",
+    "normalizedHash": "",
+    "artifactHash": "item-2815c58c",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-11": {
+    "sourceHash": "6c90e754633d0a7966d168561b253e65dcfcb705edcc6baae1be3028c5dbb5c7",
+    "normalizedHash": "",
+    "artifactHash": "item-6c90e754",
+    "lastCompiledAt": "2026-07-21T14:18:03.876Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-12": {
+    "sourceHash": "f4a57ae5bd2c42dca5eed071e4808dd1ecf867d03b65d0736be9599fd70d96c5",
+    "normalizedHash": "",
+    "artifactHash": "item-f4a57ae5",
+    "lastCompiledAt": "2026-07-21T14:18:03.877Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-13": {
+    "sourceHash": "432e87636c0a264fc82d576c7da57bc4c40b6ab9c554ba9e56890b93c135f064",
+    "normalizedHash": "",
+    "artifactHash": "item-432e8763",
+    "lastCompiledAt": "2026-07-21T14:18:03.877Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-14": {
+    "sourceHash": "8f1f8785f3010db03b04e6c79eabcdca824b7f8fa18c5388fedf962df10a5877",
+    "normalizedHash": "",
+    "artifactHash": "item-8f1f8785",
+    "lastCompiledAt": "2026-07-21T14:18:03.877Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-15": {
+    "sourceHash": "41c0d69ded405f3b8e40dd312c1b2faaa5054453e1fdb41203f768a5bbe5ba4d",
+    "normalizedHash": "",
+    "artifactHash": "item-41c0d69d",
+    "lastCompiledAt": "2026-07-21T14:18:03.877Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-16": {
+    "sourceHash": "b1bdb50000719b5a961cbe985e00c4aa767250d848b2466a68b27399c468ade8",
+    "normalizedHash": "",
+    "artifactHash": "item-b1bdb500",
+    "lastCompiledAt": "2026-07-21T14:18:03.877Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-17": {
+    "sourceHash": "70b721a7b31c7c7d66841ed89ad42312ed4a6d945d25a4e6a6f4d7da59f3f32a",
+    "normalizedHash": "",
+    "artifactHash": "item-70b721a7",
+    "lastCompiledAt": "2026-07-21T14:18:03.877Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-18": {
+    "sourceHash": "6b706899aa35277f751ad3ed110274a26451ae7920310a095d4085d9e2443c4c",
+    "normalizedHash": "",
+    "artifactHash": "item-6b706899",
+    "lastCompiledAt": "2026-07-21T14:18:03.877Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-19": {
+    "sourceHash": "f46cc72647868e3269c91578cdb2d7b9e4c9806fca9c802dddf41fa087865633",
+    "normalizedHash": "",
+    "artifactHash": "item-f46cc726",
+    "lastCompiledAt": "2026-07-21T14:18:03.877Z",
+    "dependencies": []
+  },
+  "zendesk://profile-mock-20": {
+    "sourceHash": "93c7f6dfd510b7ef89f3069807ec288a6aeebdb355152cce10ca988de06acc09",
+    "normalizedHash": "",
+    "artifactHash": "item-93c7f6df",
+    "lastCompiledAt": "2026-07-21T14:18:03.877Z",
     "dependencies": []
   }
 }

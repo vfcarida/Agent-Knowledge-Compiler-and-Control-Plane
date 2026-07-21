@@ -3,13 +3,19 @@ import { z } from "zod";
 export const SourceConfigSchema = z
   .object({
     type: z
-      .enum(["okf-directory", "markdown-directory", "openwiki", "openapi"])
+      .enum([
+        "okf-directory",
+        "markdown-directory",
+        "openwiki",
+        "openapi",
+        "mock-zendesk",
+      ])
       .default("okf-directory"),
     path: z.string().optional(),
     url: z.string().optional(),
     exclude: z.array(z.string()).optional(),
   })
-  .refine((data) => data.path || data.url, {
+  .refine((data) => data.path || data.url || data.type === "mock-zendesk", {
     message: "Either 'path' or 'url' must be provided in source config",
     path: ["path"],
   });
@@ -29,7 +35,7 @@ export const TargetConfigSchema = z.object({
     ])
     .default("context-pack"),
   out: z.string().min(1).optional(),
-  path: z.string().min(1).optional()
+  path: z.string().min(1).optional(),
 });
 
 export const BudgetsConfigSchema = z.object({
@@ -90,7 +96,9 @@ export const ControlPlaneConfigSchema = z.object({
 });
 
 export const PrivacyConfigSchema = z.object({
-  defaultPiiMode: z.enum(["redact", "tokenize", "detect-only"]).default("redact"),
+  defaultPiiMode: z
+    .enum(["redact", "tokenize", "detect-only"])
+    .default("redact"),
   allowedPiiClasses: z.array(z.string()).optional(),
   blockedPiiClasses: z.array(z.string()).optional(),
   redactionTokenFormat: z.string().optional(),
