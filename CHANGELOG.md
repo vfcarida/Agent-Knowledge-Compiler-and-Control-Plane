@@ -18,6 +18,7 @@ For detailed information on our deprecation and backwards compatibility policies
 - **Action Pins**: All GitHub Actions in `release.yml` and `ci.yml` are now pinned to exact commit SHAs.
 - **Documentation**: Added `docs/release/release-process.md` with full pre/post-release checklist and `gh attestation verify` instructions.
 - **Supply Chain Docs**: `docs/security/supply-chain.md` updated from roadmap framing to implemented-controls description with consumer verification commands and honest SLSA L1 posture statement.
+- **Identity & Naming**: Standardized naming across the repository from OCF to AKCP (Agent Knowledge Compiler and Control Plane) and renamed compiled artifacts to `agent-knowledge-ir.json`.
 
 ## [0.1.0] - Initial Enterprise Blueprint Release
 

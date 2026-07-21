@@ -61,7 +61,7 @@ const REQUIRED_EXAMPLE_FILES = [
   "examples/domains/customer-support/akcp.yaml",
 ];
 
-let errors = [];
+const errors = [];
 
 // 1. Validate REQUIRED_DOCS
 for (const docPath of REQUIRED_DOCS) {

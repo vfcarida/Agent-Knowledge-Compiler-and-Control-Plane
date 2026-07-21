@@ -104,9 +104,9 @@ export class AKCPProfileServer {
     const capabilities = this.ir.capabilities || [];
 
     // Filter out only tools
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const tools = capabilities.filter(
-      (cap: any) =>
+      (cap: unknown) =>
         cap.kind === "tool" ||
         cap.kind === "mcp-tool" ||
         cap.type === "tool" ||
@@ -189,8 +189,7 @@ export class AKCPProfileServer {
 
     for (const cap of tools) {
       if (cap.name) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const rawCap = cap as any;
+        const rawCap = cap as unknown;
         const schema =
           cap.inputsSchema || rawCap.inputSchema || rawCap.parameters || {};
 
@@ -198,8 +197,9 @@ export class AKCPProfileServer {
         const zodShape: Record<string, z.ZodTypeAny> = {};
 
         if (schema.properties) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          for (const [key, prop] of Object.entries<any>(schema.properties)) {
+          for (const [key, prop] of Object.entries<unknown>(
+            schema.properties,
+          )) {
             let zType: z.ZodTypeAny = z.any();
             if (prop.type === "string") zType = z.string();
             else if (prop.type === "number") zType = z.number();
@@ -280,8 +280,7 @@ export class AKCPProfileServer {
                     "1.0.0",
                     reqId,
                     async () => {
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      let mockResult: any = {
+                      let mockResult: unknown = {
                         status: "simulated_success",
                         message: `Tool ${cap.name} executed successfully with args`,
                         args,
@@ -326,8 +325,7 @@ export class AKCPProfileServer {
                   },
                 ],
               };
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } catch (err: any) {
+            } catch (err: unknown) {
               mcpToolFailuresCounter.add(1);
               return {
                 isError: true,

@@ -3,10 +3,10 @@ export interface AKCPExtensionConfig {
   defaultProfile: string;
 }
 
-export function parseExtensionConfig(rawConfig: any): AKCPExtensionConfig {
+export function parseExtensionConfig(rawConfig: unknown): AKCPExtensionConfig {
   return {
-    akcpExecutable: rawConfig?.akcpExecutable || 'npx akcp',
-    defaultProfile: rawConfig?.defaultProfile || 'software'
+    akcpExecutable: rawConfig?.akcpExecutable || "npx akcp",
+    defaultProfile: rawConfig?.defaultProfile || "software",
   };
 }
 

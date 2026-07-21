@@ -8,12 +8,12 @@ import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { AKCPProfileServer } from "./server.js";
 import { jwtVerify, createRemoteJWKSet } from "jose";
 
-
-
 // Read the previously compiled AgentKnowledgeIR
 const irPath = path.resolve(process.cwd(), "dist/agent-knowledge-ir.json");
 if (!fs.existsSync(irPath)) {
-  console.error(`[AKCP Profile Server - SSE] Missing compiled IR at ${irPath}.`);
+  console.error(
+    `[AKCP Profile Server - SSE] Missing compiled IR at ${irPath}.`,
+  );
   console.error(`Run 'akcp compile' first to generate the knowledge graph.`);
   process.exit(1);
 }
@@ -22,14 +22,22 @@ const irStr = fs.readFileSync(irPath, "utf-8");
 const ir = JSON.parse(irStr);
 
 // Instantiate the AKCP Profile Server logic
-const profileServer = new AKCPProfileServer(ir, { policies: ir.policies || {} }, "mcp-sse-client");
+const profileServer = new AKCPProfileServer(
+  ir,
+  { policies: ir.policies || {} },
+  "mcp-sse-client",
+);
 const mcp = profileServer.getServerInstance();
 
 const app = express();
 app.use(cors());
 
 // JWT Auth Middleware
-const requireAuth = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+const requireAuth = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
   const jwtSecret = process.env["AKCP_JWT_SECRET"];
   const jwksUri = process.env["AKCP_JWKS_URI"];
 
@@ -42,16 +50,20 @@ const requireAuth = async (req: express.Request, res: express.Response, next: ex
 
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    res.status(401).json({ error: "Missing or invalid Authorization Bearer token" });
+    res
+      .status(401)
+      .json({ error: "Missing or invalid Authorization Bearer token" });
     return;
   }
 
   const token = authHeader.substring(7);
   if (!token) {
-    res.status(401).json({ error: "Missing or invalid Authorization Bearer token" });
+    res
+      .status(401)
+      .json({ error: "Missing or invalid Authorization Bearer token" });
     return;
   }
-  
+
   try {
     let payload;
     if (jwksUri) {
@@ -63,14 +75,18 @@ const requireAuth = async (req: express.Request, res: express.Response, next: ex
       const result = await jwtVerify(token, secret);
       payload = result.payload;
     }
-    
+
     // Use sub or email as identity
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (req as any).user = { identity: payload?.sub || payload?.email || "authenticated-agent" };
+    (req as any).user = {
+      identity: payload?.sub || payload?.email || "authenticated-agent",
+    };
     next();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
-    res.status(401).json({ error: `Unauthorized: Invalid token (${err.message})` });
+    res
+      .status(401)
+      .json({ error: `Unauthorized: Invalid token (${err.message})` });
     return;
   }
 };
@@ -79,13 +95,15 @@ let globalTransport: SSEServerTransport | null = null;
 
 // SSE connection endpoint
 app.get("/sse", requireAuth, async (req, res) => {
-  // eslint-disable-next-line no-console, @typescript-eslint/no-explicit-any
-  console.log(`[SSE] New connection from ${req.ip} (User: ${(req as any).user.identity})`);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  console.warn(
+    `[SSE] New connection from ${req.ip} (User: ${(req as any).user.identity})`,
+  );
   globalTransport = new SSEServerTransport("/message", res);
-  
+
   await mcp.connect(globalTransport);
-  
-  req.on('close', () => {
+
+  req.on("close", () => {
     // eslint-disable-next-line no-console
     console.log(`[SSE] Connection closed for ${req.ip}`);
     globalTransport = null;
@@ -100,7 +118,7 @@ app.post("/message", requireAuth, express.json(), async (req, res) => {
   }
   try {
     await globalTransport.handlePostMessage(req, res);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("[SSE] Error handling message:", err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -113,11 +131,16 @@ app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`[AKCP Profile Server - SSE] Listening on port ${PORT}`);
   // eslint-disable-next-line no-console
-  console.log(`[AKCP Profile Server - SSE] Endpoint: http://localhost:${PORT}/sse`);
-  // eslint-disable-next-line no-console
+  console.log(
+    `[AKCP Profile Server - SSE] Endpoint: http://localhost:${PORT}/sse`,
+  );
   if (process.env["AKCP_JWT_SECRET"] || process.env["AKCP_JWKS_URI"]) {
-    console.log(`[AKCP Profile Server - SSE] Enterprise Auth enabled (JWT Validation active).`);
+    console.warn(
+      `[AKCP Profile Server - SSE] Enterprise Auth enabled (JWT Validation active).`,
+    );
   } else {
-    console.warn(`[AKCP Profile Server - SSE] WARNING: No AKCP_JWT_SECRET or AKCP_JWKS_URI set. Running without authentication.`);
+    console.warn(
+      `[AKCP Profile Server - SSE] WARNING: No AKCP_JWT_SECRET or AKCP_JWKS_URI set. Running without authentication.`,
+    );
   }
 });

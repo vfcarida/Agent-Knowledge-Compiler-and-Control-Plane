@@ -7,7 +7,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 describe("Prompt Injection Dataset", () => {
-  const datasetPath = path.resolve(__dirname, "../prompt-injection-dataset.json");
+  const datasetPath = path.resolve(
+    __dirname,
+    "../prompt-injection-dataset.json",
+  );
 
   it("should have a valid dataset file", () => {
     expect(fs.existsSync(datasetPath)).toBe(true);
@@ -30,7 +33,7 @@ describe("Prompt Injection Dataset", () => {
 
   it("should cover multiple injection types", () => {
     const dataset = JSON.parse(fs.readFileSync(datasetPath, "utf-8"));
-    const types = new Set(dataset.map((d: any) => d.type));
+    const types = new Set(dataset.map((d: unknown) => d.type));
     expect(types.size).toBeGreaterThan(1); // At least 2 different types
   });
 });

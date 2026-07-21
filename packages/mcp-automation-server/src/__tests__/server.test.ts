@@ -47,16 +47,18 @@ vi.mock("@modelcontextprotocol/sdk/server/mcp.js", () => {
 vi.mock("@akcp/core", async (importOriginal) => {
   const actual = await importOriginal();
   return {
-    ...(actual as any),
+    ...(actual as unknown),
     MCPGateway: vi.fn().mockImplementation(() => ({
       execute: vi.fn().mockImplementation(async (_ctx, fn) => {
         const data = await fn();
         return { data, durationMs: 10 };
       }),
     })),
-    withToolTracing: vi.fn().mockImplementation(async (_name, _version, _reqId, fn) => {
-      return await fn();
-    }),
+    withToolTracing: vi
+      .fn()
+      .mockImplementation(async (_name, _version, _reqId, fn) => {
+        return await fn();
+      }),
   };
 });
 
@@ -70,7 +72,7 @@ const mockDocService = {
 
 describe("AKCPAutomationServer", () => {
   let server: AKCPAutomationServer;
-  let mcpServerMock: any;
+  let mcpServerMock: unknown;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -79,7 +81,9 @@ describe("AKCPAutomationServer", () => {
   });
 
   it("should register all required tools", () => {
-    const registeredTools = mcpServerMock.tool.mock.calls.map((call: any[]) => call[0]);
+    const registeredTools = mcpServerMock.tool.mock.calls.map(
+      (call: unknown[]) => call[0],
+    );
     expect(registeredTools).toContain("preview_application");
     expect(registeredTools).toContain("prepare_application");
     expect(registeredTools).toContain("confirm_application_submission");
@@ -90,11 +94,16 @@ describe("AKCPAutomationServer", () => {
 
   describe("preview_application", () => {
     it("should return a successful preview", async () => {
-      const toolCall = mcpServerMock.tool.mock.calls.find((call: any[]) => call[0] === "preview_application");
+      const toolCall = mcpServerMock.tool.mock.calls.find(
+        (call: unknown[]) => call[0] === "preview_application",
+      );
       const handler = toolCall[3];
 
-      const result = await handler({ jobUrl: "https://linkedin.com/jobs/123", _agentId: "agent-1" });
-      
+      const result = await handler({
+        jobUrl: "https://linkedin.com/jobs/123",
+        _agentId: "agent-1",
+      });
+
       expect(result.isError).toBeUndefined(); // or false
       expect(result.content[0].type).toBe("text");
       const text = JSON.parse(result.content[0].text);
@@ -104,11 +113,16 @@ describe("AKCPAutomationServer", () => {
 
   describe("prepare_application", () => {
     it("should return an approval token", async () => {
-      const toolCall = mcpServerMock.tool.mock.calls.find((call: any[]) => call[0] === "prepare_application");
+      const toolCall = mcpServerMock.tool.mock.calls.find(
+        (call: unknown[]) => call[0] === "prepare_application",
+      );
       const handler = toolCall[3];
 
-      const result = await handler({ jobUrl: "https://linkedin.com/jobs/123", _agentId: "agent-1" });
-      
+      const result = await handler({
+        jobUrl: "https://linkedin.com/jobs/123",
+        _agentId: "agent-1",
+      });
+
       expect(result.isError).toBeUndefined();
       const text = JSON.parse(result.content[0].text);
       expect(text.data.approvalToken).toBe("mock-token");
@@ -117,11 +131,13 @@ describe("AKCPAutomationServer", () => {
 
   describe("list_pending_approvals", () => {
     it("should list pending approvals", async () => {
-      const toolCall = mcpServerMock.tool.mock.calls.find((call: any[]) => call[0] === "list_pending_approvals");
+      const toolCall = mcpServerMock.tool.mock.calls.find(
+        (call: unknown[]) => call[0] === "list_pending_approvals",
+      );
       const handler = toolCall[3];
 
       const result = await handler({ _agentId: "agent-1" });
-      
+
       expect(result.isError).toBeUndefined();
       const text = JSON.parse(result.content[0].text);
       expect(text.data.pending).toEqual([]);

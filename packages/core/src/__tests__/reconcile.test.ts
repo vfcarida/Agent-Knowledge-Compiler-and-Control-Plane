@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { reconcile, type ReconcileOptions } from "../reconcile/reconcile.js";
+import { reconcile } from "../reconcile/reconcile.js";
 import type { AkcpConfig } from "../config/akcp-config-schema.js";
 import fs from "node:fs";
 
@@ -70,10 +70,13 @@ describe("Reconcile", () => {
     });
     mockMkdirSync.mockImplementation(() => {});
 
-    // Note: this won't cover the full compilation branch unless we mock all the targets, 
+    // Note: this won't cover the full compilation branch unless we mock all the targets,
     // but this covers the basic source fixing branch.
     // We remove the missing target so it doesn't try to build the IR (which causes other issues if not mocked).
-    const configOnlySources = { ...mockConfig, compile: { sources: mockConfig.compile?.sources, targets: [] } };
+    const configOnlySources = {
+      ...mockConfig,
+      compile: { sources: mockConfig.compile?.sources, targets: [] },
+    };
     const result = await reconcile(configOnlySources, { dryRun: false });
     expect(result.status).toBe("in-sync");
     expect(mockMkdirSync).toHaveBeenCalled();

@@ -5,16 +5,19 @@ import type { IApprovalStore } from "./approval-store.js";
 import { authenticate, type AuthConfig } from "./auth.js";
 import { createPiiDetector } from "../privacy/create-detector.js";
 import type { PiiDetector, PiiMatch } from "../privacy/pii-detector.js";
-import { TokenBucketRateLimiter, type RateLimiterConfig } from "./rate-limiter.js";
+import {
+  TokenBucketRateLimiter,
+  type RateLimiterConfig,
+} from "./rate-limiter.js";
 import type { IAuditLogService } from "../infrastructure/audit-log.js";
 import crypto from "crypto";
 
 export class MCPGatewayError extends Error {
   constructor(
     public readonly message: string,
-    public readonly code: string,
+    public readonly _code: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public readonly data?: any,
+    public readonly _data?: any,
   ) {
     super(message);
     this.name = "MCPGatewayError";
@@ -96,8 +99,11 @@ export class MCPGateway {
       // Check scope restriction
       if (authResult.scopes && authResult.scopes.length > 0) {
         const hasScope = authResult.scopes.some(
-          (s) => s === "*" || s === request.toolName ||
-                 (s.endsWith("*") && request.toolName.startsWith(s.replace("*", ""))),
+          (s) =>
+            s === "*" ||
+            s === request.toolName ||
+            (s.endsWith("*") &&
+              request.toolName.startsWith(s.replace("*", ""))),
         );
         if (!hasScope) {
           throw new MCPGatewayError(
@@ -109,7 +115,10 @@ export class MCPGateway {
     }
 
     const policy = this.resolvePolicy(request.agentId);
-    const payloadHash = crypto.createHash('sha256').update(JSON.stringify(request.payload || {})).digest('hex');
+    const payloadHash = crypto
+      .createHash("sha256")
+      .update(JSON.stringify(request.payload || {}))
+      .digest("hex");
 
     if (!policy) {
       if (this.config.auditLogService) {
@@ -120,7 +129,7 @@ export class MCPGateway {
           capabilityId: request.toolName,
           decision: "error",
           riskLevel: "medium",
-          evidence: { reason: "No valid policy found" }
+          evidence: { reason: "No valid policy found" },
         });
       }
       throw new MCPGatewayError(
@@ -147,8 +156,8 @@ export class MCPGateway {
           evidence: {
             payloadHash,
             policyIds: policy.id ? [policy.id] : [],
-            reason: evalResult.reason
-          }
+            reason: evalResult.reason,
+          },
         });
       }
       throw new MCPGatewayError(
@@ -167,8 +176,8 @@ export class MCPGateway {
         riskLevel: "medium",
         evidence: {
           payloadHash,
-          policyIds: policy.id ? [policy.id] : []
-        }
+          policyIds: policy.id ? [policy.id] : [],
+        },
       });
     }
 
@@ -183,11 +192,14 @@ export class MCPGateway {
 
       const payloadObj = (request.payload as Record<string, unknown>) || {};
       const token = payloadObj._approvalToken as string | undefined;
-      
+
       // Clean up token from payload so it doesn't affect hash verification
       const cleanPayload = { ...payloadObj };
       delete cleanPayload._approvalToken;
-      const cleanPayloadHash = crypto.createHash('sha256').update(JSON.stringify(cleanPayload)).digest('hex');
+      const cleanPayloadHash = crypto
+        .createHash("sha256")
+        .update(JSON.stringify(cleanPayload))
+        .digest("hex");
 
       if (!token) {
         if (this.config.auditLogService) {
@@ -200,8 +212,8 @@ export class MCPGateway {
             riskLevel: "high",
             evidence: {
               payloadHash: cleanPayloadHash,
-              policyIds: policy.id ? [policy.id] : []
-            }
+              policyIds: policy.id ? [policy.id] : [],
+            },
           });
         }
         // No token provided, generate one and throw APPROVAL_REQUIRED
@@ -239,8 +251,8 @@ export class MCPGateway {
             riskLevel: "high",
             evidence: {
               payloadHash: cleanPayloadHash,
-              policyIds: policy.id ? [policy.id] : []
-            }
+              policyIds: policy.id ? [policy.id] : [],
+            },
           });
         }
         throw new MCPGatewayError(
@@ -248,7 +260,7 @@ export class MCPGateway {
           "POLICY_VIOLATION",
         );
       }
-      
+
       if (this.config.auditLogService) {
         await this.config.auditLogService.logEvent({
           action: "approval.consume",
@@ -259,8 +271,8 @@ export class MCPGateway {
           riskLevel: "high",
           evidence: {
             payloadHash: cleanPayloadHash,
-            policyIds: policy.id ? [policy.id] : []
-          }
+            policyIds: policy.id ? [policy.id] : [],
+          },
         });
       }
 
@@ -309,12 +321,15 @@ export class MCPGateway {
   private async sanitizeOutput<T>(output: T): Promise<T> {
     let str = JSON.stringify(output);
     const matches: PiiMatch[] = await this.detector.detect(str);
-    
+
     const sorted = [...matches].sort((a, b) => b.start - a.start);
     for (const match of sorted) {
-      str = str.slice(0, match.start) + `[REDACTED_${match.type.toUpperCase()}]` + str.slice(match.end);
+      str =
+        str.slice(0, match.start) +
+        `[REDACTED_${match.type.toUpperCase()}]` +
+        str.slice(match.end);
     }
-  
+
     return JSON.parse(str) as T;
   }
 

@@ -12,7 +12,7 @@ vi.mock("@modelcontextprotocol/sdk/server/mcp.js", () => {
 });
 
 describe("AKCPProfileServer", () => {
-  let warnSpy: any;
+  let warnSpy: unknown;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -32,19 +32,32 @@ describe("AKCPProfileServer", () => {
       metadata: { createdAt: new Date().toISOString() },
     } as unknown as AgentKnowledgeIR;
     new AKCPProfileServer(ir);
-    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("No concepts found in IR"));
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining("No concepts found in IR"),
+    );
   });
 
   it("should warn if no tools are found in IR", () => {
     const ir = {
       bundleId: "test-bundle",
-      concepts: [{ conceptId: "doc-1", type: "skill", data: {}, relations: [], frontmatter: {}, body: "test" }],
+      concepts: [
+        {
+          conceptId: "doc-1",
+          type: "skill",
+          data: {},
+          relations: [],
+          frontmatter: {},
+          body: "test",
+        },
+      ],
       capabilities: [],
       links: [],
       metadata: { createdAt: new Date().toISOString() },
     } as unknown as AgentKnowledgeIR;
     new AKCPProfileServer(ir);
-    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("No tool capabilities found in IR"));
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining("No tool capabilities found in IR"),
+    );
   });
 
   it("should register resources for valid concepts", () => {
@@ -71,7 +84,7 @@ describe("AKCPProfileServer", () => {
       "domain-skill",
       "knowledge://test-bundle/domain/skill",
       expect.any(Object),
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 
@@ -96,7 +109,9 @@ describe("AKCPProfileServer", () => {
     const server = new AKCPProfileServer(ir);
     const mcpInstance = server.getServerInstance();
     expect(mcpInstance.resource).not.toHaveBeenCalled();
-    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("Skipping resource with invalid path traversal"));
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining("Skipping resource with invalid path traversal"),
+    );
   });
 
   it("should register tools for valid capabilities", () => {
@@ -111,7 +126,7 @@ describe("AKCPProfileServer", () => {
           description: "A test tool",
           riskLevel: "low",
           sideEffects: ["none"],
-        } as any,
+        } as unknown,
       ],
       links: [],
       metadata: { createdAt: new Date().toISOString() },
@@ -119,13 +134,13 @@ describe("AKCPProfileServer", () => {
 
     const server = new AKCPProfileServer(ir);
     const mcpInstance = server.getServerInstance();
-    
+
     // The built-in read_document_chunk tool should be registered
     expect(mcpInstance.tool).toHaveBeenCalledWith(
       "read_document_chunk",
       expect.any(String),
       expect.any(Object),
-      expect.any(Function)
+      expect.any(Function),
     );
 
     // The IR capability tool should be registered
@@ -133,7 +148,7 @@ describe("AKCPProfileServer", () => {
       "test_tool",
       "A test tool",
       expect.any(Object),
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 });

@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { RedisApprovalStore } from "../redis-store.js";
 
-
 vi.mock("ioredis", () => {
   return {
     Redis: vi.fn().mockImplementation(() => {
@@ -37,7 +36,9 @@ vi.mock("ioredis", () => {
         ttl: vi.fn().mockImplementation(async (_key) => {
           return 3600;
         }),
-        _reset: () => { data = {}; }
+        _reset: () => {
+          data = {};
+        },
       };
     }),
   };
@@ -45,37 +46,58 @@ vi.mock("ioredis", () => {
 
 describe("RedisApprovalStore", () => {
   let store: RedisApprovalStore;
-  let clientMock: any;
+  let clientMock: unknown;
 
   beforeEach(() => {
     vi.clearAllMocks();
     store = new RedisApprovalStore();
-    clientMock = (store as any).redis;
+    clientMock = (store as unknown).redis;
     clientMock._reset();
   });
 
   it("should generate a secure token", async () => {
-    const token = await store.generateToken("req-1", "action-1", "hash-1", "high", "write", "agent-1", {});
+    const token = await store.generateToken(
+      "req-1",
+      "action-1",
+      "hash-1",
+      "high",
+      "write",
+      "agent-1",
+      {},
+    );
     expect(token).toBeDefined();
     expect(token).toHaveLength(64); // crypto.randomBytes(32).toString("hex")
 
     const savedStr = await clientMock.get(`akcp:approval:pending:${token}`);
     expect(savedStr).toBeDefined();
-    
+
     const saved = JSON.parse(savedStr);
     expect(saved.requestId).toBe("req-1");
     expect(saved.status).toBe("PENDING");
   });
 
   it("should validate and consume a valid token", async () => {
-    const token = await store.generateToken("req-1", "action-1", "hash-1", "high", "write", "agent-1", {});
-    
+    const token = await store.generateToken(
+      "req-1",
+      "action-1",
+      "hash-1",
+      "high",
+      "write",
+      "agent-1",
+      {},
+    );
+
     // First, approve the token
     const approved = await store.approveToken(token, "user-1");
     expect(approved).toBe(true);
 
     // Then consume it
-    const isValid = await store.validateAndConsume(token, "action-1", "hash-1", "user-1");
+    const isValid = await store.validateAndConsume(
+      token,
+      "action-1",
+      "hash-1",
+      "user-1",
+    );
     expect(isValid).toBe(true);
 
     const consumedStr = await clientMock.get(`akcp:approval:pending:${token}`);
@@ -83,20 +105,54 @@ describe("RedisApprovalStore", () => {
   });
 
   it("should fail validation if action mismatch", async () => {
-    const token = await store.generateToken("req-1", "action-1", "hash-1", "high", "write", "agent-1", {});
+    const token = await store.generateToken(
+      "req-1",
+      "action-1",
+      "hash-1",
+      "high",
+      "write",
+      "agent-1",
+      {},
+    );
     await store.approveToken(token, "user-1");
-    const isValid = await store.validateAndConsume(token, "wrong-action", "hash-1", "user-1");
+    const isValid = await store.validateAndConsume(
+      token,
+      "wrong-action",
+      "hash-1",
+      "user-1",
+    );
     expect(isValid).toBe(false);
   });
 
   it("should fail validation if token is not approved", async () => {
-    const token = await store.generateToken("req-1", "action-1", "hash-1", "high", "write", "agent-1", {});
-    const isValid = await store.validateAndConsume(token, "action-1", "hash-1", "user-1");
+    const token = await store.generateToken(
+      "req-1",
+      "action-1",
+      "hash-1",
+      "high",
+      "write",
+      "agent-1",
+      {},
+    );
+    const isValid = await store.validateAndConsume(
+      token,
+      "action-1",
+      "hash-1",
+      "user-1",
+    );
     expect(isValid).toBe(false);
   });
 
   it("should revoke a token", async () => {
-    const token = await store.generateToken("req-1", "action-1", "hash-1", "high", "write", "agent-1", {});
+    const token = await store.generateToken(
+      "req-1",
+      "action-1",
+      "hash-1",
+      "high",
+      "write",
+      "agent-1",
+      {},
+    );
     const revoked = await store.revokeToken(token, "user-1");
     expect(revoked).toBe(true);
 
@@ -109,7 +165,7 @@ describe("RedisApprovalStore", () => {
     const pending = await store.getPendingApprovals();
     expect(pending.length).toBe(0);
   });
-  
+
   it("should return empty audit logs", () => {
     const logs = store.getAuditLogs();
     expect(logs.length).toBe(0);
