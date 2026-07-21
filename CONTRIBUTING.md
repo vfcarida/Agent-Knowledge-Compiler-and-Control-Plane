@@ -46,7 +46,7 @@ The project is organized into the following workstreams. Pick the one that match
 
 - **Small, iterative PRs.** A single PR should do one thing. Large monolithic PRs will be rejected.
 - **Tests are mandatory.** All changes to `packages/core` or `packages/cli` require corresponding unit tests. Coverage must not decrease.
-- **Spec changes require an RFC.** Any normative change to `docs/specs/` requires a formal RFC. See [docs/rfcs/README.md](docs/governance/rfc-process.md).
+- **Spec changes require an RFC.** Any normative change to `docs/specs/` requires a formal RFC. See [RFC Process](docs/governance/rfc-process.md).
 - **Conventional Commits.** PR titles and commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/). Examples: `feat: add eval-dataset target`, `fix: correct policy deny logic`, `docs: improve IR spec examples`.
 - **Do not credit AI in commits.** Commit messages must read as standard developer-authored notes.
 
