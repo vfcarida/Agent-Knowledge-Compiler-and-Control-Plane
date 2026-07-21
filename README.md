@@ -29,6 +29,59 @@ pnpm akcp compile --config examples/domains/it-operations/akcp.yaml
 # → dist/eval-dataset.json        (incident response scenarios)
 ```
 
+## In Action
+
+<details>
+<summary>CLI Compile Output</summary>
+
+```bash
+$ pnpm akcp compile --config examples/domains/it-operations/akcp.yaml
+[AKCP] Loading config: examples/domains/it-operations/akcp.yaml
+[AKCP] Profile: it-operations
+[AKCP] Sources: 1 connector (okf-directory)
+[AKCP] Pipeline: Ingest → Normalize → Privacy → Enrich → LinkExtract → Validate
+[AKCP] Compiled 12 concepts, 8 links, 5 policies
+[AKCP] Targets:
+  ✓ dist/agent-knowledge-ir.json (AK-IR)
+  ✓ dist/mcp-resources.json (MCP Resources)
+  ✓ dist/openwiki/ (OpenWiki Docs)
+  ✓ dist/dashboard-meta.json (Dashboard Metadata)
+[AKCP] Build complete in 340ms
+```
+
+</details>
+
+<details>
+<summary>Policy Card Enforcement</summary>
+
+```bash
+$ akcp policy explain examples/domains/it-operations/policies/execute_remediation.policy.yaml
+
+Policy: execute_remediation
+Risk Level: critical
+Side Effect: external-write
+Default Mode: disabled (requires HITL approval)
+
+Approval Requirements:
+  - TTL: 10 minutes
+  - Bound to payload hash (tamper-proof)
+  - Single use
+  - Approver roles: on-call-lead, engineering-manager
+
+Safety Rules:
+  - NEVER execute in production outside change window for SEV > 2
+  - Logs must not contain: credential, password, secret, token
+
+NIST AI RMF: GOVERN 1.1, MAP 2.3
+OWASP LLM: LLM06 (Excessive Agency)
+```
+
+</details>
+
+### Dashboard Preview
+
+> See the [Dashboard](packages/dashboard/) for visual inspection of compiled artifacts, knowledge graph, and audit trails.
+
 ## Architecture at a glance
 
 ```mermaid
@@ -85,19 +138,19 @@ pnpm akcp compile --config examples/domains/it-operations/akcp.yaml
 
 ## Current Maturity Status
 
-| Area | Status | Evidence | Next milestone |
-|------|--------|----------|----------------|
-| AKCP CLI | Beta | tests, examples, init command | npm publish |
-| AK-IR Compiler | Beta | spec, fixtures, pipeline stages | auto-normalization |
-| MCP Profile Server | Beta | contract tests, SSE transport | remote hosting |
-| MCP Automation Server | Alpha | safety tests, browser automation | real cloud integrations |
-| Control Plane (Gateway) | Beta | auth, rate limit, HITL, PII, WAF | distributed deployment |
-| Dashboard UI | Alpha | React app, e2e tests, Express server | feature completion |
-| IT Operations (flagship) | Beta | policies, evals, expected-output | real infrastructure |
-| Career (starter) | Stable | full walkthrough, golden outputs | |
-| Customer Support | Alpha | sources, 8 policies, capabilities, evals | full implementation |
-| VSCode Extension | Experimental | syntax highlighting | validation, autocomplete |
-| Legacy CLI | Deprecated | deprecation warnings | removal in v1.0 |
+| Area                     | Status       | Evidence                                 | Next milestone           |
+| ------------------------ | ------------ | ---------------------------------------- | ------------------------ |
+| AKCP CLI                 | Beta         | tests, examples, init command            | npm publish              |
+| AK-IR Compiler           | Beta         | spec, fixtures, pipeline stages          | auto-normalization       |
+| MCP Profile Server       | Beta         | contract tests, SSE transport            | remote hosting           |
+| MCP Automation Server    | Alpha        | safety tests, browser automation         | real cloud integrations  |
+| Control Plane (Gateway)  | Beta         | auth, rate limit, HITL, PII, WAF         | distributed deployment   |
+| Dashboard UI             | Alpha        | React app, e2e tests, Express server     | feature completion       |
+| IT Operations (flagship) | Beta         | policies, evals, expected-output         | real infrastructure      |
+| Career (starter)         | Stable       | full walkthrough, golden outputs         |                          |
+| Customer Support         | Alpha        | sources, 8 policies, capabilities, evals | full implementation      |
+| VSCode Extension         | Experimental | syntax highlighting                      | validation, autocomplete |
+| Legacy CLI               | Deprecated   | deprecation warnings                     | removal in v1.0          |
 
 For formal definitions, see the [Maturity and Status Guide](docs/status.md).
 
