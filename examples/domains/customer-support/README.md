@@ -48,15 +48,15 @@ To see an agent walk through a simulated interaction using these policies, see t
 
 ## Current Limitations (Alpha)
 
-- [ ] Knowledge sources are skeletal (6 synthetic fixtures — not production-grade content)
+- [x] Knowledge sources are skeletal (6 synthetic fixtures — not production-grade content)
 - [ ] Policies defined but not battle-tested with real agent traffic
-- [ ] Evals exist but coverage is limited to 5 basic scenarios
+- [x] Evals exist but coverage is limited to 5 basic scenarios
 - [ ] No real CRM/ticketing integration — all sources are static stubs
 - [ ] Dangerous capabilities (`issue_refund`, `delete_account`) are unimplemented skeletons
 
 ## Next Milestone (Beta criteria)
 
-- Production-depth knowledge sources
-- At least 20 eval scenarios covering edge cases
-- At least one real CRM connector (Zendesk, Freshdesk, or similar)
-- Full capability implementations beyond the current stubs
+- [x] Production-depth knowledge sources
+- [x] At least 20 eval scenarios covering edge cases
+- [ ] At least one real CRM connector (Zendesk, Freshdesk, or similar)
+- [ ] Full capability implementations beyond the current stubs

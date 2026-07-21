@@ -15,9 +15,9 @@ Customer Support shows how AKCP handles tickets, macros, policies, customer hist
 
 ## Current Limitations (Alpha)
 
-- [ ] Knowledge sources are skeletal (6 synthetic fixtures — not production-grade content)
+- [x] Knowledge sources are skeletal (6 synthetic fixtures — not production-grade content)
 - [ ] Policies defined but not battle-tested with real agent traffic
-- [ ] Evals exist but coverage is limited to 5 basic scenarios
+- [x] Evals exist but coverage is limited to 5 basic scenarios
 - [ ] No real CRM/ticketing integration — all sources are static stubs
 - [ ] Dangerous capabilities (`issue_refund`, `delete_account`) are unimplemented skeletons
 
@@ -52,10 +52,10 @@ Planned for future milestones:
 
 To advance to **Beta**, this domain needs:
 
-- Production-depth knowledge sources (real policy content, not synthetic)
-- At least 20 eval scenarios covering edge cases
-- At least one real CRM connector (Zendesk, Freshdesk, or similar)
-- Expanded capability implementations beyond the current stubs
+- [x] Production-depth knowledge sources (real policy content, not synthetic)
+- [x] At least 20 eval scenarios covering edge cases
+- [ ] At least one real CRM connector (Zendesk, Freshdesk, or similar)
+- [ ] Expanded capability implementations beyond the current stubs
 
 ---
 

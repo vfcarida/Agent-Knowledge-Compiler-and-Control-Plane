@@ -3,14 +3,14 @@
     "sourceHash": "6032966b4e8f370a1e4e4d1f33919e2d292f46b79a4e254afada764ee1a33a8e",
     "normalizedHash": "",
     "artifactHash": "policies/pii-policy",
-    "lastCompiledAt": "2026-07-16T02:08:51.866Z",
+    "lastCompiledAt": "2026-07-21T14:07:44.170Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\policies\\refund-policy.md": {
     "sourceHash": "c7da0219883c0265340571b964365e35469b26c0ce7be1f24e94a972d980dc3b",
     "normalizedHash": "",
     "artifactHash": "policies/refund-policy",
-    "lastCompiledAt": "2026-07-16T02:08:51.866Z",
+    "lastCompiledAt": "2026-07-21T14:07:44.171Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\macros\\delete-customer-data.md": {
@@ -28,59 +28,59 @@
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\README.md": {
-    "sourceHash": "8f6b176573631abb681283bce82d72ad29411c995a2d505ac43dc6b38fb0e793",
+    "sourceHash": "26d92c00a2b0f982c19892abe1d08d4100326094843fd3f1902d8d0ccfc9ed9a",
     "normalizedHash": "",
     "artifactHash": "README",
-    "lastCompiledAt": "2026-07-16T02:08:51.865Z",
+    "lastCompiledAt": "2026-07-21T14:07:44.169Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\WALKTHROUGH.md": {
     "sourceHash": "6933afe10b52983b5ce6a43ad3b835c6344f80f7053ac2ae79b3cefd36c8ecfc",
     "normalizedHash": "",
     "artifactHash": "WALKTHROUGH",
-    "lastCompiledAt": "2026-07-16T02:08:51.865Z",
+    "lastCompiledAt": "2026-07-21T14:07:44.170Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\article-refunds.md": {
-    "sourceHash": "cad431cf557f44dfb9d148da71bb1b8378b3dabf2c6c2bcc9b1b203f8f1bafe8",
+    "sourceHash": "5fa438016cf017c2ced7aa67e51e27f014b46e44ae7daf37b9716a87df054e9a",
     "normalizedHash": "",
     "artifactHash": "sources/article-refunds",
-    "lastCompiledAt": "2026-07-16T02:08:51.866Z",
+    "lastCompiledAt": "2026-07-21T14:07:44.172Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\escalation-tier2.md": {
-    "sourceHash": "e13374c4622cb58bcf85f0e1b3aa9bf7cb63289566ea73c49a427db60205118e",
+    "sourceHash": "8dc6c8868310138e9492d77d8c258c6c9e8c3eb1353087a4a075267ce8492eec",
     "normalizedHash": "",
     "artifactHash": "sources/escalation-tier2",
-    "lastCompiledAt": "2026-07-16T02:08:51.866Z",
+    "lastCompiledAt": "2026-07-21T14:07:44.173Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\issue-login.md": {
-    "sourceHash": "caab3f1b89229ce23cea6d3e0da3ef715fee7f479b05ae990b5425916bd97fd5",
+    "sourceHash": "8213ad75cf8e596ccc141e5f0e0933c587a863cf9f6ba554eb411bb6ef3b74a3",
     "normalizedHash": "",
     "artifactHash": "sources/issue-login",
-    "lastCompiledAt": "2026-07-16T02:08:51.866Z",
+    "lastCompiledAt": "2026-07-21T14:07:44.173Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\profile-johndoe.md": {
-    "sourceHash": "acc054001d9f6940dd8ee9c41f4eb94b1717b04b2065e5fee6f8243666a295c8",
+    "sourceHash": "14c08a350be1ffa32a19c1b40a0d5b657c914a085c9508ab068bcea4f38d6cdf",
     "normalizedHash": "",
     "artifactHash": "sources/profile-johndoe",
-    "lastCompiledAt": "2026-07-16T02:08:51.866Z",
+    "lastCompiledAt": "2026-07-21T14:07:44.175Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\sla-standard.md": {
-    "sourceHash": "283e7dc99294f0f45a3f3d1b59b0f9e8314cbe8d5709a5251861f71c6b3563bb",
+    "sourceHash": "bf55d8d0edaaeb3b2d731dd5e8a79ada9a32e1fb3ac6ea6fe2b2e2a1012feed8",
     "normalizedHash": "",
     "artifactHash": "sources/sla-standard",
-    "lastCompiledAt": "2026-07-16T02:08:51.866Z",
+    "lastCompiledAt": "2026-07-21T14:07:44.176Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\ticket-101.md": {
-    "sourceHash": "a19aceb3d9a199d5c580e5db413086f5a7dd6c0f2c1fd5a74c53b13100ab81a9",
+    "sourceHash": "67780fe1f91f5eb18e4c63ab865d144f91a9db4679ce5a417f2a2379257961b2",
     "normalizedHash": "",
     "artifactHash": "sources/ticket-101",
-    "lastCompiledAt": "2026-07-16T02:08:51.866Z",
+    "lastCompiledAt": "2026-07-21T14:07:44.176Z",
     "dependencies": []
   },
   "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\walkthrough.md": {
@@ -88,6 +88,62 @@
     "normalizedHash": "",
     "artifactHash": "walkthrough",
     "lastCompiledAt": "2026-07-15T22:17:28.506Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\ticket-102.md": {
+    "sourceHash": "91c0b113d56d9cd618cb80eba86abe10aa8dc3ed078658ffd75432a1765d52a0",
+    "normalizedHash": "",
+    "artifactHash": "sources/ticket-102",
+    "lastCompiledAt": "2026-07-21T14:07:44.177Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\ticket-103.md": {
+    "sourceHash": "89e6e79c8b74240a2abdacbed0e0b03f1ebd0985ae6566567ea45fac2e330605",
+    "normalizedHash": "",
+    "artifactHash": "sources/ticket-103",
+    "lastCompiledAt": "2026-07-21T14:07:44.177Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\article-billing-dispute.md": {
+    "sourceHash": "87695fad371e1be9cd2abba909382b620eee4a4bf11e0a0dd22839edd30f225b",
+    "normalizedHash": "",
+    "artifactHash": "sources/article-billing-dispute",
+    "lastCompiledAt": "2026-07-21T14:07:44.171Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\article-cancellation.md": {
+    "sourceHash": "28a943ea3011290537cbe1ae115d83df7d59690ba435339ec6b8b2db17ca9e83",
+    "normalizedHash": "",
+    "artifactHash": "sources/article-cancellation",
+    "lastCompiledAt": "2026-07-21T14:07:44.171Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\macro-account-unlock.md": {
+    "sourceHash": "4c005954fe946584976daf2066b51a48b7be794187774e28d7c2b5d5fda63a1e",
+    "normalizedHash": "",
+    "artifactHash": "sources/macro-account-unlock",
+    "lastCompiledAt": "2026-07-21T14:07:44.173Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\macro-password-reset.md": {
+    "sourceHash": "61680cb30417e1b1ae1f1f61971b0110ebb967ba0aacb3d55afc91c3bb2fe665",
+    "normalizedHash": "",
+    "artifactHash": "sources/macro-password-reset",
+    "lastCompiledAt": "2026-07-21T14:07:44.174Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\macro-refund-processing.md": {
+    "sourceHash": "270bda6b3415d510d81942e3c1cb7783cbd4c683212f0f090a8555bfc2e6e603",
+    "normalizedHash": "",
+    "artifactHash": "sources/macro-refund-processing",
+    "lastCompiledAt": "2026-07-21T14:07:44.174Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\customer-support\\sources\\product-overview.md": {
+    "sourceHash": "99e34da1cd346da8d40db0095a299431ff2a9265c9b55a23925050c283eacc8d",
+    "normalizedHash": "",
+    "artifactHash": "sources/product-overview",
+    "lastCompiledAt": "2026-07-21T14:07:44.174Z",
     "dependencies": []
   }
 }
