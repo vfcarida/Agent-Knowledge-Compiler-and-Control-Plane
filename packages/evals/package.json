@@ -12,6 +12,10 @@
     "./dist/scenarios.js": {
       "types": "./dist/scenarios.d.ts",
       "import": "./dist/scenarios.js"
+    },
+    "./dist/prompt-injection-scenario.js": {
+      "types": "./dist/prompt-injection-scenario.d.ts",
+      "import": "./dist/prompt-injection-scenario.js"
     }
   },
   "scripts": {

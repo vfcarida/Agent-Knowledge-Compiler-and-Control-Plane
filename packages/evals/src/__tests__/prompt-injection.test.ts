@@ -1,39 +1,28 @@
 import { describe, it, expect } from "vitest";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import { runPromptInjectionEval } from "../prompt-injection-scenario.js";
+import { LakeraGateway } from "@akcp/core";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+describe("Prompt Injection Scenario Eval", () => {
+  it("should run injection evaluation with regex fallback WAF", async () => {
+    // We enforce regex fallback for the test to ensure deterministic offline results
+    const waf = new LakeraGateway();
+    // Simulate lacking API key
+    Object.defineProperty(waf, "apiKey", { value: undefined, writable: true });
 
-describe("Prompt Injection Dataset", () => {
-  const datasetPath = path.resolve(
-    __dirname,
-    "../prompt-injection-dataset.json",
-  );
+    const result = await runPromptInjectionEval({ waf });
 
-  it("should have a valid dataset file", () => {
-    expect(fs.existsSync(datasetPath)).toBe(true);
-  });
+    expect(result.scenario).toBe("prompt-injection");
+    expect(result.totalCases).toBeGreaterThan(0);
+    expect(result.details.length).toBe(result.totalCases);
 
-  it("should contain properly structured scenarios", () => {
-    const dataset = JSON.parse(fs.readFileSync(datasetPath, "utf-8"));
-    expect(Array.isArray(dataset)).toBe(true);
-    expect(dataset.length).toBeGreaterThan(0);
+    // Detection rate should be at least 40% for fallback mode (baseline)
+    // The WAF fallback currently misses obfuscated patterns.
+    expect(result.detectionRate).toBeGreaterThanOrEqual(0.4);
 
-    for (const item of dataset) {
-      expect(item).toHaveProperty("id");
-      expect(item).toHaveProperty("type");
-      expect(item).toHaveProperty("payload");
-      expect(item).toHaveProperty("expectedBehavior");
-      expect(typeof item.payload).toBe("string");
-      expect(item.payload.length).toBeGreaterThan(0);
-    }
-  });
+    // False positive rate should be 10% or less
+    expect(result.falsePositiveRate).toBeLessThanOrEqual(0.1);
 
-  it("should cover multiple injection types", () => {
-    const dataset = JSON.parse(fs.readFileSync(datasetPath, "utf-8"));
-    const types = new Set(dataset.map((d: unknown) => d.type));
-    expect(types.size).toBeGreaterThan(1); // At least 2 different types
+    // The eval should pass overall
+    expect(result.passed).toBe(true);
   });
 });
