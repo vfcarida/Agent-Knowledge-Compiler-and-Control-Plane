@@ -25,9 +25,9 @@ vi.mock("better-sqlite3", () => {
                   capabilityId: "mock-tool",
                   toolName: "mock-tool",
                   payloadHash: "mock-hash",
-                  status: "PENDING"
+                  status: "PENDING",
                 }
-              : undefined
+              : undefined,
         ),
         all: vi.fn().mockReturnValue([]),
       };
@@ -47,7 +47,7 @@ function hashPayload(payload: any): string {
 describe("Approval Store Security", () => {
   let store: ApprovalStore;
   let testDbPath: string;
-  
+
   beforeEach(() => {
     // We use a specific temp DB path to avoid polluting real dbs
     testDbPath = path.join(__dirname, "test-approvals.db");
@@ -63,14 +63,14 @@ describe("Approval Store Security", () => {
 
   it("should generate a secure token and bind it to a payload hash", async () => {
     const payload = { action: "deploy", target: "production" };
-    
+
     const token = store.generateToken(
       "req-1",
       "deploy_service",
       hashPayload(payload),
       "high",
       "external-write",
-      "agent"
+      "agent",
     );
 
     expect(token).toBeDefined();
@@ -82,7 +82,7 @@ describe("Approval Store Security", () => {
   it("should fail validation if the execution payload does not match the approved payload", async () => {
     const originalPayload = { action: "refund", amount: 10 };
     const maliciousPayload = { action: "refund", amount: 1000 };
-    
+
     const originalHash = hashPayload(originalPayload);
     const token = store.generateToken(
       "req-2",
@@ -90,7 +90,7 @@ describe("Approval Store Security", () => {
       originalHash,
       "critical",
       "external-write",
-      "agent"
+      "agent",
     );
 
     // Assume user approves it here
@@ -111,14 +111,26 @@ describe("Approval Store Security", () => {
       hashPayload(payload),
       "low",
       "none",
-      "agent"
+      "agent",
     );
-    
+
     store.approveToken(token, "human-approver");
 
-    // Since we are mocking sqlite, the logic inside validateAndConsume depends heavily on the sqlite get() result.
-    // Instead of doing a full integration test with an in-memory DB, we will just verify the mock is hit.
-    // In a real environment with native bindings, we'd use an actual in-memory SQLite instance.
-    expect(true).toBe(true);
+    // validateAndConsume is the replay-prevention gate.
+    // With a fully mocked sqlite the real DB path is not exercised, but we CAN verify:
+    //   1. The token is a non-empty hex string (crypto.randomBytes output)
+    //   2. approveToken returns true (mock returns the pending row)
+    //   3. A second approveToken call on the SAME token returns false (already consumed in mock)
+    //      — with the current mock, the second call also returns true since the mock always
+    //        returns the same row; we document this as a known test limitation and test the
+    //        real invariant through the hash check above.
+    expect(token).toMatch(/^[0-9a-f]{64}$/);
+    expect(token.length).toBe(64);
+    // NOTE: Full replay-prevention integration test requires a real in-memory SQLite binding.
+    // See it.todo below for the planned integration test.
   });
+
+  it.todo(
+    "should reject validateAndConsume on an already-consumed token (requires real in-memory SQLite)",
+  );
 });

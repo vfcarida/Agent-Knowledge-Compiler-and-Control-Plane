@@ -150,7 +150,7 @@ describe("MCPGateway", () => {
     };
 
     const mockApprovalStore = {
-      generateToken: vi.fn().mockReturnValue("mock-token-123"),
+      generateToken: vi.fn().mockResolvedValue("mock-token-123"),
       validateAndConsume: vi.fn().mockResolvedValue(true),
       getPendingApprovals: vi.fn(),
       getAuditLogs: vi.fn(),
@@ -192,7 +192,7 @@ describe("MCPGateway", () => {
         "high",
         "write",
         "agent-hitl",
-        expect.any(Object)
+        expect.any(Object),
       );
     });
 

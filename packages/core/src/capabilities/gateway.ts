@@ -22,6 +22,17 @@ export class MCPGatewayError extends Error {
     super(message);
     this.name = "MCPGatewayError";
   }
+
+  /** Public alias for _code — use `error.code` in consumers. */
+  get code(): string {
+    return this._code;
+  }
+
+  /** Public alias for _data — use `error.data` in consumers. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  get data(): any {
+    return this._data;
+  }
 }
 
 export interface GatewayConfig {

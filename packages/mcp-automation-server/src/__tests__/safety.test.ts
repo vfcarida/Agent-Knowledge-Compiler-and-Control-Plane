@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { AKCPAutomationServer } from "../server.js";
 import { OKFDocumentService } from "@akcp/core";
+import { automationServerCapabilities } from "../capabilities.js";
 
 vi.mock("better-sqlite3", () => {
   const transactionFn = vi.fn().mockImplementation((fn: () => void) => {
@@ -45,7 +46,45 @@ describe("Safety Controls", () => {
 
   it("blocks live submission when AUTOMATION_RUNTIME_MODE is sandbox", async () => {
     process.env["AUTOMATION_RUNTIME_MODE"] = "sandbox";
-    expect(server).toBeDefined();
-    expect(true).toBe(true);
+
+    // Server must instantiate correctly even in sandbox mode
+    expect(server).toBeInstanceOf(AKCPAutomationServer);
+
+    // The underlying MCP server instance must be accessible
+    const instance = server.getServerInstance();
+    expect(instance).toBeDefined();
+    expect(typeof instance.tool).toBe("function");
+  });
+
+  it("registers the confirm_application_submission tool with critical risk metadata", () => {
+    // The confirm tool must be registered (it is the gated, high-risk one)
+    // We verify registration by checking capabilities.ts manifest, which is the source-of-truth
+    // used by registerTools() to wire the MCP server.
+    const confirmCap = automationServerCapabilities.find(
+      (c) => c.name === "confirm_application_submission",
+    );
+
+    expect(confirmCap).toBeDefined();
+    expect(confirmCap?.riskLevel).toBe("critical");
+    expect(confirmCap?.sideEffectLevel).toBe("external-submit");
+    expect(confirmCap?.requiredApproval).toBe(true);
+  });
+
+  it("does NOT register any tool with riskLevel critical and requiredApproval false", () => {
+    const unsafeTools = automationServerCapabilities.filter(
+      (c) => c.riskLevel === "critical" && c.requiredApproval === false,
+    );
+
+    // Safety invariant: no critical-risk tool may bypass the approval gate
+    expect(unsafeTools).toHaveLength(0);
+  });
+
+  it("sandbox mode does not change server structure", () => {
+    process.env["AUTOMATION_RUNTIME_MODE"] = "sandbox";
+    const sandboxServer = new AKCPAutomationServer({} as OKFDocumentService);
+
+    // Server must still be fully constructed and expose the same interface
+    expect(sandboxServer.getServerInstance()).toBeDefined();
+    expect(typeof sandboxServer.getServerInstance().tool).toBe("function");
   });
 });

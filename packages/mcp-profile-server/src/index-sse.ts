@@ -95,9 +95,8 @@ let globalTransport: SSEServerTransport | null = null;
 
 // SSE connection endpoint
 app.get("/sse", requireAuth, async (req, res) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   console.warn(
-    `[SSE] New connection from ${req.ip} (User: ${(req as any).user.identity})`,
+    `[SSE] New connection from ${req.ip} (User: ${(req as express.Request & { user?: { identity?: string } }).user?.identity ?? "anonymous"})`,
   );
   globalTransport = new SSEServerTransport("/message", res);
 

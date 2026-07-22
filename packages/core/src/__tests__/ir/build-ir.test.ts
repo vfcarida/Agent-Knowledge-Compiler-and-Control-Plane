@@ -36,7 +36,9 @@ describe("buildKnowledgeIR", () => {
     // Verify source
     expect(firstConcept?.source.format).toBe("okf/markdown");
 
-    // Verify frontmatter was preserved
+    // Verify frontmatter was preserved and is a non-empty object (field names vary per domain)
     expect(firstConcept?.frontmatter).toBeDefined();
+    expect(typeof firstConcept?.frontmatter).toBe("object");
+    expect(Object.keys(firstConcept?.frontmatter ?? {})).not.toHaveLength(0);
   });
 });

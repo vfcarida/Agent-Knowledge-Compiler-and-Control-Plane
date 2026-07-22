@@ -25,16 +25,20 @@ describe("MCP Tool Descriptors Contract", () => {
           inputsSchema: {
             type: "object",
             properties: { payload: { type: "string" } },
-            required: ["payload"]
-          }
-        }
-      ]
+            required: ["payload"],
+          },
+        },
+      ],
     };
-    
+
     const profileServer = new AKCPProfileServer(mockIR);
     const serverInstance = profileServer.getServerInstance();
 
+    // Verify the returned object is a real MCP server with the expected API surface
     expect(serverInstance).toBeDefined();
-    // We would use the MCP SDK to query tools here.
+    expect(typeof serverInstance.tool).toBe("function");
+    expect(typeof serverInstance.resource).toBe("function");
+    expect(typeof serverInstance.connect).toBe("function");
+    // We would use the MCP SDK to query registered tools here — see mcp-security.test.ts for full tool registration checks.
   });
 });
