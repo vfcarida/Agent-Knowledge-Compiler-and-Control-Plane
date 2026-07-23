@@ -1,0 +1,18 @@
+id: career-starter-policy
+name: "Career Domain Starter Policy"
+description: "Safeguards for career-related MCP tools, enforcing read-only behavior for personal knowledge."
+defaultAutonomyLevel: read-only
+piiHandling: allow
+rules:
+  - id: prevent-writes
+    effect: deny
+    condition: "resource.sideEffects == 'external-write' || resource.sideEffects == 'state-write'"
+    description: "Personal career datasets are immutable at runtime. Tools cannot modify state."
+  - id: allow-low-risk
+    effect: allow
+    condition: "resource.riskLevel == 'low' || resource.riskLevel == 'medium'"
+    description: "Allow analysis and summarization tools without human approval."
+  - id: deny-critical-risk
+    effect: deny
+    condition: "resource.riskLevel == 'critical'"
+    description: "Career tools should not have critical risk."

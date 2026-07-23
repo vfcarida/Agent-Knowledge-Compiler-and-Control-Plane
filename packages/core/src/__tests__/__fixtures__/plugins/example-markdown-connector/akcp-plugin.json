@@ -1,0 +1,8 @@
+{
+  "name": "example-markdown-connector",
+  "version": "1.0.0",
+  "akcpPluginVersion": "1.0.0",
+  "type": "source-connector",
+  "entrypoint": "index.js",
+  "permissions": ["fs:read"]
+}

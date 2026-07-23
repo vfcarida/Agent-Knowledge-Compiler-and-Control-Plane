@@ -1,0 +1,21 @@
+{
+  "name": "career-baseline",
+  "version": "1.0.0",
+  "prompts": [
+    {
+      "id": "q1",
+      "text": "What is Alex Doe's primary programming language expertise based on their profile?",
+      "expectedOutputs": ["TypeScript", "Node.js"]
+    },
+    {
+      "id": "q2",
+      "text": "Summarize Alex Doe's impact at Acme Corp.",
+      "expectedOutputs": ["reduced latency by 40%", "migrated monolithic API", "introduced Redis"]
+    },
+    {
+      "id": "q3",
+      "text": "Would Alex Doe be a good fit for an on-site Lead Backend role in London?",
+      "expectedOutputs": ["No", "Remote", "Hybrid", "max 2 days"]
+    }
+  ]
+}

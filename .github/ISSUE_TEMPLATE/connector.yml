@@ -1,0 +1,70 @@
+name: "🔌 New Connector"
+description: "Propose or contribute a new source connector plugin for AKCP."
+title: "[connector]: <Connector Name>"
+labels: ["workstream: connectors", "good first issue"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A **connector** is a build-time AKCP plugin (`source-connector` type) that pulls knowledge from an external system and normalizes it into OKF Markdown files.
+        Please review the [Connector Contribution Guide](../../docs/community/how-to-contribute-a-connector.md) before submitting.
+
+  - type: input
+    id: connector-name
+    attributes:
+      label: Connector Name
+      description: "The name of the external system to connect to."
+      placeholder: "e.g., Notion, Confluence, Jira, GitHub Issues"
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: "What problem does this connector solve? Who needs it?"
+      placeholder: "e.g., Our team's runbooks are in Confluence. Pulling them into AKCP would allow agents to use them deterministically."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: auth-method
+    attributes:
+      label: Authentication Method
+      description: "How does the external system authenticate?"
+      options:
+        - API Key
+        - OAuth 2.0
+        - Service Account / PAT
+        - No Authentication Required
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: permissions
+    attributes:
+      label: Required Permissions
+      description: "Which AKCP plugin permissions will this connector need?"
+      options:
+        - label: "`fs:read`"
+        - label: "`fs:write`"
+        - label: "`network:outbound`"
+        - label: "`network:inbound`"
+        - label: "`mcp:execute`"
+
+  - type: textarea
+    id: output-format
+    attributes:
+      label: Expected Output
+      description: "What OKF document types will this connector produce? (e.g., `document`, `playbook`, `concept`)"
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: "I have read the [Connector Contribution Guide](../../docs/community/how-to-contribute-a-connector.md)."
+          required: true
+        - label: "I understand that connectors must declare all required permissions in `akcp-plugin.json`."
+          required: true

@@ -1,0 +1,13 @@
+apiVersion: akcp.policy/v1
+kind: Policy
+metadata:
+  name: "suggest_macro"
+  description: "Allows the agent to suggest a macro for the agent to use"
+spec:
+  effect: allow
+  actions:
+    - mcp:call_tool:customer-support.suggest_macro
+  conditions:
+    - field: riskLevel
+      operator: in
+      value: ["low"]

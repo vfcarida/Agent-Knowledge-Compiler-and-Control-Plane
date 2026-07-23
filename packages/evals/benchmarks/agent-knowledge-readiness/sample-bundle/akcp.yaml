@@ -1,0 +1,14 @@
+compile:
+  sources:
+    - type: okf-directory
+      path: .
+  targets:
+    - type: mcp-profile-server
+      out: dist/mcp
+controlPlane:
+  policies:
+    disableDangerousTools: true
+    requireApprovalFor: ["execute_command"]
+  mcp:
+    profileServer:
+      enabled: true

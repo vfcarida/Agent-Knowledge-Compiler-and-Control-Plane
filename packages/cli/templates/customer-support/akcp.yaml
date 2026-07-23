@@ -1,0 +1,40 @@
+compile:
+  profile: "customer-support"
+
+  sources:
+    - type: okf-directory
+      path: ./sources
+
+  targets:
+    - type: context-pack
+      out: dist/agent-knowledge-ir.json
+    - type: mcp-resources
+      out: dist/mcp-resources.json
+    - type: openwiki
+      out: dist/openwiki
+    - type: dashboard-metadata
+      out: dist/dashboard-meta.json
+
+policy:
+  defaultAutonomyLevel: review-required
+  policies:
+    - policies/autonomous_actions.policy.yaml
+    - policies/draft_response.policy.yaml
+    - policies/escalate_to_human.policy.yaml
+    - policies/read_support_knowledge.policy.yaml
+    - policies/suggest_macro.policy.yaml
+    - policies/summarize_ticket.policy.yaml
+
+controlPlane:
+  policies:
+    disableDangerousTools: true
+    requireApprovalFor:
+      - issue_refund
+      - delete_customer_data
+    disableInLogs:
+      - "ssn"
+      - "credit_card"
+      - "password"
+      - "auth_token"
+      - "email"
+      - "phone_number"

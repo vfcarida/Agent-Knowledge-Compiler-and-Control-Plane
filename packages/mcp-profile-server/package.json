@@ -1,0 +1,70 @@
+{
+  "name": "@akcp/mcp-profile-server",
+  "version": "0.1.0",
+  "description": "AKCP MCP Profile Server. Exposes normalized knowledge artifacts and schemas via MCP tools and resources.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./dist/capabilities.js": {
+      "types": "./dist/capabilities.d.ts",
+      "import": "./dist/capabilities.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/index.js",
+    "start:http": "node dist/http-server.js",
+    "start:sse": "node dist/index-sse.js",
+    "dev": "tsx src/index.ts",
+    "dev:http": "tsx src/http-server.ts",
+    "dev:sse": "tsx src/index-sse.ts",
+    "clean": "node -e \"fs.rmSync('dist', {recursive:true,force:true}); fs.rmSync('tsconfig.tsbuildinfo', {force:true})\""
+  },
+  "dependencies": {
+    "@akcp/core": "workspace:*",
+    "@modelcontextprotocol/sdk": "catalog:",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "jose": "^6.2.3",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "catalog:",
+    "tsx": "^4.19.0",
+    "typescript": "catalog:"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane.git",
+    "directory": "packages/mcp-profile-server"
+  },
+  "homepage": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane#readme",
+  "bugs": {
+    "url": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "ai-agents",
+    "knowledge-management",
+    "mcp",
+    "governance",
+    "compilation"
+  ]
+}

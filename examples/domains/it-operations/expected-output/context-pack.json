@@ -1,0 +1,672 @@
+{
+  "irVersion": "1.0.0",
+  "okfVersion": "0.1.0",
+  "bundleId": "it-operations",
+  "buildId": "bld_e232ae6c",
+  "timestamp": "2026-07-15T12:18:53.480Z",
+  "concepts": [
+    {
+      "conceptId": "alert-high-cpu-payment",
+      "type": "Alert",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\alert-high-cpu-payment.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "Alert",
+        "title": "Alert: High CPU — Payment Service",
+        "description": "Fires when CPU utilization on svc-payment exceeds 90% for 5 consecutive minutes.",
+        "tags": [
+          "alert",
+          "cpu",
+          "payments"
+        ],
+        "schemaVersion": "okf/v1",
+        "id": "alert-high-cpu-payment",
+        "source": "Prometheus",
+        "severity": "Critical",
+        "serviceRef": "svc-payment",
+        "summary": "```\navg(rate(container_cpu_usage_seconds_total{service=\"svc-payment\"}[5m])) > 0.90\nfor: 5m\n```"
+      },
+      "body": "# Alert: High CPU — Payment Service\n\n## Condition\n\n```\navg(rate(container_cpu_usage_seconds_total{service=\"svc-payment\"}[5m])) > 0.90\nfor: 5m\n```\n\n## Impact\n\nSustained high CPU typically indicates either a traffic spike, a runaway process, or a regression in a recent deployment. Without mitigation, this escalates to degraded response times and eventually to a service-level incident.\n\n## Runbook\n\nSee `runbook-high-cpu` for the detailed triage and remediation procedure.\n\n## Escalation\n\nIf mitigation is not initiated within 10 minutes of the alert firing, L2 escalation (Engineering Lead) is triggered automatically per `escalation-policy-payments`.",
+      "budget": {
+        "byteSize": 654,
+        "estimatedTokens": 164
+      },
+      "status": "active",
+      "isStale": false
+    },
+    {
+      "conceptId": "auth-service",
+      "type": "Service",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\auth-service.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "Service",
+        "title": "Auth Service",
+        "description": "Manages JWT issuance, token validation, and user session lifecycle.",
+        "tags": [
+          "tier-1",
+          "security",
+          "authentication"
+        ],
+        "schemaVersion": "okf/v1",
+        "id": "svc-auth",
+        "ownerRef": "owner-team-security",
+        "repository": "https://github.com/example-org/auth-service",
+        "tier": "Tier 1",
+        "dependencies": [
+          "svc-session-store"
+        ],
+        "systemRef": "sys-identity",
+        "summary": "The Auth Service manages JWT issuance, token validation, and user session lifecycle. It is called synchronously by almost every other Tier-1 service, making its availability critical."
+      },
+      "body": "# Auth Service\n\nThe Auth Service manages JWT issuance, token validation, and user session lifecycle. It is called synchronously by almost every other Tier-1 service, making its availability critical.\n\n## Architecture\n\n- **Language**: Rust\n- **Session Store**: Redis Cluster (six shards, three availability zones)\n- **Token Algorithm**: RS256, key rotation every 90 days\n\n## SLOs\n\n| Indicator    | Target  | Window |\n|--------------|---------|--------|\n| Availability | 99.99%  | 30d    |\n| P99 Latency  | < 50ms  | 7d     |\n| Error Rate   | < 0.01% | 7d     |\n\n## On-Call\n\n- **Team Slack**: `#ops-security`\n- **PagerDuty**: `auth-primary`\n- **Escalation**: See `escalation-policy-auth.md`\n\n## Alert Runbooks\n\n- Auth Failure Spike → `runbook-auth-failures`\n- Token Validation Errors → `runbook-token-validation`\n- Redis Session Store Degraded → `runbook-session-store`",
+      "budget": {
+        "byteSize": 873,
+        "estimatedTokens": 219
+      },
+      "status": "active",
+      "isStale": false
+    },
+    {
+      "conceptId": "change-window-payments",
+      "type": "ChangeWindow",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\change-window-payments.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "ChangeWindow",
+        "title": "Payment Service Change Window",
+        "description": "Approved change window for production deployments to the Payment Service.",
+        "tags": [
+          "change-management",
+          "payments"
+        ],
+        "schemaVersion": "okf/v1",
+        "id": "change-window-payments",
+        "serviceRef": "svc-payment",
+        "dayOfWeek": "Tuesday,Thursday",
+        "startTime": "02:00 UTC",
+        "durationHours": 2,
+        "summary": "Production deployments to `svc-payment` are only permitted during the approved change window:"
+      },
+      "body": "# Payment Service — Change Window\n\n## Policy\n\nProduction deployments to `svc-payment` are only permitted during the approved change window:\n\n- **Days**: Tuesday and Thursday\n- **Time**: 02:00–04:00 UTC\n- **Duration**: 2 hours maximum\n\n## Emergency Exceptions\n\nEmergency changes outside the window require:\n1. Approval from the Engineering Lead (Level 2 escalation)\n2. Documented justification in the incident ticket\n3. An automated rollback plan pre-tested in staging\n\nAll emergency changes are logged in the audit trail and reviewed in the next postmortem.\n\n## Automated Enforcement\n\nAKCP's control plane blocks `deploy_service` capabilities during non-window hours unless an explicit emergency override is granted via the approval flow.",
+      "budget": {
+        "byteSize": 742,
+        "estimatedTokens": 186
+      },
+      "status": "active",
+      "isStale": false
+    },
+    {
+      "conceptId": "escalation-policy-payments",
+      "type": "EscalationPolicy",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\escalation-policy-payments.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "EscalationPolicy",
+        "title": "Payment Service Escalation Policy",
+        "description": "Escalation ladder for incidents affecting the Payment Service.",
+        "tags": [
+          "escalation",
+          "payments",
+          "oncall"
+        ],
+        "schemaVersion": "okf/v1",
+        "id": "escalation-policy-payments",
+        "serviceRef": "svc-payment",
+        "levels": [
+          {
+            "level": 1,
+            "ownerRef": "owner-team-payments",
+            "timeoutMinutes": 5
+          },
+          {
+            "level": 2,
+            "ownerRef": "owner-team-payments",
+            "timeoutMinutes": 10
+          },
+          {
+            "level": 3,
+            "ownerRef": "owner-team-payments",
+            "timeoutMinutes": 20
+          }
+        ],
+        "summary": "All incidents affecting `svc-payment` must follow this escalation ladder. AKCP enforces these timeouts when the control plane is integrated with the alert routing system."
+      },
+      "body": "# Payment Service — Escalation Policy\n\n## Overview\n\nAll incidents affecting `svc-payment` must follow this escalation ladder. AKCP enforces these timeouts when the control plane is integrated with the alert routing system.\n\n## Levels\n\n| Level | Contact              | Timeout | Notes                                         |\n|-------|----------------------|---------|-----------------------------------------------|\n| L1    | On-call engineer     | 5 min   | Must acknowledge alert                        |\n| L2    | Engineering Lead     | 10 min  | Joins bridge call, drives mitigation          |\n| L3    | VP Engineering       | 20 min  | Authorizes emergency changes (bypasses change window) |\n\n## SEV-1 Override\n\nFor SEV-1 incidents, all three levels are paged simultaneously. The change-window restriction is suspended, but the capability approval policy remains enforced.",
+      "budget": {
+        "byteSize": 880,
+        "estimatedTokens": 220
+      },
+      "status": "active",
+      "isStale": false
+    },
+    {
+      "conceptId": "owner-team-payments",
+      "type": "Owner",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\owner-team-payments.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "Owner",
+        "title": "Payments Engineering Team",
+        "description": "Responsible for the Payment Service and related billing infrastructure.",
+        "tags": [
+          "team",
+          "payments"
+        ],
+        "schemaVersion": "okf/v1",
+        "id": "owner-team-payments",
+        "contactEmail": "payments-oncall@example.org",
+        "slackChannel": "#ops-payments",
+        "pagerDutySchedule": "payments-primary"
+      },
+      "body": "# Payments Engineering Team\n\nThe Payments Engineering team owns all services in the `sys-commerce` system. They are responsible for PCI-DSS compliance, SLO adherence, and incident response for payment flows.\n\n## Members (Example)\n\n| Role              | Contact             |\n|-------------------|---------------------|\n| Engineering Lead  | alice@example.org   |\n| On-Call Primary   | bob@example.org     |\n| On-Call Secondary | carol@example.org   |",
+      "budget": {
+        "byteSize": 450,
+        "estimatedTokens": 113
+      },
+      "status": "active",
+      "isStale": false
+    },
+    {
+      "conceptId": "payment-service",
+      "type": "Service",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\payment-service.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "Service",
+        "title": "Payment Service",
+        "description": "Handles all credit-card and wallet transactions. Tier-1 revenue-critical service.",
+        "tags": [
+          "tier-1",
+          "payments",
+          "pci-dss"
+        ],
+        "schemaVersion": "okf/v1",
+        "id": "svc-payment",
+        "ownerRef": "owner-team-payments",
+        "repository": "https://github.com/example-org/payment-service",
+        "tier": "Tier 1",
+        "dependencies": [
+          "svc-auth",
+          "svc-fraud-detection"
+        ],
+        "systemRef": "sys-commerce",
+        "summary": "The Payment Service handles all credit-card and digital-wallet transactions. It is the primary Tier-1 revenue-critical service and is subject to PCI-DSS compliance requirements."
+      },
+      "body": "# Payment Service\n\nThe Payment Service handles all credit-card and digital-wallet transactions. It is the primary Tier-1 revenue-critical service and is subject to PCI-DSS compliance requirements.\n\n## Architecture\n\n- **Language**: Go\n- **Database**: PostgreSQL (ACID transactions, read replicas)\n- **Cache**: Redis (idempotency keys, rate limiting)\n- **Dependencies**: Auth Service (token validation), Fraud Detection Service (risk scoring)\n\n## SLOs\n\n| Indicator         | Target  | Window |\n|-------------------|---------|--------|\n| Availability      | 99.95%  | 30d    |\n| P99 Latency       | < 500ms | 7d     |\n| Error Rate        | < 0.1%  | 7d     |\n\n## On-Call\n\n- **Team Slack**: `#ops-payments`\n- **PagerDuty**: `payments-primary`\n- **Escalation**: See `escalation-policy-payments.md`\n\n## Change Window\n\nDeployments are restricted to **Tuesday and Thursday 02:00–04:00 UTC** via `change-window-payments.md`.\n\n## Alert Runbooks\n\n- High CPU → `runbook-high-cpu`\n- Failed Payments Spike → `runbook-payment-failures`\n- Database Connection Exhaustion → `runbook-db-connection-exhaustion`",
+      "budget": {
+        "byteSize": 1098,
+        "estimatedTokens": 275
+      },
+      "status": "active",
+      "isStale": false
+    },
+    {
+      "conceptId": "slo-payment-availability",
+      "type": "SLO",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\slo-payment-availability.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "SLO",
+        "title": "Payment Service - Availability SLO",
+        "description": "99.95% availability target for the Payment Service over a 30-day rolling window.",
+        "tags": [
+          "slo",
+          "payments",
+          "availability"
+        ],
+        "schemaVersion": "okf/v1",
+        "id": "slo-payment-availability",
+        "serviceRef": "svc-payment",
+        "indicator": "availability",
+        "target": "99.95%",
+        "window": "30d",
+        "summary": "The **Payment Service Availability SLO** requires that the service successfully handles at least 99.95% of incoming requests over a rolling 30-day window. A request is considered a failure if it returns a 5xx response or times out after 30 seconds."
+      },
+      "body": "# Payment Service — Availability SLO\n\n## Definition\n\nThe **Payment Service Availability SLO** requires that the service successfully handles at least 99.95% of incoming requests over a rolling 30-day window. A request is considered a failure if it returns a 5xx response or times out after 30 seconds.\n\n## Error Budget\n\n| Window | Allowed Downtime |\n|--------|-----------------|\n| 30d    | ~21.6 minutes   |\n| 7d     | ~5 minutes      |\n\n## Burn Rate Alerts\n\n| Burn Rate | Alert Window | Action                          |\n|-----------|--------------|---------------------------------|\n| 14x       | 1 hour       | Page primary on-call immediately |\n| 6x        | 6 hours      | Notify team, begin investigation |\n| 3x        | 1 day        | Create a tracking issue          |\n\n## Consequences of SLO Breach\n\nA breach of this SLO triggers a mandatory postmortem and blocks all non-emergency deployments until the error budget is restored.",
+      "budget": {
+        "byteSize": 940,
+        "estimatedTokens": 235
+      },
+      "status": "active",
+      "isStale": false
+    },
+    {
+      "conceptId": "failed-deploy",
+      "type": "Runbook",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\runbooks\\failed-deploy.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "Runbook",
+        "title": "Failed Deployment Runbook — Rollback Procedure",
+        "description": "Procedure for rolling back a failed deployment to any Tier-1 service.",
+        "tags": [
+          "deployment",
+          "rollback",
+          "incident"
+        ],
+        "schemaVersion": "okf/v1",
+        "id": "runbook-failed-deploy",
+        "serviceRef": "svc-payment",
+        "alertRefs": [
+          "alert-error-rate-spike"
+        ],
+        "severity": "SEV-1",
+        "lastTested": "2026-06-20",
+        "summary": "**Trigger**: Error rate spike (> 5x baseline) within 30 minutes of a production deployment."
+      },
+      "body": "# Failed Deployment Runbook — Rollback Procedure\n\n**Trigger**: Error rate spike (> 5x baseline) within 30 minutes of a production deployment.\n\n> **Safety**: Rollback execution via the `execute_remediation` capability **always requires explicit human approval**. The agent can prepare and stage the rollback but cannot execute it autonomously.\n\n## Triage Steps\n\n1. **Confirm the deployment** using `query_logs` for recent deployment events.\n2. **Check error rates** for the last 30 minutes. If errors started within 5 minutes of the deployment, assume causation.\n3. **Identify the previous stable version** from the deployment history.\n\n## Rollback Decision Tree\n\n```\nIs error rate > 5x baseline?\n  ├── Yes → Proceed to rollback (approval required)\n  └── No  → Continue monitoring, create tracking issue\n```\n\n## Rollback Steps (Approval Required)\n\n1. Agent surfaces rollback plan: \"Roll back `svc-payment` from `v1.4.2` to `v1.4.1`?\"\n2. On-call lead reviews and **approves** the action.\n3. The approval and timestamp are recorded in the AKCP audit log.\n4. Rollback executes; progress is streamed back to the incident bridge.\n5. Monitor for 10 minutes. Confirm error rates return to baseline.\n\n## Safe / Unsafe Boundary\n\n| Action                  | Requires Approval | Risk     |\n|-------------------------|-------------------|----------|\n| Query deployment history| No                | Low      |\n| Stage rollback plan     | No                | Low      |\n| Execute rollback        | **Yes**           | Critical |\n\n## Post-Incident\n\n- Create a postmortem within 48 hours.\n- Add the regression pattern to the eval dataset (`evals/`).\n- Update deployment pipeline checks to prevent recurrence.",
+      "budget": {
+        "byteSize": 1709,
+        "estimatedTokens": 428
+      },
+      "status": "active",
+      "isStale": false
+    },
+    {
+      "conceptId": "high-cpu",
+      "type": "Runbook",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\runbooks\\high-cpu.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "Runbook",
+        "title": "High CPU Runbook — Payment Service",
+        "description": "Remediation steps for sustained high CPU utilization on the Payment Service.",
+        "tags": [
+          "cpu",
+          "performance",
+          "payments",
+          "incident"
+        ],
+        "schemaVersion": "okf/v1",
+        "id": "runbook-high-cpu",
+        "serviceRef": "svc-payment",
+        "alertRefs": [
+          "alert-high-cpu-payment"
+        ],
+        "severity": "SEV-2",
+        "lastTested": "2026-06-15",
+        "summary": "**Trigger**: CPU utilization > 90% sustained for 5+ minutes on `svc-payment`."
+      },
+      "body": "# High CPU Runbook — Payment Service\n\n**Trigger**: CPU utilization > 90% sustained for 5+ minutes on `svc-payment`.\n\n## Triage Steps\n\n1. **Confirm the alert** is not a monitoring false positive by checking the real-time metrics dashboard.\n2. **Check for a recent deployment** using `query_logs` to inspect deployment events in the last 30 minutes.\n3. **Identify the top processes** by pulling the last 5 minutes of CPU profiling samples.\n4. **Examine request rates**: Are request volumes above the expected baseline? Is there a traffic spike or a slow-processing loop?\n\n## Mitigation Paths\n\n### Path A — Traffic Spike (Legitimate Load)\n\nIf request volume is elevated but processing looks normal:\n\n1. Scale out replicas (this is a **read operation** and can be suggested by the agent without approval).\n2. Notify the team in `#ops-payments`.\n3. Monitor for 10 minutes to confirm stabilization.\n\n### Path B — Bad Deployment (Regression)\n\nIf a deployment was made in the last 60 minutes:\n\n1. Agent suggests a rollback. **This requires human approval** via the `execute_remediation` capability.\n2. Approval is sought from the on-call lead via `escalation-policy-payments`.\n3. Once approved, rollback is executed and logged in the audit trail.\n\n### Path C — Runaway Process (Anomaly)\n\nIf an isolated pod is consuming excessive CPU:\n\n1. Agent can **suggest** restarting the pod.\n2. **Execution of `restart_service` requires approval** — the agent will surface this for the on-call engineer to confirm.\n3. After restart, watch error rates and CPU metrics for 5 minutes.\n\n## Safe / Unsafe Boundary\n\n| Action                  | Requires Approval | Risk   |\n|-------------------------|-------------------|--------|\n| Query logs              | No                | Low    |\n| Scale replicas (suggest)| No (suggest only) | Medium |\n| Restart pod             | **Yes**           | High   |\n| Rollback deployment     | **Yes**           | Critical |\n\n## Post-Incident\n\n- Open a postmortem if impact lasted > 15 minutes or SLO error budget was burned.\n- Update this runbook if root cause was not covered by existing paths.",
+      "budget": {
+        "byteSize": 2116,
+        "estimatedTokens": 529
+      },
+      "status": "active",
+      "isStale": false
+    },
+    {
+      "conceptId": "remediation-rollback-deployment",
+      "type": "RemediationAction",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\runbooks\\remediation-rollback-deployment.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "RemediationAction",
+        "title": "Rollback Deployment",
+        "description": "Rolls back a service to its previous stable version. This is a destructive, approval-gated action.",
+        "tags": [
+          "remediation",
+          "deployment",
+          "approval-required"
+        ],
+        "schemaVersion": "okf/v1",
+        "id": "remediation-rollback-deployment",
+        "riskLevel": "Critical",
+        "requiresApproval": true,
+        "scriptRef": "scripts/rollback-deployment.sh",
+        "summary": "> **Risk Level**: Critical — requires explicit human approval before execution."
+      },
+      "body": "# Remediation Action: Rollback Deployment\n\n> **Risk Level**: Critical — requires explicit human approval before execution.\n\nThis remediation action instructs the deployment system to roll a service back to the previously known-good version. It is surfaced by the AKCP agent during incident triage but **never executed autonomously**.\n\n## What It Does\n\n1. Identifies the last successful deployment for the target service.\n2. Stages the rollback configuration.\n3. **Requests human approval** via the AKCP control plane.\n4. Upon approval, executes the rollback and logs the event to the audit trail.\n5. Streams execution status back to the incident bridge.\n\n## Simulated Script (No Real Endpoints)\n\n```bash\n#!/usr/bin/env bash\n# scripts/rollback-deployment.sh\n# SIMULATION ONLY — No production endpoints are called.\nset -euo pipefail\n\nSERVICE=\"${1:?SERVICE required}\"\nTARGET_VERSION=\"${2:?TARGET_VERSION required}\"\n\necho \"[SIMULATION] Would execute: kubectl rollout undo deployment/${SERVICE}\"\necho \"[SIMULATION] Target version: ${TARGET_VERSION}\"\necho \"[SIMULATION] Audit event: remediation.rollback approved by ${AKCP_APPROVER:-unknown}\"\necho \"[SIMULATION] Status: success (simulated)\"\n```\n\n> **Security Note**: In production, the real script would be stored in a secured secrets manager and only accessible with a scoped service account. Credentials must never appear in logs.\n\n## Audit Trail\n\nAKCP logs the following fields for every invocation of this action:\n\n| Field           | Value                            |\n|-----------------|----------------------------------|\n| `capability`    | `it-operations.execute_remediation` |\n| `action`        | `rollback_deployment`            |\n| `approvedBy`    | (email of approver)             |\n| `approvedAt`    | (ISO timestamp)                 |\n| `executedAt`    | (ISO timestamp)                 |\n| `status`        | `success` or `failed`           |",
+      "budget": {
+        "byteSize": 1905,
+        "estimatedTokens": 477
+      },
+      "status": "active",
+      "isStale": false
+    },
+    {
+      "conceptId": "inc-2026-001",
+      "type": "Incident",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\incidents\\inc-2026-001.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "Incident",
+        "title": "SEV-1: Payment Service Outage — Elevated Error Rates",
+        "description": "Complete payment processing failure caused by database connection pool exhaustion after a misconfigured deployment.",
+        "tags": [
+          "sev-1",
+          "payments",
+          "database",
+          "postmortem-available"
+        ],
+        "schemaVersion": "okf/v1",
+        "status": "Closed",
+        "id": "inc-2026-001",
+        "severity": "SEV-1",
+        "serviceRefs": [
+          "svc-payment"
+        ],
+        "commanderRef": "owner-team-payments",
+        "startTime": "2026-04-14T03:47:00Z",
+        "endTime": "2026-04-14T04:52:00Z",
+        "summary": "- **Duration**: 65 minutes\n- **Scope**: 100% of payment transactions failed during the incident window\n- **User Impact**: Estimated 14,000 failed transactions. No data loss; all transactions were safely rolled back.\n- **SLO Impact**: 65 minutes of downtime burned the entire 30-day error budget."
+      },
+      "body": "# INC-2026-001 — Payment Service Outage\n\n## Impact Summary\n\n- **Duration**: 65 minutes\n- **Scope**: 100% of payment transactions failed during the incident window\n- **User Impact**: Estimated 14,000 failed transactions. No data loss; all transactions were safely rolled back.\n- **SLO Impact**: 65 minutes of downtime burned the entire 30-day error budget.\n\n## Timeline\n\n| Time (UTC)  | Event                                                                        |\n|-------------|------------------------------------------------------------------------------|\n| 03:42       | Deployment of `svc-payment v1.4.2` completed                                |\n| 03:47       | Monitoring alerts: error rate 98%, P99 latency > 30s                        |\n| 03:49       | On-call engineer (L1) acknowledged PagerDuty alert                           |\n| 03:51       | Engineering Lead (L2) joined incident bridge                                 |\n| 03:55       | AKCP agent queried logs — identified DB connection pool exhaustion           |\n| 04:02       | Agent suggested rollback to `v1.4.1`. **Approval requested.**               |\n| 04:04       | Engineering Lead approved rollback via AKCP approval flow                    |\n| 04:04       | AKCP logged approval event: `approval-004 granted by alice@example.org`      |\n| 04:06       | Rollback completed. Error rate began recovering.                             |\n| 04:15       | Error rate returned to baseline (<0.1%)                                      |\n| 04:52       | Incident resolved. Monitoring period ended.                                  |\n\n## What Worked Well\n\n- AKCP agent immediately identified the DB connection pool exhaustion from logs.\n- The approval flow ensured the rollback was authorized before execution.\n- Audit trail captured full decision chain for postmortem review.\n\n## Postmortem\n\nSee `postmortem-2026-001.md` for root cause analysis and action items.",
+      "budget": {
+        "byteSize": 1935,
+        "estimatedTokens": 484
+      },
+      "status": "Closed",
+      "isStale": false
+    },
+    {
+      "conceptId": "p1-procedure",
+      "type": "Incident",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\incidents\\p1-procedure.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "Incident",
+        "title": "SEV-2: Payment Service High CPU — Suspected Deployment Regression",
+        "description": "Elevated CPU on svc-payment following a deployment. Triaged and mitigated via rollback.",
+        "tags": [
+          "sev-2",
+          "payments",
+          "cpu"
+        ],
+        "schemaVersion": "okf/v1",
+        "status": "Resolved",
+        "id": "inc-2026-002",
+        "severity": "SEV-2",
+        "serviceRefs": [
+          "svc-payment"
+        ],
+        "commanderRef": "owner-team-payments",
+        "startTime": "2026-07-10T14:30:00Z",
+        "endTime": "2026-07-10T15:12:00Z",
+        "summary": "- **Duration**: 42 minutes\n- **Scope**: Elevated P99 latency (450ms vs 80ms baseline); no transaction failures\n- **SLO Impact**: 4.2 minutes of error-budget burned (availability maintained)"
+      },
+      "body": "# INC-2026-002 — Payment Service High CPU\n\n## Impact Summary\n\n- **Duration**: 42 minutes\n- **Scope**: Elevated P99 latency (450ms vs 80ms baseline); no transaction failures\n- **SLO Impact**: 4.2 minutes of error-budget burned (availability maintained)\n\n## Timeline\n\n| Time (UTC) | Event                                                                         |\n|------------|-------------------------------------------------------------------------------|\n| 14:25      | Deployment of `svc-payment v1.4.3` completed                                 |\n| 14:30      | Monitoring alert: CPU > 90% for 5 minutes on `svc-payment`                   |\n| 14:32      | On-call engineer acknowledged alert                                           |\n| 14:34      | AKCP agent called `get_runbook(runbook-high-cpu)` — retrieved runbook         |\n| 14:36      | AKCP agent called `query_logs` — identified deployment event at 14:25         |\n| 14:38      | Agent proposed rollback to v1.4.2. **Approval requested.**                   |\n| 14:40      | On-call lead approved rollback (approvalTicketId: approval-007)               |\n| 14:40      | AKCP logged: `approval-007 granted by bob@example.org`                        |\n| 14:41      | Rollback to v1.4.2 executed. CPU began recovering.                            |\n| 14:52      | CPU returned to baseline (65%). Incident monitoring period started.           |\n| 15:12      | Incident resolved after stable monitoring period.                             |\n\n## Runbooks Applied\n\n- `runbook-high-cpu` (Path B — Bad Deployment)\n\n## Capability Audit\n\n| Capability                          | Approved | Ticket       |\n|-------------------------------------|----------|--------------|\n| `it-operations.get_runbook`         | N/A      | N/A          |\n| `it-operations.query_logs`          | N/A      | N/A          |\n| `it-operations.execute_remediation` | Yes      | approval-007 |",
+      "budget": {
+        "byteSize": 1926,
+        "estimatedTokens": 482
+      },
+      "status": "Resolved",
+      "isStale": false
+    },
+    {
+      "conceptId": "postmortem-2026-001",
+      "type": "Postmortem",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\incidents\\postmortem-2026-001.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "Postmortem",
+        "title": "Postmortem: Payment Service Outage — INC-2026-001",
+        "description": "Root cause analysis and action items for the 65-minute SEV-1 payment outage on 2026-04-14.",
+        "tags": [
+          "postmortem",
+          "payments",
+          "database"
+        ],
+        "schemaVersion": "okf/v1",
+        "id": "postmortem-2026-001",
+        "incidentRef": "inc-2026-001",
+        "rootCause": "svc-payment v1.4.2 introduced a misconfigured database connection pool (max_connections set to 5 instead of 500). Under normal traffic load the pool exhausted within 5 minutes of the deployment, causing all requests to queue and then timeout.",
+        "actionItems": [
+          "Add connection pool configuration validation to the CI pipeline (owner: payments-team, due: 2026-05-01)",
+          "Create a canary deployment stage that validates DB connection pool health before full rollout (owner: infra-team, due: 2026-05-15)",
+          "Add a dedicated alert for connection pool utilization > 80% (owner: observability-team, due: 2026-04-21)",
+          "Update the High CPU and DB runbooks to include connection pool exhaustion as an explicit triage path"
+        ],
+        "dateCompleted": "2026-04-16",
+        "summary": "The 65-minute payment outage on 2026-04-14 was caused by a misconfigured database connection pool introduced in `svc-payment v1.4.2`. The AKCP agent correctly identified the issue from logs within 8 minutes of the alert firing and requested a rollback. The rollback required and received human approv..."
+      },
+      "body": "# Postmortem — INC-2026-001\n\n## Blameless Summary\n\nThe 65-minute payment outage on 2026-04-14 was caused by a misconfigured database connection pool introduced in `svc-payment v1.4.2`. The AKCP agent correctly identified the issue from logs within 8 minutes of the alert firing and requested a rollback. The rollback required and received human approval, executing correctly and restoring service.\n\n## Root Cause\n\n`svc-payment v1.4.2` introduced a configuration change to the database pooler settings. A typo in the Kubernetes ConfigMap set `DB_POOL_MAX_CONNECTIONS=5` instead of `DB_POOL_MAX_CONNECTIONS=500`. Under normal traffic, 5 connections are sufficient for ~10 requests/second; the service handles ~2,000 requests/second in production, causing the pool to exhaust within minutes.\n\n## Contributing Factors\n\n1. The configuration change was not covered by staging tests (staging load is < 1% of production).\n2. The deployment checklist did not include a post-deploy DB health check.\n3. Connection pool utilization was not a monitored metric.\n\n## Action Items\n\n| Item                                                             | Owner             | Due Date   | Status      |\n|------------------------------------------------------------------|-------------------|------------|-------------|\n| Add pool config validation to CI                                 | payments-team     | 2026-05-01 | Completed   |\n| Add canary stage with DB health validation                       | infra-team        | 2026-05-15 | In Progress |\n| Alert on connection pool utilization > 80%                       | observability     | 2026-04-21 | Completed   |\n| Update High CPU and DB runbooks with connection pool triage path | payments-team     | 2026-04-30 | Completed   |\n\n## What the Agent Did Correctly\n\n- Queried logs and correctly identified `connection pool exhausted` as the root cause within 8 minutes.\n- Surfaced a rollback recommendation with the specific version to roll back to.\n- Did **not** attempt to execute the rollback autonomously — correctly requested approval first.\n- Audit log captured the full approval chain.\n\n## Audit Evidence\n\n- Approval event: `approval-004` granted by `alice@example.org` at `04:04 UTC`\n- Capability invoked: `execute_remediation` (rollback)\n- Audit log entry: `akcp.audit/v1` format, stored in `dist/audit-log.jsonl`",
+      "budget": {
+        "byteSize": 2356,
+        "estimatedTokens": 589
+      },
+      "status": "active",
+      "isStale": false
+    },
+    {
+      "conceptId": "slo-payment",
+      "type": "SLO",
+      "source": {
+        "filePath": "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\policies\\slo-payment.md",
+        "format": "okf/markdown"
+      },
+      "frontmatter": {
+        "type": "SLO",
+        "serviceRef": "payment-service",
+        "indicator": "legacy-slo",
+        "target": "0%",
+        "window": "0d"
+      },
+      "body": "# Note: This file is superseded\n\n\nThe SLO document for the Payment Service has moved to:\n`../services/slo-payment-availability.md`\n\nThis file is kept here only for historical reference and is not included in the OKF source scan.",
+      "budget": {
+        "byteSize": 228,
+        "estimatedTokens": 57
+      },
+      "status": "active",
+      "isStale": false
+    }
+  ],
+  "links": [],
+  "capabilities": [
+    {
+      "id": "it-operations.query_logs",
+      "kind": "tool",
+      "name": "query_logs",
+      "description": "Queries structured operational logs for a given service and time range. Read-only. Does not expose credentials or secrets.",
+      "version": "1.0.0",
+      "riskLevel": "low",
+      "sideEffects": "external-read",
+      "requiresApproval": false,
+      "readsPII": false,
+      "writesPII": false,
+      "inputsSchema": {
+        "type": "object",
+        "properties": {
+          "serviceName": {
+            "type": "string",
+            "description": "The service ID to query logs for."
+          },
+          "query": {
+            "type": "string",
+            "description": "Log filter expression (no credentials or secrets)."
+          },
+          "startTime": {
+            "type": "string",
+            "description": "ISO 8601 start time."
+          },
+          "endTime": {
+            "type": "string",
+            "description": "ISO 8601 end time."
+          }
+        },
+        "required": [
+          "serviceName",
+          "query"
+        ]
+      }
+    },
+    {
+      "id": "it-operations.get_runbook",
+      "kind": "resource",
+      "name": "get_runbook",
+      "description": "Retrieves the full content of a runbook by ID. Read-only knowledge retrieval.",
+      "version": "1.0.0",
+      "riskLevel": "low",
+      "sideEffects": "none",
+      "requiresApproval": false,
+      "readsPII": false,
+      "writesPII": false,
+      "inputsSchema": {
+        "type": "object",
+        "properties": {
+          "runbookId": {
+            "type": "string",
+            "description": "The runbook document ID."
+          }
+        },
+        "required": [
+          "runbookId"
+        ]
+      }
+    },
+    {
+      "id": "it-operations.create_incident",
+      "kind": "tool",
+      "name": "create_incident",
+      "description": "Creates a new incident record in the incident management system. Does not execute any remediation.",
+      "version": "1.0.0",
+      "riskLevel": "medium",
+      "sideEffects": "external-write",
+      "requiresApproval": false,
+      "readsPII": false,
+      "writesPII": false,
+      "inputsSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "SEV-1",
+              "SEV-2",
+              "SEV-3",
+              "SEV-4",
+              "SEV-5"
+            ]
+          },
+          "serviceRef": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "severity",
+          "serviceRef"
+        ]
+      }
+    },
+    {
+      "id": "it-operations.escalate_incident",
+      "kind": "tool",
+      "name": "escalate_incident",
+      "description": "Triggers the escalation policy for a given incident, paging the next on-call level. Requires approval for escalation beyond L2.",
+      "version": "1.0.0",
+      "riskLevel": "medium",
+      "sideEffects": "external-write",
+      "requiresApproval": true,
+      "readsPII": false,
+      "writesPII": false,
+      "inputsSchema": {
+        "type": "object",
+        "properties": {
+          "incidentId": {
+            "type": "string"
+          },
+          "targetLevel": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 3
+          }
+        },
+        "required": [
+          "incidentId",
+          "targetLevel"
+        ]
+      }
+    },
+    {
+      "id": "it-operations.execute_remediation",
+      "kind": "tool",
+      "name": "execute_remediation",
+      "description": "Executes a pre-approved remediation action (e.g., rollback or restart). This is a high-risk, approval-gated capability. The agent MUST obtain explicit human approval before execution.",
+      "version": "1.0.0",
+      "riskLevel": "critical",
+      "sideEffects": "external-write",
+      "requiresApproval": true,
+      "readsPII": false,
+      "writesPII": false,
+      "inputsSchema": {
+        "type": "object",
+        "properties": {
+          "remediationActionId": {
+            "type": "string",
+            "description": "The remediation action to execute (e.g., remediation-rollback-deployment)."
+          },
+          "serviceRef": {
+            "type": "string"
+          },
+          "targetVersion": {
+            "type": "string",
+            "description": "For rollbacks: the version to roll back to."
+          },
+          "approvalTicketId": {
+            "type": "string",
+            "description": "Required: the approval ticket ID from the AKCP approval flow."
+          }
+        },
+        "required": [
+          "remediationActionId",
+          "serviceRef",
+          "approvalTicketId"
+        ]
+      }
+    }
+  ],
+  "targets": [
+    "mcp-profile-server",
+    "mcp-automation-server"
+  ],
+  "sourceHashes": {
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\alert-high-cpu-payment.md": "eea9c450294403bc5a63e47a3c052204de794f6cefd89fdfffe7cd0fe6ed2a0b",
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\auth-service.md": "fd37728410f10888722590e9527e85edc6ff33c5910e6f84201efd64b4748e46",
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\change-window-payments.md": "cae307b7fea091bcbe01ea9a9a9fa9037bd6b5a5ae707802c5b28775be6bb192",
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\escalation-policy-payments.md": "c49ea23416ce702f4497c6026f60d24eb3ec42fde8556a02716f7d8b733da372",
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\owner-team-payments.md": "9dc6fe7c66168084f2110b8ca297574c232a38cab29a9a8524347f2d1f5d5cba",
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\payment-service.md": "fb6fdd70d4b300f5999d1ce9f89790828603d959d313dbbd3a8e74ce68b8474b",
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\slo-payment-availability.md": "e4e478375f712252f417218337abc2528efcc031db5ff46f28993c08568bd6fb",
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\runbooks\\failed-deploy.md": "d2307091187996f43f49feb239d59ec50b353e36d17953f01330168d30da1fd5",
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\runbooks\\high-cpu.md": "8cc6d040a39d80b90624f48c10d99b469a86e178a17e8baaf88ea8313c6b12d0",
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\runbooks\\remediation-rollback-deployment.md": "a1d6e3463ab5552b459decb28e94047bc060333dd9deed02ac78ab874a0e2d38",
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\incidents\\inc-2026-001.md": "bb5dc190a9b6c2b45dc0a2250e2a960e079991a1cc8899bce3fbb1d4d9efa429",
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\incidents\\p1-procedure.md": "09c3d9ec1d13fad3bb3ba6e43a1cca541b324d50f8ffff2cb8fcf047500415d1",
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\incidents\\postmortem-2026-001.md": "32e4b5121cd23cb674ac9aceca176ed907d4d49ed37c678ceed899311157b6c0",
+    "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\policies\\slo-payment.md": "006275afe21b024dd0cd4b1f75404a1aa7c674dfc2fa3678fefa04fa974a9a98"
+  }
+}

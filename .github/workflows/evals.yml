@@ -1,0 +1,42 @@
+name: Evals Regression Check
+
+on:
+  pull_request:
+    paths:
+      - "packages/mcp-profile-server/src/**"
+      - "packages/mcp-automation-server/src/**"
+      - "packages/evals/src/**"
+      - "packages/core/src/contracts/**"
+
+permissions:
+  contents: read
+
+jobs:
+  run-evals:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Core
+        run: pnpm --filter @akcp/core build
+
+      - name: Build Dashboard Server
+        run: pnpm --filter @akcp/dashboard build
+
+      - name: Run Evals
+        run: pnpm evals
+        env:
+          AUTOMATION_RUNTIME_MODE: sandbox

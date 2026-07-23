@@ -1,0 +1,39 @@
+[
+  {
+    "id": "career.summarize_experience",
+    "name": "summarize_experience",
+    "version": "1.0.0",
+    "description": "Summarizes the user's career experience and highlights key achievements.",
+    "kind": "tool",
+    "riskLevel": "low",
+    "sideEffects": "none",
+    "requiresApproval": false,
+    "readsPII": true,
+    "writesPII": false,
+    "inputsSchema": {
+      "type": "object",
+      "properties": {
+        "focusArea": { "type": "string", "description": "Optional specific tech stack or skill to focus on." }
+      }
+    }
+  },
+  {
+    "id": "career.analyze_job_fit",
+    "name": "analyze_job_fit",
+    "version": "1.0.0",
+    "description": "Analyzes how well the user's profile and preferences match a given job description.",
+    "kind": "tool",
+    "riskLevel": "medium",
+    "sideEffects": "none",
+    "requiresApproval": false,
+    "readsPII": true,
+    "writesPII": false,
+    "inputsSchema": {
+      "type": "object",
+      "properties": {
+        "jobDescription": { "type": "string", "description": "The target job description text." }
+      },
+      "required": ["jobDescription"]
+    }
+  }
+]

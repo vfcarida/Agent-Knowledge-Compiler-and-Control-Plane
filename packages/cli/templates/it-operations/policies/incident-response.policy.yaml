@@ -1,0 +1,56 @@
+policyVersion: 1
+description: >
+  Master incident response policy for the IT Operations domain.
+  Governs which agent capabilities are allowed at each incident severity level,
+  what requires human approval, and what is permanently disallowed.
+
+# Capability risk tiers and approval requirements
+capabilities:
+  query_logs:
+    riskLevel: "low"
+    requiresApproval: false
+    allowedAtSeverities: ["SEV-1", "SEV-2", "SEV-3", "SEV-4", "SEV-5"]
+    notes: "Read-only. Agent may invoke without approval at any severity."
+
+  get_runbook:
+    riskLevel: "low"
+    requiresApproval: false
+    allowedAtSeverities: ["SEV-1", "SEV-2", "SEV-3", "SEV-4", "SEV-5"]
+    notes: "Knowledge retrieval only. No side effects."
+
+  create_incident:
+    riskLevel: "medium"
+    requiresApproval: false
+    allowedAtSeverities: ["SEV-1", "SEV-2", "SEV-3", "SEV-4", "SEV-5"]
+    notes: "Creates an incident record. Does not execute any remediation."
+
+  escalate_incident:
+    riskLevel: "medium"
+    requiresApproval: true
+    approvalRequired: "on-call-lead"
+    allowedAtSeverities: ["SEV-1", "SEV-2", "SEV-3"]
+    notes: "Escalation beyond L1 requires approval."
+
+  execute_remediation:
+    riskLevel: "critical"
+    requiresApproval: true
+    approvalRequired: "on-call-lead"
+    allowedAtSeverities: ["SEV-1", "SEV-2", "SEV-3"]
+    notes: >
+      The agent MUST surface the remediation plan and request approval.
+      AKCP will block execution unless an approvalTicketId is present and valid.
+      This capability is DISABLED for SEV-4 and SEV-5 (use change window process instead).
+
+# Permanently disallowed agent behaviors
+forbidden:
+  - "Execute any destructive action without a valid approvalTicketId"
+  - "Expose credentials, passwords, secrets, or tokens in any output or log"
+  - "Modify production database records directly"
+  - "Disable monitoring or alerting systems"
+  - "Bypass the change-window policy without documented emergency approval"
+
+# Audit requirements
+audit:
+  allActions: true
+  retentionDays: 90
+  format: "akcp.audit/v1"

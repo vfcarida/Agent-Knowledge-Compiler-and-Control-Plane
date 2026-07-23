@@ -1,0 +1,190 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Cache workspace
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: .
+          key: workspace-${{ github.sha }}
+
+  lint-and-format:
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore workspace
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: .
+          key: workspace-${{ github.sha }}
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Check Metadata
+        run: pnpm run check:metadata
+
+      - name: Check Identity
+        run: pnpm run check:identity
+
+      - name: Check Docs
+        run: pnpm run check:docs
+
+      - name: Check Links
+        run: pnpm run check:links
+
+  typecheck:
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore workspace
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: .
+          key: workspace-${{ github.sha }}
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Typecheck
+        run: pnpm run typecheck
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Unit Tests
+        run: pnpm test -- --run
+
+      - name: Coverage Check
+        run: pnpm coverage
+
+  security-and-contract:
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore workspace
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: .
+          key: workspace-${{ github.sha }}
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Security and Contract Tests
+        run: pnpm run test:mcp
+
+      - name: Conformance Tests
+        run: pnpm run test:conformance
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          path: ./
+          format: spdx-json
+          output-file: sbom.spdx.json
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        with:
+          name: sbom-spdx
+          path: sbom.spdx.json
+          retention-days: 30
+
+  evals-and-integration:
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore workspace
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: .
+          key: workspace-${{ github.sha }}
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Validate IT Operations Bundle
+        run: pnpm akcp validate --bundle examples/domains/it-operations --profile it-operations
+
+      - name: Compile IT Operations Bundle
+        run: pnpm akcp compile --config examples/domains/it-operations/akcp.yaml
+
+      - name: Validate Career Bundle
+        run: pnpm akcp validate --bundle examples/domains/career --profile career

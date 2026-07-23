@@ -1,0 +1,7 @@
+compile:
+  sources:
+    - type: okf-directory
+      path: .
+  targets:
+    - type: context-pack
+      out: dist/context-pack.json

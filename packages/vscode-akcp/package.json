@@ -1,0 +1,62 @@
+{
+  "name": "@akcp/vscode",
+  "displayName": "AKCP Orchestrator",
+  "description": "Agent Knowledge Compiler and Control Plane VSCode Extension",
+  "version": "0.1.0",
+  "private": true,
+  "publisher": "akcp",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "okf",
+        "aliases": [
+          "Open Knowledge Format",
+          "okf"
+        ],
+        "extensions": [
+          ".okf"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "okf",
+        "scopeName": "text.html.markdown.okf",
+        "path": "./syntaxes/okf.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "akcp.validate",
+        "title": "AKCP: Validate Context Pack"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b -w",
+    "test": "vitest run",
+    "compile": "tsc -b"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.5.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane.git"
+  },
+  "homepage": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane#readme",
+  "bugs": {
+    "url": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane/issues"
+  }
+}

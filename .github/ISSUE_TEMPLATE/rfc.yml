@@ -1,0 +1,33 @@
+name: RFC (Request for Comments)
+description: Propose significant architectural shifts following Spec-Driven Development
+title: "rfc: <title>"
+labels: ["rfc", "design"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Brief summary of the proposed architectural shift.
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What problem is this resolving? Refer to Spec-Driven Development goals.
+    validations:
+      required: true
+  - type: textarea
+    id: detailed-design
+    attributes:
+      label: Detailed Design
+      description: Explain the new package splits, tools, schema updates, or security gates.
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Drawbacks & Risks
+      description: What are the risks? How will backward compatibility for OKF bundles be handled?
+    validations:
+      required: true

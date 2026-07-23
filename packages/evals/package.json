@@ -1,0 +1,65 @@
+{
+  "name": "@akcp/evals",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./dist/scenarios.js": {
+      "types": "./dist/scenarios.d.ts",
+      "import": "./dist/scenarios.js"
+    },
+    "./dist/prompt-injection-scenario.js": {
+      "types": "./dist/prompt-injection-scenario.d.ts",
+      "import": "./dist/prompt-injection-scenario.js"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "clean": "node -e \"fs.rmSync('dist', {recursive:true,force:true}); fs.rmSync('tsconfig.tsbuildinfo', {force:true})\"",
+    "evals": "vitest run --reporter=json --outputFile=../../reports/evals-report.json"
+  },
+  "dependencies": {
+    "@akcp/core": "workspace:*",
+    "@akcp/mcp-profile-server": "workspace:*",
+    "@akcp/mcp-automation-server": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "@types/node": "catalog:",
+    "vitest": "catalog:"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane.git",
+    "directory": "packages/evals"
+  },
+  "homepage": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane#readme",
+  "bugs": {
+    "url": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "ai-agents",
+    "knowledge-management",
+    "mcp",
+    "governance",
+    "compilation"
+  ]
+}

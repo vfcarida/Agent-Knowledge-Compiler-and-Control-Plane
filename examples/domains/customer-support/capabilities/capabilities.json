@@ -1,0 +1,106 @@
+[
+  {
+    "id": "customer-support.get_customer_history",
+    "name": "get_customer_history",
+    "version": "1.0.0",
+    "description": "Retrieves the historical support tickets and profile data for a given customer. Reads PII (name, email) which must be redacted in audit logs.",
+    "kind": "tool",
+    "riskLevel": "medium",
+    "sideEffects": "external-read",
+    "requiresApproval": false,
+    "readsPII": true,
+    "writesPII": false,
+    "inputsSchema": {
+      "type": "object",
+      "properties": {
+        "customerId": { "type": "string", "description": "The unique ID of the customer." },
+        "includeArchived": { "type": "boolean", "description": "Whether to include tickets older than 1 year." }
+      },
+      "required": ["customerId"]
+    }
+  },
+  {
+    "id": "customer-support.search_knowledge_base",
+    "name": "search_knowledge_base",
+    "version": "1.0.0",
+    "description": "Searches the support knowledge base and policies.",
+    "kind": "tool",
+    "riskLevel": "low",
+    "sideEffects": "none",
+    "requiresApproval": false,
+    "readsPII": false,
+    "writesPII": false,
+    "inputsSchema": {
+      "type": "object",
+      "properties": {
+        "query": { "type": "string" },
+        "category": { "type": "string", "enum": ["billing", "technical", "account", "shipping"] }
+      },
+      "required": ["query"]
+    }
+  },
+  {
+    "id": "customer-support.issue_refund",
+    "name": "issue_refund",
+    "version": "1.0.0",
+    "description": "[EXPERIMENTAL SKELETON - UNIMPLEMENTED] Issues a refund to a customer. This is a high-risk action requiring HITL approval.",
+    "kind": "tool",
+    "riskLevel": "critical",
+    "sideEffects": "external-write",
+    "requiresApproval": true,
+    "readsPII": true,
+    "writesPII": false,
+    "inputsSchema": {
+      "type": "object",
+      "properties": {
+        "ticketId": { "type": "string" },
+        "amount": { "type": "number", "minimum": 0.01 },
+        "currency": { "type": "string", "enum": ["USD", "EUR", "GBP"] },
+        "reason": { "type": "string" },
+        "approvalTicketId": { "type": "string", "description": "The approval ticket ID from the Control Plane." }
+      },
+      "required": ["ticketId", "amount", "currency", "reason", "approvalTicketId"]
+    }
+  },
+  {
+    "id": "customer-support.escalate_ticket",
+    "name": "escalate_ticket",
+    "version": "1.0.0",
+    "description": "Escalates a ticket to a higher support tier or specialized team.",
+    "kind": "tool",
+    "riskLevel": "medium",
+    "sideEffects": "external-write",
+    "requiresApproval": false,
+    "readsPII": false,
+    "writesPII": false,
+    "inputsSchema": {
+      "type": "object",
+      "properties": {
+        "ticketId": { "type": "string" },
+        "targetTier": { "type": "string", "enum": ["Tier 2", "Tier 3", "Billing Specialist", "Legal"] },
+        "handoffNotes": { "type": "string" }
+      },
+      "required": ["ticketId", "targetTier", "handoffNotes"]
+    }
+  },
+  {
+    "id": "customer-support.delete_account",
+    "name": "delete_account",
+    "version": "1.0.0",
+    "description": "[EXPERIMENTAL SKELETON - UNIMPLEMENTED] Permanently deletes a customer account.",
+    "kind": "tool",
+    "riskLevel": "critical",
+    "sideEffects": "external-write",
+    "requiresApproval": true,
+    "readsPII": true,
+    "writesPII": true,
+    "inputsSchema": {
+      "type": "object",
+      "properties": {
+        "customerId": { "type": "string" },
+        "reason": { "type": "string" }
+      },
+      "required": ["customerId", "reason"]
+    }
+  }
+]

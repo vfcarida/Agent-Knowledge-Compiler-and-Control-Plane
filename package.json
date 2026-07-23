@@ -1,0 +1,97 @@
+{
+  "name": "agent-knowledge-compiler-and-control-plane",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Agent Knowledge Compiler and Control Plane (AKCP). Compiles organizational knowledge into versioned, agent-consumable artifacts and controls how agents discover and act on them.",
+  "author": "Vinicius Carida",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "check:metadata": "node scripts/check-metadata.mjs",
+    "check:identity": "node scripts/check-identity.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "check:docs": "node scripts/check-docs.mjs",
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "test:watch": "pnpm -r run test:watch",
+    "test:unit": "pnpm -r run test",
+    "test:integration": "pnpm -r run test",
+    "test:contract": "vitest run packages/mcp-profile-server packages/mcp-automation-server",
+    "test:security": "vitest run packages/mcp-profile-server/src/__tests__/security packages/mcp-automation-server/src/__tests__/security packages/core/src/__tests__/privacy",
+    "test:mcp": "pnpm run test:contract && pnpm run test:security",
+    "test:e2e": "pnpm --filter @akcp/dashboard exec playwright install chromium && pnpm --filter @akcp/dashboard exec playwright test",
+    "test:conformance": "pnpm --filter @akcp/conformance run test",
+    "test:coverage": "vitest run --coverage",
+    "bench": "vitest bench --run",
+    "bench:watch": "vitest bench",
+    "quality:gate": "pnpm run test && pnpm run test:coverage && pnpm run test:contract && pnpm run test:security && pnpm run test:conformance",
+    "smoke:quickstart": "node packages/cli/dist/index.js validate --bundle examples/domains/it-operations --profile it-operations && node packages/cli/dist/index.js compile --config examples/domains/it-operations/akcp.yaml",
+    "examples:validate": "node packages/cli/dist/index.js validate --bundle examples/domains/career --profile career && node packages/cli/dist/index.js validate --bundle examples/domains/it-operations --profile it-operations && node packages/cli/dist/index.js validate --bundle examples/domains/customer-support --profile customer-support",
+    "release:check": "node scripts/pre-release-check.mjs",
+    "coverage": "vitest run --coverage --config vitest.config.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "docs:api": "typedoc",
+    "docs:api:watch": "typedoc --watch",
+    "typecheck": "pnpm -r run typecheck",
+    "clean": "pnpm -r run clean",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "validate:yaml": "node scripts/validate-yaml.mjs",
+    "validate:bundle": "tsx packages/core/src/cli/validate-bundle.ts",
+    "migrate:bundle": "tsx packages/core/src/cli/migrate-bundle.ts",
+    "generate:registry": "tsx scripts/generate-registry.ts",
+    "evals": "pnpm --filter @akcp/evals run evals",
+    "dev:profile-server": "pnpm --filter @akcp/mcp-profile-server dev",
+    "dev:automation-server": "pnpm --filter @akcp/mcp-automation-server dev",
+    "dev:dashboard": "pnpm --filter @akcp/dashboard dev",
+    "akcp": "node packages/cli/dist/index.js",
+    "ocf": "node packages/cli/dist/legacy-ocf-bin.js",
+    "agent-ready": "node packages/cli/dist/legacy-bin.js",
+    "release": "pnpm -r publish --no-git-checks",
+    "infra:up": "docker compose up -d redis",
+    "infra:up:full": "docker compose --profile observability up -d",
+    "infra:down": "docker compose down",
+    "infra:logs": "docker compose logs -f"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "@eslint/js": "catalog:",
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^3.2.7",
+    "eslint": "catalog:",
+    "glob": "^13.0.6",
+    "husky": "^9.0.0",
+    "js-yaml": "^5.2.1",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.5.0",
+    "typedoc": "catalog:",
+    "typedoc-plugin-markdown": "catalog:",
+    "typescript": "^5.8.0",
+    "typescript-eslint": "catalog:",
+    "vitest": "^3.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane.git"
+  },
+  "homepage": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane#readme",
+  "bugs": {
+    "url": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane/issues"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix --max-warnings 0 --no-warn-ignored",
+      "prettier --write"
+    ],
+    "*.{json,yaml,yml,md}": [
+      "prettier --write"
+    ]
+  }
+}

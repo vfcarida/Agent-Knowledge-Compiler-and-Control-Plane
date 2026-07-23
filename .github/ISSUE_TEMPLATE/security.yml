@@ -1,0 +1,18 @@
+name: Security Vulnerability Report
+description: Securely report issues following our security policy
+title: "security: <title>"
+labels: ["security"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **WARNING**: If you have found a critical security vulnerability, do NOT file a public issue.
+        Please send a secure report to the project maintainers following the guidelines in [SECURITY.md](https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane/blob/main/SECURITY.md).
+        This template is only for non-critical security queries, sandboxed findings, or dependency updates.
+  - type: textarea
+    id: details
+    attributes:
+      label: Vulnerability Details
+      description: Explain the vulnerability found in sandboxed environments.
+    validations:
+      required: true

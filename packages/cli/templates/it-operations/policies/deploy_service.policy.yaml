@@ -1,0 +1,21 @@
+policyVersion: 1
+capability: "deploy_service"
+description: "Controls the ability to deploy a new version of a service."
+riskLevel: "critical"
+sideEffectLevel: "external-write"
+defaultMode: "disabled"
+allowedRuntimeModes:
+  - "sandbox"
+  - "hitl-approved"
+requiresApproval: true
+approval:
+  ttlMinutes: 60
+  bindToPayloadHash: true
+  singleUse: true
+audit:
+  required: true
+  fields:
+    - "serviceName"
+    - "environment"
+    - "version"
+    - "approver"

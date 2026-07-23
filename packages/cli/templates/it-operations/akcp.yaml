@@ -1,0 +1,42 @@
+compile:
+  profile: "it-operations"
+
+  sources:
+    - type: okf-directory
+      path: ./sources
+
+  targets:
+    - type: context-pack
+      out: dist/agent-knowledge-ir.json
+    - type: mcp-resources
+      out: dist/mcp-resources.json
+    - type: openwiki
+      out: dist/openwiki
+    - type: dashboard-metadata
+      out: dist/dashboard-meta.json
+
+policy:
+  defaultAutonomyLevel: review-required
+  policies:
+    - policies/deploy_service.policy.yaml
+    - policies/execute_command.policy.yaml
+    - policies/execute_remediation.policy.yaml
+    - policies/incident-response.policy.yaml
+    - policies/restart_service.policy.yaml
+
+controlPlane:
+  policies:
+    disableDangerousTools: true
+    requireApprovalFor:
+      - execute_remediation
+      - restart_service
+      - deploy_service
+      - execute_command
+    disableInLogs:
+      - "credential"
+      - "password"
+      - "secret"
+      - "token"
+
+conformance:
+  level: "AKCP-control-plane-compatible"

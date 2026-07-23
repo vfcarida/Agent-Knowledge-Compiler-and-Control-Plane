@@ -1,0 +1,114 @@
+{
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\README.md": {
+    "sourceHash": "12ad58ef4fc5fef0360292315d8905d3b138a0d338a8728d1d9c30188a8434a5",
+    "normalizedHash": "",
+    "artifactHash": "README",
+    "lastCompiledAt": "2026-07-15T20:23:16.165Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\dist\\openwiki\\README.md": {
+    "sourceHash": "ac593f60312d3190a9fe88360c1b8b036d6bff8e677a0be69496301833308c4f",
+    "normalizedHash": "",
+    "artifactHash": "dist\\openwiki\\README",
+    "lastCompiledAt": "2026-07-14T16:51:52.155Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\dist\\openwiki\\index.md": {
+    "sourceHash": "a3252b8f0dea79d695af4f0ff0158564c15b280b3078cfd9b168d70ad7c437b2",
+    "normalizedHash": "",
+    "artifactHash": "dist\\openwiki\\index",
+    "lastCompiledAt": "2026-07-14T16:51:52.155Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\dist\\openwiki\\dist-openwiki-README.md": {
+    "sourceHash": "6b2001746065ef179510c5e69ccfcf69cf2eb4c4aef55b815941fafe525d66cd",
+    "normalizedHash": "",
+    "artifactHash": "dist\\openwiki\\dist-openwiki-README",
+    "lastCompiledAt": "2026-07-14T16:51:52.155Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\dist\\openwiki\\dist-openwiki-index.md": {
+    "sourceHash": "0feca809b476290e78905078e532b08d9b87d04b4bf3a3a9c7546c53c9d932c1",
+    "normalizedHash": "",
+    "artifactHash": "dist\\openwiki\\dist-openwiki-index",
+    "lastCompiledAt": "2026-07-14T16:51:52.155Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\dist\\openwiki\\dist-openwiki-dist-openwiki-README.md": {
+    "sourceHash": "80098ff8cfa4b9a6cccbb14e5bbad172095a1b1e3b42fdeda6d2bd8211092a7c",
+    "normalizedHash": "",
+    "artifactHash": "dist\\openwiki\\dist-openwiki-dist-openwiki-README",
+    "lastCompiledAt": "2026-07-14T16:51:52.155Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\dist\\openwiki\\dist-openwiki-dist-openwiki-index.md": {
+    "sourceHash": "62a912d6fada9216b8a77fbfb91b98b9852944258bba9fa8cdf337a08f93cf3b",
+    "normalizedHash": "",
+    "artifactHash": "dist\\openwiki\\dist-openwiki-dist-openwiki-index",
+    "lastCompiledAt": "2026-07-14T16:51:52.155Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\dist\\openwiki\\dist-openwiki-dist-openwiki-dist-openwiki-README.md": {
+    "sourceHash": "3ce0d950d64e5d2ea2956b7ac09a3d54ee23dde2166c6d4530c3990a5c9bf8ed",
+    "normalizedHash": "",
+    "artifactHash": "dist\\openwiki\\dist-openwiki-dist-openwiki-dist-openwiki-README",
+    "lastCompiledAt": "2026-07-14T16:51:52.155Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\dist\\openwiki\\dist-openwiki-dist-openwiki-dist-openwiki-index.md": {
+    "sourceHash": "1df802622d2a872ecd258ffc7d29992ae4bbbc37cd8d27bc40f8eb5e4f97de34",
+    "normalizedHash": "",
+    "artifactHash": "dist\\openwiki\\dist-openwiki-dist-openwiki-dist-openwiki-index",
+    "lastCompiledAt": "2026-07-14T16:51:52.155Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\knowledge\\experience-acmecorp.md": {
+    "sourceHash": "2b7ec7e07deca47458342f1d6f35e176f6849da677073329984d8ecfd7198ca9",
+    "normalizedHash": "",
+    "artifactHash": "knowledge/experience-acmecorp",
+    "lastCompiledAt": "2026-07-15T12:19:32.895Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\knowledge\\preferences.md": {
+    "sourceHash": "161d4fafda506925e674226de71cbd063b25d67dd66e82cf025459d7c9a7558c",
+    "normalizedHash": "",
+    "artifactHash": "knowledge/preferences",
+    "lastCompiledAt": "2026-07-15T12:19:32.895Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\knowledge\\profile.md": {
+    "sourceHash": "f98c47310fa7cf27f0515b90492cbfe647a9d7cbfd6a4aed402d0e8b5efcbe58",
+    "normalizedHash": "",
+    "artifactHash": "knowledge/profile",
+    "lastCompiledAt": "2026-07-15T12:19:32.895Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\sources\\experience-acmecorp.md": {
+    "sourceHash": "2b7ec7e07deca47458342f1d6f35e176f6849da677073329984d8ecfd7198ca9",
+    "normalizedHash": "",
+    "artifactHash": "sources/experience-acmecorp",
+    "lastCompiledAt": "2026-07-15T20:23:16.165Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\sources\\preferences.md": {
+    "sourceHash": "161d4fafda506925e674226de71cbd063b25d67dd66e82cf025459d7c9a7558c",
+    "normalizedHash": "",
+    "artifactHash": "sources/preferences",
+    "lastCompiledAt": "2026-07-15T20:23:16.166Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\sources\\profile.md": {
+    "sourceHash": "f98c47310fa7cf27f0515b90492cbfe647a9d7cbfd6a4aed402d0e8b5efcbe58",
+    "normalizedHash": "",
+    "artifactHash": "sources/profile",
+    "lastCompiledAt": "2026-07-15T20:23:16.166Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\walkthrough.md": {
+    "sourceHash": "d10295befd857e0ac6b52721c2e53d2261d32d0d938a140751fa52eea35e55d9",
+    "normalizedHash": "",
+    "artifactHash": "walkthrough",
+    "lastCompiledAt": "2026-07-15T20:23:16.166Z",
+    "dependencies": []
+  }
+}

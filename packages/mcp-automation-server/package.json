@@ -1,0 +1,65 @@
+{
+  "name": "@akcp/mcp-automation-server",
+  "version": "0.1.0",
+  "description": "AKCP MCP Automation Server. Executes policy-governed, human-in-the-loop workflows across domains.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./dist/capabilities.js": {
+      "types": "./dist/capabilities.d.ts",
+      "import": "./dist/capabilities.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "clean": "node -e \"fs.rmSync('dist', {recursive:true,force:true}); fs.rmSync('tsconfig.tsbuildinfo', {force:true})\""
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "catalog:",
+    "@akcp/core": "workspace:*",
+    "better-sqlite3": "^12.11.1",
+    "ioredis": "^5.11.1",
+    "playwright": "^1.49.0",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "catalog:",
+    "tsx": "^4.19.0",
+    "typescript": "catalog:"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane.git",
+    "directory": "packages/mcp-automation-server"
+  },
+  "homepage": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane#readme",
+  "bugs": {
+    "url": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "ai-agents",
+    "knowledge-management",
+    "mcp",
+    "governance",
+    "compilation"
+  ]
+}

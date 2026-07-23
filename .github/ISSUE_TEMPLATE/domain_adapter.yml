@@ -1,0 +1,31 @@
+name: Domain Adapter Proposal
+description: Propose a new flagship domain or domain adapter for AKCP
+title: "domain: <Domain Name>"
+labels: ["domain", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for proposing a new domain for AKCP! Please provide the necessary details so we can evaluate its fit for the ecosystem.
+  - type: textarea
+    id: domain-description
+    attributes:
+      label: Domain Description
+      description: Describe the domain and why it is a valuable addition to AKCP.
+      placeholder: e.g. Healthcare Compliance, Legal Discovery...
+    validations:
+      required: true
+  - type: textarea
+    id: domain-model
+    attributes:
+      label: Proposed Domain Model
+      description: List the core OKF profile types required (e.g. Patient, Case, Policy).
+    validations:
+      required: true
+  - type: textarea
+    id: capabilities
+    attributes:
+      label: Required Capabilities
+      description: What MCP capabilities will agents need in this domain? Note which ones have Side Effects or high risk.
+    validations:
+      required: true

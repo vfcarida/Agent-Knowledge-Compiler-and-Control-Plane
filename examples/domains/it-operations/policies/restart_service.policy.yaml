@@ -1,0 +1,22 @@
+policyVersion: 1
+capability: "restart_service"
+description: "Controls the ability of an agent to restart a live service pod or instance."
+riskLevel: "critical"
+sideEffectLevel: "external-write"
+defaultMode: "disabled"
+allowedRuntimeModes:
+  - "sandbox"
+  - "hitl-approved"
+requiresApproval: true
+approval:
+  ttlMinutes: 10
+  bindToPayloadHash: true
+  singleUse: true
+audit:
+  required: true
+  fields:
+    - "serviceName"
+    - "environment"
+    - "approver"
+    - "reason"
+    - "payloadHash"

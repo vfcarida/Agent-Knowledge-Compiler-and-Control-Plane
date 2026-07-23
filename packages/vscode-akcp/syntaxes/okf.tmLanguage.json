@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "OKF (Open Knowledge Format)",
+  "patterns": [
+    {
+      "include": "text.html.markdown"
+    }
+  ],
+  "scopeName": "text.html.markdown.okf"
+}

@@ -1,0 +1,296 @@
+{
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Agent-Knowledge-Compiler-and-Control-Plane-Orchestrator\\examples\\domains\\it-operations\\services\\auth-service.md": {
+    "sourceHash": "863ccf6ad5b2b466377f47cefff2b02875d5bc48b2b186cd8a24fc8bff3d7b9f",
+    "normalizedHash": "",
+    "artifactHash": "../dummy",
+    "lastCompiledAt": "2026-07-11T00:27:24.013Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Agent-Knowledge-Compiler-and-Control-Plane-Orchestrator\\examples\\domains\\it-operations\\services\\payment-service.md": {
+    "sourceHash": "1043e32f6296e6d08193468d9a46bbac0ce5b76e21d6497e867075924d4aaf13",
+    "normalizedHash": "",
+    "artifactHash": "../dummy",
+    "lastCompiledAt": "2026-07-11T00:27:24.014Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Agent-Knowledge-Compiler-and-Control-Plane-Orchestrator\\examples\\domains\\it-operations\\runbooks\\failed-deploy.md": {
+    "sourceHash": "30d762189d5276b8f6f15736cf83415c17aa7f31309a11214319ec535c29d13e",
+    "normalizedHash": "",
+    "artifactHash": "../dummy",
+    "lastCompiledAt": "2026-07-11T00:27:24.014Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Agent-Knowledge-Compiler-and-Control-Plane-Orchestrator\\examples\\domains\\it-operations\\runbooks\\high-cpu.md": {
+    "sourceHash": "8fb5452ca9f6f27956087a60f1bf3be6215a672469bedb2894b8715539c85a02",
+    "normalizedHash": "",
+    "artifactHash": "../dummy",
+    "lastCompiledAt": "2026-07-11T00:27:24.015Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Agent-Knowledge-Compiler-and-Control-Plane-Orchestrator\\examples\\domains\\it-operations\\incidents\\p1-procedure.md": {
+    "sourceHash": "381b1fbafb907d2faea5884eec10734e26cef2fedf4a873c80ba1af8bd624ae8",
+    "normalizedHash": "",
+    "artifactHash": "../dummy",
+    "lastCompiledAt": "2026-07-11T00:27:24.015Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Agent-Knowledge-Compiler-and-Control-Plane-Orchestrator\\examples\\domains\\it-operations\\policies\\slo-payment.md": {
+    "sourceHash": "0f2681af3c1e3d9e60cbde077e9f8f36e1bf6b300dd45c17af08251fdb59b06c",
+    "normalizedHash": "",
+    "artifactHash": "../dummy",
+    "lastCompiledAt": "2026-07-11T00:27:24.015Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\auth-service.md": {
+    "sourceHash": "fd37728410f10888722590e9527e85edc6ff33c5910e6f84201efd64b4748e46",
+    "normalizedHash": "",
+    "artifactHash": "services/auth-service",
+    "lastCompiledAt": "2026-07-15T12:19:32.999Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\payment-service.md": {
+    "sourceHash": "fb6fdd70d4b300f5999d1ce9f89790828603d959d313dbbd3a8e74ce68b8474b",
+    "normalizedHash": "",
+    "artifactHash": "services/payment-service",
+    "lastCompiledAt": "2026-07-15T12:19:33.000Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\runbooks\\failed-deploy.md": {
+    "sourceHash": "d2307091187996f43f49feb239d59ec50b353e36d17953f01330168d30da1fd5",
+    "normalizedHash": "",
+    "artifactHash": "runbooks/failed-deploy",
+    "lastCompiledAt": "2026-07-15T12:19:32.998Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\runbooks\\high-cpu.md": {
+    "sourceHash": "8cc6d040a39d80b90624f48c10d99b469a86e178a17e8baaf88ea8313c6b12d0",
+    "normalizedHash": "",
+    "artifactHash": "runbooks/high-cpu",
+    "lastCompiledAt": "2026-07-15T12:19:32.998Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\incidents\\p1-procedure.md": {
+    "sourceHash": "09c3d9ec1d13fad3bb3ba6e43a1cca541b324d50f8ffff2cb8fcf047500415d1",
+    "normalizedHash": "",
+    "artifactHash": "incidents/p1-procedure",
+    "lastCompiledAt": "2026-07-15T12:19:32.998Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\policies\\slo-payment.md": {
+    "sourceHash": "006275afe21b024dd0cd4b1f75404a1aa7c674dfc2fa3678fefa04fa974a9a98",
+    "normalizedHash": "",
+    "artifactHash": "policies/slo-payment",
+    "lastCompiledAt": "2026-07-15T12:19:32.998Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\FLAGSHIP_AUDIT.md": {
+    "sourceHash": "6f2491639f2e21823a7686330874e13becf1a97a5030e92cbceef5fc3ed11cee",
+    "normalizedHash": "",
+    "artifactHash": "FLAGSHIP_AUDIT",
+    "lastCompiledAt": "2026-07-15T20:23:16.272Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\README.md": {
+    "sourceHash": "b46f69c6e2bbaae673021e3ca40ddf82cf03cc1982a7e802cf4a4e60ce99d23e",
+    "normalizedHash": "",
+    "artifactHash": "README",
+    "lastCompiledAt": "2026-07-15T20:23:16.272Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\WALKTHROUGH.md": {
+    "sourceHash": "6fe9f3ca43a1b5361a88148772822205244727e89efdbd498a4ed0ad3b69802c",
+    "normalizedHash": "",
+    "artifactHash": "WALKTHROUGH",
+    "lastCompiledAt": "2026-07-15T12:19:32.997Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sample-data\\.okf\\runbook-db.md": {
+    "sourceHash": "952a506f07bf52666e51018e435aa31a77596d07aa5ad2ea7803ac442912b7bc",
+    "normalizedHash": "",
+    "artifactHash": "sample-data/.okf/runbook-db",
+    "lastCompiledAt": "2026-07-15T20:23:16.273Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\scenarios\\high-cpu-incident.md": {
+    "sourceHash": "cda40a3e0990265a8da9d6b1f304143cb5759977443b633abc4dc6921fbc968b",
+    "normalizedHash": "",
+    "artifactHash": "scenarios/high-cpu-incident",
+    "lastCompiledAt": "2026-07-15T12:19:32.999Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\scorecard.md": {
+    "sourceHash": "eb636adc756f64038a0ed4f11c8326d0f600e8e7c274fc97b71cdb99f6996d6c",
+    "normalizedHash": "",
+    "artifactHash": "scorecard",
+    "lastCompiledAt": "2026-07-15T20:23:16.273Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\alert-high-cpu-payment.md": {
+    "sourceHash": "eea9c450294403bc5a63e47a3c052204de794f6cefd89fdfffe7cd0fe6ed2a0b",
+    "normalizedHash": "",
+    "artifactHash": "services/alert-high-cpu-payment",
+    "lastCompiledAt": "2026-07-15T12:19:32.999Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\change-window-payments.md": {
+    "sourceHash": "cae307b7fea091bcbe01ea9a9a9fa9037bd6b5a5ae707802c5b28775be6bb192",
+    "normalizedHash": "",
+    "artifactHash": "services/change-window-payments",
+    "lastCompiledAt": "2026-07-15T12:19:32.999Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\escalation-policy-payments.md": {
+    "sourceHash": "c49ea23416ce702f4497c6026f60d24eb3ec42fde8556a02716f7d8b733da372",
+    "normalizedHash": "",
+    "artifactHash": "services/escalation-policy-payments",
+    "lastCompiledAt": "2026-07-15T12:19:32.999Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\owner-team-payments.md": {
+    "sourceHash": "9dc6fe7c66168084f2110b8ca297574c232a38cab29a9a8524347f2d1f5d5cba",
+    "normalizedHash": "",
+    "artifactHash": "services/owner-team-payments",
+    "lastCompiledAt": "2026-07-15T12:19:33.000Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\services\\slo-payment-availability.md": {
+    "sourceHash": "e4e478375f712252f417218337abc2528efcc031db5ff46f28993c08568bd6fb",
+    "normalizedHash": "",
+    "artifactHash": "services/slo-payment-availability",
+    "lastCompiledAt": "2026-07-15T12:19:33.000Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\runbooks\\remediation-rollback-deployment.md": {
+    "sourceHash": "a1d6e3463ab5552b459decb28e94047bc060333dd9deed02ac78ab874a0e2d38",
+    "normalizedHash": "",
+    "artifactHash": "runbooks/remediation-rollback-deployment",
+    "lastCompiledAt": "2026-07-15T12:19:32.998Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\incidents\\inc-2026-001.md": {
+    "sourceHash": "bb5dc190a9b6c2b45dc0a2250e2a960e079991a1cc8899bce3fbb1d4d9efa429",
+    "normalizedHash": "",
+    "artifactHash": "incidents/inc-2026-001",
+    "lastCompiledAt": "2026-07-15T12:19:32.998Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\incidents\\postmortem-2026-001.md": {
+    "sourceHash": "32e4b5121cd23cb674ac9aceca176ed907d4d49ed37c678ceed899311157b6c0",
+    "normalizedHash": "",
+    "artifactHash": "incidents/postmortem-2026-001",
+    "lastCompiledAt": "2026-07-15T12:19:32.998Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sources\\incidents\\inc-2026-001.md": {
+    "sourceHash": "bb5dc190a9b6c2b45dc0a2250e2a960e079991a1cc8899bce3fbb1d4d9efa429",
+    "normalizedHash": "",
+    "artifactHash": "sources/incidents/inc-2026-001",
+    "lastCompiledAt": "2026-07-15T20:23:16.273Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sources\\incidents\\p1-procedure.md": {
+    "sourceHash": "09c3d9ec1d13fad3bb3ba6e43a1cca541b324d50f8ffff2cb8fcf047500415d1",
+    "normalizedHash": "",
+    "artifactHash": "sources/incidents/p1-procedure",
+    "lastCompiledAt": "2026-07-15T20:23:16.273Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sources\\incidents\\postmortem-2026-001.md": {
+    "sourceHash": "32e4b5121cd23cb674ac9aceca176ed907d4d49ed37c678ceed899311157b6c0",
+    "normalizedHash": "",
+    "artifactHash": "sources/incidents/postmortem-2026-001",
+    "lastCompiledAt": "2026-07-15T20:23:16.273Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sources\\runbooks\\failed-deploy.md": {
+    "sourceHash": "d2307091187996f43f49feb239d59ec50b353e36d17953f01330168d30da1fd5",
+    "normalizedHash": "",
+    "artifactHash": "sources/runbooks/failed-deploy",
+    "lastCompiledAt": "2026-07-15T20:23:16.274Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sources\\runbooks\\high-cpu.md": {
+    "sourceHash": "8cc6d040a39d80b90624f48c10d99b469a86e178a17e8baaf88ea8313c6b12d0",
+    "normalizedHash": "",
+    "artifactHash": "sources/runbooks/high-cpu",
+    "lastCompiledAt": "2026-07-15T20:23:16.274Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sources\\runbooks\\remediation-rollback-deployment.md": {
+    "sourceHash": "a1d6e3463ab5552b459decb28e94047bc060333dd9deed02ac78ab874a0e2d38",
+    "normalizedHash": "",
+    "artifactHash": "sources/runbooks/remediation-rollback-deployment",
+    "lastCompiledAt": "2026-07-15T20:23:16.274Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sources\\scenarios\\high-cpu-incident.md": {
+    "sourceHash": "cda40a3e0990265a8da9d6b1f304143cb5759977443b633abc4dc6921fbc968b",
+    "normalizedHash": "",
+    "artifactHash": "sources/scenarios/high-cpu-incident",
+    "lastCompiledAt": "2026-07-15T20:23:16.274Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sources\\services\\alert-high-cpu-payment.md": {
+    "sourceHash": "eea9c450294403bc5a63e47a3c052204de794f6cefd89fdfffe7cd0fe6ed2a0b",
+    "normalizedHash": "",
+    "artifactHash": "sources/services/alert-high-cpu-payment",
+    "lastCompiledAt": "2026-07-15T20:23:16.274Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sources\\services\\auth-service.md": {
+    "sourceHash": "fd37728410f10888722590e9527e85edc6ff33c5910e6f84201efd64b4748e46",
+    "normalizedHash": "",
+    "artifactHash": "sources/services/auth-service",
+    "lastCompiledAt": "2026-07-15T20:23:16.274Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sources\\services\\change-window-payments.md": {
+    "sourceHash": "cae307b7fea091bcbe01ea9a9a9fa9037bd6b5a5ae707802c5b28775be6bb192",
+    "normalizedHash": "",
+    "artifactHash": "sources/services/change-window-payments",
+    "lastCompiledAt": "2026-07-15T20:23:16.274Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sources\\services\\escalation-policy-payments.md": {
+    "sourceHash": "c49ea23416ce702f4497c6026f60d24eb3ec42fde8556a02716f7d8b733da372",
+    "normalizedHash": "",
+    "artifactHash": "sources/services/escalation-policy-payments",
+    "lastCompiledAt": "2026-07-15T20:23:16.275Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sources\\services\\owner-team-payments.md": {
+    "sourceHash": "9dc6fe7c66168084f2110b8ca297574c232a38cab29a9a8524347f2d1f5d5cba",
+    "normalizedHash": "",
+    "artifactHash": "sources/services/owner-team-payments",
+    "lastCompiledAt": "2026-07-15T20:23:16.275Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sources\\services\\payment-service.md": {
+    "sourceHash": "fb6fdd70d4b300f5999d1ce9f89790828603d959d313dbbd3a8e74ce68b8474b",
+    "normalizedHash": "",
+    "artifactHash": "sources/services/payment-service",
+    "lastCompiledAt": "2026-07-15T20:23:16.275Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sources\\services\\slo-payment-availability.md": {
+    "sourceHash": "e4e478375f712252f417218337abc2528efcc031db5ff46f28993c08568bd6fb",
+    "normalizedHash": "",
+    "artifactHash": "sources/services/slo-payment-availability",
+    "lastCompiledAt": "2026-07-15T20:23:16.275Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\sources\\slo-payment.md": {
+    "sourceHash": "006275afe21b024dd0cd4b1f75404a1aa7c674dfc2fa3678fefa04fa974a9a98",
+    "normalizedHash": "",
+    "artifactHash": "sources/slo-payment",
+    "lastCompiledAt": "2026-07-15T20:23:16.275Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\it-operations\\walkthrough.md": {
+    "sourceHash": "e402997cf75a22ade3d91aa0a238e21522c7e346a138dc20a481009a54f42ac8",
+    "normalizedHash": "",
+    "artifactHash": "walkthrough",
+    "lastCompiledAt": "2026-07-15T20:23:16.276Z",
+    "dependencies": []
+  }
+}

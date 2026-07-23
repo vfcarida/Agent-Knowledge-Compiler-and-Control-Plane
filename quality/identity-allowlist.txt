@@ -1,0 +1,6 @@
+# Files that are allowed to contain OCF/ContextOps for backwards compatibility or deprecation documentation
+docs/getting-started/migration.md
+docs/release/final-release-readiness.md
+docs/release/pre-release-checklist.md
+packages/mcp-profile-server/src/http-server.ts
+packages/mcp-profile-server/src/index.ts

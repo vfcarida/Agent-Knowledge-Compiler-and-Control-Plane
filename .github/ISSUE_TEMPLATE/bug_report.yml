@@ -1,0 +1,49 @@
+name: Bug Report
+description: File a bug report to help us improve AKCP
+title: "bug: <title>"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug. Please fill in the details below.
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of the bug.
+      placeholder: Describe what went wrong...
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: What steps did you take to trigger the bug?
+      placeholder: |
+        1. Select directory '.okf'
+        2. Click 'Knowledge Graph'
+        3. See error...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: AKCP CLI / Package Version
+      description: Which version are you running? (e.g. akcp v0.1.0)
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      description: What OS are you running? (e.g. macOS 14.1, Windows 11)
+    validations:
+      required: true

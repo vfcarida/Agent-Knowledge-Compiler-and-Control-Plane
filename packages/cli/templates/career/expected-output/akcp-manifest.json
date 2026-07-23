@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "akcp.artifact-manifest/v1",
+  "buildId": "bld_f9f42c63",
+  "createdAt": "2026-07-15T12:34:56.581Z",
+  "source": {
+    "root": "C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career",
+    "config": "akcp.yaml",
+    "hash": "863a0f0ce2086cd0846e63a560fe5629648fd795ba8f8c51317285e7d47ae46f"
+  },
+  "compiler": {
+    "name": "akcp",
+    "version": "0.1.0"
+  },
+  "targets": [
+    {
+      "name": "ir-json",
+      "status": "success",
+      "outputs": [
+        "C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\dist\\context-pack.json"
+      ],
+      "hash": "d6d8612ea185e69503bc9253aacce44e7abdd41b4d7d57a0a241d5eb9d9ae205",
+      "sizeBytes": 5616
+    },
+    {
+      "name": "openwiki",
+      "status": "success",
+      "outputs": [
+        "C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\dist\\openwiki"
+      ],
+      "hash": "acc02e9f9f705256467fff0e84069a570585a388997f753b236f42cc158944f0",
+      "sizeBytes": 3963
+    },
+    {
+      "name": "mcp-resources-manifest",
+      "status": "success",
+      "outputs": [
+        "C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\dist\\akcp-manifest.json"
+      ],
+      "hash": "0f4304424a650a154d1cf479a0c1a54735e867cbbe377c191ed97901be9b6386",
+      "sizeBytes": 661
+    },
+    {
+      "name": "dashboard-metadata",
+      "status": "success",
+      "outputs": [
+        "C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\dist\\dashboard-meta.json"
+      ],
+      "hash": "ffd25efdce2340b87d9d206426d6b6ee3a25ecaa67f03dfff0693d3b18862890",
+      "sizeBytes": 604
+    }
+  ],
+  "diagnostics": [],
+  "conformance": {
+    "level": "none",
+    "checks": [
+      {
+        "file": "walkthrough.md",
+        "type": "error",
+        "message": "OKF Parse Error: OKF Validation Error: Frontmatter validation failed: type: Required. Ensure the document has valid YAML frontmatter with at least a \"type\" field. See OKF v0.1 spec §4.1 for required fields.",
+        "ruleId": "OKF-V0.1-3.2"
+      }
+    ]
+  }
+}

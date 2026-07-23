@@ -1,0 +1,45 @@
+policyVersion: 1
+capability: "execute_remediation"
+description: >
+  Controls the agent's ability to execute remediation actions (rollbacks, restarts, configuration
+  changes) against production services. This is the highest-risk capability in the IT Ops domain.
+  The agent may SUGGEST remediation but MUST obtain explicit human approval before executing.
+riskLevel: "critical"
+sideEffectLevel: "external-write"
+defaultMode: "disabled"
+allowedRuntimeModes:
+  - "hitl-approved"
+
+requiresApproval: true
+approval:
+  ttlMinutes: 10
+  bindToPayloadHash: true
+  singleUse: true
+  approverRoles:
+    - "on-call-lead"
+    - "engineering-manager"
+
+contextRequirements:
+  - "incidentId must be provided and must reference an open incident"
+  - "approvalTicketId must be present and valid"
+  - "remediationActionId must reference a known RemediationAction document"
+
+safety:
+  neverExecuteWhen:
+    - "environment == production AND changeWindow.active == false AND incidentSeverity > SEV-2"
+  logMustNotContain:
+    - "credential"
+    - "password"
+    - "secret"
+    - "token"
+
+audit:
+  required: true
+  fields:
+    - "remediationActionId"
+    - "serviceRef"
+    - "approvalTicketId"
+    - "approvedBy"
+    - "approvedAt"
+    - "executedAt"
+    - "status"

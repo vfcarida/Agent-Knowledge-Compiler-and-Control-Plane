@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+packages/*/dist/
+packages/*/build/
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Test coverage
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Playwright
+test-results/
+playwright-report/
+
+# Docker
+Docker
+docker/data/
+
+# Documentation
+docs/api/
+
+# Generated artifacts (never commit)
+lint-results.json
+debug-*.ts
+*.1147000961
+
+# Reports (generated)
+reports/

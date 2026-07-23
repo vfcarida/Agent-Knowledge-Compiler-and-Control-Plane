@@ -1,0 +1,27 @@
+bundle:
+  name: career-example
+  version: "0.1.0"
+  description: "Example AKCP bundle for a personal career knowledge base."
+  profile: career
+
+compile:
+  sources:
+    - type: okf-directory
+      path: sources
+  targets:
+    - type: context-pack
+      out: dist/context-pack.json
+    - type: openwiki
+      out: dist/openwiki
+    - type: mcp-resources
+      out: dist/akcp-manifest.json
+    - type: dashboard-metadata
+      out: dist/dashboard-meta.json
+
+policy:
+  defaultAutonomyLevel: read-only
+  policies:
+    - policies/career.policy.yaml
+
+conformance:
+  level: "AKCP-control-plane-compatible"

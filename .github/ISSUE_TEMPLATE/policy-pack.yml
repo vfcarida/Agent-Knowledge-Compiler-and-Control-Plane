@@ -1,0 +1,62 @@
+name: "🛡️ New Policy Pack"
+description: "Propose a new reusable governance policy pack for AKCP bundles."
+title: "[policy-pack]: <Policy Name>"
+labels: ["workstream: policies", "good first issue"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A **Policy Pack** is an AKCP plugin (`policy-pack` type) that distributes a reusable, standardized `.policy.yaml` for a specific governance domain (e.g., GDPR compliance, HIPAA, internal security baselines).
+        See [docs/specs/policy-cards.md](docs/specs/policy-cards.md) for the Policy Card schema.
+
+  - type: input
+    id: policy-name
+    attributes:
+      label: Policy Pack Name
+      description: "The domain or regulation this policy pack governs."
+      placeholder: "e.g., GDPR Data Minimization, HIPAA PHI Handling, SOC2 Read-Only Baseline"
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: "What compliance requirement or risk does this policy pack address?"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: default-autonomy
+    attributes:
+      label: Default Autonomy Level
+      description: "What is the safe default autonomy level for this policy?"
+      options:
+        - read-only
+        - read-write
+        - autonomous (requires strong justification)
+    validations:
+      required: true
+
+  - type: textarea
+    id: rules
+    attributes:
+      label: Key Rules
+      description: "List the primary deny/allow rules this pack should enforce."
+      placeholder: |
+        - DENY: access to any field tagged `pii:true`
+        - DENY: any tool in `requireApprovalFor` without HITL
+        - ALLOW: read access to policy documents
+
+  - type: checkboxes
+    id: frameworks
+    attributes:
+      label: Compliance Frameworks
+      description: "Which frameworks does this policy support?"
+      options:
+        - label: "NIST AI RMF"
+        - label: "OWASP LLM Top 10"
+        - label: "GDPR"
+        - label: "HIPAA"
+        - label: "SOC 2"
+        - label: "ISO 27001"

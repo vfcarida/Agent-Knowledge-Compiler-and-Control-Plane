@@ -1,0 +1,16 @@
+{
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Agent-Knowledge-Compiler-and-Control-Plane-Orchestrator\\packages\\conformance\\fixtures\\akcp-valid-ir\\skills\\typescript.md": {
+    "sourceHash": "75411ac9b6498616c1f973ccb446bdf31899eed802d07d2654a46d48a5f0a145",
+    "normalizedHash": "",
+    "artifactHash": "../dummy",
+    "lastCompiledAt": "2026-07-11T01:52:17.593Z",
+    "dependencies": []
+  },
+  "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\packages\\conformance\\fixtures\\akcp-valid-ir\\skills\\typescript.md": {
+    "sourceHash": "75411ac9b6498616c1f973ccb446bdf31899eed802d07d2654a46d48a5f0a145",
+    "normalizedHash": "",
+    "artifactHash": "skills/typescript",
+    "lastCompiledAt": "2026-07-23T13:06:12.280Z",
+    "dependencies": []
+  }
+}

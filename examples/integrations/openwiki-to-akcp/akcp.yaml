@@ -1,0 +1,16 @@
+compile:
+  sources:
+    - type: okf-directory
+      path: .akcp/sources/openwiki
+
+  targets:
+    - type: ir-json
+      out: dist/agent-knowledge-ir.json
+    - type: mcp-resources-manifest
+      out: dist/mcp-resources.json
+    - type: okf-bundle
+      out: dist/okf-bundle
+    - type: openwiki-docs
+      out: dist/openwiki
+    - type: graph-json
+      out: dist/knowledge-graph.json

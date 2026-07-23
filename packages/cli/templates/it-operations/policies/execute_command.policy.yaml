@@ -1,0 +1,19 @@
+policyVersion: 1
+capability: "execute_command"
+description: "Executes arbitrary shell commands on infrastructure."
+riskLevel: "critical"
+sideEffectLevel: "external-write"
+defaultMode: "disabled"
+allowedRuntimeModes:
+  - "sandbox"
+requiresApproval: true
+approval:
+  ttlMinutes: 5
+  bindToPayloadHash: true
+  singleUse: true
+audit:
+  required: true
+  fields:
+    - "command"
+    - "targetNode"
+    - "approver"

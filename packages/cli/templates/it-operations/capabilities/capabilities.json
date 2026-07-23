@@ -1,0 +1,107 @@
+[
+  {
+    "id": "it-operations.query_logs",
+    "name": "query_logs",
+    "version": "1.0.0",
+    "description": "Queries structured operational logs for a given service and time range. Read-only. Does not expose credentials or secrets.",
+    "kind": "tool",
+    "riskLevel": "low",
+    "sideEffects": "external-read",
+    "requiresApproval": false,
+    "readsPII": false,
+    "writesPII": false,
+    "inputsSchema": {
+      "type": "object",
+      "properties": {
+        "serviceName": { "type": "string", "description": "The service ID to query logs for." },
+        "query": { "type": "string", "description": "Log filter expression (no credentials or secrets)." },
+        "startTime": { "type": "string", "description": "ISO 8601 start time." },
+        "endTime": { "type": "string", "description": "ISO 8601 end time." }
+      },
+      "required": ["serviceName", "query"]
+    }
+  },
+  {
+    "id": "it-operations.get_runbook",
+    "name": "get_runbook",
+    "version": "1.0.0",
+    "description": "Retrieves the full content of a runbook by ID. Read-only knowledge retrieval.",
+    "kind": "resource",
+    "riskLevel": "low",
+    "sideEffects": "none",
+    "requiresApproval": false,
+    "readsPII": false,
+    "writesPII": false,
+    "inputsSchema": {
+      "type": "object",
+      "properties": {
+        "runbookId": { "type": "string", "description": "The runbook document ID." }
+      },
+      "required": ["runbookId"]
+    }
+  },
+  {
+    "id": "it-operations.create_incident",
+    "name": "create_incident",
+    "version": "1.0.0",
+    "description": "Creates a new incident record in the incident management system. Does not execute any remediation.",
+    "kind": "tool",
+    "riskLevel": "medium",
+    "sideEffects": "external-write",
+    "requiresApproval": false,
+    "readsPII": false,
+    "writesPII": false,
+    "inputsSchema": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "severity": { "type": "string", "enum": ["SEV-1", "SEV-2", "SEV-3", "SEV-4", "SEV-5"] },
+        "serviceRef": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "required": ["title", "severity", "serviceRef"]
+    }
+  },
+  {
+    "id": "it-operations.escalate_incident",
+    "name": "escalate_incident",
+    "version": "1.0.0",
+    "description": "Triggers the escalation policy for a given incident, paging the next on-call level. Requires approval for escalation beyond L2.",
+    "kind": "tool",
+    "riskLevel": "medium",
+    "sideEffects": "external-write",
+    "requiresApproval": true,
+    "readsPII": false,
+    "writesPII": false,
+    "inputsSchema": {
+      "type": "object",
+      "properties": {
+        "incidentId": { "type": "string" },
+        "targetLevel": { "type": "number", "minimum": 1, "maximum": 3 }
+      },
+      "required": ["incidentId", "targetLevel"]
+    }
+  },
+  {
+    "id": "it-operations.execute_remediation",
+    "name": "execute_remediation",
+    "version": "1.0.0",
+    "description": "Executes a pre-approved remediation action (e.g., rollback or restart). This is a high-risk, approval-gated capability. The agent MUST obtain explicit human approval before execution.",
+    "kind": "tool",
+    "riskLevel": "critical",
+    "sideEffects": "external-write",
+    "requiresApproval": true,
+    "readsPII": false,
+    "writesPII": false,
+    "inputsSchema": {
+      "type": "object",
+      "properties": {
+        "remediationActionId": { "type": "string", "description": "The remediation action to execute (e.g., remediation-rollback-deployment)." },
+        "serviceRef": { "type": "string" },
+        "targetVersion": { "type": "string", "description": "For rollbacks: the version to roll back to." },
+        "approvalTicketId": { "type": "string", "description": "Required: the approval ticket ID from the AKCP approval flow." }
+      },
+      "required": ["remediationActionId", "serviceRef", "approvalTicketId"]
+    }
+  }
+]
