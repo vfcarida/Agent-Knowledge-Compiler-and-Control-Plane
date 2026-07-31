@@ -54,11 +54,19 @@ export class FrontmatterParser implements IFrontmatterParser {
       });
     }
 
-    // Derive concept ID: relative path from bundle root, without .md extension
-    const relativePath = path.relative(bundleRoot, filePath);
-    const conceptId = relativePath
-      .replace(/\\/g, "/") // Normalize Windows paths
-      .replace(/\.md$/, "");
+    // Derive concept ID: relative path from bundle root, without .md extension.
+    // Backslashes must be normalized BEFORE computing the relative path: on a
+    // POSIX host, path.relative() treats a Windows-style "C:\Users\..." string
+    // as one opaque segment and returns garbage like "../C:\Users\...", so
+    // normalizing afterwards (as this previously did) was too late. Using
+    // path.posix.relative on pre-normalized inputs behaves identically on
+    // every platform.
+    const toPosix = (p: string) => p.replace(/\\/g, "/");
+    const relativePath = path.posix.relative(
+      toPosix(bundleRoot),
+      toPosix(filePath),
+    );
+    const conceptId = relativePath.replace(/\.md$/, "");
 
     return {
       frontmatter: validation.data as OKFFrontmatter,

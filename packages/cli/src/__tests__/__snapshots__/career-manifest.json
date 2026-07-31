@@ -2,57 +2,53 @@
   "buildId": "deterministic_build_id",
   "compiler": {
     "name": "akcp",
-    "version": "0.1.0",
+    "version": "0.1.0"
   },
   "conformance": {
     "checks": [],
-    "level": "AKCP-control-plane-compatible",
+    "level": "AKCP-control-plane-compatible"
   },
   "createdAt": "2026-01-01T00:00:00.000Z",
   "diagnostics": [],
   "schemaVersion": "akcp.artifact-manifest/v1",
   "source": {
     "config": "akcp.yaml",
-    "hash": "863a0f0ce2086cd0846e63a560fe5629648fd795ba8f8c51317285e7d47ae46f",
-    "root": "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\career",
+    "hash": "deterministic_config_hash",
+    "root": "<WORKSPACE>/examples/domains/career"
   },
   "targets": [
     {
       "hash": "deterministic_hash",
       "name": "ir-json",
-      "outputs": [
-        "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\career\dist\context-pack.json",
-      ],
-      "sizeBytes": 6901,
-      "status": "success",
+      "outputs": ["<WORKSPACE>/examples/domains/career/dist/context-pack.json"],
+      "sizeBytes": 0,
+      "status": "success"
     },
     {
       "hash": "deterministic_hash",
       "name": "openwiki",
-      "outputs": [
-        "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\career\dist\openwiki",
-      ],
-      "sizeBytes": 3963,
-      "status": "success",
+      "outputs": ["<WORKSPACE>/examples/domains/career/dist/openwiki"],
+      "sizeBytes": 0,
+      "status": "success"
     },
     {
       "hash": "deterministic_hash",
       "name": "mcp-resources-manifest",
       "outputs": [
-        "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\career\dist\akcp-manifest.json",
+        "<WORKSPACE>/examples/domains/career/dist/akcp-manifest.json"
       ],
-      "sizeBytes": 661,
-      "status": "success",
+      "sizeBytes": 0,
+      "status": "success"
     },
     {
       "hash": "deterministic_hash",
       "name": "dashboard-metadata",
       "outputs": [
-        "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\career\dist\dashboard-meta.json",
+        "<WORKSPACE>/examples/domains/career/dist/dashboard-meta.json"
       ],
-      "sizeBytes": 1889,
-      "status": "success",
-    },
+      "sizeBytes": 0,
+      "status": "success"
+    }
   ],
-  "timestamp": "2026-01-01T00:00:00.000Z",
+  "timestamp": "2026-01-01T00:00:00.000Z"
 }

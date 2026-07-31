@@ -2,57 +2,62 @@
   "buildId": "deterministic_build_id",
   "compiler": {
     "name": "akcp",
-    "version": "0.1.0",
+    "version": "0.1.0"
   },
   "conformance": {
-    "checks": [],
-    "level": "AKCP-control-plane-compatible",
+    "checks": [
+      {
+        "file": "<WORKSPACE>/examples/domains/it-operations/README.md",
+        "message": "Broken dependency link: walkthrough",
+        "ruleId": "AKCP-GRAPH-INTEGRITY",
+        "type": "warning"
+      }
+    ],
+    "level": "AKCP-control-plane-compatible"
   },
   "createdAt": "2026-01-01T00:00:00.000Z",
   "diagnostics": [],
   "schemaVersion": "akcp.artifact-manifest/v1",
   "source": {
     "config": "akcp.yaml",
-    "hash": "5150be5f5eb0f26334a42fca8ed99ef5b942a5c842d7b5bae0798320b9576f7a",
-    "root": "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\it-operations",
+    "hash": "deterministic_config_hash",
+    "root": "<WORKSPACE>/examples/domains/it-operations"
   },
   "targets": [
     {
       "hash": "deterministic_hash",
       "name": "ir-json",
       "outputs": [
-        "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\it-operations\dist\agent-knowledge-ir.json",
+        "<WORKSPACE>/examples/domains/it-operations/dist/agent-knowledge-ir.json"
       ],
-      "sizeBytes": 47095,
-      "status": "success",
+      "sizeBytes": 0,
+      "status": "success"
     },
     {
       "hash": "deterministic_hash",
       "name": "mcp-resources-manifest",
       "outputs": [
-        "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\it-operations\dist\mcp-resources.json",
+        "<WORKSPACE>/examples/domains/it-operations/dist/mcp-resources.json"
       ],
-      "sizeBytes": 3761,
-      "status": "success",
+      "sizeBytes": 0,
+      "status": "success"
     },
     {
       "hash": "deterministic_hash",
       "name": "openwiki",
-      "outputs": [
-        "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\it-operations\dist\openwiki",
-      ],
-      "sizeBytes": 33020,
-      "status": "success",
+      "outputs": ["<WORKSPACE>/examples/domains/it-operations/dist/openwiki"],
+      "sizeBytes": 0,
+      "status": "success"
     },
     {
       "hash": "deterministic_hash",
       "name": "dashboard-metadata",
       "outputs": [
-        "C:\Users\vinicius\Documents\GeminiCode\Open-Career-Format-Orchestrator\examples\domains\it-operations\dist\dashboard-meta.json",
+        "<WORKSPACE>/examples/domains/it-operations/dist/dashboard-meta.json"
       ],
-      "sizeBytes": 7137,
-      "status": "success",
-    },
+      "sizeBytes": 0,
+      "status": "success"
+    }
   ],
-  "timestamp": "2026-01-01T00:00:00.000Z",
+  "timestamp": "2026-01-01T00:00:00.000Z"
 }

@@ -14,7 +14,49 @@ describe("Golden Compiler Tests", () => {
   }
 
   const runCli = (args: string, dir: string) => {
-    return execSync("node " + cliPath + " " + args, { encoding: "utf-8", stdio: "pipe", cwd: dir });
+    return execSync("node " + cliPath + " " + args, {
+      encoding: "utf-8",
+      stdio: "pipe",
+      cwd: dir,
+    });
+  };
+
+  // The manifest embeds machine-specific values (absolute output paths, a
+  // config hash computed over resolved paths, byte sizes that vary with path
+  // length inside the outputs). The original snapshots had the author's
+  // Windows paths baked in, so the test failed on every other machine —
+  // including CI. Scrub everything machine-dependent so the snapshot captures
+  // the *shape and relative layout* of the build, which is the part that
+  // should be deterministic.
+  const normalizePathsDeep = (value: unknown): unknown => {
+    if (typeof value === "string") {
+      const posix = value.replace(/\\/g, "/");
+      const idx = posix.indexOf("examples/domains");
+      if (idx > 0) return "<WORKSPACE>/" + posix.slice(idx);
+      return posix;
+    }
+    if (Array.isArray(value)) return value.map(normalizePathsDeep);
+    if (value && typeof value === "object") {
+      return Object.fromEntries(
+        Object.entries(value).map(([k, v]) => [k, normalizePathsDeep(v)]),
+      );
+    }
+    return value;
+  };
+
+  const scrubManifest = (manifest: any): unknown => {
+    manifest.timestamp = "2026-01-01T00:00:00.000Z";
+    manifest.createdAt = "2026-01-01T00:00:00.000Z";
+    manifest.buildId = "deterministic_build_id";
+    if (manifest.source) manifest.source.hash = "deterministic_config_hash";
+
+    manifest.targets.forEach((t: any) => {
+      t.hash = "deterministic_hash";
+      // Output sizes vary across machines because compiled artifacts embed
+      // absolute paths whose length differs per machine.
+      t.sizeBytes = 0;
+    });
+    return normalizePathsDeep(manifest);
   };
 
   it("compiles Career domain bundle deterministically", async () => {
@@ -33,17 +75,14 @@ describe("Golden Compiler Tests", () => {
     // Check manifest exists
     expect(fs.existsSync(outManifest)).toBe(true);
 
-    // Snapshot manifest (omit timestamp/buildId/hashes for determinism)
-    const manifest = JSON.parse(fs.readFileSync(outManifest, "utf-8"));
-    manifest.timestamp = "2026-01-01T00:00:00.000Z";
-    manifest.createdAt = "2026-01-01T00:00:00.000Z";
-    manifest.buildId = "deterministic_build_id";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    manifest.targets.forEach((t: any) => {
-      t.hash = "deterministic_hash";
-    });
+    // Snapshot manifest (scrubbed of machine-dependent values for portability)
+    const manifest = scrubManifest(
+      JSON.parse(fs.readFileSync(outManifest, "utf-8")),
+    );
 
-    await expect(manifest).toMatchFileSnapshot("__snapshots__/career-manifest.json");
+    await expect(manifest).toMatchFileSnapshot(
+      "__snapshots__/career-manifest.json",
+    );
   });
 
   it("compiles IT Operations domain bundle deterministically", async () => {
@@ -62,16 +101,13 @@ describe("Golden Compiler Tests", () => {
     // Check manifest exists
     expect(fs.existsSync(outManifest)).toBe(true);
 
-    // Snapshot manifest (omit timestamp/buildId/hashes for determinism)
-    const manifest = JSON.parse(fs.readFileSync(outManifest, "utf-8"));
-    manifest.timestamp = "2026-01-01T00:00:00.000Z";
-    manifest.createdAt = "2026-01-01T00:00:00.000Z";
-    manifest.buildId = "deterministic_build_id";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    manifest.targets.forEach((t: any) => {
-      t.hash = "deterministic_hash";
-    });
+    // Snapshot manifest (scrubbed of machine-dependent values for portability)
+    const manifest = scrubManifest(
+      JSON.parse(fs.readFileSync(outManifest, "utf-8")),
+    );
 
-    await expect(manifest).toMatchFileSnapshot("__snapshots__/it-operations-manifest.json");
+    await expect(manifest).toMatchFileSnapshot(
+      "__snapshots__/it-operations-manifest.json",
+    );
   });
 });
