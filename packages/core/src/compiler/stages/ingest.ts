@@ -9,6 +9,7 @@ import { MarkdownDirectoryConnector } from "../../connectors/markdown-directory.
 import { OpenWikiConnector } from "../../connectors/openwiki.js";
 import { OpenApiConnector } from "../../connectors/openapi.js";
 import { MockZendeskConnector } from "../../connectors/mock-zendesk.js";
+import type { CompilerWarning } from "../errors.js";
 import path from "path";
 
 export class IngestStage implements PipelineStage {
@@ -21,6 +22,7 @@ export class IngestStage implements PipelineStage {
     ];
 
     const allRawItems: RawKnowledgeItem[] = [];
+    const warnings: CompilerWarning[] = [...context.warnings];
 
     for (const sourceConfig of sources) {
       const resolvedConfig = { ...sourceConfig };
@@ -53,12 +55,16 @@ export class IngestStage implements PipelineStage {
           items = await new MockZendeskConnector().ingest(resolvedConfig);
           break;
         default:
-          // Unknown source type, skip silently
+          warnings.push({
+            type: "unknown_source_type",
+            message: `Unknown connector type "${resolvedConfig.type}" was skipped.`,
+            source: resolvedConfig.path,
+          });
           break;
       }
       allRawItems.push(...items);
     }
 
-    return { ...context, rawItems: allRawItems };
+    return { ...context, rawItems: allRawItems, warnings };
   }
 }

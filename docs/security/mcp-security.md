@@ -26,7 +26,7 @@ All tools exposed to an agent via MCP must include Risk Metadata defined in thei
 
 ## Tool Contracts & Telemetry
 
-When an agent invokes a tool, AKCP's `MCPGateway` ensures the result conforms to the `ToolSuccess` or `ToolFailure` contract. 
+When an agent invokes a tool, AKCP's `MCPGateway` ensures the result conforms to the `ToolSuccess` or `ToolFailure` contract.
 
 ```json
 {
@@ -48,6 +48,7 @@ The gateway intercepts every execution. Tools with `requiresApproval = true` wil
 ## Prompt Injection and Tool Shadowing
 
 AKCP mitigates common LLM attack vectors:
+
 - **Schema Bypass Attempt:** Tools validate inputs strictly against their defined `inputsSchema` via Zod before invoking underlying logic.
 - **Tool Shadowing:** The compiler errors out if two capabilities share the same `name` or `id`.
 - **Side Effect Exfiltration:** Tools with `external-write` side effects are logged with full provenance, including the originating `requestId`.
@@ -60,3 +61,17 @@ To verify the security of the MCP surface, AKCP includes dedicated contract and 
 pnpm run test:security
 pnpm run test:mcp
 ```
+
+## References
+
+This threat model is informed by the official MCP specification and independent security
+guidance published after AKCP's MCP servers were built — worth re-checking against as the
+protocol and its guidance evolve:
+
+- [MCP Specification — Transports](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports) (Streamable HTTP is the current recommended remote transport; `mcp-profile-server` uses it alongside SSE/stdio — see `packages/mcp-profile-server/src/transport.ts`)
+- NSA/CISA joint MCP security advisory — names confused deputy, token passthrough, tool poisoning, SSRF via connectors, and rogue server registration as the key attack classes for MCP deployments
+- [CSA Agentic MCP Security Best Practices](https://labs.cloudsecurityalliance.org/agentic/agentic-mcp-security-best-practices-v1/)
+
+Of these, AKCP's connectors (`packages/core/src/connectors/*`) are the most relevant SSRF surface —
+`openapi.ts` and `okf-directory.ts`/`markdown-directory.ts` resolve caller-supplied paths/URLs and
+should be reviewed against the SSRF guidance above if remote/network-backed connectors are added.

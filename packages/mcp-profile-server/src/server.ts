@@ -106,7 +106,6 @@ export class AKCPProfileServer {
     // Filter out only tools
 
     const tools = capabilities.filter(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (cap: any) =>
         cap.kind === "tool" ||
         cap.kind === "mcp-tool" ||
@@ -190,7 +189,6 @@ export class AKCPProfileServer {
 
     for (const cap of tools) {
       if (cap.name) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const rawCap = cap as any;
         const schema =
           cap.inputsSchema || rawCap.inputSchema || rawCap.parameters || {};
@@ -199,7 +197,6 @@ export class AKCPProfileServer {
         const zodShape: Record<string, z.ZodTypeAny> = {};
 
         if (schema.properties) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           for (const [key, prop] of Object.entries<any>(schema.properties)) {
             let zType: z.ZodTypeAny = z.any();
             if (prop.type === "string") zType = z.string();
@@ -223,12 +220,11 @@ export class AKCPProfileServer {
             const reqId = crypto.randomUUID();
             mcpToolCallsCounter.add(1);
 
-            // Gating based on requiresApproval and sideEffects could happen here
-            if (cap.requiresApproval) {
-              console.warn(
-                `[SECURITY] Tool ${cap.name} requires human approval! (Simulated)`,
-              );
-            }
+            // Real HITL gating for requiresApproval tools happens inside
+            // this.gateway.execute() below, via the policy engine's
+            // "require_approval" obligation (see capabilities/gateway.ts) — not
+            // here. This used to be a console.warn-only no-op that gave the false
+            // impression of a check without actually blocking anything.
 
             // WAF Security Check
             const wafResult = await this.securityGateway.checkPrompt(
@@ -281,28 +277,31 @@ export class AKCPProfileServer {
                     "1.0.0",
                     reqId,
                     async () => {
-                      let mockResult: unknown = {
-                        status: "simulated_success",
-                        message: `Tool ${cap.name} executed successfully with args`,
-                        args,
-                      };
+                      // AKCPProfileServer is read-only by design (ADR-002) — it has no
+                      // real backend to execute side-effecting capabilities against.
+                      // This used to fabricate plausible-looking "success"/"pending"
+                      // results (e.g. a fake transactionId for issue_refund) regardless
+                      // of policy/approval outcome, which a caller could easily mistake
+                      // for a real result. Any non-read-only capability now gets an
+                      // explicit not_implemented status instead — real side-effecting
+                      // actions belong in mcp-automation-server, gated by its HITL flow.
+                      const isReadOnly =
+                        !cap.sideEffects ||
+                        cap.sideEffects === "none" ||
+                        cap.sideEffects === "external-read";
 
-                      if (cap.name === "issue_refund") {
-                        mockResult = {
-                          status: "pending_hitl_approval",
-                          message: `Refund request initiated and sent to Tier 2 for approval.`,
-                          transactionId: `txn-${crypto.randomUUID().slice(0, 8)}`,
-                          recordedArgs: args,
-                        };
-                      } else if (cap.name === "delete_customer_data") {
-                        mockResult = {
-                          status: "escalated_to_legal",
-                          message: `GDPR deletion request logged. Operations suspended pending Legal review.`,
-                          caseId: `legal-${crypto.randomUUID().slice(0, 8)}`,
+                      if (!isReadOnly) {
+                        return {
+                          status: "not_implemented",
+                          message: `'${cap.name}' has side effect '${cap.sideEffects}' — the read-only profile server does not execute it. Use mcp-automation-server for side-effecting actions.`,
                         };
                       }
 
-                      return mockResult;
+                      return {
+                        status: "ok",
+                        message: `Tool ${cap.name} executed (read-only).`,
+                        args,
+                      };
                     },
                   );
                 },
@@ -326,7 +325,6 @@ export class AKCPProfileServer {
                   },
                 ],
               };
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (err: any) {
               mcpToolFailuresCounter.add(1);
               return {

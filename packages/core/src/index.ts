@@ -119,7 +119,9 @@ export { OKFDocumentFactory } from "./factories/okf-document-factory.js";
 export { ContextPacker } from "./services/context-packer.js";
 
 // Policy & Governance
-export * from "./domain/policy.js"; // Deprecated old policy
+// AgentPolicy/PolicyEngine: static policy presets consumed by ContextPacker and
+// covered by packages/evals — still live, not deprecated (despite the name).
+export * from "./domain/policy.js";
 export * from "./policy/schema.js";
 /**
  * Defines a Policy Card for agent governance.
@@ -127,7 +129,10 @@ export * from "./policy/schema.js";
 export type { PolicyCard } from "./policy/types.js";
 export * from "./policy/types.js";
 /**
- * Evaluates whether an agent capability request is permitted by a policy.
+ * Standalone single-PolicyCard evaluator. NOT the path used by MCPGateway at
+ * runtime — that path is `policies/engine.js`'s evaluatePolicies/evaluatePoliciesWithTrace,
+ * reached via `policies/adapter.js`'s adaptPolicyCardToRules (see capabilities/gateway.ts).
+ * Kept for its own test coverage; do not treat this as the production enforcement path.
  */
 export { evaluatePolicy } from "./policy/evaluate.js";
 export * from "./policy/evaluate.js";
@@ -195,6 +200,7 @@ export * from "./provenance/types.js";
 export * from "./provenance/hash.js";
 export * from "./provenance/build-manifest.js";
 export * from "./provenance/verify.js";
+export * from "./provenance/sign.js";
 
 // Scanner
 export * from "./scanner/scan.js";

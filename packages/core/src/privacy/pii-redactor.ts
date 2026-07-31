@@ -18,26 +18,33 @@ export interface PiiRedactorOptions {
 
 export class PiiRedactor {
   private detector: PiiDetector;
-  
+
   constructor(detector?: PiiDetector) {
     this.detector = detector || new RegexPiiDetector();
   }
 
-  async redact(text: string, options: PiiRedactorOptions = { mode: "redact" }): Promise<PiiRedactionResult> {
+  async redact(
+    text: string,
+    options: PiiRedactorOptions = { mode: "redact" },
+  ): Promise<PiiRedactionResult> {
     const findings = await this.detector.detect(text);
     let redactedText = text;
     let blocked = false;
-    
+
     // Sort findings descending by start to avoid shifting indices when replacing
     const sortedFindings = [...findings].sort((a, b) => b.start - a.start);
-    
+
     for (const finding of sortedFindings) {
-      if (options.allowedClasses?.includes(finding.type)) {
+      const isBlockedClass =
+        options.blockedClasses?.includes(finding.type) ?? false;
+
+      // blockedClasses always takes precedence: a class that is (mistakenly or
+      // maliciously) present in both lists must still be redacted/blocked, not
+      // silently passed through.
+      if (options.allowedClasses?.includes(finding.type) && !isBlockedClass) {
         continue;
       }
-      
-      const isBlockedClass = options.blockedClasses?.includes(finding.type);
-      
+
       if (options.mode === "detect-only") {
         if (isBlockedClass && options.failOnUnredactedHighRiskPii) {
           blocked = true;
@@ -47,7 +54,11 @@ export class PiiRedactor {
 
       let replacement = "***";
       if (options.mode === "tokenize") {
-        const hash = crypto.createHash("sha256").update(finding.value).digest("hex").slice(0, 8);
+        const hash = crypto
+          .createHash("sha256")
+          .update(finding.value)
+          .digest("hex")
+          .slice(0, 8);
         const format = options.tokenFormat || "<PII:{type}:{stableHash}>";
         replacement = format
           .replace("{type}", finding.type.toUpperCase())
@@ -56,14 +67,17 @@ export class PiiRedactor {
         // redact mode
         replacement = `<${finding.type.toUpperCase()}_REDACTED>`;
       }
-      
-      redactedText = redactedText.substring(0, finding.start) + replacement + redactedText.substring(finding.end);
+
+      redactedText =
+        redactedText.substring(0, finding.start) +
+        replacement +
+        redactedText.substring(finding.end);
     }
-    
+
     return {
       redactedText,
       findings,
-      blocked
+      blocked,
     };
   }
 }

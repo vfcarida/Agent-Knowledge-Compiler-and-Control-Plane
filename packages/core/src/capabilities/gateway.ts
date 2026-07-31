@@ -17,7 +17,7 @@ export class MCPGatewayError extends Error {
   constructor(
     public readonly message: string,
     public readonly _code: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     public readonly _data?: any,
   ) {
     super(message);
@@ -30,7 +30,7 @@ export class MCPGatewayError extends Error {
   }
 
   /** Public alias for _data — use `error.data` in consumers. */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   get data(): any {
     return this._data;
   }
@@ -185,7 +185,7 @@ export class MCPGateway {
         });
       }
       throw new MCPGatewayError(
-        `[LLM06: Excessive Agency] Policy Violation: ${evalResult.reason}`,
+        `[LLM08: Excessive Agency] Policy Violation: ${evalResult.reason}`,
         "POLICY_VIOLATION",
       );
     }
@@ -212,7 +212,7 @@ export class MCPGateway {
     if (requiresApproval) {
       if (!this.config.approvalStore) {
         throw new MCPGatewayError(
-          `[LLM06: Excessive Agency] Policy Violation: Tool requires approval, but no ApprovalStore is configured.`,
+          `[LLM08: Excessive Agency] Policy Violation: Tool requires approval, but no ApprovalStore is configured.`,
           "POLICY_VIOLATION",
         );
       }
@@ -282,7 +282,7 @@ export class MCPGateway {
           });
         }
         throw new MCPGatewayError(
-          `[LLM06: Excessive Agency] Policy Violation: Invalid, expired, or tampered approval token: ${token}`,
+          `[LLM08: Excessive Agency] Policy Violation: Invalid, expired, or tampered approval token: ${token}`,
           "POLICY_VIOLATION",
         );
       }

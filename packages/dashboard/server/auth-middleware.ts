@@ -6,6 +6,12 @@ export interface DashboardAuthConfig {
   issuer?: string;
   audience?: string;
   sessionTtl?: number;
+  /**
+   * Explicit opt-in required to run without real JWT verification. When true and
+   * no jwtSecret is set, the raw Bearer header value is trusted as-is (no IdP
+   * exists in this project) — never enable this in a real deployment.
+   */
+  allowDemoMode?: boolean;
 }
 
 export function createAuthMiddleware(config: DashboardAuthConfig) {
@@ -13,7 +19,16 @@ export function createAuthMiddleware(config: DashboardAuthConfig) {
     const authHeader = req.headers.authorization;
 
     if (!config.jwtSecret) {
-      // Allow fallback to anonymous if no secret is configured (for local dev)
+      if (!config.allowDemoMode) {
+        res.status(401).json({
+          error:
+            "Unauthorized: no jwtSecret configured. Set DASHBOARD_JWT_SECRET, " +
+            "or explicitly opt into unauthenticated demo mode with DASHBOARD_DEMO_MODE=true.",
+        });
+        return;
+      }
+      // Demo mode only: no real IdP exists in this project, so the client-supplied
+      // identity string is trusted as-is. Never enable in a real deployment.
       if (authHeader && authHeader.startsWith("Bearer ")) {
         (req as any).user = { identity: authHeader.substring(7) };
       } else {

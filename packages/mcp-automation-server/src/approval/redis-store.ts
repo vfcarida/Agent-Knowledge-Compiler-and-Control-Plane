@@ -5,14 +5,18 @@ import type { IApprovalStore, PendingApproval, AuditLog } from "./types.js";
 export class RedisApprovalStore implements IApprovalStore {
   private redis: Redis;
   private prefix = "akcp:approval:";
+  private indexKey: string;
+  private auditStreamKey: string;
 
   constructor(redisUrl?: string) {
     this.redis = new Redis(
       redisUrl || process.env.REDIS_URL || "redis://localhost:6379",
     );
+    this.indexKey = `${this.prefix}pending:index`;
+    this.auditStreamKey = `${this.prefix}audit_stream`;
   }
 
-  generateToken(
+  async generateToken(
     requestId: string,
     capabilityId: string,
     payloadHash: string,
@@ -21,7 +25,7 @@ export class RedisApprovalStore implements IApprovalStore {
     requestedBy: string,
     metadata?: Record<string, unknown>,
     ttlMs = 15 * 60 * 1000,
-  ): string {
+  ): Promise<string> {
     const token = crypto.randomBytes(32).toString("hex");
     const expiresAt = Date.now() + ttlMs;
 
@@ -40,33 +44,68 @@ export class RedisApprovalStore implements IApprovalStore {
       auditEventIds: [],
     };
 
-    // Store with TTL
-    this.redis.setex(
+    // Store with TTL, and index the token so getPendingApprovals() doesn't need
+    // a cluster-wide SCAN. Awaited (not fire-and-forget) so the token is durable
+    // before the caller can hand it to anyone for approval.
+    await this.redis.setex(
       `${this.prefix}pending:${token}`,
       Math.floor(ttlMs / 1000),
       JSON.stringify(record),
     );
+    await this.redis.sadd(this.indexKey, token);
 
     return token;
   }
 
-  getPendingApprovals(): PendingApproval[] {
-    // Note: In a real enterprise setup, we'd use HSCAN or maintain an index of pending approvals
-    // For this interface parity, we will just return empty or require a different query pattern
-    // because SCAN can be slow on large clusters.
-    // As a stub for compatibility, we return empty unless we scan (omitted here for performance).
-    console.warn(
-      "[RedisApprovalStore] getPendingApprovals requires a secondary index (not fully implemented in Redis adapter)",
-    );
-    return [];
+  async getPendingApprovals(): Promise<PendingApproval[]> {
+    const tokens = await this.redis.smembers(this.indexKey);
+    if (tokens.length === 0) return [];
+
+    const keys = tokens.map((t) => `${this.prefix}pending:${t}`);
+    const values = await this.redis.mget(...keys);
+
+    const pending: PendingApproval[] = [];
+    const staleTokens: string[] = [];
+
+    values.forEach((data, i) => {
+      const token = tokens[i]!;
+      if (!data) {
+        // Record expired/consumed/revoked (key gone) but the index entry wasn't
+        // cleaned up yet — self-heal by dropping it from the index.
+        staleTokens.push(token);
+        return;
+      }
+      const record: PendingApproval = JSON.parse(data);
+      if (record.status === "PENDING") {
+        pending.push(record);
+      } else {
+        staleTokens.push(token);
+      }
+    });
+
+    if (staleTokens.length > 0) {
+      await this.redis.srem(this.indexKey, ...staleTokens);
+    }
+
+    return pending;
   }
 
-  getAuditLogs(_limit = 100): AuditLog[] {
-    // Stub: Redis is not a good persistent audit log. Usually we would stream this to Kafka or Postgres.
-    console.warn(
-      "[RedisApprovalStore] getAuditLogs should query a persistent sink, not Redis.",
+  async getAuditLogs(limit = 100): Promise<AuditLog[]> {
+    // Read the most recent `limit` entries from the audit stream written by
+    // logAudit(). Not a substitute for a persistent sink (Kafka/Postgres) in a
+    // long-lived production deployment, but no longer a stub returning [].
+    const entries = await this.redis.xrevrange(
+      this.auditStreamKey,
+      "+",
+      "-",
+      "COUNT",
+      limit,
     );
-    return [];
+    return entries.map(([, fields]) => {
+      const eventIdx = fields.indexOf("event");
+      const raw = eventIdx >= 0 ? fields[eventIdx + 1] : undefined;
+      return raw ? (JSON.parse(raw) as AuditLog) : ({} as AuditLog);
+    });
   }
 
   async validateAndConsume(
@@ -124,8 +163,11 @@ export class RedisApprovalStore implements IApprovalStore {
       return false;
     }
 
-    // Atomic delete to consume
+    // DEL's return count is the consumption guard: if two callers race past the
+    // checks above, only one DEL removes the key (returns 1) and consumes the
+    // token — the other's DEL returns 0 and is correctly rejected below.
     const deleted = await this.redis.del(key);
+    await this.redis.srem(this.indexKey, token);
     if (deleted > 0) {
       this.logAudit(
         "APPROVED",
@@ -176,6 +218,7 @@ export class RedisApprovalStore implements IApprovalStore {
     if (data) {
       const record: PendingApproval = JSON.parse(data);
       await this.redis.del(key);
+      await this.redis.srem(this.indexKey, token);
       this.logAudit(
         "REVOKED",
         record.capabilityId,
@@ -203,12 +246,13 @@ export class RedisApprovalStore implements IApprovalStore {
       metadata,
       actorIdentity,
     };
-    // Emit event or stream
-    this.redis.xadd(
-      `${this.prefix}audit_stream`,
-      "*",
-      "event",
-      JSON.stringify(log),
-    );
+    // Fire-and-forget is acceptable here: audit logging must not block/fail the
+    // approval decision path itself, but surface stream write failures instead
+    // of swallowing them silently.
+    this.redis
+      .xadd(this.auditStreamKey, "*", "event", JSON.stringify(log))
+      .catch((err) =>
+        console.error("[RedisApprovalStore] Failed to write audit log", err),
+      );
   }
 }

@@ -1,5 +1,12 @@
 import type { PolicyCard, PolicyEvaluationResult } from "./types.js";
 
+/**
+ * Standalone evaluator for a single PolicyCard, kept for its own test coverage.
+ * This is NOT the runtime enforcement path: MCPGateway (capabilities/gateway.ts)
+ * evaluates policies via policies/engine.js's evaluatePolicies, reached through
+ * policies/adapter.js's adaptPolicyCardToRules. If you're wiring new enforcement
+ * logic, extend that path, not this one, to avoid two divergent rule engines.
+ */
 export interface PolicyContext {
   toolName: string;
   sideEffect: "read" | "write" | "submit";
@@ -9,13 +16,14 @@ export function evaluatePolicy(
   policy: PolicyCard,
   context: PolicyContext,
 ): PolicyEvaluationResult {
-  
   // V2 Rule Evaluation (if appliesTo and rules exist)
   if (policy.appliesTo?.capabilities && policy.rules) {
     const matchesCapability = policy.appliesTo.capabilities.some(
-      (cap) => cap === "*" || 
-               context.toolName === cap || 
-               (cap.endsWith("*") && context.toolName.startsWith(cap.replace("*", "")))
+      (cap) =>
+        cap === "*" ||
+        context.toolName === cap ||
+        (cap.endsWith("*") &&
+          context.toolName.startsWith(cap.replace("*", ""))),
     );
 
     if (matchesCapability) {
@@ -109,7 +117,8 @@ export function evaluatePolicy(
     allowed: true, // It is allowed, but possibly with requirements
     requirements: {
       approvalRequired: requiresApproval,
-      evidenceRequired: spec.evidenceRequirements || policy.evidence?.required || [],
+      evidenceRequired:
+        spec.evidenceRequirements || policy.evidence?.required || [],
       piiHandling: spec.piiHandling,
     },
   };

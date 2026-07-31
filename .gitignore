@@ -49,3 +49,10 @@ debug-*.ts
 
 # Reports (generated)
 reports/
+packages/reports/
+
+# Ad-hoc debug/codegen scripts (never commit)
+/scratch/
+
+# Leftover CLI init test output (never commit)
+/test-init-tmp/

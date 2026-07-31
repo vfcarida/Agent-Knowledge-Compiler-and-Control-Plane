@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/stryker-mutator/stryker-js/master/packages/api/schema/stryker-schema.json",
+  "_comment": "Scoped to the correctness-critical subsystems (compiler pipeline, policy engine, privacy/PII, IR schema) rather than the whole package — full-repo mutation runs are slow and this is a first pass. Score is informational only (break: null) until a baseline is established; do not treat a low score as a CI failure yet.",
+  "packageManager": "pnpm",
+  "testRunner": "vitest",
+  "reporters": ["html", "clear-text", "progress"],
+  "htmlReporter": {
+    "fileName": "reports/mutation/index.html"
+  },
+  "mutate": [
+    "src/compiler/**/*.ts",
+    "src/policies/**/*.ts",
+    "src/privacy/**/*.ts",
+    "src/ir/**/*.ts",
+    "!src/**/__tests__/**",
+    "!src/**/*.test.ts"
+  ],
+  "coverageAnalysis": "perTest",
+  "thresholds": {
+    "high": 80,
+    "low": 50,
+    "break": null
+  },
+  "tempDirName": ".stryker-tmp",
+  "cleanTempDir": true
+}

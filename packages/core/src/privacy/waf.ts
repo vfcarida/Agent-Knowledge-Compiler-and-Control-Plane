@@ -21,15 +21,26 @@ export interface WAFResult {
 }
 
 export interface ISecurityGateway {
-  // eslint-disable-next-line no-unused-vars
   checkPrompt(prompt: string): Promise<WAFResult>;
+}
+
+export interface LakeraGatewayOptions {
+  /**
+   * When true, a Lakera API failure (auth error, outage, schema change) BLOCKS
+   * the request instead of silently downgrading to the weaker regex fallback.
+   * Off by default to preserve prior behavior; deployments that treat Lakera
+   * as their primary defense (rather than defense-in-depth) should enable it.
+   */
+  failClosedOnGatewayError?: boolean;
 }
 
 export class LakeraGateway implements ISecurityGateway {
   private apiKey: string | undefined;
+  private failClosedOnGatewayError: boolean;
 
-  constructor() {
+  constructor(options: LakeraGatewayOptions = {}) {
     this.apiKey = process.env.LAKERA_API_KEY;
+    this.failClosedOnGatewayError = options.failClosedOnGatewayError ?? false;
   }
 
   async checkPrompt(prompt: string): Promise<WAFResult> {
@@ -74,8 +85,17 @@ export class LakeraGateway implements ISecurityGateway {
           : undefined,
         provider: "lakera",
       };
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
+      if (this.failClosedOnGatewayError) {
+        console.error(
+          `[WAF] Lakera API call failed (${err.message}). Failing closed (blocking request) per failClosedOnGatewayError=true.`,
+        );
+        return {
+          flagged: true,
+          reason: `Security Gateway unavailable and failClosedOnGatewayError is enabled: ${err.message}`,
+          provider: "lakera",
+        };
+      }
       console.error(
         `[WAF] Lakera API call failed (${err.message}). Falling back to local Regex.`,
       );

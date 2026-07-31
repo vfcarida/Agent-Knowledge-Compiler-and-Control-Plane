@@ -20,3 +20,8 @@ We establish **AKCP Profile v1** as a versioned extension profile over OKF. Ever
 
 - Prevents malformed frontmatter from corrupting the AI's matching context.
 - Allows automated in-place migration pipelines.
+- Extensions use standard YAML frontmatter and leave unknown keys intact, so generic OKF tooling can still parse AKCP bundles while domain-specific LLMs leverage the stricter schema.
+
+## History
+
+Supersedes an earlier internal draft of this decision (previously tracked as a separate "-deprecated" file); consolidated here per [MADR](https://adr.github.io/madr/) convention of using a status field rather than a duplicate file.
