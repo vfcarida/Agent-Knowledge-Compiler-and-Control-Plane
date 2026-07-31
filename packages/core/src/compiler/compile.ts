@@ -1,20 +1,16 @@
 import type { AgentKnowledgeIR } from "../ir/types.js";
 import type { BuildOptions } from "../ir/build-ir.js";
 import type { Result } from "../domain/result.js";
-import type { CompilerError } from "./errors.js";
+import type { CompilerError, CompilerWarning } from "./errors.js";
 import { success, failure } from "../domain/result.js";
-import { runCompilerPipeline } from "./run-pipeline.js";
+import { runCompilerPipelineDetailed } from "./run-pipeline.js";
+
+export type { CompilerWarning } from "./errors.js";
 
 export interface CompileResult {
   ir: AgentKnowledgeIR;
   warnings: CompilerWarning[];
   stats: CompileStats;
-}
-
-export interface CompilerWarning {
-  type: "stale_document" | "unknown_source_type" | "missing_link_target" | "pii_redacted";
-  message: string;
-  source?: string;
 }
 
 export interface CompileStats {
@@ -49,7 +45,14 @@ export async function compile(
   const errors: CompilerError[] = [];
 
   try {
-    const ir = await runCompilerPipeline(bundlePath, options);
+    const {
+      ir,
+      skippedCount,
+      piiReport,
+      warnings: pipelineWarnings,
+    } = await runCompilerPipelineDetailed(bundlePath, options);
+
+    warnings.push(...pipelineWarnings);
 
     // Collect warnings from stale documents
     for (const concept of ir.concepts) {
@@ -67,10 +70,10 @@ export async function compile(
       warnings,
       stats: {
         totalDocuments: ir.concepts.length,
-        skippedDocuments: 0, // TODO: get from pipeline context
+        skippedDocuments: skippedCount,
         compiledDocuments: ir.concepts.length,
         linksExtracted: ir.links?.length || 0,
-        piiRedactions: 0, // TODO: get from privacy stage
+        piiRedactions: piiReport?.totalFindings ?? 0,
         durationMs: Date.now() - start,
       },
     });
@@ -81,6 +84,12 @@ export async function compile(
       errors.push({ type: "pii", message, source: "" });
     } else if (message.includes("[VALIDATION_ERROR]")) {
       errors.push({ type: "schema", message });
+    } else if (message.includes("[GATEWAY_ERROR]")) {
+      errors.push({
+        type: "connector",
+        message,
+        connectorType: "security-gateway",
+      });
     } else {
       errors.push({ type: "validation", message });
     }

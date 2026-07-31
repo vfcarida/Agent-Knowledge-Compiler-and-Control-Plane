@@ -35,7 +35,7 @@ spec:
     nist_ai_rmf:
       - GOVERN 1.1
     owasp_llm:
-      - LLM06: Excessive Agency
+      - LLM08: Excessive Agency
 ```
 
 ### Spec Fields
@@ -58,4 +58,4 @@ spec:
 
 ## MCP Enforcement
 
-When the `mcp-automation-server` initializes with a policy, every single tool call is passed through the evaluation engine. If a tool violates the allowed tools, autonomy boundary, or side-effect rules, it will instantly throw an error mapped to `[LLM06: Excessive Agency]`.
+When the `mcp-automation-server` initializes with a policy, every single tool call is passed through the evaluation engine. If a tool violates the allowed tools, autonomy boundary, or side-effect rules, it will instantly throw an error mapped to `[LLM08: Excessive Agency]` (OWASP Top 10 for LLM Applications 2023 numbering — see [docs/governance/owasp-llm-controls.md](../governance/owasp-llm-controls.md)).

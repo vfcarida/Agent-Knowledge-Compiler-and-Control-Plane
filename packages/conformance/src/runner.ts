@@ -4,10 +4,17 @@ import {
   OKFFileRepository,
   buildKnowledgeIR,
   loadAkcpConfig,
+  type AgentKnowledgeIR,
 } from "@akcp/core";
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+
 import type { ConformanceReport, ConformanceDetail } from "./types.js";
 import path from "path";
+
+const SIDE_EFFECTING_CAPABILITY_TYPES = new Set([
+  "local-write",
+  "external-write",
+  "external-submit",
+]);
 
 export class ConformanceRunner {
   private bundlePath: string;
@@ -77,7 +84,6 @@ export class ConformanceRunner {
           } else {
             report.passed++;
           }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
           report.failed++;
           okfCompatible = false;
@@ -89,7 +95,6 @@ export class ConformanceRunner {
           });
         }
       }
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     } catch (e: any) {
       okfCompatible = false;
     }
@@ -110,7 +115,6 @@ export class ConformanceRunner {
       // Actually, FrontmatterParser currently only validates against OKFFrontmatterSchema.
       // To strictly validate profile, we can use the domain/profiles/career schemas, but for now we rely on the parser not throwing OKFValidationError.
       report.passed += docs.length;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       akcpCompatible = false;
       report.failed++;
@@ -128,9 +132,10 @@ export class ConformanceRunner {
 
     // Level 3: AKCP-compiler-compatible
     let compilerCompatible = true;
+    let ir: AgentKnowledgeIR | undefined;
     try {
       // Build IR to test semantic graph and index integrity
-      const ir = await buildKnowledgeIR(this.bundlePath, {
+      ir = await buildKnowledgeIR(this.bundlePath, {
         sources: [{ type: "okf-directory", path: this.bundlePath }],
       });
       report.passed++;
@@ -152,7 +157,6 @@ export class ConformanceRunner {
           });
         }
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       compilerCompatible = false;
       report.failed++;
@@ -176,6 +180,27 @@ export class ConformanceRunner {
       if (await fsAdapter.exists(configPath)) {
         loadAkcpConfig(configPath); // Throws if invalid
         report.passed++;
+
+        // docs/governance/conformance-levels.md requires "all capabilities have
+        // declared risk levels and approval requirements" for this level.
+        // riskLevel is already enforced by CapabilitySchema during Level 3's IR
+        // build (it's a required field there), so the remaining gap this check
+        // closes is requiresApproval being explicitly declared for any
+        // capability with a write/submit side effect.
+        for (const cap of ir?.capabilities ?? []) {
+          const isSideEffecting = SIDE_EFFECTING_CAPABILITY_TYPES.has(
+            cap.sideEffects,
+          );
+          if (isSideEffecting && cap.requiresApproval === undefined) {
+            controlPlaneCompatible = false;
+            report.failed++;
+            report.details.push({
+              type: "error",
+              message: `Capability "${cap.name}" has side effect "${cap.sideEffects}" but does not declare requiresApproval.`,
+              ruleId: "AKCP-CP-APPROVAL-REQUIRED",
+            });
+          }
+        }
       } else {
         // Warning if no config, but maybe we shouldn't fail?
         // Actually, to be control-plane compatible it MUST have an akcp.yaml
@@ -186,7 +211,6 @@ export class ConformanceRunner {
           ruleId: "AKCP-CP-CONFIG",
         });
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       controlPlaneCompatible = false;
       report.failed++;

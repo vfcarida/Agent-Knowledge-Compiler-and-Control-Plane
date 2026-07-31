@@ -27,6 +27,10 @@ export interface AuditEvent {
 
 import { useAuth } from "../../contexts/AuthContext.js";
 
+// No import.meta.env fallback hardcodes localhost so this keeps working out of
+// the box in local dev, but a real deployment should set VITE_API_BASE_URL.
+const API_BASE_URL = import.meta.env["VITE_API_BASE_URL"] || "http://localhost:3001";
+
 export function AuditLog() {
   const [logs, setLogs] = useState<AuditEvent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,8 +40,12 @@ export function AuditLog() {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
+        // NOTE: user.identity is a demo-mode-only client-chosen string, not a real
+        // bearer token — see AuthContext.tsx. The BFF's auth middleware only
+        // accepts this verbatim when DASHBOARD_DEMO_MODE=true; otherwise it
+        // requires a real JWT this demo login flow doesn't produce.
         const token = user ? user.identity : "anonymous";
-        const response = await fetch("http://localhost:3001/api/audit/logs", {
+        const response = await fetch(`${API_BASE_URL}/api/audit/logs`, {
           headers: {
             "Authorization": `Bearer ${token}`
           }

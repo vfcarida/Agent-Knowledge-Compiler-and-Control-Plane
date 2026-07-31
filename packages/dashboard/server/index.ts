@@ -4,6 +4,10 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createAuthMiddleware } from "./auth-middleware.js";
+import { createCsrfMiddleware } from "./csrf-middleware.js";
+import { createRateLimitMiddleware } from "./rate-limit-middleware.js";
+import { createSecurityHeadersMiddleware } from "./security-headers.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,20 +16,25 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Auth Middleware: Decodes simulated Bearer JWT tokens
-const authMiddleware = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-  const authHeader = req.headers.authorization;
-  if (authHeader && authHeader.startsWith("Bearer ")) {
-    const token = authHeader.split(" ")[1];
-    // In a real app, verify JWT here. For MVP, we trust the token string as the identity.
-    (req as any).user = { identity: token };
-  } else {
-    (req as any).user = { identity: "anonymous" };
-  }
-  next();
-};
-
-app.use(authMiddleware);
+// These four middlewares each had their own test coverage (security.test.ts) but
+// were never actually applied to this server — the real BFF ran with none of
+// them wired in. Now wired for real, in the order headers -> rate-limit -> csrf -> auth.
+app.use(createSecurityHeadersMiddleware());
+app.use(
+  createRateLimitMiddleware({
+    windowMs: 60_000,
+    maxRequests: Number(process.env["DASHBOARD_RATE_LIMIT"]) || 300,
+  }),
+);
+app.use(createCsrfMiddleware());
+app.use(
+  createAuthMiddleware({
+    jwtSecret: process.env["DASHBOARD_JWT_SECRET"],
+    issuer: process.env["DASHBOARD_JWT_ISSUER"],
+    audience: process.env["DASHBOARD_JWT_AUDIENCE"],
+    allowDemoMode: process.env["DASHBOARD_DEMO_MODE"] === "true",
+  }),
+);
 
 const PORT = process.env.PORT || 3001;
 
@@ -46,8 +55,12 @@ async function startMCPClients() {
 
     const env = {
       ...process.env,
-      AKCP_IR_PATH: process.env.AKCP_IR_PATH || path.resolve(__dirname, "../../../dist/agent-knowledge-ir.json"),
-      AKCP_BUNDLE_PATH: process.env.AKCP_BUNDLE_PATH || path.resolve(__dirname, "../../../.okf")
+      AKCP_IR_PATH:
+        process.env.AKCP_IR_PATH ||
+        path.resolve(__dirname, "../../../dist/agent-knowledge-ir.json"),
+      AKCP_BUNDLE_PATH:
+        process.env.AKCP_BUNDLE_PATH ||
+        path.resolve(__dirname, "../../../.okf"),
     };
 
     console.log(`[BFF] Starting Profile Server: ${profileScript}`);
@@ -146,7 +159,12 @@ app.get("/api/automation/approvals", async (req, res) => {
 app.post("/api/automation/approve", async (req, res) => {
   if (!automationClient)
     return res.status(503).json({ error: "Automation server not ready" });
-  const { approvalToken, jobUrl, dryRun, approverIdentity: providedIdentity } = req.body;
+  const {
+    approvalToken,
+    jobUrl,
+    dryRun,
+    approverIdentity: providedIdentity,
+  } = req.body;
   const approverIdentity = providedIdentity || (req as any).user?.identity;
   try {
     const result = await automationClient.callTool({
@@ -209,7 +227,7 @@ app.post("/api/automation/revoke", async (req, res) => {
 app.get("/api/audit/logs", async (req, res) => {
   if (!automationClient)
     return res.status(503).json({ error: "Automation server not ready" });
-  
+
   const limit = parseInt(req.query.limit as string) || 100;
   try {
     const result = await automationClient.callTool({
@@ -271,14 +289,16 @@ app.get("/api/mcp/tools", (req, res) => {
       __dirname,
       "../../../examples/domains/career/dist/agent-knowledge-ir.json",
     );
-    
+
     let targetPath = fs.existsSync(irPath) ? irPath : fallbackPath;
 
     if (fs.existsSync(targetPath)) {
       const data = JSON.parse(fs.readFileSync(targetPath, "utf-8"));
       res.json({ tools: data.capabilities || [] });
     } else {
-      res.status(404).json({ error: "No compiled IR found. Compile a domain first." });
+      res
+        .status(404)
+        .json({ error: "No compiled IR found. Compile a domain first." });
     }
   } catch (error: any) {
     res.status(500).json({ error: error.message });

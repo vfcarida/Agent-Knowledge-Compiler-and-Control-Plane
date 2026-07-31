@@ -2,6 +2,14 @@
 
 ## Default: Internal Engine
 
+The canonical, wired-in policy engine is `packages/core/src/policies/engine.ts`
+(`evaluatePolicies`/`evaluatePoliciesWithTrace`), reached from `MCPGateway.execute()`
+(`packages/core/src/capabilities/gateway.ts`) via `packages/core/src/policies/adapter.ts`'s
+`adaptPolicyCardToRules`. There is also a standalone `policy/evaluate.ts` (singular) exporting
+`evaluatePolicy`, which evaluates a `PolicyCard` directly with its own V1/V2 rule matching —
+it has its own test coverage but is **not** in the `MCPGateway` request path; don't confuse the
+two when extending policy enforcement.
+
 AKCP ships with a built-in policy engine that supports:
 
 - Priority-based rule evaluation

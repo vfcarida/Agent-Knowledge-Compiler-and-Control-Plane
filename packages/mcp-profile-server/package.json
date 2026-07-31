@@ -18,6 +18,8 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
     "start": "node dist/index.js",
     "start:http": "node dist/http-server.js",
     "start:sse": "node dist/index-sse.js",
@@ -39,7 +41,8 @@
     "@types/express": "^5.0.6",
     "@types/node": "catalog:",
     "tsx": "^4.19.0",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "license": "MIT",
   "repository": {

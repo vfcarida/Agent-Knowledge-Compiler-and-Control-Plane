@@ -18,6 +18,8 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
     "clean": "node -e \"fs.rmSync('dist', {recursive:true,force:true}); fs.rmSync('tsconfig.tsbuildinfo', {force:true})\""
@@ -34,7 +36,8 @@
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "catalog:",
     "tsx": "^4.19.0",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "license": "MIT",
   "repository": {

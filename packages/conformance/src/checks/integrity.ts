@@ -11,12 +11,18 @@ export async function checkIntegrity(
 ): Promise<CheckResult[]> {
   const results: CheckResult[] = [];
 
-  // 1. Hash verification: every artifact should have a sha256 that matches content
-  // Note: the IR doesn't necessarily contain all raw contents for checking here easily,
-  // but if artifacts are present in the concept, we could check. For now, since IR
-  // concepts are our source of truth in the bundle, we can check basic graph integrity.
+  // NOTE: this check only verifies link-reference integrity (below) — it does NOT
+  // do SHA-256 artifact-hash verification. That's a materially different check
+  // (comparing compiled outputs on disk against a BuildManifest's recorded
+  // hashes) already implemented separately in provenance/verify.ts's
+  // verifyManifest(), which this function doesn't call: checkIntegrity() only
+  // receives the in-memory AgentKnowledgeIR, not a manifest or bundle root, so
+  // it has no artifact paths to hash. Wiring real hash verification in here
+  // would mean threading a manifest path through ConformanceRunner — a bigger
+  // change than a docs/naming fix, so it's left as a known gap rather than
+  // silently claimed as done.
 
-  // 2. Cross-reference integrity: links in knowledge graph point to existing concepts
+  // Cross-reference integrity: links in knowledge graph point to existing concepts
   for (const link of ir.links ?? []) {
     const sourceExists = ir.concepts.some(
       (c) => c.conceptId === link.sourceConceptId,

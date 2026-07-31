@@ -39,11 +39,22 @@ async function main() {
     // JWT Auth Middleware
     const jwtSecret = process.env["AKCP_JWT_SECRET"];
     const jwksUri = process.env["AKCP_JWKS_URI"];
+    const allowInsecureDev = process.env["AKCP_ALLOW_INSECURE_DEV"] === "true";
+
+    if (!jwtSecret && !jwksUri && !allowInsecureDev) {
+      throw new Error(
+        "[AKCP Profile Server] Refusing to start without authentication: neither " +
+          "AKCP_JWT_SECRET nor AKCP_JWKS_URI is set. This server can expose read " +
+          "access to compiled knowledge over HTTP, so it fails closed by default. " +
+          "Set one of those two, or set AKCP_ALLOW_INSECURE_DEV=true to explicitly " +
+          "opt into unauthenticated local development mode.",
+      );
+    }
 
     app.use(async (req, res, next) => {
       if (!jwtSecret && !jwksUri) {
-        // If no token verification is configured, allow anonymous access for MVP backwards-compatibility
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // Only reachable when AKCP_ALLOW_INSECURE_DEV=true was explicitly set above.
+
         (req as any).agentIdentity = "anonymous-agent";
         return next();
       }
@@ -75,11 +86,10 @@ async function main() {
         }
 
         // Use sub or email as identity
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         (req as any).agentIdentity =
           payload?.sub || payload?.email || "authenticated-agent";
         next();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         res
           .status(401)
@@ -88,14 +98,22 @@ async function main() {
       }
     });
 
-    let transport: SSEServerTransport | null = null;
+    // Keyed per SSE session — a single module-level transport variable would let a
+    // second client's connection silently overwrite the first's, breaking multi-agent
+    // usage (each POST would race against whichever session connected most recently).
+    const transports = new Map<string, SSEServerTransport>();
 
     app.get("/mcp/sse", async (req, res) => {
-      // eslint-disable-next-line no-console
-      console.log("[AKCP Profile Server] New SSE connection established");
-      transport = new SSEServerTransport("/mcp/messages", res);
+      const transport = new SSEServerTransport("/mcp/messages", res);
+      transports.set(transport.sessionId, transport);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      console.log(
+        `[AKCP Profile Server] New SSE connection established (session ${transport.sessionId})`,
+      );
+      res.on("close", () => {
+        transports.delete(transport.sessionId);
+      });
+
       const agentIdentity = (req as any).agentIdentity || "anonymous-agent";
 
       const mcpProfileServer = new AKCPProfileServer(
@@ -107,8 +125,12 @@ async function main() {
     });
 
     app.post("/mcp/messages", express.json(), async (req, res) => {
+      const sessionId = req.query["sessionId"] as string | undefined;
+      const transport = sessionId ? transports.get(sessionId) : undefined;
       if (!transport) {
-        res.status(400).json({ error: "SSE connection not established" });
+        res
+          .status(400)
+          .json({ error: "No active SSE connection for this session" });
         return;
       }
       await transport.handlePostMessage(req, res);
@@ -116,12 +138,10 @@ async function main() {
 
     const PORT = process.env.PORT || 3001;
     app.listen(PORT, () => {
-      // eslint-disable-next-line no-console
       console.log(
         `[AKCP Profile Server] HTTP/SSE Server listening on port ${PORT}`,
       );
       if (jwtSecret || jwksUri) {
-        // eslint-disable-next-line no-console
         console.log(
           `[AKCP Profile Server] Enterprise Auth enabled (JWT Validation active).`,
         );

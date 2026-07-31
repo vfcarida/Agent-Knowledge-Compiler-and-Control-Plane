@@ -1,8 +1,5 @@
 export type CompilerError =
-  | ValidationError
-  | PiiError
-  | ConnectorError
-  | SchemaError;
+  ValidationError | PiiError | ConnectorError | SchemaError;
 
 export interface ValidationError {
   type: "validation";
@@ -30,4 +27,14 @@ export interface SchemaError {
   message: string;
   path?: string;
   details?: unknown;
+}
+
+export interface CompilerWarning {
+  type:
+    | "stale_document"
+    | "unknown_source_type"
+    | "missing_link_target"
+    | "pii_redacted";
+  message: string;
+  source?: string;
 }

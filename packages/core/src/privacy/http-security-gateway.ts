@@ -55,12 +55,13 @@ export class HttpSecurityGateway {
         findings: data.findings || [],
         blocked: data.blocked || false,
       };
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      // If the gateway fails, fail closed if we are in block mode, or throw error.
+      // A gateway connectivity failure is NOT a PII violation — misclassifying it as
+      // one previously made transient network/auth outages look like data-privacy
+      // incidents. Tagged distinctly so callers (see compile.ts) can tell them apart.
       console.warn(`[WARN] Security Gateway call failed: ${err.message}`);
       throw new Error(
-        `[PII_ERROR] Failed to reach Security Gateway at ${this.gatewayUrl}`,
+        `[GATEWAY_ERROR] Failed to reach Security Gateway at ${this.gatewayUrl}: ${err.message}`,
       );
     }
   }

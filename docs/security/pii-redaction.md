@@ -7,8 +7,9 @@ Agent Knowledge Compiler and Control Plane (AKCP) strictly enforces data privacy
 All fields and telemetry traversing the Control Plane are classified using a multi-layered approach:
 
 1. **Schema-Level Annotations:** MCP tools explicitly declare their PII handling (e.g., `readsPII: true`, `writesPII: true`).
-2. **Deterministic Heuristics:** Fast, regex-based matching for well-known patterns (SSN, credit cards, emails).
-3. **ML-Based Identification:** (Optional) Integration with platforms like [Presidio](https://github.com/data-privacy-stack/presidio) or Google Sensitive Data Protection for contextual PII discovery (e.g., recognizing names in unstructured chat).
+2. **Deterministic Heuristics:** Fast, regex-based matching for well-known patterns (SSN, credit cards, emails) — `RegexPiiDetector` in `packages/core/src/privacy/regex-pii-detector.ts`.
+3. **Heuristic Name Detection (opt-in, dependency-free):** `NerLiteDetector` (`packages/core/src/privacy/ner-lite-detector.ts`) catches free-text person names via honorific-prefixed and Title Case patterns, always at `low`/`medium` confidence — never `high`, so it can't trigger high-confidence-gated blocking on its own. Enable it by passing `{ enableNerLite: true }` to `createPiiDetector()`; it's off by default since it's best-effort and can add both false positives and negatives.
+4. **ML-Based Identification:** (Not yet implemented) Real NER via a trained model — e.g. [Microsoft Presidio](https://github.com/microsoft/presidio) or spaCy — is the documented upgrade path once the heuristic detector above proves insufficient. This requires a Python runtime or a bundled ONNX/WASM model, neither of which this package currently depends on.
 
 ## Redaction Policies
 

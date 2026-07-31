@@ -54,7 +54,6 @@ export const regulatedEnterprisePolicy: AgentPolicy = {
 import type { CapabilityManifest } from "./capabilities.js";
 
 export class PolicyEngine {
-  // eslint-disable-next-line no-unused-vars
   constructor(private policy: AgentPolicy) {}
 
   /**
@@ -63,7 +62,7 @@ export class PolicyEngine {
   public validateExecution(
     toolName: string,
     capabilities: CapabilityManifest[],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     args: Record<string, any>,
   ): void {
     // 1. Basic tool existence & blocklist checks
@@ -72,7 +71,7 @@ export class PolicyEngine {
       this.policy.deniedTools.includes("*")
     ) {
       throw new Error(
-        `[LLM06: Excessive Agency] Policy Violation: Tool '${toolName}' is explicitly denied by policy '${this.policy.policyId}'.`,
+        `[LLM08: Excessive Agency] Policy Violation: Tool '${toolName}' is explicitly denied by policy '${this.policy.policyId}'.`,
       );
     }
 
@@ -97,7 +96,7 @@ export class PolicyEngine {
 
     if (autonomyLevel === "observe" && isWrite) {
       throw new Error(
-        `[LLM06: Excessive Agency] Policy Violation: Autonomy level 'observe' cannot execute write side-effect '${toolName}'.`,
+        `[LLM08: Excessive Agency] Policy Violation: Autonomy level 'observe' cannot execute write side-effect '${toolName}'.`,
       );
     }
 
@@ -108,7 +107,7 @@ export class PolicyEngine {
         capability.sideEffectLevel === "external-write"
       ) {
         throw new Error(
-          `[LLM06: Excessive Agency] Policy Violation: Autonomy level 'advise' cannot execute '${capability.sideEffectLevel}' tool '${toolName}'.`,
+          `[LLM08: Excessive Agency] Policy Violation: Autonomy level 'advise' cannot execute '${capability.sideEffectLevel}' tool '${toolName}'.`,
         );
       }
     }
@@ -119,13 +118,12 @@ export class PolicyEngine {
         this.policy.approvalRequiredFor.includes("*");
       if (!allowedToApprove) {
         throw new Error(
-          `[LLM06: Excessive Agency] Policy Violation: Tool '${toolName}' requires approval, but policy '${this.policy.policyId}' does not whitelist it for approval-based execution.`,
+          `[LLM08: Excessive Agency] Policy Violation: Tool '${toolName}' requires approval, but policy '${this.policy.policyId}' does not whitelist it for approval-based execution.`,
         );
       }
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private inspectPayload(toolName: string, args: Record<string, any>): void {
     const payloadStr = JSON.stringify(args);
 

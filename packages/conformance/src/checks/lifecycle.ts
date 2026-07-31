@@ -9,13 +9,13 @@ export async function checkLifecycleConsistency(
   for (const concept of ir.concepts) {
     // Lifecycle state must be valid
     const validStates = ["draft", "active", "deprecated", "archived"];
-    // Assuming the IR concept has frontmatter or properties where lifecycle is stored
-    // Under OKF, lifecycle might be under `properties.lifecycle` or similar, but the IR types
-    // map it. If it doesn't exist, we assume 'active' for the sake of the check.
-    // The exact type might vary based on how buildKnowledgeIR maps it.
-    // We'll use a loose cast to check if there's a lifecycle state explicitly.
-
-    const lifecycleState = (concept as any).lifecycle?.state || "active";
+    // IRConcept's actual lifecycle field is `status` (see ir/schema.ts's
+    // IRConceptSchema) — this used to read a nonexistent `concept.lifecycle.state`
+    // path, which meant every concept was silently treated as "active" regardless
+    // of its real status, and the "no-active-depends-on-deprecated" check below
+    // could never fire. `status` is optional in the schema, so 'active' remains a
+    // reasonable default only when it's genuinely unset.
+    const lifecycleState = concept.status || "active";
 
     results.push({
       check: "lifecycle-state-valid",
@@ -35,8 +35,7 @@ export async function checkLifecycleConsistency(
       const activeDependents = dependents.filter((id) => {
         const dependentConcept = ir.concepts.find((c) => c.conceptId === id);
 
-        const depState =
-          (dependentConcept as any)?.lifecycle?.state || "active";
+        const depState = dependentConcept?.status || "active";
         return depState === "active";
       });
 

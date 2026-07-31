@@ -16,15 +16,18 @@ export class PrivacyStage implements PipelineStage {
       allowedClasses: context.options.privacy.allowedPiiClasses,
       blockedClasses: context.options.privacy.blockedPiiClasses,
       tokenFormat: context.options.privacy.redactionTokenFormat,
-      failOnUnredactedHighRiskPii: context.options.privacy.failOnUnredactedHighRiskPii,
+      failOnUnredactedHighRiskPii:
+        context.options.privacy.failOnUnredactedHighRiskPii,
     };
 
     for (const concept of context.concepts) {
       if (!concept.body) continue;
-      
+
       const result = await piiRedactor.redact(concept.body, redactOpts);
       if (result.blocked) {
-        throw new Error(`[PII_ERROR] Build failed: Unredacted high-risk PII in ${concept.source?.filePath}`);
+        throw new Error(
+          `[PII_ERROR] Build failed: Unredacted high-risk PII in ${concept.source?.filePath}`,
+        );
       }
       concept.body = result.redactedText;
 
@@ -33,9 +36,14 @@ export class PrivacyStage implements PipelineStage {
       }
     }
 
-    const reportPath = path.resolve(process.cwd(), "dist/privacy/pii-report.json");
+    // Resolved against the bundle being compiled (not process.cwd()) so the report
+    // lands next to the bundle regardless of the CLI's invocation directory.
+    const reportPath = path.resolve(
+      context.bundlePath,
+      "dist/privacy/pii-report.json",
+    );
     piiReport.save(reportPath);
 
-    return context;
+    return { ...context, piiReport: piiReport.getData() };
   }
 }

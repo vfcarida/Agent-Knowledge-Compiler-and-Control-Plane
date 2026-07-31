@@ -3,31 +3,36 @@ import { TokenBucketRateLimiter } from "./rate-limiter.js";
 
 export interface AgentCredential {
   agentId: string;
-  apiKey: string;        // hashed (SHA-256)
-  scopes?: string[];     // optional: restrict to specific tools
+  apiKey: string; // hashed (SHA-256)
+  scopes?: string[]; // optional: restrict to specific tools
   createdAt: string;
-  expiresAt?: string;    // ISO date, optional TTL
+  expiresAt?: string; // ISO date, optional TTL
 }
 
 export interface AuthConfig {
   credentials: AgentCredential[];
-  requireAuth: boolean;   // if false, auth is skipped (dev mode)
-  maxAuthAttempts?: number;      // Default: 5
-  authCooldownMs?: number;       // Default: 10000 (10s per token)
+  requireAuth: boolean; // if false, auth is skipped (dev mode)
+  maxAuthAttempts?: number; // Default: 5
+  authCooldownMs?: number; // Default: 10000 (10s per token)
 }
 
-// Module-level, but configurable
-let authLimiterInstance: TokenBucketRateLimiter | null = null;
+// Keyed by AuthConfig object identity (not a single module-level instance) so
+// two gateways/tests configured with different maxAuthAttempts/authCooldownMs
+// in the same process don't silently share (and ignore) each other's settings —
+// whichever config was passed on the very first call used to "win" for good.
+const authLimiters = new WeakMap<AuthConfig, TokenBucketRateLimiter>();
 
 function getAuthLimiter(config: AuthConfig): TokenBucketRateLimiter {
-  if (!authLimiterInstance) {
-    authLimiterInstance = new TokenBucketRateLimiter({
+  let limiter = authLimiters.get(config);
+  if (!limiter) {
+    limiter = new TokenBucketRateLimiter({
       maxTokens: config.maxAuthAttempts ?? 5,
       refillRate: 1,
       refillInterval: config.authCooldownMs ?? 10000,
     });
+    authLimiters.set(config, limiter);
   }
-  return authLimiterInstance;
+  return limiter;
 }
 
 export interface AuthResult {
@@ -62,7 +67,7 @@ export function authenticate(
   }
 
   const authLimiter = getAuthLimiter(config);
-  
+
   // Brute-force protection
   const sourceKey = options.sourceId || "global";
   if (!authLimiter.consume(sourceKey)) {
@@ -75,7 +80,8 @@ export function authenticate(
   if (!apiKey) {
     return {
       authenticated: false,
-      reason: "No API key provided. Include _apiKey in request payload or X-AKCP-Key header.",
+      reason:
+        "No API key provided. Include _apiKey in request payload or X-AKCP-Key header.",
     };
   }
 

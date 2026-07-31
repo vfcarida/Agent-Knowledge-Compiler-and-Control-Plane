@@ -22,7 +22,9 @@ export const IRConceptSchema = z.object({
   conceptId: z.string(),
   type: z.string(),
   source: IRSourceSchema,
-  frontmatter: z.record(z.string(), z.any()),
+  // Frontmatter keys are user/domain-defined and intentionally open-ended;
+  // `unknown` (not `any`) forces consumers to narrow before use.
+  frontmatter: z.record(z.string(), z.unknown()),
   body: z.string(),
   budget: IRScienceBudgetSchema,
   provenance: IRProvenanceRecordSchema.optional(),
@@ -41,6 +43,13 @@ export const IRPoliciesSchema = z
     defaultAutonomyLevel: z.string().optional(),
     piiHandling: z.string().optional(),
   })
+  // NOTE: kept as `z.any()` deliberately (not tightened to `z.unknown()` like the
+  // other catchalls in this file) — several call sites (e.g. mcp-profile-server's
+  // http-server.ts/index.ts/index-sse.ts) pass `{ policies: ir.policies || {} }`
+  // directly as `GatewayConfig.policies: Record<string, PolicyCard>`, relying on
+  // this looseness. Tightening it requires also typing those call sites properly
+  // (ir.policies isn't actually a Record<string, PolicyCard> shape today), which
+  // is a real pre-existing gap worth fixing but is out of scope here.
   .catchall(z.any());
 
 export const CapabilitySchema = z.object({
@@ -51,12 +60,20 @@ export const CapabilitySchema = z.object({
   owner: z.string().optional(),
   version: z.string(),
   riskLevel: z.enum(["low", "medium", "high", "critical"]),
-  sideEffects: z.enum(["none", "local-write", "external-read", "external-write", "external-submit"]),
+  sideEffects: z.enum([
+    "none",
+    "local-write",
+    "external-read",
+    "external-write",
+    "external-submit",
+  ]),
   requiresApproval: z.boolean().optional(),
   readsPII: z.boolean().optional(),
   writesPII: z.boolean().optional(),
-  inputsSchema: z.record(z.string(), z.any()).optional(),
-  outputsSchema: z.record(z.string(), z.any()).optional(),
+  // JSON-Schema-shaped I/O contracts; kept as an open record of `unknown` values
+  // (rather than `any`) since we don't enforce a JSON-Schema meta-schema here yet.
+  inputsSchema: z.record(z.string(), z.unknown()).optional(),
+  outputsSchema: z.record(z.string(), z.unknown()).optional(),
   policyRefs: z.array(z.string()).optional(),
 });
 
@@ -74,4 +91,6 @@ export const AgentKnowledgeIRSchema = z
     targets: z.array(z.string()).optional(),
     sourceHashes: z.record(z.string(), z.string()).optional(),
   })
-  .catchall(z.any());
+  // Intentional extension point: compile targets may attach additional top-level
+  // fields to the IR envelope. `unknown` still forces narrowing before use.
+  .catchall(z.unknown());

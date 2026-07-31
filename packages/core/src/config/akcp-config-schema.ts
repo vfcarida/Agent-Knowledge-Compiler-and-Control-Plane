@@ -125,3 +125,7 @@ export const AkcpConfigSchema = z
 export type AkcpConfig = z.infer<typeof AkcpConfigSchema>;
 export type CompileConfig = z.infer<typeof CompileConfigSchema>;
 export type ControlPlaneConfig = z.infer<typeof ControlPlaneConfigSchema>;
+/** Parsed/defaulted shape (defaultPiiMode/failOnUnredactedHighRiskPii always present) — what AkcpConfig["privacy"] is after loadAkcpConfig() parses akcp.yaml. */
+export type PrivacyConfig = z.infer<typeof PrivacyConfigSchema>;
+/** Pre-default input shape (all fields optional) — use this for callers constructing a privacy config directly (e.g. BuildOptions.privacy) rather than parsing it from YAML. */
+export type PrivacyConfigInput = z.input<typeof PrivacyConfigSchema>;

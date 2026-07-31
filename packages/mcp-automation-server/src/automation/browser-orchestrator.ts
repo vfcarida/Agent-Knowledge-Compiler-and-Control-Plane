@@ -39,8 +39,25 @@ export class BrowserOrchestrator {
   async orchestrate(
     url: string,
     careerContext: CareerContext,
-    options: { headless?: boolean; dryRun?: boolean } = {},
+    options: {
+      headless?: boolean;
+      dryRun?: boolean;
+      siteAutomationConsent?: boolean;
+    } = {},
   ): Promise<ApplicationResult> {
+    // Per ADR-004 (Browser Automation Safety): automating a third-party site's
+    // UI (login/apply forms) can violate that site's Terms of Service. Require
+    // an explicit, per-call acknowledgment rather than proceeding silently —
+    // this is a safeguard in addition to (not a replacement for) the HITL
+    // approval gate already enforced by the caller (see server.ts).
+    if (!options.siteAutomationConsent) {
+      throw new Error(
+        "Execution Blocked: siteAutomationConsent must be explicitly true. " +
+          "Automating this job site's UI may violate its Terms of Service — " +
+          "the caller must acknowledge this before any live browser automation runs.",
+      );
+    }
+
     // 1. Identify strategy
     const strategy = this.strategies.find((strat) => strat.supports(url));
 
@@ -53,10 +70,10 @@ export class BrowserOrchestrator {
     });
 
     try {
-      const context = await browser.newContext({
-        userAgent:
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-      });
+      // No spoofed user-agent / anti-detection evasion: ADR-004 mandates failing
+      // gracefully against a target site's bot defenses rather than evading them.
+      // Playwright's default (honest) Chromium UA is used as-is.
+      const context = await browser.newContext();
       const page = await context.newPage();
 
       // 3. Execute application strategy
