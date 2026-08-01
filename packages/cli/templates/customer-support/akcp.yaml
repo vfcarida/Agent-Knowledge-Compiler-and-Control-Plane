@@ -24,6 +24,7 @@ policy:
     - policies/read_support_knowledge.policy.yaml
     - policies/suggest_macro.policy.yaml
     - policies/summarize_ticket.policy.yaml
+    - policies/support.policy.yaml
 
 controlPlane:
   policies:

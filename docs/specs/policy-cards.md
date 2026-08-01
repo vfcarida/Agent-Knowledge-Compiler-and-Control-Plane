@@ -51,6 +51,29 @@ spec:
 - **evidenceRequirements**: Additional compliance logs that must be emitted (e.g. "JIRA Ticket ID").
 - **mappings**: Links policy controls back to enterprise governance frameworks.
 
+### Scoping rules by capability and risk level (`appliesTo` + `rules`)
+
+For policies that only need to allow/deny/require-approval for a specific set
+of capabilities (optionally narrowed to specific risk levels), a Policy Card
+can use `appliesTo` + `rules` instead of (or alongside) `spec`:
+
+```yaml
+apiVersion: policy.akcp.dev/v1alpha1
+kind: PolicyCard
+metadata:
+  name: Deny critical-risk actions
+appliesTo:
+  capabilities: ["*"]
+  riskLevels: ["critical"]
+rules:
+  - effect: deny
+```
+
+- **appliesTo.capabilities**: Capability/tool IDs this rule set applies to. Supports `*` and trailing-`*` glob prefixes.
+- **appliesTo.riskLevels**: (Optional) Narrows the rule set to only fire when the invoked capability's declared `riskLevel` is in this list. Omit to match any risk level. The capability's risk level must actually reach policy evaluation — see `CapabilityRequest.riskLevel` in `capabilities/request.ts`; MCP servers that don't pass it fall back to `"medium"`.
+- **rules[].effect**: `allow`, `deny`, or `require_approval`.
+- **rules[].condition**: Accepted by the schema for forward compatibility, but **not currently evaluated** by either the runtime enforcement path (`policies/adapter.ts`) or the standalone `policy explain` evaluator (`policy/evaluate.ts`) — a rule with a `condition` behaves identically to the same rule without one. Express conditional logic today via `appliesTo.riskLevels` and/or by splitting into separate, narrowly-scoped Policy Cards instead.
+
 ## CLI Commands
 
 - **Validate a Policy**: `npx akcp policy validate policies/strict-enterprise.policy.yaml`

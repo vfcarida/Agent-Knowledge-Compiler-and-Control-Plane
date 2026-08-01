@@ -1,13 +1,11 @@
-apiVersion: akcp.policy/v1
-kind: Policy
+apiVersion: policy.akcp.dev/v1alpha1
+kind: PolicyCard
 metadata:
   name: "summarize_ticket"
   description: "Allows the agent to summarize tickets for human handoff"
-spec:
-  effect: allow
-  actions:
-    - mcp:call_tool:customer-support.summarize_ticket
-  conditions:
-    - field: riskLevel
-      operator: in
-      value: ["low"]
+appliesTo:
+  capabilities:
+    - customer-support.summarize_ticket
+  riskLevels: ["low"]
+rules:
+  - effect: allow

@@ -162,7 +162,14 @@ export class MCPGateway {
     const evalResult = evaluatePolicies(rules, {
       tool: request.toolName,
       agentId: request.agentId || "anonymous",
-      riskLevel: "medium", // Default to medium risk if not specified
+      // Was hardcoded to "medium" for every request regardless of the
+      // capability's actual declared risk level, which made any policy rule
+      // scoped by risk level (e.g. "deny critical-risk tools") silently
+      // unenforceable — every request looked medium-risk to the engine.
+      // Callers that know the capability's real riskLevel (see
+      // CapabilityRequest.riskLevel) now pass it through; "medium" remains
+      // the fallback for callers that don't.
+      riskLevel: request.riskLevel || "medium",
       scopes: activeScopes,
       approvalToken: token,
       sideEffect: request.sideEffect,

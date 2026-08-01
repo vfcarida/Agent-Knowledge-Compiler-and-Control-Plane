@@ -15,6 +15,9 @@ export function explainPolicy(policy: PolicyCard): string {
   if (policy.appliesTo) {
     lines.push("--- Applies To ---");
     lines.push(`Capabilities: ${policy.appliesTo.capabilities.join(", ")}`);
+    if (policy.appliesTo.riskLevels) {
+      lines.push(`Risk Levels: ${policy.appliesTo.riskLevels.join(", ")}`);
+    }
     lines.push("");
   }
 

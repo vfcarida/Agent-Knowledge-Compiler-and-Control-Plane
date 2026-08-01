@@ -1,56 +1,52 @@
-policyVersion: 1
-description: >
-  Master incident response policy for the IT Operations domain.
-  Governs which agent capabilities are allowed at each incident severity level,
-  what requires human approval, and what is permanently disallowed.
-
-# Capability risk tiers and approval requirements
-capabilities:
-  query_logs:
-    riskLevel: "low"
-    requiresApproval: false
-    allowedAtSeverities: ["SEV-1", "SEV-2", "SEV-3", "SEV-4", "SEV-5"]
-    notes: "Read-only. Agent may invoke without approval at any severity."
-
-  get_runbook:
-    riskLevel: "low"
-    requiresApproval: false
-    allowedAtSeverities: ["SEV-1", "SEV-2", "SEV-3", "SEV-4", "SEV-5"]
-    notes: "Knowledge retrieval only. No side effects."
-
-  create_incident:
-    riskLevel: "medium"
-    requiresApproval: false
-    allowedAtSeverities: ["SEV-1", "SEV-2", "SEV-3", "SEV-4", "SEV-5"]
-    notes: "Creates an incident record. Does not execute any remediation."
-
-  escalate_incident:
-    riskLevel: "medium"
-    requiresApproval: true
-    approvalRequired: "on-call-lead"
-    allowedAtSeverities: ["SEV-1", "SEV-2", "SEV-3"]
-    notes: "Escalation beyond L1 requires approval."
-
-  execute_remediation:
-    riskLevel: "critical"
-    requiresApproval: true
-    approvalRequired: "on-call-lead"
-    allowedAtSeverities: ["SEV-1", "SEV-2", "SEV-3"]
-    notes: >
-      The agent MUST surface the remediation plan and request approval.
-      AKCP will block execution unless an approvalTicketId is present and valid.
-      This capability is DISABLED for SEV-4 and SEV-5 (use change window process instead).
-
-# Permanently disallowed agent behaviors
-forbidden:
-  - "Execute any destructive action without a valid approvalTicketId"
-  - "Expose credentials, passwords, secrets, or tokens in any output or log"
-  - "Modify production database records directly"
-  - "Disable monitoring or alerting systems"
-  - "Bypass the change-window policy without documented emergency approval"
-
-# Audit requirements
-audit:
-  allActions: true
-  retentionDays: 90
-  format: "akcp.audit/v1"
+apiVersion: policy.akcp.dev/v1alpha1
+kind: PolicyCard
+metadata:
+  name: "IT Operations Incident Response Policy"
+  description: >
+    Master incident response policy for the IT Operations domain. Governs
+    which agent capabilities are allowed at each incident severity level,
+    what requires human approval, and what is permanently disallowed.
+# Read-only / low-risk capabilities: allowed without approval.
+appliesTo:
+  capabilities:
+    - it-operations.query_logs
+    - it-operations.get_runbook
+    - it-operations.create_incident
+rules:
+  - effect: allow
+spec:
+  allowedTools:
+    - it-operations.query_logs
+    - it-operations.get_runbook
+    - it-operations.create_incident
+    - it-operations.escalate_incident
+    - it-operations.execute_remediation
+  # escalate_incident and execute_remediation are allowed but always require
+  # approval, regardless of appliesTo's narrower read-only scope above — see
+  # policies/adapter.ts's "Approval requirements per tool" rule, which is
+  # independent of appliesTo.
+  approvalRequirements:
+    - it-operations.escalate_incident
+    - it-operations.execute_remediation
+  evidenceRequirements:
+    - "incidentSeverity"
+    - "approvalTicketId"
+  piiHandling: deny
+evidence:
+  required: ["incidentSeverity", "approvalTicketId"]
+# Permanently disallowed agent behaviors — natural-language safety
+# constraints, not machine-checkable tool identifiers. There is no policy
+# engine feature yet that enforces free-text constraints like these; they
+# remain operator/reviewer guidance until one exists:
+#   - Execute any destructive action without a valid approvalTicketId
+#   - Expose credentials, passwords, secrets, or tokens in any output or log
+#   - Modify production database records directly
+#   - Disable monitoring or alerting systems
+#   - Bypass the change-window policy without documented emergency approval
+#
+# Per-severity capability gating (query_logs/get_runbook allowed at all
+# severities; escalate_incident/execute_remediation require approval and are
+# disabled below SEV-3) is also not yet representable — PolicyCardSchema has
+# no severity concept. Audit requirements (allActions, 90-day retention,
+# akcp.audit/v1 format) are configured at the audit-log-service level, not
+# per-policy.

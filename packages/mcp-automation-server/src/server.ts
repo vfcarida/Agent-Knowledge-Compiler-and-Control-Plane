@@ -28,6 +28,17 @@ import { auditLogger } from "./audit/audit-log.js";
 import { automationServerCapabilities } from "./capabilities.js";
 import type { IApprovalStore } from "./approval/types.js";
 
+/**
+ * Looks up a registered capability's declared risk level for a tool name, so
+ * policy rules scoped by risk level (e.g. "deny critical-risk tools") can
+ * actually be enforced — MCPGateway used to default every request to
+ * "medium" regardless of the capability actually being invoked.
+ */
+function riskLevelFor(toolName: string): string | undefined {
+  return automationServerCapabilities.find((c) => c.name === toolName)
+    ?.riskLevel;
+}
+
 const approvalStore: IApprovalStore = process.env.REDIS_URL
   ? new RedisApprovalStore()
   : new ApprovalStore();
@@ -89,6 +100,7 @@ export class AKCPAutomationServer {
             {
               requestId: reqId,
               toolName,
+              riskLevel: riskLevelFor(toolName),
               sideEffect: "read",
               agentId: _agentId,
               payload: { jobUrl, _approvalToken },
@@ -182,6 +194,7 @@ export class AKCPAutomationServer {
             {
               requestId: reqId,
               toolName,
+              riskLevel: riskLevelFor(toolName),
               sideEffect: "read",
               agentId: _agentId,
               payload: { jobUrl },
@@ -339,6 +352,7 @@ export class AKCPAutomationServer {
             {
               requestId: reqId,
               toolName,
+              riskLevel: riskLevelFor(toolName),
               sideEffect: "submit",
               agentId: _agentId,
               payload: {
@@ -587,6 +601,7 @@ export class AKCPAutomationServer {
             {
               requestId: reqId,
               toolName,
+              riskLevel: riskLevelFor(toolName),
               sideEffect: "read",
               agentId: _agentId,
               payload: {},
@@ -668,6 +683,7 @@ export class AKCPAutomationServer {
             {
               requestId: reqId,
               toolName,
+              riskLevel: riskLevelFor(toolName),
               sideEffect: "write",
               agentId: _agentId,
               payload: { approvalToken, approverIdentity },
@@ -757,6 +773,7 @@ export class AKCPAutomationServer {
             {
               requestId: reqId,
               toolName,
+              riskLevel: riskLevelFor(toolName),
               sideEffect: "write",
               agentId: _agentId,
               payload: { approvalToken, approverIdentity },
@@ -845,6 +862,7 @@ export class AKCPAutomationServer {
             {
               requestId: reqId,
               toolName,
+              riskLevel: riskLevelFor(toolName),
               sideEffect: "read",
               agentId: _agentId,
               payload: { limit },

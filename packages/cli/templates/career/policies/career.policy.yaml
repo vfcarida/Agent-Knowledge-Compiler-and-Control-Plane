@@ -1,18 +1,21 @@
-id: career-starter-policy
-name: "Career Domain Starter Policy"
-description: "Safeguards for career-related MCP tools, enforcing read-only behavior for personal knowledge."
-defaultAutonomyLevel: read-only
-piiHandling: allow
+apiVersion: policy.akcp.dev/v1alpha1
+kind: PolicyCard
+metadata:
+  name: "Career Domain Starter Policy"
+  description: "Safeguards for career-related MCP tools, enforcing read-only behavior for personal knowledge."
+appliesTo:
+  capabilities: ["*"]
+  riskLevels: ["critical"]
 rules:
-  - id: prevent-writes
-    effect: deny
-    condition: "resource.sideEffects == 'external-write' || resource.sideEffects == 'state-write'"
-    description: "Personal career datasets are immutable at runtime. Tools cannot modify state."
-  - id: allow-low-risk
-    effect: allow
-    condition: "resource.riskLevel == 'low' || resource.riskLevel == 'medium'"
-    description: "Allow analysis and summarization tools without human approval."
-  - id: deny-critical-risk
-    effect: deny
-    condition: "resource.riskLevel == 'critical'"
-    description: "Career tools should not have critical risk."
+  # Career tools should not have critical risk.
+  - effect: deny
+spec:
+  allowedTools: ["*"]
+  # Personal career datasets are immutable at runtime — write/submit tools
+  # are denied outright rather than merely requiring approval, since this
+  # domain has no legitimate use for modifying personal knowledge at runtime.
+  sideEffectRules:
+    read: allow
+    write: deny
+    submit: deny
+  piiHandling: allow-with-audit

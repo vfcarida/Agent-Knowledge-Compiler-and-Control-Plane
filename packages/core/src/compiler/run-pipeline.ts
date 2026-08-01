@@ -14,6 +14,7 @@ import { ValidateStage } from "./stages/validate.js";
 import { LifecycleValidator } from "../validation/lifecycle-rules.js";
 import { CapabilityValidator } from "../validation/capability-rules.js";
 import { AgentKnowledgeIRSchema } from "../ir/schema.js";
+import { detectSourceOkfVersion } from "../infrastructure/okf-version.js";
 
 const DEFAULT_STAGES: PipelineStage[] = [
   new IngestStage(),
@@ -58,7 +59,11 @@ export async function runCompilerPipelineDetailed(
 
   const ir: AgentKnowledgeIR = {
     irVersion: "1.0.0",
-    okfVersion: "0.1.0",
+    // The real OKF v0.2 version the source bundle declared in its root
+    // index.md, or "unspecified" if it didn't (a valid, spec-sanctioned
+    // omission — see detectSourceOkfVersion). This used to be a hardcoded
+    // "0.1.0" that didn't reflect anything about the actual source bundle.
+    okfVersion: detectSourceOkfVersion(bundlePath) ?? "unspecified",
     bundleId: options.bundleId || basename(bundlePath),
     buildId: `bld_${randomUUID().split("-")[0]}`,
     timestamp: new Date().toISOString(),
