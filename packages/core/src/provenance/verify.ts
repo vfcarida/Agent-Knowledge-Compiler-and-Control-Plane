@@ -39,9 +39,30 @@ export async function verifyManifest(
   const basePath = process.cwd(); // Assume paths in manifest are relative to CWD
 
   for (const target of manifest.targets) {
+    // Some targets (e.g. openwiki) record a single output that is a directory,
+    // not a file — hashFile() does fs.readFile() on it and throws EISDIR, which
+    // used to crash the whole command since only ENOENT was handled. Check the
+    // path type first so directory targets fall through to the existence-only
+    // verification below instead.
+    const singleOutputPath =
+      target.outputs.length === 1 ? (target.outputs[0] as string) : undefined;
+    let singleOutputIsFile = false;
+    if (singleOutputPath) {
+      try {
+        const stat = await fs.stat(path.resolve(basePath, singleOutputPath));
+        singleOutputIsFile = stat.isFile();
+      } catch {
+        singleOutputIsFile = false;
+      }
+    }
+
     // Only verify hash if we have a single primary output matching the recorded hash
-    if (target.outputs.length === 1 && typeof target.hash === "string") {
-      const outputPath = target.outputs[0] as string;
+    if (
+      singleOutputPath &&
+      singleOutputIsFile &&
+      typeof target.hash === "string"
+    ) {
+      const outputPath = singleOutputPath;
       const fullTargetPath = path.resolve(basePath, outputPath);
       try {
         const currentHash = await hashFile(fullTargetPath);
@@ -49,7 +70,6 @@ export async function verifyManifest(
           report.isValid = false;
           report.tamperedFiles.push(outputPath);
         }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         if (err.code === "ENOENT") {
           report.isValid = false;
@@ -64,7 +84,6 @@ export async function verifyManifest(
         const fullTargetPath = path.resolve(basePath, outputPath);
         try {
           await fs.access(fullTargetPath);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
           if (err.code === "ENOENT") {
             report.isValid = false;

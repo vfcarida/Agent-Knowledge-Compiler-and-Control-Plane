@@ -75,12 +75,19 @@ describe("Golden Compiler Tests", () => {
     // Check manifest exists
     expect(fs.existsSync(outManifest)).toBe(true);
 
-    // Snapshot manifest (scrubbed of machine-dependent values for portability)
+    // Snapshot manifest (scrubbed of machine-dependent values for portability).
+    // Serialized to a real JSON string (not the raw object) before snapshotting:
+    // toMatchFileSnapshot on an object uses vitest's own JS-like pretty-printer
+    // (which emits trailing commas), but prettier reformats ".json"-named
+    // snapshot files as strict JSON on every commit (via lint-staged) — the two
+    // serializations never agree, so the test would fail right after any commit
+    // touched the snapshot. Passing a JSON string makes the file's on-disk
+    // format and the comparison format the same thing.
     const manifest = scrubManifest(
       JSON.parse(fs.readFileSync(outManifest, "utf-8")),
     );
 
-    await expect(manifest).toMatchFileSnapshot(
+    await expect(JSON.stringify(manifest, null, 2)).toMatchFileSnapshot(
       "__snapshots__/career-manifest.json",
     );
   });
@@ -101,12 +108,12 @@ describe("Golden Compiler Tests", () => {
     // Check manifest exists
     expect(fs.existsSync(outManifest)).toBe(true);
 
-    // Snapshot manifest (scrubbed of machine-dependent values for portability)
+    // Snapshot manifest (scrubbed of machine-dependent values; see comment above)
     const manifest = scrubManifest(
       JSON.parse(fs.readFileSync(outManifest, "utf-8")),
     );
 
-    await expect(manifest).toMatchFileSnapshot(
+    await expect(JSON.stringify(manifest, null, 2)).toMatchFileSnapshot(
       "__snapshots__/it-operations-manifest.json",
     );
   });

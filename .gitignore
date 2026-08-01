@@ -56,3 +56,8 @@ packages/reports/
 
 # Leftover CLI init test output (never commit)
 /test-init-tmp/
+
+# Incremental compiler build-state cache (machine/run-specific — a committed
+# cache made first-compile-after-clone a silent no-op for anyone, including
+# the shipped CLI templates and quickstart examples)
+.akcp/

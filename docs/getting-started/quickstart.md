@@ -24,21 +24,26 @@ pnpm akcp compile --config examples/domains/it-operations/akcp.yaml
 ## What did this do?
 
 1. **`pnpm akcp validate`**: Validated the schema, structure, and integrity of the bundle. You should see a success report indicating all files are valid.
-2. **`pnpm akcp compile`**: Ingested the raw markdown files, built the Agent Knowledge IR (AK-IR) in memory, linked all references, and generated compiled targets to `examples/domains/it-operations/.akcp/cache/build-state.json`. You can inspect this file to see the parsed knowledge graph.
+2. **`pnpm akcp compile`**: Ingested the raw markdown files, built the Agent Knowledge IR (AK-IR) in memory, linked all references, and wrote compiled targets to `examples/domains/it-operations/dist/` (`agent-knowledge-ir.json`, `mcp-resources.json`, `openwiki/`, `dashboard-meta.json`) plus a build manifest at `dist/akcp-manifest.json`. `.akcp/cache/build-state.json` is a separate, internal incremental-build cache — not the compiled output.
 
 ## Serving to Agents
 
 Once compiled, you can boot the local MCP server to allow AI Agents (like Claude or Cursor) to interact with the capabilities:
 
 ```bash
-pnpm akcp serve mcp --profile it-operations
+pnpm akcp serve mcp --profile it-operations --ir examples/domains/it-operations/dist/agent-knowledge-ir.json
 ```
 
-You should see output similar to:
+You should see output similar to (real transcript):
+
 ```
-[MCP Server] Starting on stdio
-[MCP Server] Registered 3 resources, 5 tools
+[INFO] Booting MCP Server (Profile: it-operations) for bundle at <cwd>
+[AKCP Telemetry] OpenTelemetry NodeSDK initialized successfully.
+[AKCP Profile Server] Initializing with Context Pack at: <cwd>/examples/domains/it-operations/dist/agent-knowledge-ir.json
+[AKCP Profile Server] Successfully connected via stdio transport.
 ```
+
+The process then stays running, waiting for an MCP client (e.g. Claude Desktop, Cursor) to connect over stdio — press Ctrl+C to stop it.
 
 ## Next Steps
 

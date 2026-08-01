@@ -87,3 +87,22 @@ export class FrontmatterParser implements IFrontmatterParser {
     return matter.stringify(body, frontmatter);
   }
 }
+
+/**
+ * Returns true if `rawContent` appears to declare a YAML frontmatter block at
+ * all (gray-matter parsed at least one key), as opposed to plain markdown with
+ * no frontmatter delimiters. Used by the normalize stage to distinguish a
+ * genuine authoring mistake (frontmatter present but malformed/invalid — worth
+ * a warning) from an intentionally-plain document like README.md falling back
+ * to a generic "Document" concept type, which is expected and not an error.
+ */
+export function hasFrontmatterAttempt(rawContent: string): boolean {
+  try {
+    const parsed = matter(rawContent);
+    return Object.keys(parsed.data || {}).length > 0;
+  } catch {
+    // gray-matter itself failed on the YAML block — that's an attempted-but-
+    // broken frontmatter block, not the absence of one.
+    return true;
+  }
+}

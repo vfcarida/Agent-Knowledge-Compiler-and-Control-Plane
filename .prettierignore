@@ -1,0 +1,11 @@
+# Machine-generated test fixtures — vitest's toMatchFileSnapshot() writes these
+# without a trailing newline and compares them byte-for-byte against a freshly
+# serialized string. Letting prettier "fix" the formatting (it adds a trailing
+# newline) breaks that comparison on every commit that touches them.
+packages/cli/src/__tests__/__snapshots__/*.json
+
+# Build artifacts / generated output
+dist/
+packages/*/dist/
+coverage/
+packages/core/reports/

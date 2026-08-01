@@ -16,37 +16,35 @@ AI agents today suffer from structural hallucination: they lack deterministic gr
 
 ```bash
 # Input: organizational runbooks, incident procedures, SLOs
-examples/domains/it-operations/runbooks/high-cpu.md
+examples/domains/it-operations/sources/runbooks/high-cpu.md
 examples/domains/it-operations/policies/execute_remediation.policy.yaml
 
 # Compile into governed, agent-consumable artifacts
 pnpm akcp compile --config examples/domains/it-operations/akcp.yaml
 
-# Output:
-# → dist/agent-knowledge-ir.json        (normalized runbook IR)
-# → dist/mcp-resources.json       (MCP tools: diagnose, remediate, escalate)
-# → dist/policy-bundle.json       (HITL requirements, side-effect rules)
-# → dist/eval-dataset.json        (incident response scenarios)
+# Output (targets declared in that bundle's akcp.yaml):
+# → dist/agent-knowledge-ir.json  (normalized knowledge IR)
+# → dist/mcp-resources.json       (MCP resource/tool manifest)
+# → dist/openwiki/                (OpenWiki-style docs)
+# → dist/dashboard-meta.json      (dashboard metadata)
+# → dist/akcp-manifest.json       (provenance/build manifest)
 ```
 
 ## In Action
+
+The two transcripts below are copy-pasted from real runs against this repo's own example bundles (not hand-written) — try them yourself after `pnpm install && pnpm -r build`.
 
 <details>
 <summary>CLI Compile Output</summary>
 
 ```bash
-$ pnpm akcp compile --config examples/domains/it-operations/akcp.yaml
-[AKCP] Loading config: examples/domains/it-operations/akcp.yaml
-[AKCP] Profile: it-operations
-[AKCP] Sources: 1 connector (okf-directory)
-[AKCP] Pipeline: Ingest → Normalize → Privacy → Enrich → LinkExtract → Validate
-[AKCP] Compiled 12 concepts, 8 links, 5 policies
-[AKCP] Targets:
-  ✓ dist/agent-knowledge-ir.json (AK-IR)
-  ✓ dist/mcp-resources.json (MCP Resources)
-  ✓ dist/openwiki/ (OpenWiki Docs)
-  ✓ dist/dashboard-meta.json (Dashboard Metadata)
-[AKCP] Build complete in 340ms
+$ node packages/cli/dist/index.js compile --config examples/domains/it-operations/akcp.yaml
+[INFO] Compiling context pack from examples/domains/it-operations/akcp.yaml (target: all)
+[INFO] Running target: context-pack -> examples/domains/it-operations/dist/agent-knowledge-ir.json
+[INFO] Running target: mcp-resources -> examples/domains/it-operations/dist/mcp-resources.json
+[INFO] Running target: openwiki -> examples/domains/it-operations/dist/openwiki
+[INFO] Running target: dashboard-metadata -> examples/domains/it-operations/dist/dashboard-meta.json
+[OK] Compilation complete. Manifest written to examples/domains/it-operations/dist/akcp-manifest.json
 ```
 
 </details>
@@ -54,27 +52,43 @@ $ pnpm akcp compile --config examples/domains/it-operations/akcp.yaml
 <details>
 <summary>Policy Card Enforcement</summary>
 
+Using the schema-compliant example at
+[`docs/specs/examples/strict-enterprise.policy.yaml`](docs/specs/examples/strict-enterprise.policy.yaml)
+(the shape `policy validate`/`policy explain` actually enforce — see
+[docs/specs/policy-cards.md](docs/specs/policy-cards.md)):
+
 ```bash
-$ akcp policy explain examples/domains/it-operations/policies/execute_remediation.policy.yaml
+$ node packages/cli/dist/index.js policy explain docs/specs/examples/strict-enterprise.policy.yaml
 
-Policy: execute_remediation
-Risk Level: critical
-Side Effect: external-write
-Default Mode: disabled (requires HITL approval)
+Policy Name: Strict Enterprise Governance
+Description: Highly restrictive policy for sensitive operations.
+Version: 1.0.0
 
-Approval Requirements:
-  - TTL: 10 minutes
-  - Bound to payload hash (tamper-proof)
-  - Single use
-  - Approver roles: on-call-lead, engineering-manager
+--- Access Rules (V1) ---
+Allowed Agents: trusted-automation-agent
+Allowed Tools: read_document
+Forbidden Tools: delete_document
 
-Safety Rules:
-  - NEVER execute in production outside change window for SEV > 2
-  - Logs must not contain: credential, password, secret, token
+--- Side Effects (V1) ---
+Read Actions: audit
+Write Actions: deny
+Submit Actions: deny
 
-NIST AI RMF: GOVERN 1.1, MAP 2.3
-OWASP LLM: LLM06 (Excessive Agency)
+--- Requirements (V1) ---
+PII Handling: deny
+Explicit Approval For: *
+Evidence Required: Full session recording
+
+--- Framework Mappings (V1) ---
+NIST AI RMF: GOVERN 1.1
+OWASP LLM Top 10: LLM08: Excessive Agency
 ```
+
+> **Known gap:** the policy files shipped under `examples/domains/*/policies/` predate this
+> schema and use their own (mutually inconsistent) shapes — running `policy explain` against
+> those specific files currently prints almost nothing, because none of their fields match
+> `PolicyCardSchema`. Tracked as a real architectural gap, not yet fixed; see
+> [docs/project/deep-analysis-round2.md](docs/project/deep-analysis-round2.md).
 
 </details>
 

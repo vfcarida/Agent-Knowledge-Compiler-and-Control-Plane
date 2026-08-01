@@ -1,54 +1,58 @@
 {
+  "schemaVersion": "akcp.artifact-manifest/v1",
   "buildId": "deterministic_build_id",
+  "createdAt": "2026-01-01T00:00:00.000Z",
+  "source": {
+    "root": "<WORKSPACE>/examples/domains/career",
+    "config": "akcp.yaml",
+    "hash": "deterministic_config_hash"
+  },
   "compiler": {
     "name": "akcp",
     "version": "0.1.0"
   },
-  "conformance": {
-    "checks": [],
-    "level": "AKCP-control-plane-compatible"
-  },
-  "createdAt": "2026-01-01T00:00:00.000Z",
-  "diagnostics": [],
-  "schemaVersion": "akcp.artifact-manifest/v1",
-  "source": {
-    "config": "akcp.yaml",
-    "hash": "deterministic_config_hash",
-    "root": "<WORKSPACE>/examples/domains/career"
-  },
   "targets": [
     {
-      "hash": "deterministic_hash",
       "name": "ir-json",
-      "outputs": ["<WORKSPACE>/examples/domains/career/dist/context-pack.json"],
-      "sizeBytes": 0,
-      "status": "success"
+      "status": "success",
+      "outputs": [
+        "<WORKSPACE>/examples/domains/career/dist/context-pack.json"
+      ],
+      "hash": "deterministic_hash",
+      "sizeBytes": 0
     },
     {
-      "hash": "deterministic_hash",
       "name": "openwiki",
-      "outputs": ["<WORKSPACE>/examples/domains/career/dist/openwiki"],
-      "sizeBytes": 0,
-      "status": "success"
+      "status": "success",
+      "outputs": [
+        "<WORKSPACE>/examples/domains/career/dist/openwiki"
+      ],
+      "hash": "deterministic_hash",
+      "sizeBytes": 0
     },
     {
-      "hash": "deterministic_hash",
       "name": "mcp-resources-manifest",
+      "status": "success",
       "outputs": [
         "<WORKSPACE>/examples/domains/career/dist/akcp-manifest.json"
       ],
-      "sizeBytes": 0,
-      "status": "success"
+      "hash": "deterministic_hash",
+      "sizeBytes": 0
     },
     {
-      "hash": "deterministic_hash",
       "name": "dashboard-metadata",
+      "status": "success",
       "outputs": [
         "<WORKSPACE>/examples/domains/career/dist/dashboard-meta.json"
       ],
-      "sizeBytes": 0,
-      "status": "success"
+      "hash": "deterministic_hash",
+      "sizeBytes": 0
     }
   ],
+  "diagnostics": [],
+  "conformance": {
+    "level": "AKCP-control-plane-compatible",
+    "checks": []
+  },
   "timestamp": "2026-01-01T00:00:00.000Z"
 }

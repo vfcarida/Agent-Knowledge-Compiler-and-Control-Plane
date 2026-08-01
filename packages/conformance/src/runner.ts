@@ -51,6 +51,12 @@ export class ConformanceRunner {
           file === "walkthrough.md" ||
           file === "FLAGSHIP_AUDIT.md" ||
           file === "scorecard.md" ||
+          // AGENTS.md is a reserved filename in the wider agent-instructions
+          // ecosystem (agents.md) — free-form instructions, not an OKF concept
+          // with a `type` field. Every CLI-generated template ships one, so
+          // without this exclusion `akcp init` bundles failed their own
+          // conformance check before a user changed anything.
+          file === "AGENTS.md" ||
           file.includes(path.sep + "dist" + path.sep) ||
           file.startsWith("dist" + path.sep) ||
           file.includes(path.sep + "scenarios" + path.sep) ||
