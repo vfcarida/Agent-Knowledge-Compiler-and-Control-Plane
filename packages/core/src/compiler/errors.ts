@@ -34,7 +34,8 @@ export interface CompilerWarning {
     | "stale_document"
     | "unknown_source_type"
     | "missing_link_target"
-    | "pii_redacted";
+    | "pii_redacted"
+    | "frontmatter_parse_error";
   message: string;
   source?: string;
 }

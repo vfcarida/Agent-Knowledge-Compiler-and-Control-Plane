@@ -6,6 +6,7 @@ import {
   writeScanSuggestions,
   loadAkcpConfig,
   buildKnowledgeIR,
+  compile as compileToIR,
   IrJsonTarget,
   OpenWikiDocsTarget,
   AgentsMdTarget,
@@ -46,6 +47,30 @@ import { Command } from "commander";
 import fs from "fs";
 import path from "path";
 
+/**
+ * Merges the policy-relevant config scattered across akcp.yaml's top-level
+ * `policy:` block, `controlPlane.policies`, and `privacy.defaultPiiMode` into
+ * the shape BuildOptions.policies expects. Every caller that builds an IR from
+ * a loaded AkcpConfig should route through this — omitting it (as compile/
+ * scorecard both used to) leaves `ir.policies` empty regardless of what the
+ * bundle actually declares, which made scorecard/conformance score bundles as
+ * unpoliced even when they weren't.
+ */
+
+function resolveIrPolicies(config: any): Record<string, unknown> | undefined {
+  const rawPolicyBlock = config?.policy;
+  const merged = {
+    ...(config?.controlPlane?.policies || {}),
+    ...(rawPolicyBlock?.defaultAutonomyLevel
+      ? { defaultAutonomyLevel: rawPolicyBlock.defaultAutonomyLevel }
+      : {}),
+    ...(config?.privacy?.defaultPiiMode
+      ? { piiHandling: config.privacy.defaultPiiMode }
+      : {}),
+  };
+  return Object.keys(merged).length > 0 ? merged : undefined;
+}
+
 const program = new Command();
 
 program
@@ -85,7 +110,16 @@ program
     // Attempt to copy from Domain Adapter templates if available
     try {
       const cliDir = path.dirname(fileURLToPath(import.meta.url));
-      const profile = options.template || options.profile || "career";
+      const requestedProfile = options.template || options.profile || "career";
+      // This command's own --help text suggests "it-ops" as an example value,
+      // but the real template directory is named "it-operations" — that
+      // mismatch used to silently fall through to an empty profile with only
+      // a warning. Aliasing the documented/obvious short forms fixes the
+      // exact case the help text invites someone to hit.
+      const TEMPLATE_ALIASES: Record<string, string> = {
+        "it-ops": "it-operations",
+      };
+      const profile = TEMPLATE_ALIASES[requestedProfile] || requestedProfile;
 
       let templateDir = path.resolve(cliDir, "../templates", profile);
       if (!fs.existsSync(templateDir)) {
@@ -111,7 +145,6 @@ program
           `[WARN] Domain template '${profile}' not found. Initializing empty profile.`,
         );
       }
-      // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     } catch (e) {
       console.warn(
         `[WARN] Could not copy template for '${options.template || options.profile}'. Initializing empty profile.`,
@@ -184,7 +217,6 @@ program
         `node ${validatorPath} --bundle ${targetDir} --format ${options.format} --profile ${options.profile}`,
         { encoding: "utf-8", stdio: "inherit" },
       );
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Validation command failed:`, err.message);
       process.exit(1);
@@ -233,7 +265,6 @@ program
         );
         written.forEach((f) => console.log(`  - ${path.basename(f)}`));
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Scan failed: ${err.message}`);
       process.exit(1);
@@ -258,6 +289,17 @@ program
     "Enable full cryptographic provenance tracking",
     false,
   )
+  .option(
+    "--force",
+    "Bypass the incremental-build cache and always regenerate targets",
+    false,
+  )
+  .option(
+    "--strict",
+    "Exit non-zero if any source document has malformed/invalid frontmatter " +
+      "(by default these are skipped with a warning, not a failure)",
+    false,
+  )
   .action(async (options) => {
     const configInput = options.config || options.bundle || ".";
     console.log(
@@ -275,6 +317,38 @@ program
 
       const config = loadAkcpConfig(configPath);
 
+      // akcp.yaml's `policy.policies` (a list of *.policy.yaml file paths) was
+      // never actually read anywhere in the compile path — a policy file
+      // referenced there could be totally malformed and `compile` would still
+      // print [OK], because nothing ever tried to parse it until the
+      // automation server loaded it at runtime. Validate them now so a broken
+      // policy fails fast at compile time instead of at HITL-approval time.
+
+      const referencedPolicyPaths: string[] = (config as any).policy?.policies;
+      if (Array.isArray(referencedPolicyPaths)) {
+        const policyErrors: string[] = [];
+        for (const relPolicyPath of referencedPolicyPaths) {
+          const fullPolicyPath = path.resolve(targetDir, relPolicyPath);
+          try {
+            loadPolicy(fullPolicyPath);
+          } catch (err: any) {
+            policyErrors.push(`${relPolicyPath}: ${err.message}`);
+          }
+        }
+        if (policyErrors.length > 0) {
+          console.warn(
+            `[WARN] ${policyErrors.length} policy file(s) referenced in akcp.yaml failed to parse/validate:`,
+          );
+          for (const e of policyErrors) console.warn(`  - ${e}`);
+          if (options.strict) {
+            console.error(
+              `[ERROR] Exiting non-zero due to --strict and the policy issue(s) above.`,
+            );
+            process.exit(1);
+          }
+        }
+      }
+
       let capabilitiesPath = path.join(targetDir, "capabilities.json");
       if (!fs.existsSync(capabilitiesPath)) {
         capabilitiesPath = path.join(
@@ -287,19 +361,52 @@ program
       if (fs.existsSync(capabilitiesPath)) {
         try {
           capabilities = JSON.parse(fs.readFileSync(capabilitiesPath, "utf-8"));
-          // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
         } catch (e) {
           console.warn(`[WARNING] Failed to parse ${capabilitiesPath}`);
         }
       }
 
-      // 1. Build IR
-      const ir = await buildKnowledgeIR(targetDir, {
+      // 1. Build IR — via the Result-based compile() API (not the throwing
+      // buildKnowledgeIR helper) so real per-document warnings (e.g. malformed
+      // frontmatter that was silently downgraded to a generic "Document" type)
+      // actually reach the CLI instead of compilation reporting success no
+      // matter what happened to individual source files.
+      const compileResult = await compileToIR(targetDir, {
         sources: config.compile?.sources,
         generateProvenance: options.provenance,
         privacy: config.privacy,
         capabilities,
+        policies: resolveIrPolicies(config),
       });
+
+      if (!compileResult.ok) {
+        console.error(`[ERROR] Compilation failed:`);
+        for (const e of compileResult.error) {
+          console.error(`  - [${e.type}] ${e.message}`);
+        }
+        process.exit(1);
+      }
+
+      const { ir, warnings } = compileResult.value;
+
+      const frontmatterWarnings = warnings.filter(
+        (w) => w.type === "frontmatter_parse_error",
+      );
+      if (frontmatterWarnings.length > 0) {
+        console.warn(
+          `[WARN] ${frontmatterWarnings.length} document(s) had malformed or invalid frontmatter and were compiled as generic untyped documents:`,
+        );
+        for (const w of frontmatterWarnings) {
+          console.warn(`  - ${w.message}`);
+        }
+        if (options.strict) {
+          console.error(
+            `[ERROR] Exiting non-zero due to --strict and the frontmatter issue(s) above.`,
+          );
+          process.exit(1);
+        }
+      }
+
       const configHashStr = options.provenance ? hashConfig(config) : "none";
 
       const irSourceHashesStr = JSON.stringify(ir.sourceHashes || {});
@@ -312,7 +419,11 @@ program
       const fullManifestPath = path.resolve(targetDir, manifestPath);
       let skipTargetGeneration = false;
 
-      if (fs.existsSync(fullManifestPath)) {
+      if (options.force) {
+        console.log(
+          "[INFO] --force set: bypassing the incremental-build cache.",
+        );
+      } else if (fs.existsSync(fullManifestPath)) {
         try {
           const oldManifest = JSON.parse(
             fs.readFileSync(fullManifestPath, "utf-8"),
@@ -322,23 +433,22 @@ program
             oldManifest.source.hash === compileRunHash
           ) {
             console.log(
-              "[INFO] Intelligent Incremental Build: No changes detected in sources or config. Skipping target generation.",
+              "[INFO] Intelligent Incremental Build: No changes detected in sources or config. " +
+                "Skipping target generation. Use --force to regenerate anyway.",
             );
             skipTargetGeneration = true;
           }
-          // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
         } catch (e) {
           // ignore parsing error
         }
       }
 
       // 2. Select targets
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       let targetsToRun: any[] = config.compile?.targets || [];
       if (options.target !== "all") {
         // filter or force
         targetsToRun = (config.compile?.targets || []).filter(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (t: any) => t.type === options.target,
         );
         if (targetsToRun.length === 0) {
@@ -360,7 +470,7 @@ program
           checks: report.details,
         });
 
-        const confOutDir = path.resolve(process.cwd(), "dist/akcp");
+        const confOutDir = path.resolve(targetDir, "dist/akcp");
         if (!fs.existsSync(confOutDir)) {
           fs.mkdirSync(confOutDir, { recursive: true });
         }
@@ -368,12 +478,10 @@ program
           path.join(confOutDir, "conformance-report.json"),
           JSON.stringify(report, null, 2),
         );
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         console.warn(`[WARN] Failed to run conformance: ${err.message}`);
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const targetInstances: Record<string, any> = {
         "context-pack": new IrJsonTarget(),
         openwiki: new OpenWikiDocsTarget(),
@@ -398,10 +506,21 @@ program
 
           const targetImpl = targetInstances[targetConf.type];
           if (targetImpl) {
+            // Every target implementation (packages/core/src/targets/*.ts) does
+            // path.resolve(process.cwd(), config.out) internally, so a relative
+            // `out` (the normal case — e.g. "dist/context-pack.json") landed
+            // wherever the CLI happened to be invoked from, not in the bundle
+            // being compiled. Pre-resolving against targetDir here fixes every
+            // target at once: path.resolve() is a no-op on an already-absolute
+            // path, regardless of cwd.
+            const resolvedTargetConf = {
+              ...targetConf,
+              out: path.resolve(targetDir, targetConf.out),
+            };
             console.log(
-              `[INFO] Running target: ${targetConf.type} -> ${targetConf.out}`,
+              `[INFO] Running target: ${targetConf.type} -> ${resolvedTargetConf.out}`,
             );
-            const output = await targetImpl.compile(ir, targetConf);
+            const output = await targetImpl.compile(ir, resolvedTargetConf);
             manifestBuilder.addOutput(output);
           } else {
             console.error(
@@ -423,7 +542,6 @@ program
           `[OK] Compilation complete. Manifest written to ${fullManifestPath}`,
         );
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Compilation failed: ${err.message}`);
       process.exit(1);
@@ -443,22 +561,25 @@ program
         process.exit(1);
       }
       const raw = fs.readFileSync(fullPath, "utf-8");
+      // Field names below match BuildManifest (packages/core/src/provenance/types.ts):
+      // schemaVersion/buildId/createdAt/source/targets[].{name,outputs,hash,sizeBytes} —
+      // this used to read version/bundleId/timestamp/targetType/outputPath/bytesWritten,
+      // none of which exist on the real manifest shape, so every field printed "undefined".
       const manifest = JSON.parse(raw);
       console.log(`\n=== AKCP Artifact Manifest ===`);
-      console.log(`Version: ${manifest.version}`);
+      console.log(`Schema Version: ${manifest.schemaVersion}`);
       console.log(`Build ID: ${manifest.buildId}`);
-      console.log(`Bundle ID: ${manifest.bundleId}`);
-      console.log(`Timestamp: ${manifest.timestamp}`);
+      console.log(`Source Root: ${manifest.source?.root}`);
+      console.log(`Created At: ${manifest.createdAt}`);
       console.log(`\n=== Targets Generated (${manifest.targets.length}) ===`);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       manifest.targets.forEach((t: any) => {
-        console.log(`- ${t.targetType}`);
-        console.log(`  Output: ${t.outputPath}`);
-        console.log(`  Hash:   ${t.hash}`);
-        console.log(`  Size:   ${t.bytesWritten} bytes`);
+        console.log(`- ${t.name} (${t.status})`);
+        console.log(`  Outputs: ${(t.outputs || []).join(", ")}`);
+        console.log(`  Hash:    ${t.hash ?? "n/a"}`);
+        console.log(`  Size:    ${t.sizeBytes ?? "n/a"} bytes`);
       });
       console.log();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Failed to inspect artifact: ${err.message}`);
       process.exit(1);
@@ -497,7 +618,6 @@ program
         }
         process.exit(1);
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Verification failed: ${err.message}`);
       process.exit(1);
@@ -558,7 +678,7 @@ program
       console.log(`- Files skipped: ${report.documentsSkipped}`);
       if (report.diagnostics.length > 0) {
         console.log(`\nDiagnostics:`);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         report.diagnostics.forEach((d: any) => {
           console.log(`  - [${d.level.toUpperCase()}] ${d.message}`);
         });
@@ -571,7 +691,6 @@ program
           `\n[OK] Import complete. Remember to instruct AGENTS.md to use this context.`,
         );
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Import failed: ${err.message}`);
       process.exit(1);
@@ -603,8 +722,13 @@ serveCmd
     );
 
     try {
-      const require = createRequire(import.meta.url);
-      const serverPath = require.resolve("@akcp/mcp-profile-server");
+      // require.resolve() (CJS resolution) fails on @akcp/mcp-profile-server
+      // with "No \"exports\" main defined" — that package is ESM-only and its
+      // exports map only declares an "import" condition, which the CJS
+      // resolver doesn't match. import.meta.resolve() is the ESM-native
+      // equivalent and resolves it correctly.
+      const resolvedUrl = await import.meta.resolve("@akcp/mcp-profile-server");
+      const serverPath = fileURLToPath(resolvedUrl);
 
       const child = spawn("node", [serverPath], {
         stdio: "inherit",
@@ -618,7 +742,6 @@ serveCmd
       child.on("close", (code) => {
         process.exit(code ?? 0);
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Failed to launch MCP server: ${err.message}`);
       process.exit(1);
@@ -710,7 +833,6 @@ const evalsCmd = program
           console.log("=========================\n");
         }
         process.exit(result.passed ? 0 : 1);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         console.error(`[ERROR] Scenario failed: ${err.message}`);
         process.exit(1);
@@ -738,7 +860,6 @@ evalsCmd
         fs.mkdirSync(reportDir, { recursive: true });
       }
       harness.generateReport(reportDir);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Evals run failed: ${err.message}`);
       process.exit(1);
@@ -757,7 +878,6 @@ docsCmd
     console.log(`[INFO] Running docs doctor...`);
     try {
       execSync("pnpm check:docs", { encoding: "utf-8", stdio: "inherit" });
-      // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Docs checks failed.`);
       process.exit(1);
@@ -826,7 +946,6 @@ program
           `[INFO] No files were modified (either up-to-date or missing).`,
         );
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Sync failed: ${err.message}`);
       process.exit(1);
@@ -846,7 +965,6 @@ program
       const configPath = path.resolve(process.cwd(), options.file);
       loadAkcpConfig(configPath);
       console.log(`[OK] Configuration is valid.`);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Validation failed:\n${err.message}`);
       process.exit(1);
@@ -867,7 +985,6 @@ policyCmd
       const fullPath = path.resolve(process.cwd(), file);
       loadPolicy(fullPath);
       console.log(`[OK] Policy is structurally valid and well-formed.`);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Policy validation failed:\n${err.message}`);
       process.exit(1);
@@ -883,7 +1000,6 @@ policyCmd
       const fullPath = path.resolve(process.cwd(), file);
       const policy = loadPolicy(fullPath);
       console.log(explainPolicy(policy));
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Failed to explain policy:\n${err.message}`);
       process.exit(1);
@@ -901,7 +1017,6 @@ program
       const config = loadAkcpConfig(configPath);
       const plan = generateBuildPlan(config);
       console.log(printBuildPlan(plan));
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Plan failed:\n${err.message}`);
       process.exit(1);
@@ -930,7 +1045,6 @@ program
         console.warn(`[WARN] ${result.message}`);
         result.differences.forEach((d: string) => console.log(`  - ${d}`));
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Reconcile failed:\n${err.message}`);
       process.exit(1);
@@ -958,7 +1072,6 @@ graphCmd
       let config;
       try {
         config = loadAkcpConfig(path.join(targetDir, "akcp.yaml"));
-        // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
       } catch (e) {
         config = {
           compile: { sources: [{ type: "okf-directory", path: targetDir }] },
@@ -977,7 +1090,6 @@ graphCmd
       });
 
       console.log(`[OK] Graph generated at ${output.outputPath}`);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Graph build failed: ${err.message}`);
       process.exit(1);
@@ -1002,17 +1114,15 @@ graphCmd
       const graphData = JSON.parse(fs.readFileSync(graphPath, "utf-8"));
 
       const incoming = graphData.edges.filter(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (e: any) => e.target === options.concept,
       );
       const outgoing = graphData.edges.filter(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (e: any) => e.source === options.concept,
       );
 
       console.log(`\n=== Concept: ${options.concept} ===`);
       console.log(`Outgoing Links (${outgoing.length}):`);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       outgoing.forEach((e: any) =>
         console.log(
           `  -> ${e.target} [${e.relation}] ${e.isBroken ? "(BROKEN)" : ""}`,
@@ -1020,12 +1130,11 @@ graphCmd
       );
 
       console.log(`\nIncoming Links (${incoming.length}):`);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       incoming.forEach((e: any) =>
         console.log(`  <- ${e.source} [${e.relation}]`),
       );
       console.log();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Inspect failed: ${err.message}`);
       process.exit(1);
@@ -1062,7 +1171,6 @@ graphCmd
         impacted.forEach((id: string) => console.log(`  - ${id}`));
       }
       console.log();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Impact analysis failed: ${err.message}`);
       process.exit(1);
@@ -1098,7 +1206,6 @@ contextCmd
       const config = loadAkcpConfig(configPath);
       const sources = config.compile?.sources || [];
       const dirSource = sources.find(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (s: any) =>
           s.type === "okf-directory" || s.type === "markdown-directory",
       );
@@ -1141,7 +1248,7 @@ contextCmd
       console.log(`Included Docs:    ${manifest.documentsIncluded.length}`);
       console.log(`Excluded Docs:    ${manifest.documentsExcluded.length}`);
       console.log("\n[INCLUDED]");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       manifest.documentsIncluded.forEach((doc: any) => {
         console.log(`  - ${doc.title} (ID: ${doc.id})`);
         console.log(
@@ -1150,7 +1257,7 @@ contextCmd
       });
 
       console.log("\n[EXCLUDED]");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       manifest.documentsExcluded.forEach((doc: any) => {
         console.log(`  - ${doc.title} (ID: ${doc.id})`);
         console.log(
@@ -1159,7 +1266,6 @@ contextCmd
         console.log(`    Reason: ${doc.reason}`);
       });
       console.log("=============================================\n");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       console.error(`[ERROR] Context plan failed: ${e.message}`);
       process.exit(1);
@@ -1182,7 +1288,6 @@ lifecycleCmd
       const config = loadAkcpConfig(configPath);
       const sources = config.compile?.sources || [];
       const dirSource = sources.find(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (s: any) =>
           s.type === "okf-directory" || s.type === "markdown-directory",
       );
@@ -1243,7 +1348,6 @@ lifecycleCmd
         deprecatedDocs.forEach((id) => console.log(`  - ${id}`));
       }
       console.log("=============================================\n");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       console.error(`[ERROR] Lifecycle report failed: ${e.message}`);
       process.exit(1);
@@ -1323,7 +1427,7 @@ conformanceCmd
 
         if (report.details.length > 0) {
           console.log("\n[DETAILS]");
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
           report.details.forEach((det: any) => {
             const fileStr = det.file ? ` (${det.file})` : "";
             const typeStr = det.type === "error" ? "❌ ERROR" : "⚠️  WARN";
@@ -1343,7 +1447,6 @@ conformanceCmd
       if (report.conformanceLevel === "none") {
         process.exit(1);
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       console.error(`[ERROR] Conformance suite failed: ${e.message}`);
       process.exit(1);
@@ -1369,7 +1472,6 @@ program
       let config;
       try {
         config = loadAkcpConfig(path.join(targetDir, "akcp.yaml"));
-        // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
       } catch (e) {
         config = {
           compile: { sources: [{ type: "okf-directory", path: targetDir }] },
@@ -1379,6 +1481,7 @@ program
       console.log(`[INFO] Building IR for Scorecard from ${targetDir}`);
       const ir = await buildKnowledgeIR(targetDir, {
         sources: config.compile?.sources,
+        policies: resolveIrPolicies(config),
       });
 
       // Collect raw files to pass to scorecard calculation
@@ -1403,7 +1506,6 @@ program
       } else {
         console.log(JSON.stringify(report, null, 2));
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Scorecard calculation failed: ${err.message}`);
       process.exit(1);
@@ -1449,7 +1551,6 @@ pluginCmd
         }
       });
       console.log();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Plugin list failed: ${err.message}`);
       process.exit(1);
@@ -1472,7 +1573,6 @@ pluginCmd
       console.log(`Version:     ${manifest.version}`);
       console.log(`Type:        ${manifest.type}`);
       console.log(`Permissions: ${manifest.permissions.join(", ") || "none"}`);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Plugin validation failed: ${err.message}`);
       process.exit(1);
@@ -1498,7 +1598,7 @@ privacyCmd
   .action(async (options) => {
     try {
       const redactor = new PiiRedactor();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       const result = await redactor.redact(options.text, {
         mode: options.mode as any,
       });
@@ -1511,7 +1611,7 @@ privacyCmd
 
       if (result.findings.length > 0) {
         console.log("\nDetails:");
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         result.findings.forEach((f: any) => {
           console.log(
             `  - [${f.type.toUpperCase()}] "${f.value}" (pos: ${f.start}-${f.end})`,
@@ -1519,7 +1619,6 @@ privacyCmd
         });
       }
       console.log("============================\n");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`[ERROR] Redaction failed: ${err.message}`);
       process.exit(1);

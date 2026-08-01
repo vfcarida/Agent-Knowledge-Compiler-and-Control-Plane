@@ -1,0 +1,29 @@
+apiVersion: policy.akcp.dev/v1alpha1
+kind: PolicyCard
+metadata:
+  name: Strict Enterprise Governance
+  description: Highly restrictive policy for sensitive operations.
+  version: 1.0.0
+spec:
+  allowedAgents:
+    - "trusted-automation-agent"
+  allowedContextPacks:
+    - "compliance"
+  allowedTools:
+    - "read_document"
+  forbiddenTools:
+    - "delete_document"
+  sideEffectRules:
+    read: audit
+    write: deny
+    submit: deny
+  approvalRequirements:
+    - "*"
+  piiHandling: deny
+  evidenceRequirements:
+    - "Full session recording"
+  mappings:
+    nist_ai_rmf:
+      - GOVERN 1.1
+    owasp_llm:
+      - "LLM08: Excessive Agency"

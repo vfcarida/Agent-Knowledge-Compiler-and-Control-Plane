@@ -1,63 +1,65 @@
 {
+  "schemaVersion": "akcp.artifact-manifest/v1",
   "buildId": "deterministic_build_id",
+  "createdAt": "2026-01-01T00:00:00.000Z",
+  "source": {
+    "root": "<WORKSPACE>/examples/domains/it-operations",
+    "config": "akcp.yaml",
+    "hash": "deterministic_config_hash"
+  },
   "compiler": {
     "name": "akcp",
     "version": "0.1.0"
   },
-  "conformance": {
-    "checks": [
-      {
-        "file": "<WORKSPACE>/examples/domains/it-operations/README.md",
-        "message": "Broken dependency link: walkthrough",
-        "ruleId": "AKCP-GRAPH-INTEGRITY",
-        "type": "warning"
-      }
-    ],
-    "level": "AKCP-control-plane-compatible"
-  },
-  "createdAt": "2026-01-01T00:00:00.000Z",
-  "diagnostics": [],
-  "schemaVersion": "akcp.artifact-manifest/v1",
-  "source": {
-    "config": "akcp.yaml",
-    "hash": "deterministic_config_hash",
-    "root": "<WORKSPACE>/examples/domains/it-operations"
-  },
   "targets": [
     {
-      "hash": "deterministic_hash",
       "name": "ir-json",
+      "status": "success",
       "outputs": [
         "<WORKSPACE>/examples/domains/it-operations/dist/agent-knowledge-ir.json"
       ],
-      "sizeBytes": 0,
-      "status": "success"
+      "hash": "deterministic_hash",
+      "sizeBytes": 0
     },
     {
-      "hash": "deterministic_hash",
       "name": "mcp-resources-manifest",
+      "status": "success",
       "outputs": [
         "<WORKSPACE>/examples/domains/it-operations/dist/mcp-resources.json"
       ],
-      "sizeBytes": 0,
-      "status": "success"
+      "hash": "deterministic_hash",
+      "sizeBytes": 0
     },
     {
-      "hash": "deterministic_hash",
       "name": "openwiki",
-      "outputs": ["<WORKSPACE>/examples/domains/it-operations/dist/openwiki"],
-      "sizeBytes": 0,
-      "status": "success"
+      "status": "success",
+      "outputs": [
+        "<WORKSPACE>/examples/domains/it-operations/dist/openwiki"
+      ],
+      "hash": "deterministic_hash",
+      "sizeBytes": 0
     },
     {
-      "hash": "deterministic_hash",
       "name": "dashboard-metadata",
+      "status": "success",
       "outputs": [
         "<WORKSPACE>/examples/domains/it-operations/dist/dashboard-meta.json"
       ],
-      "sizeBytes": 0,
-      "status": "success"
+      "hash": "deterministic_hash",
+      "sizeBytes": 0
     }
   ],
+  "diagnostics": [],
+  "conformance": {
+    "level": "AKCP-control-plane-compatible",
+    "checks": [
+      {
+        "file": "<WORKSPACE>/examples/domains/it-operations/README.md",
+        "type": "warning",
+        "message": "Broken dependency link: walkthrough",
+        "ruleId": "AKCP-GRAPH-INTEGRITY"
+      }
+    ]
+  },
   "timestamp": "2026-01-01T00:00:00.000Z"
 }
