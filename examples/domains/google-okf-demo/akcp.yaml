@@ -1,0 +1,22 @@
+bundle:
+  name: google-okf-demo
+  version: "0.1.0"
+  description: "A bundle written entirely to Google's real Open Knowledge Format v0.2 spec, with no AKCP-specific governance fields, compiled through AKCP's standard pipeline to demonstrate real interop."
+
+compile:
+  sources:
+    # Unlike the other example domains (which point at a `sources/`
+    # subdirectory to keep bundle-management files like akcp.yaml and
+    # policies/ out of the ingested concept set), this points at the bundle
+    # root itself — matching OKF v0.2's own directory layout, where index.md,
+    # log.md, and concept files can all live at the top level.
+    - type: okf-directory
+      path: .
+      exclude:
+        - README.md
+        - WALKTHROUGH.md
+  targets:
+    - type: context-pack
+      out: dist/context-pack.json
+    - type: mcp-resources
+      out: dist/akcp-manifest.json

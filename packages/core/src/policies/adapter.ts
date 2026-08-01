@@ -15,13 +15,14 @@ export function adaptPolicyCardToRules(policy: PolicyCard): PolicyRule[] {
   // V2 Rules
   if (policy.appliesTo?.capabilities && policy.rules) {
     const scopes = policy.appliesTo.capabilities;
+    const riskLevels = policy.appliesTo.riskLevels;
     for (const rule of policy.rules) {
       if (rule.effect === "deny") {
         rules.push({
           id: `${baseId}-v2-deny-${priority}`,
           priority: priority++,
           effect: "deny",
-          match: { tools: scopes },
+          match: { tools: scopes, riskLevels },
           description: `V2 Deny rule from ${policy.metadata?.name}`,
         });
       } else {
@@ -32,7 +33,7 @@ export function adaptPolicyCardToRules(policy: PolicyCard): PolicyRule[] {
           id: `${baseId}-v2-allow-${priority}`,
           priority: priority++,
           effect: "allow",
-          match: { tools: scopes },
+          match: { tools: scopes, riskLevels },
           obligations: obs,
           description: `V2 Allow rule from ${policy.metadata?.name}`,
         });

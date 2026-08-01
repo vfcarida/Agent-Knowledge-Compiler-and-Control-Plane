@@ -1,14 +1,16 @@
-apiVersion: akcp.policy/v1
-kind: Policy
+apiVersion: policy.akcp.dev/v1alpha1
+kind: PolicyCard
 metadata:
   name: "read_support_knowledge"
   description: "Allows the agent to read support knowledge base articles"
-spec:
-  effect: allow
-  actions:
-    - mcp:call_tool:customer-support.search_knowledge_base
-    - mcp:read_resource:*
-  conditions:
-    - field: riskLevel
-      operator: in
-      value: ["low"]
+appliesTo:
+  # The original also covered `mcp:read_resource:*` (any MCP resource read,
+  # not just this one tool) — PolicyCardSchema's appliesTo.capabilities
+  # scopes tools/capabilities by id, not MCP protocol-level operations, so
+  # that broader resource-read grant isn't representable here and is
+  # dropped rather than silently misrepresented.
+  capabilities:
+    - customer-support.search_knowledge_base
+  riskLevels: ["low"]
+rules:
+  - effect: allow

@@ -188,3 +188,9 @@ jobs:
 
       - name: Validate Career Bundle
         run: pnpm akcp validate --bundle examples/domains/career --profile career
+
+      - name: Validate Google OKF Demo Bundle
+        run: pnpm akcp validate --bundle examples/domains/google-okf-demo --profile okf
+
+      - name: Compile Google OKF Demo Bundle
+        run: pnpm akcp compile --config examples/domains/google-okf-demo/akcp.yaml

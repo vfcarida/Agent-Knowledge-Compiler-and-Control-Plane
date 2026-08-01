@@ -31,7 +31,7 @@
     "bench:watch": "vitest bench",
     "quality:gate": "pnpm run test && pnpm run test:coverage && pnpm run test:contract && pnpm run test:security && pnpm run test:conformance",
     "smoke:quickstart": "node packages/cli/dist/index.js validate --bundle examples/domains/it-operations --profile it-operations && node packages/cli/dist/index.js compile --config examples/domains/it-operations/akcp.yaml",
-    "examples:validate": "node packages/cli/dist/index.js validate --bundle examples/domains/career --profile career && node packages/cli/dist/index.js validate --bundle examples/domains/it-operations --profile it-operations && node packages/cli/dist/index.js validate --bundle examples/domains/customer-support --profile customer-support",
+    "examples:validate": "node packages/cli/dist/index.js validate --bundle examples/domains/career --profile career && node packages/cli/dist/index.js validate --bundle examples/domains/it-operations --profile it-operations && node packages/cli/dist/index.js validate --bundle examples/domains/customer-support --profile customer-support && node packages/cli/dist/index.js validate --bundle examples/domains/google-okf-demo --profile okf",
     "release:check": "node scripts/pre-release-check.mjs",
     "coverage": "vitest run --coverage --config vitest.config.ts",
     "lint": "eslint .",

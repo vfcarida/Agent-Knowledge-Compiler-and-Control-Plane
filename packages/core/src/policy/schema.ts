@@ -23,6 +23,11 @@ export const PolicyCardSchema = z.object({
   }).optional(),
   appliesTo: z.object({
     capabilities: z.array(z.string()).default(["*"]),
+    // Scopes `rules[]` to only fire when the invoked capability's declared
+    // riskLevel is in this list (e.g. ["high", "critical"]). Omit to match
+    // any risk level. See capabilities/gateway.ts for how a capability's
+    // riskLevel reaches policy evaluation.
+    riskLevels: z.array(z.string()).optional(),
   }).optional(),
   rules: z.array(PolicyRuleSchema).optional(),
   evidence: z.object({

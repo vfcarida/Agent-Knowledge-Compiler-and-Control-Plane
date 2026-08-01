@@ -26,12 +26,24 @@ const OKF_LIKE_FORMATS = new Set([
  * parse here (redundant but cheap) only to decide whether a warning is
  * warranted keeps normalizeRawItem's own contract/return-shape unchanged.
  */
+// Per OKF v0.2, index.md/log.md are reserved structural files, not concepts —
+// index.md's only permitted frontmatter is `okf_version` (see
+// infrastructure/okf-version.ts), and log.md carries no frontmatter at all.
+// Neither is expected to declare a concept `type`, so a missing-`type` result
+// here is normal, not a mistake worth warning about (AKCP's own index.md
+// convention, which does set `type: Index`, still parses and warns as usual —
+// this only suppresses the warning, it doesn't change how the file compiles).
+const RESERVED_STRUCTURAL_FILENAMES = new Set(["index.md", "log.md"]);
+
 function detectFrontmatterWarning(
   item: PipelineContext["rawItems"][number],
 ): CompilerWarning | undefined {
   const format = item.metadata.originalFormat;
   if (!format || !OKF_LIKE_FORMATS.has(format)) return undefined;
   if (!hasFrontmatterAttempt(item.rawContent)) return undefined;
+
+  const baseName = path.basename(item.metadata.relativePath || "");
+  if (RESERVED_STRUCTURAL_FILENAMES.has(baseName)) return undefined;
 
   try {
     new FrontmatterParser().parse(

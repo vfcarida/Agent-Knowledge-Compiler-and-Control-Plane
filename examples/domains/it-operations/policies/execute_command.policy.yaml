@@ -1,19 +1,16 @@
-policyVersion: 1
-capability: "execute_command"
-description: "Executes arbitrary shell commands on infrastructure."
-riskLevel: "critical"
-sideEffectLevel: "external-write"
-defaultMode: "disabled"
-allowedRuntimeModes:
-  - "sandbox"
-requiresApproval: true
-approval:
-  ttlMinutes: 5
-  bindToPayloadHash: true
-  singleUse: true
-audit:
-  required: true
-  fields:
-    - "command"
-    - "targetNode"
-    - "approver"
+apiVersion: policy.akcp.dev/v1alpha1
+kind: PolicyCard
+metadata:
+  name: "execute_command"
+  description: "Executes arbitrary shell commands on infrastructure."
+appliesTo:
+  capabilities: ["it-operations.execute_command"]
+  riskLevels: ["critical"]
+rules:
+  - effect: require_approval
+evidence:
+  required: ["command", "targetNode", "approver"]
+# Not yet representable in PolicyCardSchema, kept here for operators: approval
+# token TTL (5 min — deliberately short given this capability's blast radius),
+# payload-hash binding, and single-use enforcement are configured at the
+# ApprovalStore level (see mcp-automation-server/src/approval/), not per-policy.

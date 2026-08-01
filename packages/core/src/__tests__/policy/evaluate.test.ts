@@ -138,6 +138,42 @@ describe("Policy Evaluation Engine", () => {
     expect(result.requirements?.approvalRequired).toBe(true);
   });
 
+  const v2PolicyDenyCriticalRisk: PolicyCard = {
+    apiVersion: "policy.akcp.dev/v2",
+    kind: "PolicyCard",
+    metadata: { name: "V2 Deny Critical Risk" },
+    appliesTo: { capabilities: ["*"], riskLevels: ["high", "critical"] },
+    rules: [{ effect: "deny" }],
+  };
+
+  it("should scope V2 rules by riskLevel and deny when it matches", () => {
+    const result = evaluatePolicy(v2PolicyDenyCriticalRisk, {
+      toolName: "any_tool",
+      sideEffect: "write",
+      riskLevel: "critical",
+    });
+    expect(result.allowed).toBe(false);
+  });
+
+  it("should not apply a riskLevel-scoped V2 rule when the risk level doesn't match", () => {
+    const result = evaluatePolicy(v2PolicyDenyCriticalRisk, {
+      toolName: "any_tool",
+      sideEffect: "write",
+      riskLevel: "low",
+    });
+    // Falls through past the (non-matching) V2 rule to the V1 fallback, which
+    // has no spec on this policy card and so defaults to allowed.
+    expect(result.allowed).toBe(true);
+  });
+
+  it("should not apply a riskLevel-scoped V2 rule when no riskLevel is provided", () => {
+    const result = evaluatePolicy(v2PolicyDenyCriticalRisk, {
+      toolName: "any_tool",
+      sideEffect: "write",
+    });
+    expect(result.allowed).toBe(true);
+  });
+
   it("should return allowed if no spec and no v2 rules", () => {
     const emptyPolicy: PolicyCard = {
       apiVersion: "v1",

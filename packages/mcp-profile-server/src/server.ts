@@ -268,6 +268,7 @@ export class AKCPProfileServer {
                   requestId: reqId,
                   toolName: cap.name,
                   sideEffect: mappedSideEffect,
+                  riskLevel: cap.riskLevel,
                   agentId: this.agentIdentity,
                   payload: args,
                 },

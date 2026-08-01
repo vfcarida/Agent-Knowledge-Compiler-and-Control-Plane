@@ -84,11 +84,16 @@ NIST AI RMF: GOVERN 1.1
 OWASP LLM Top 10: LLM08: Excessive Agency
 ```
 
-> **Known gap:** the policy files shipped under `examples/domains/*/policies/` predate this
-> schema and use their own (mutually inconsistent) shapes — running `policy explain` against
-> those specific files currently prints almost nothing, because none of their fields match
-> `PolicyCardSchema`. Tracked as a real architectural gap, not yet fixed; see
-> [docs/project/deep-analysis-round2.md](docs/project/deep-analysis-round2.md).
+> Every policy file shipped under `examples/domains/*/policies/` (and the matching
+> `packages/cli/templates/*/policies/` copies `akcp init` hands out) is a real `PolicyCard`
+> against this exact schema — `policy validate`/`policy explain` produce meaningful output for
+> all of them. This used to be a real architectural gap (5 mutually-incompatible ad hoc shapes,
+> documented in [docs/project/deep-analysis-round2.md](docs/project/deep-analysis-round2.md));
+> migrating them surfaced and fixed a deeper one along the way — `MCPGateway` was hardcoding
+> every request's risk level to `"medium"`, which made any policy rule scoped by risk level
+> silently unenforceable regardless of file format (see `appliesTo.riskLevels` in
+> [docs/specs/policy-cards.md](docs/specs/policy-cards.md)). Remaining known gap: `rules[].condition`
+> is accepted by the schema but not yet evaluated by either enforcement path — see that same doc.
 
 </details>
 

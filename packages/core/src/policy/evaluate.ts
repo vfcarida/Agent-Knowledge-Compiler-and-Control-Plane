@@ -10,6 +10,9 @@ import type { PolicyCard, PolicyEvaluationResult } from "./types.js";
 export interface PolicyContext {
   toolName: string;
   sideEffect: "read" | "write" | "submit";
+  /** The capability's declared risk level, matched against a rule's
+   * `appliesTo.riskLevels` scope, if the policy declares one. */
+  riskLevel?: string;
 }
 
 export function evaluatePolicy(
@@ -26,7 +29,12 @@ export function evaluatePolicy(
           context.toolName.startsWith(cap.replace("*", ""))),
     );
 
-    if (matchesCapability) {
+    const matchesRiskLevel =
+      !policy.appliesTo.riskLevels ||
+      (context.riskLevel !== undefined &&
+        policy.appliesTo.riskLevels.includes(context.riskLevel));
+
+    if (matchesCapability && matchesRiskLevel) {
       for (const rule of policy.rules) {
         // Evaluate first matching rule (no condition logic implemented yet, assume all match if no condition)
         if (!rule.condition) {

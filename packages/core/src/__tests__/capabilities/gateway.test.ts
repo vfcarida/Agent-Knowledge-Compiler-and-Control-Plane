@@ -139,6 +139,93 @@ describe("MCPGateway", () => {
     ).rejects.toThrowError(/PII detected in output/);
   });
 
+  describe("riskLevel-scoped policy rules", () => {
+    // Regression test: MCPGateway used to hardcode riskLevel: "medium" for
+    // every request, which made any policy rule scoped by risk level
+    // silently unenforceable no matter what the caller passed.
+    const riskScopedPolicy: PolicyCard = {
+      apiVersion: "policy.akcp.dev/v1alpha1",
+      kind: "PolicyCard",
+      metadata: { name: "risk-scoped-policy" },
+      appliesTo: { capabilities: ["*"], riskLevels: ["critical"] },
+      rules: [{ effect: "deny" }],
+    };
+
+    const riskGateway = new MCPGateway({
+      policies: { "agent-risk": riskScopedPolicy },
+    });
+
+    it("denies a request whose declared riskLevel matches the rule's scope", async () => {
+      await expect(
+        riskGateway.execute(
+          {
+            requestId: "123",
+            toolName: "some_tool",
+            sideEffect: "read",
+            riskLevel: "critical",
+            agentId: "agent-risk",
+            payload: {},
+          },
+          async () => ({ success: true }),
+        ),
+      ).rejects.toThrowError(/Policy Violation/);
+    });
+
+    it("does not match the deny rule when the declared riskLevel is outside its scope", async () => {
+      // This policy card declares only the risk-scoped V2 deny rule and no
+      // `spec` — so once the rule fails to match, the engine's closed-world
+      // default (deny when nothing matches) applies. The point of this test
+      // is narrower: confirming the rule itself didn't fire for "low" (it
+      // would throw a POLICY_VIOLATION reason naming the matched rule, not
+      // the generic default-deny reason).
+      await expect(
+        riskGateway.execute(
+          {
+            requestId: "123",
+            toolName: "some_tool",
+            sideEffect: "read",
+            riskLevel: "low",
+            agentId: "agent-risk",
+            payload: {},
+          },
+          async () => ({ success: true }),
+        ),
+      ).rejects.toThrowError(/No matching rule found\. Default: deny\./);
+    });
+
+    it("allows the request when riskLevel is outside scope and a permissive V1 spec exists", async () => {
+      const permissiveGateway = new MCPGateway({
+        policies: {
+          "agent-risk-permissive": {
+            ...riskScopedPolicy,
+            spec: {
+              allowedAgents: ["*"],
+              allowedContextPacks: ["*"],
+              allowedTools: ["*"],
+              forbiddenTools: [],
+              approvalRequirements: [],
+              piiHandling: "deny",
+              sideEffectRules: { read: "allow", write: "approval", submit: "approval" },
+            },
+          },
+        },
+      });
+
+      const result = await permissiveGateway.execute(
+        {
+          requestId: "123",
+          toolName: "some_tool",
+          sideEffect: "read",
+          riskLevel: "low",
+          agentId: "agent-risk-permissive",
+          payload: {},
+        },
+        async () => ({ success: true }),
+      );
+      expect(result.success).toBe(true);
+    });
+  });
+
   describe("HITL Approval Enforcement", () => {
     const approvalRequiredPolicy = {
       ...mockPolicy,

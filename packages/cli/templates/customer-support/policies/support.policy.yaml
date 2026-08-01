@@ -1,12 +1,17 @@
-id: support-pii-policy
-name: "Customer Support PII Handling"
-description: "Safeguards for handling sensitive customer data during agent sessions."
+apiVersion: policy.akcp.dev/v1alpha1
+kind: PolicyCard
+metadata:
+  name: "Customer Support PII Handling"
+  description: "Safeguards for handling sensitive customer data during agent sessions."
+appliesTo:
+  capabilities: ["customer-support.issue_refund"]
 rules:
-  - id: enforce-pii-redaction
-    effect: deny
-    condition: "resource.readsPII == true && session.piiHandling != 'redact'"
-    description: "Tools that read PII must run in a session with PII redaction enabled."
-  - id: require-approval-refund
-    effect: deny
-    condition: "resource.id == 'issue_refund' && autonomyLevel == 'autonomous'"
-    description: "Refunds always require Human-In-The-Loop approval."
+  # Refunds always require Human-In-The-Loop approval.
+  - effect: require_approval
+spec:
+  allowedTools: ["*"]
+  forbiddenTools: []
+  # Tools that read PII must run with redaction enabled. This obligation is
+  # attached to every action this card allows (not just issue_refund) — see
+  # spec.piiHandling's effect on every generated rule in policies/adapter.ts.
+  piiHandling: redact
