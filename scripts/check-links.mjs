@@ -35,8 +35,8 @@ for (const file of mdFiles) {
     while ((match = linkRegex.exec(line)) !== null) {
       let link = match[1].trim();
 
-      // Ignore http/https, mailto, and fragment-only links
-      if (link.startsWith("http") || link.startsWith("mailto:") || link.startsWith("#")) {
+      // Ignore http/https, mailto, fragment-only links, and generated api/ link
+      if (link.startsWith("http") || link.startsWith("mailto:") || link.startsWith("#") || link === "api/") {
         continue;
       }
 

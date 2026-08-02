@@ -4,3 +4,5 @@ docs/release/final-release-readiness.md
 docs/release/pre-release-checklist.md
 packages/mcp-profile-server/src/http-server.ts
 packages/mcp-profile-server/src/index.ts
+CHANGELOG.md
+docs/project/deep-analysis-round2.md
