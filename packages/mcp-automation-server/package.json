@@ -29,7 +29,7 @@
     "@akcp/core": "workspace:*",
     "better-sqlite3": "^12.11.1",
     "ioredis": "^5.11.1",
-    "playwright": "^1.49.0",
+    "playwright": "^1.62.1",
     "zod": "catalog:"
   },
   "devDependencies": {
