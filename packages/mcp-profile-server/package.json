@@ -33,14 +33,14 @@
     "@modelcontextprotocol/sdk": "catalog:",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "jose": "^6.2.3",
+    "jose": "^6.2.9",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "catalog:",
-    "tsx": "^4.19.0",
+    "tsx": "^4.23.12",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
