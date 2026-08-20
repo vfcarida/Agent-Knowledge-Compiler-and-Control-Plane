@@ -435,5 +435,39 @@ describe("MCPGateway", () => {
         }),
       );
     });
+
+    it("should log policy.evaluate allow audit event with cumulative token metrics upon successful execution", async () => {
+      mockAuditLog.logEvent.mockClear();
+
+      const res = await auditGateway.execute(
+        {
+          requestId: "req-invoke-1",
+          toolName: "read_document",
+          sideEffect: "read",
+          agentId: "agent-audit",
+          riskLevel: "low",
+          payload: { query: "search test docs" },
+        },
+        async () => ({ result: "Here is the documentation content" }),
+      );
+
+      expect(res).toBeDefined();
+      expect(mockAuditLog.logEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: "policy.evaluate",
+          actor: "agent-audit",
+          capabilityId: "read_document",
+          decision: "allow",
+          evidence: expect.objectContaining({
+            estimatedTokens: expect.any(Number),
+            cumulativeTokens: expect.any(Number),
+            budgetExceeded: false,
+          }),
+        }),
+      );
+
+      const tracker = auditGateway.getCostTracker();
+      expect(tracker.getCumulativeTokens("agent-audit")).toBeGreaterThan(0);
+    });
   });
 });

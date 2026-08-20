@@ -134,6 +134,14 @@ export const automationSubmissionBlockedCounter = meter.createCounter(
   },
 );
 
+export const agentTokensConsumedCounter = meter.createCounter(
+  "akcp_agent_tokens_consumed_total",
+  {
+    description:
+      "Total estimated tokens consumed by agents across tool executions",
+  },
+);
+
 export const mcpToolDurationHistogram = meter.createHistogram(
   "akcp_mcp_tool_duration_ms",
   {

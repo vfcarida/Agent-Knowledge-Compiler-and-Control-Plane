@@ -177,6 +177,13 @@ export {
   type AuthConfig,
   type AuthResult,
 } from "./capabilities/auth.js";
+export {
+  CostTracker,
+  estimateTokens,
+  type AgentUsage,
+  type CostUsageRecord,
+  type CostTrackerConfig,
+} from "./capabilities/cost-tracker.js";
 
 // Migrations
 export { migrateBundle } from "./migrations/migrate-bundle.js";
@@ -193,6 +200,7 @@ export {
   automationApprovalRequiredCounter,
   automationSubmissionBlockedCounter,
   automationSubmissionSuccessCounter,
+  agentTokensConsumedCounter,
   withToolTracing,
 } from "./observability/otel.js";
 

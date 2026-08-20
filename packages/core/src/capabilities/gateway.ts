@@ -15,6 +15,7 @@ import type {
   IAuditLogService,
   AuditRiskLevel,
 } from "../infrastructure/audit-log.js";
+import { CostTracker, type CostTrackerConfig } from "./cost-tracker.js";
 import crypto from "crypto";
 
 export class MCPGatewayError extends Error {
@@ -48,15 +49,23 @@ export interface GatewayConfig {
   piiDetector?: PiiDetector;
   rateLimiter?: RateLimiterConfig;
   auth?: AuthConfig;
+  costTracker?: CostTracker;
+  costBudget?: CostTrackerConfig;
 }
 
 export class MCPGateway {
   private limiter?: IRateLimiter;
+  private costTracker: CostTracker;
 
   constructor(private config: GatewayConfig) {
     if (config.rateLimiter) {
       this.limiter = createRateLimiter(config.rateLimiter);
     }
+    this.costTracker = config.costTracker || new CostTracker(config.costBudget);
+  }
+
+  public getCostTracker(): CostTracker {
+    return this.costTracker;
   }
 
   public async execute<T>(
@@ -201,21 +210,6 @@ export class MCPGateway {
       );
     }
 
-    if (this.config.auditLogService) {
-      await this.config.auditLogService.logEvent({
-        action: "policy.evaluate",
-        actor: request.agentId || "anonymous",
-        requestId,
-        capabilityId: request.toolName,
-        decision: "allow",
-        riskLevel: (request.riskLevel as AuditRiskLevel) || "medium",
-        evidence: {
-          payloadHash,
-          policyIds: policy.id ? [policy.id] : [],
-        },
-      });
-    }
-
     // Evaluate HITL requirement
     const requiresApproval = evalResult.obligations.some(
       (o) => o.type === "require_approval",
@@ -320,6 +314,8 @@ export class MCPGateway {
     try {
       const result = await executor();
 
+      let finalResult = result;
+
       // Post-execution sanitization
       const redactPii = evalResult.obligations.some(
         (o) => o.type === "pii_redact",
@@ -327,7 +323,7 @@ export class MCPGateway {
       const denyPii = evalResult.obligations.some((o) => o.type === "pii_deny");
 
       if (redactPii) {
-        return await this.sanitizeOutput(result);
+        finalResult = await this.sanitizeOutput(result);
       }
 
       if (denyPii) {
@@ -339,7 +335,36 @@ export class MCPGateway {
         }
       }
 
-      return result;
+      // Token & Cost Tracking
+      const estimatedTokens = this.costTracker.estimateTokens(
+        request.payload,
+        finalResult,
+      );
+      const usage = this.costTracker.recordUsage(
+        agentKey,
+        estimatedTokens,
+        request.toolName,
+      );
+
+      if (this.config.auditLogService) {
+        await this.config.auditLogService.logEvent({
+          action: "policy.evaluate",
+          actor: request.agentId || "anonymous",
+          requestId,
+          capabilityId: request.toolName,
+          decision: "allow",
+          riskLevel: (request.riskLevel as AuditRiskLevel) || "medium",
+          evidence: {
+            payloadHash,
+            policyIds: policy.id ? [policy.id] : [],
+            estimatedTokens,
+            cumulativeTokens: usage.cumulativeTokens,
+            budgetExceeded: usage.budgetExceeded,
+          },
+        });
+      }
+
+      return finalResult;
     } catch (err: unknown) {
       if (err instanceof MCPGatewayError) throw err;
       throw new MCPGatewayError(
