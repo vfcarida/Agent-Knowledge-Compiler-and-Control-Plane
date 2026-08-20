@@ -27,7 +27,7 @@
     "@opentelemetry/exporter-trace-otlp-grpc": "^0.220.0",
     "@opentelemetry/sdk-node": "^0.220.0",
     "gray-matter": "^4.0.3",
-    "ioredis": "^5.11.1",
+    "ioredis": "^6.0.0",
     "yaml": "^2.9.0",
     "zod": "catalog:"
   },
