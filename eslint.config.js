@@ -24,14 +24,28 @@ export default tseslint.config(
     rules: {
       // TODO: Tighten these rules incrementally
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": ["off", { argsIgnorePattern: "^_", ignoreRestSiblings: true }],
+      "@typescript-eslint/no-unused-vars": [
+        "off",
+        { argsIgnorePattern: "^_", ignoreRestSiblings: true },
+      ],
       "no-unused-vars": ["off", { argsIgnorePattern: "^_" }],
       "@typescript-eslint/no-empty-object-type": "off",
       "no-console": ["off", { allow: ["warn", "error"] }],
       "no-undef": "off",
-      "prefer-const": "off",
+      "prefer-const": "warn",
       "no-useless-escape": "warn",
-      "no-unsafe-optional-chaining": "warn"
+      "no-unsafe-optional-chaining": "warn",
+    },
+  },
+  {
+    files: [
+      "packages/core/src/capabilities/**/*.ts",
+      "packages/core/src/policies/**/*.ts",
+      "packages/core/src/policy/**/*.ts",
+      "packages/core/src/privacy/**/*.ts",
+    ],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "error",
     },
   },
   {

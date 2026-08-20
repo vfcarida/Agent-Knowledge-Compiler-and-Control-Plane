@@ -5,7 +5,11 @@
 
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import path from "node:path";
-import { startTelemetry, type AgentKnowledgeIR } from "@akcp/core";
+import {
+  startTelemetry,
+  type AgentKnowledgeIR,
+  extractGatewayPolicies,
+} from "@akcp/core";
 import { AKCPProfileServer } from "./server.js";
 import fs from "node:fs";
 
@@ -38,7 +42,7 @@ async function main() {
 
     // Provide the dynamic IR to the new server
     const mcpProfileServer = new AKCPProfileServer(ir, {
-      policies: ir.policies || {},
+      policies: extractGatewayPolicies(ir),
     });
     const serverInstance = mcpProfileServer.getServerInstance();
 

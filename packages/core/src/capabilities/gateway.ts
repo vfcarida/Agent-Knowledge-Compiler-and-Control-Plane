@@ -21,7 +21,7 @@ export class MCPGatewayError extends Error {
     public readonly message: string,
     public readonly _code: string,
 
-    public readonly _data?: any,
+    public readonly _data?: unknown,
   ) {
     super(message);
     this.name = "MCPGatewayError";
@@ -34,7 +34,7 @@ export class MCPGatewayError extends Error {
 
   /** Public alias for _data — use `error.data` in consumers. */
 
-  get data(): any {
+  get data(): unknown {
     return this._data;
   }
 }

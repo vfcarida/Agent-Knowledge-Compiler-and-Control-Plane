@@ -65,7 +65,7 @@ function normalizeSingleCondition(
       ];
     }
 
-    return [{ type: "unknown" as any, params: obj }];
+    return [{ type: "unknown", params: obj }];
   }
 
   if (typeof item === "string") {
@@ -100,7 +100,7 @@ function normalizeSingleCondition(
     return single ? [single] : undefined;
   }
 
-  return [{ type: "unknown" as any, params: { raw: item } }];
+  return [{ type: "unknown", params: { raw: item } }];
 }
 
 function normalizeSingleConditionString(str: string): PolicyCondition {
@@ -179,7 +179,7 @@ function normalizeSingleConditionString(str: string): PolicyCondition {
   }
 
   // 5. Unknown condition type -> fail closed
-  return { type: "unknown" as any, params: { raw: trimmed } };
+  return { type: "unknown", params: { raw: trimmed } };
 }
 
 export function adaptPolicyCardToRules(policy: PolicyCard): PolicyRule[] {

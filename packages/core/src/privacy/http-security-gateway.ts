@@ -55,13 +55,14 @@ export class HttpSecurityGateway {
         findings: data.findings || [],
         blocked: data.blocked || false,
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       // A gateway connectivity failure is NOT a PII violation — misclassifying it as
       // one previously made transient network/auth outages look like data-privacy
       // incidents. Tagged distinctly so callers (see compile.ts) can tell them apart.
-      console.warn(`[WARN] Security Gateway call failed: ${err.message}`);
+      const message = err instanceof Error ? err.message : String(err);
+      console.warn(`[WARN] Security Gateway call failed: ${message}`);
       throw new Error(
-        `[GATEWAY_ERROR] Failed to reach Security Gateway at ${this.gatewayUrl}: ${err.message}`,
+        `[GATEWAY_ERROR] Failed to reach Security Gateway at ${this.gatewayUrl}: ${message}`,
       );
     }
   }

@@ -8,8 +8,7 @@ export interface CapabilityRequest {
    * policy rules scoped by risk level can actually be enforced. Falls back
    * to "medium" in MCPGateway if omitted. */
   riskLevel?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload: any;
+  payload: unknown;
   apiKey?: string;
   sourceId?: string;
 }

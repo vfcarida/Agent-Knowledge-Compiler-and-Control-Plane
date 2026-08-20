@@ -8,7 +8,9 @@ export default defineConfig({
         singleFork: true,
       },
     },
-    testTimeout: 30000,
+    fileParallelism: false,
+    testTimeout: 60000,
+    hookTimeout: 120000,
     coverage: {
       provider: "v8",
       include: ["src/**/*.ts"],

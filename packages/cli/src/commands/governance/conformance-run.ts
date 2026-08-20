@@ -62,7 +62,7 @@ export function registerConformanceRunCommand(
             if (check.type === "warning") {
               statusIcon = "⚠️  WARNING";
             }
-            let targetStr = check.file ? ` (${check.file})` : "";
+            const targetStr = check.file ? ` (${check.file})` : "";
             console.log(
               `[${statusIcon}] ${check.ruleId || "unknown"}${targetStr}`,
             );

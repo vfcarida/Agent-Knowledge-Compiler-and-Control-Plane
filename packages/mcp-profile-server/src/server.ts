@@ -17,6 +17,7 @@ import {
   type AgentKnowledgeIR,
   LakeraGateway,
   type ISecurityGateway,
+  extractGatewayPolicies,
 } from "@akcp/core";
 
 export class AKCPProfileServer {
@@ -28,11 +29,18 @@ export class AKCPProfileServer {
 
   constructor(
     ir: AgentKnowledgeIR,
-    gatewayConfig: GatewayConfig = { policies: {} },
+    gatewayConfig?: Partial<GatewayConfig>,
     agentIdentity: string = "mcp-client",
   ) {
     this.ir = ir;
-    this.gateway = new MCPGateway(gatewayConfig);
+    const extractedPolicies = extractGatewayPolicies(ir);
+    const resolvedConfig: GatewayConfig = {
+      policies: gatewayConfig?.policies ?? extractedPolicies,
+      defaultPolicy:
+        gatewayConfig?.defaultPolicy ?? extractedPolicies["default"],
+      ...gatewayConfig,
+    };
+    this.gateway = new MCPGateway(resolvedConfig);
     this.agentIdentity = agentIdentity;
     this.securityGateway = new LakeraGateway();
 

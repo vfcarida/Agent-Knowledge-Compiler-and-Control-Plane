@@ -81,9 +81,10 @@ export class CedarPolicyProvider implements PolicyProvider {
           data.decision === "Allow" ? "allow" : "deny",
         ),
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Fail-closed principle
-      return this.createDenyDecision(`Cedar Evaluation Failed: ${err.message}`);
+      const message = err instanceof Error ? err.message : String(err);
+      return this.createDenyDecision(`Cedar Evaluation Failed: ${message}`);
     }
   }
 

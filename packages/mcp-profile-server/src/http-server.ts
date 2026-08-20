@@ -8,7 +8,11 @@ import cors from "cors";
 import path from "node:path";
 import fs from "node:fs";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
-import { startTelemetry, type AgentKnowledgeIR } from "@akcp/core";
+import {
+  startTelemetry,
+  type AgentKnowledgeIR,
+  extractGatewayPolicies,
+} from "@akcp/core";
 import { AKCPProfileServer } from "./server.js";
 import { jwtVerify, createRemoteJWKSet } from "jose";
 
@@ -118,7 +122,7 @@ async function main() {
 
       const mcpProfileServer = new AKCPProfileServer(
         ir,
-        { policies: ir.policies || {} },
+        { policies: extractGatewayPolicies(ir) },
         agentIdentity,
       );
       await mcpProfileServer.getServerInstance().connect(transport);

@@ -42,15 +42,12 @@ export const IRPoliciesSchema = z
   .object({
     defaultAutonomyLevel: z.string().optional(),
     piiHandling: z.string().optional(),
+    disableDangerousTools: z.boolean().optional(),
+    requireApprovalFor: z.array(z.string()).optional(),
+    policies: z.array(z.string()).optional(),
   })
-  // NOTE: kept as `z.any()` deliberately (not tightened to `z.unknown()` like the
-  // other catchalls in this file) — several call sites (e.g. mcp-profile-server's
-  // http-server.ts/index.ts/index-sse.ts) pass `{ policies: ir.policies || {} }`
-  // directly as `GatewayConfig.policies: Record<string, PolicyCard>`, relying on
-  // this looseness. Tightening it requires also typing those call sites properly
-  // (ir.policies isn't actually a Record<string, PolicyCard> shape today), which
-  // is a real pre-existing gap worth fixing but is out of scope here.
-  .catchall(z.any());
+  // Open-ended extension point for enterprise metadata; `unknown` forces narrowing before use.
+  .catchall(z.unknown());
 
 export const CapabilitySchema = z.object({
   id: z.string(),

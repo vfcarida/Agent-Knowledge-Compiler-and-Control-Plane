@@ -138,6 +138,7 @@ export { evaluatePolicy } from "./policy/evaluate.js";
 export * from "./policy/evaluate.js";
 export * from "./policy/explain.js";
 export * from "./policy/load.js";
+export * from "./policy/extract-gateway-policies.js";
 export * from "./policies/engine.js";
 export * from "./policies/adapter.js";
 export * from "./policies/trace.js";

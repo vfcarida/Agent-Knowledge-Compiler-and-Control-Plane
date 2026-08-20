@@ -70,9 +70,10 @@ export class OPAPolicyProvider implements PolicyProvider {
         obligations: result.obligations || [],
         matchedRule: this.mapRule(result.matched_rule),
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Fail-closed principle
-      return this.createDenyDecision(`OPA Evaluation Failed: ${err.message}`);
+      const message = err instanceof Error ? err.message : String(err);
+      return this.createDenyDecision(`OPA Evaluation Failed: ${message}`);
     }
   }
 

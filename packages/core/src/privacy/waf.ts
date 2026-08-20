@@ -85,19 +85,20 @@ export class LakeraGateway implements ISecurityGateway {
           : undefined,
         provider: "lakera",
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       if (this.failClosedOnGatewayError) {
         console.error(
-          `[WAF] Lakera API call failed (${err.message}). Failing closed (blocking request) per failClosedOnGatewayError=true.`,
+          `[WAF] Lakera API call failed (${message}). Failing closed (blocking request) per failClosedOnGatewayError=true.`,
         );
         return {
           flagged: true,
-          reason: `Security Gateway unavailable and failClosedOnGatewayError is enabled: ${err.message}`,
+          reason: `Security Gateway unavailable and failClosedOnGatewayError is enabled: ${message}`,
           provider: "lakera",
         };
       }
       console.error(
-        `[WAF] Lakera API call failed (${err.message}). Falling back to local Regex.`,
+        `[WAF] Lakera API call failed (${message}). Falling back to local Regex.`,
       );
       return this.regexFallback(prompt);
     }

@@ -17,7 +17,8 @@ export interface PolicyMatcher {
 }
 
 export interface PolicyCondition {
-  type: "time_window" | "environment" | "approval_exists" | "custom";
+  type:
+    "time_window" | "environment" | "approval_exists" | "custom" | "unknown";
   params: Record<string, unknown>;
 }
 

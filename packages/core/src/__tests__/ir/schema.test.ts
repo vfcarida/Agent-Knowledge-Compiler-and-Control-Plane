@@ -62,4 +62,66 @@ describe("Agent Knowledge IR Schema", () => {
     expect(parsed.concepts[0].frontmatter.proprietaryKey).toBe(42);
     expect(parsed.concepts[0].type).toBe("UnknownType");
   });
+
+  it("should validate structured policies fields properly", () => {
+    const raw = {
+      irVersion: "1.0.0",
+      okfVersion: "0.1.0",
+      bundleId: "test-bundle",
+      buildId: "test-build",
+      timestamp: "2026-07-08T00:00:00Z",
+      concepts: [],
+      policies: {
+        defaultAutonomyLevel: "autonomous",
+        piiHandling: "redact",
+        disableDangerousTools: true,
+        requireApprovalFor: ["execute_command", "drop_db"],
+        policies: ["policies/security.policy.yaml"],
+        customOrgLevel: 3,
+      },
+    };
+
+    const parsed = AgentKnowledgeIRSchema.parse(raw);
+    expect(parsed.policies?.defaultAutonomyLevel).toBe("autonomous");
+    expect(parsed.policies?.piiHandling).toBe("redact");
+    expect(parsed.policies?.disableDangerousTools).toBe(true);
+    expect(parsed.policies?.requireApprovalFor).toEqual([
+      "execute_command",
+      "drop_db",
+    ]);
+    expect(parsed.policies?.policies).toEqual([
+      "policies/security.policy.yaml",
+    ]);
+    expect(parsed.policies?.customOrgLevel).toBe(3);
+  });
+
+  it("should fail validation when policies fields have invalid types", () => {
+    const rawInvalidBool = {
+      irVersion: "1.0.0",
+      okfVersion: "0.1.0",
+      bundleId: "test-bundle",
+      buildId: "test-build",
+      timestamp: "2026-07-08T00:00:00Z",
+      concepts: [],
+      policies: {
+        disableDangerousTools: "invalid-boolean",
+      },
+    };
+
+    expect(() => AgentKnowledgeIRSchema.parse(rawInvalidBool)).toThrow();
+
+    const rawInvalidArray = {
+      irVersion: "1.0.0",
+      okfVersion: "0.1.0",
+      bundleId: "test-bundle",
+      buildId: "test-build",
+      timestamp: "2026-07-08T00:00:00Z",
+      concepts: [],
+      policies: {
+        requireApprovalFor: 12345,
+      },
+    };
+
+    expect(() => AgentKnowledgeIRSchema.parse(rawInvalidArray)).toThrow();
+  });
 });

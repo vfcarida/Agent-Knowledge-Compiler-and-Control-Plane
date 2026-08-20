@@ -18,14 +18,13 @@ export function loadPolicy(filePath: string): PolicyCard {
 
   const fileContent = fs.readFileSync(filePath, "utf-8");
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let parsedYaml: any;
+  let parsedYaml: unknown;
   try {
     parsedYaml = yaml.parse(fileContent);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
     throw new PolicyLoadError(
-      `Failed to parse YAML file at ${filePath}:\n${error.message}`,
+      `Failed to parse YAML file at ${filePath}:\n${message}`,
     );
   }
 
