@@ -11,7 +11,7 @@
     "clean": "node -e \"fs.rmSync('dist', {recursive:true,force:true}); fs.rmSync('tsconfig.tsbuildinfo', {force:true})\""
   },
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^5.2.1"
   },
   "devDependencies": {
     "typescript": "catalog:",
