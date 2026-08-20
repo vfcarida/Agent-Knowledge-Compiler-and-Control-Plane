@@ -64,6 +64,37 @@ Tools allow the agent to invoke functions.
 
 Always deploy a `policy.yaml` card alongside your capability registry. Ensure that the `autonomyLevel` limits are respected. Do not trust the agent to self-regulate its autonomy.
 
-## 5. Denial of Service (DoS)
+## 5. Denial of Service (DoS) & Rate Limiting
 
-MCP servers can be overwhelmed by aggressive agents that loop. Implement rate limiting on the SSE endpoints and apply backpressure or concurrency limits to tool execution inside the Control Plane.
+MCP servers and Control Plane gateways can be overwhelmed by aggressive or looping agents. AKCP provides configurable token bucket rate limiting at the capability execution gateway:
+
+### Rate Limiting Backends
+
+1. **In-Memory Token Bucket (`backend: "memory"`)**:
+   - Default for single-instance setups, CLI usage, and local development.
+   - Maintains per-agent token buckets in local memory.
+
+2. **Distributed Redis Token Bucket (`backend: "redis"`)**:
+   - Recommended for multi-instance deployments behind load balancers.
+   - Uses atomic Lua scripts to synchronize bucket consumption and refills across instances without race conditions.
+   - Automatically sets key TTLs to release resources when agents become inactive.
+
+### Configuration Schema
+
+```typescript
+import { MCPGateway, createRateLimiter } from "@akcp/core";
+
+const gateway = new MCPGateway({
+  policies: {/* ... */},
+  rateLimiter: {
+    maxTokens: 60, // Bucket capacity
+    refillRate: 10, // Tokens refilled per interval
+    refillInterval: 1000, // Interval in ms (default: 1000ms)
+    backend: "redis", // "memory" (default) or "redis"
+    redis: {
+      url: process.env.REDIS_URL || "redis://localhost:6379",
+      prefix: "akcp:ratelimit:", // Optional Redis key prefix
+    },
+  },
+});
+```

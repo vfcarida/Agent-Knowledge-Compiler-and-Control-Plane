@@ -157,12 +157,18 @@ export { MCPGateway } from "./capabilities/gateway.js";
 export * from "./capabilities/gateway.js";
 export * from "./capabilities/approval-store.js";
 /**
- * Token bucket rate limiter for controlling agent MCP capability usage.
+ * Rate limiter implementations for controlling agent MCP capability usage.
  */
 export {
   TokenBucketRateLimiter,
+  createRateLimiter,
   type RateLimiterConfig,
+  type IRateLimiter,
+  type RateLimiter,
+  type RateLimiterBackend,
+  type RedisRateLimiterOptions,
 } from "./capabilities/rate-limiter.js";
+export { RedisRateLimiter } from "./capabilities/redis-rate-limiter.js";
 export {
   authenticate,
   hashApiKey,

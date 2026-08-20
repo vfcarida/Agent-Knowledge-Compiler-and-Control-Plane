@@ -7,7 +7,8 @@ import { authenticate, type AuthConfig } from "./auth.js";
 import { createPiiDetector } from "../privacy/create-detector.js";
 import type { PiiDetector, PiiMatch } from "../privacy/pii-detector.js";
 import {
-  TokenBucketRateLimiter,
+  createRateLimiter,
+  type IRateLimiter,
   type RateLimiterConfig,
 } from "./rate-limiter.js";
 import type {
@@ -50,11 +51,11 @@ export interface GatewayConfig {
 }
 
 export class MCPGateway {
-  private limiter?: TokenBucketRateLimiter;
+  private limiter?: IRateLimiter;
 
   constructor(private config: GatewayConfig) {
     if (config.rateLimiter) {
-      this.limiter = new TokenBucketRateLimiter(config.rateLimiter);
+      this.limiter = createRateLimiter(config.rateLimiter);
     }
   }
 
@@ -66,7 +67,7 @@ export class MCPGateway {
     const requestId = request.requestId || crypto.randomUUID();
 
     // Rate limiting check
-    if (this.limiter && !this.limiter.consume(agentKey)) {
+    if (this.limiter && !(await this.limiter.consume(agentKey))) {
       if (this.config.auditLogService) {
         await this.config.auditLogService.logEvent({
           action: "rate_limit.exceeded",
