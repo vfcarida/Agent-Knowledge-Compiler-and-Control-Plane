@@ -24,7 +24,13 @@ export function explainPolicy(policy: PolicyCard): string {
   if (policy.rules && policy.rules.length > 0) {
     lines.push("--- Rules ---");
     for (const rule of policy.rules) {
-      lines.push(`- Effect: ${rule.effect}${rule.condition ? ` (if: ${rule.condition})` : ""}`);
+      const condStr =
+        typeof rule.condition === "object"
+          ? JSON.stringify(rule.condition)
+          : rule.condition;
+      lines.push(
+        `- Effect: ${rule.effect}${condStr ? ` (if: ${condStr})` : ""}`,
+      );
     }
     lines.push("");
   }

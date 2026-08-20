@@ -1,4 +1,6 @@
 import type { PolicyCard, PolicyEvaluationResult } from "./types.js";
+import { meetsConditions } from "../policies/engine.js";
+import { normalizeConditions } from "../policies/adapter.js";
 
 /**
  * Standalone evaluator for a single PolicyCard, kept for its own test coverage.
@@ -13,6 +15,9 @@ export interface PolicyContext {
   /** The capability's declared risk level, matched against a rule's
    * `appliesTo.riskLevels` scope, if the policy declares one. */
   riskLevel?: string;
+  agentId?: string;
+  approvalToken?: string;
+  environment?: string;
 }
 
 export function evaluatePolicy(
@@ -36,8 +41,20 @@ export function evaluatePolicy(
 
     if (matchesCapability && matchesRiskLevel) {
       for (const rule of policy.rules) {
-        // Evaluate first matching rule (no condition logic implemented yet, assume all match if no condition)
-        if (!rule.condition) {
+        const conditions = rule.condition
+          ? normalizeConditions(rule.condition)
+          : undefined;
+        const conditionsMet = meetsConditions(conditions, {
+          tool: context.toolName,
+          agentId: context.agentId || "anonymous",
+          riskLevel: context.riskLevel || "low",
+          scopes: [],
+          approvalToken: context.approvalToken,
+          environment: context.environment,
+          sideEffect: context.sideEffect,
+        });
+
+        if (conditionsMet) {
           if (rule.effect === "deny") {
             return {
               allowed: false,

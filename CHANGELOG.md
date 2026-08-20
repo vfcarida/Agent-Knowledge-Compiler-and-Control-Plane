@@ -12,6 +12,7 @@ For detailed information on our deprecation and backwards compatibility policies
 
 ### Added
 
+- **PolicyCard Condition Enforcement**: Activated runtime evaluation of `PolicyCard.rules[].condition` in both the policy engine (`policies/adapter.ts`) and standalone evaluator (`policy/evaluate.ts`), supporting `time_window`, `environment`, `approval_exists`, `custom`, and compound conditions. Unknown condition types safely fail closed (deny).
 - **Policy Engine Evolution**: Advanced composition, rule conditions, and policy explanation logic (`explainPolicy`).
 - **Streamable HTTP Transport**: Added support for chunked HTTP data transfer to overcome SSE limitations.
 - **Conformance Suite Levels**: Tiered level validation (basic, standard, strict) optimizing build pipelines vs idempotency checks.

@@ -189,6 +189,7 @@ export function evaluatePoliciesWithTrace(
         rule,
         matched: true,
         conditionsMet: condMet,
+        skipReason: condMet ? undefined : "Conditions not met",
       });
 
       if (condMet && !finalDecision) {

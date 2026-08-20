@@ -83,4 +83,27 @@ describe("explainPolicy", () => {
     expect(result).not.toContain("Evidence Required:");
     expect(result).not.toContain("--- Rules ---");
   });
+
+  it("explains a policy with structured condition object", () => {
+    const policy: PolicyCard = {
+      apiVersion: "policy.akcp.dev/v2",
+      kind: "PolicyCard",
+      metadata: { name: "Structured Condition Policy" },
+      appliesTo: { capabilities: ["test-tool"] },
+      rules: [
+        {
+          effect: "deny",
+          condition: {
+            type: "environment",
+            params: { environment: "production" },
+          },
+        },
+      ],
+    };
+    const result = explainPolicy(policy);
+    expect(result).toContain("Structured Condition Policy");
+    expect(result).toContain(
+      'deny (if: {"type":"environment","params":{"environment":"production"}})',
+    );
+  });
 });

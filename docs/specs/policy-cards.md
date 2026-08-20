@@ -72,7 +72,13 @@ rules:
 - **appliesTo.capabilities**: Capability/tool IDs this rule set applies to. Supports `*` and trailing-`*` glob prefixes.
 - **appliesTo.riskLevels**: (Optional) Narrows the rule set to only fire when the invoked capability's declared `riskLevel` is in this list. Omit to match any risk level. The capability's risk level must actually reach policy evaluation — see `CapabilityRequest.riskLevel` in `capabilities/request.ts`; MCP servers that don't pass it fall back to `"medium"`.
 - **rules[].effect**: `allow`, `deny`, or `require_approval`.
-- **rules[].condition**: Accepted by the schema for forward compatibility, but **not currently evaluated** by either the runtime enforcement path (`policies/adapter.ts`) or the standalone `policy explain` evaluator (`policy/evaluate.ts`) — a rule with a `condition` behaves identically to the same rule without one. Express conditional logic today via `appliesTo.riskLevels` and/or by splitting into separate, narrowly-scoped Policy Cards instead.
+- **rules[].condition**: Evaluated at runtime by both the policy engine (`policies/adapter.ts` -> `policies/engine.ts`) and the standalone evaluator (`policy/evaluate.ts`). Can be specified as a string expression or structured condition object/array:
+  - `time_window`: Enforces allowed hours (e.g. `"time_window(startHour=9, endHour=17)"` or `"time_window: 9-17"`).
+  - `environment`: Matches target deployment environment (e.g. `"environment == 'production'"` or `"environment: staging"`).
+  - `approval_exists`: Requires a valid approval token (e.g. `"approval_exists"`).
+  - `custom`: Forward-compatible pass-through condition.
+  - Compound conditions can be combined using `&&` or `AND` (e.g. `"environment == 'production' && approval_exists"`).
+  - Unknown or unsupported condition types fail closed (deny).
 
 ## CLI Commands
 

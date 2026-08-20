@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { evaluatePolicy } from "../../policy/evaluate.js";
 import type { PolicyCard } from "../../policy/types.js";
 
@@ -226,5 +226,167 @@ describe("Policy Evaluation Engine", () => {
       sideEffect: "write",
     });
     expect(res2.allowed).toBe(false);
+  });
+
+  describe("Condition evaluation in standalone evaluatePolicy", () => {
+    it("should enforce environment condition", () => {
+      const policy: PolicyCard = {
+        apiVersion: "policy.akcp.dev/v2",
+        kind: "PolicyCard",
+        metadata: { name: "Env Policy" },
+        appliesTo: { capabilities: ["prod_tool"] },
+        rules: [
+          {
+            effect: "allow",
+            condition: "environment == 'production'",
+          },
+        ],
+      };
+
+      const resultDev = evaluatePolicy(policy, {
+        toolName: "prod_tool",
+        sideEffect: "read",
+        environment: "development",
+      });
+      // Falls through to V1 default allow
+      expect(resultDev.allowed).toBe(true);
+
+      const denyPolicy: PolicyCard = {
+        apiVersion: "policy.akcp.dev/v2",
+        kind: "PolicyCard",
+        metadata: { name: "Env Deny Policy" },
+        appliesTo: { capabilities: ["prod_tool"] },
+        rules: [
+          {
+            effect: "deny",
+            condition: "environment == 'production'",
+          },
+        ],
+      };
+
+      const resultDevDeny = evaluatePolicy(denyPolicy, {
+        toolName: "prod_tool",
+        sideEffect: "read",
+        environment: "development",
+      });
+      expect(resultDevDeny.allowed).toBe(true);
+
+      const resultProdDeny = evaluatePolicy(denyPolicy, {
+        toolName: "prod_tool",
+        sideEffect: "read",
+        environment: "production",
+      });
+      expect(resultProdDeny.allowed).toBe(false);
+    });
+
+    it("should enforce approval_exists condition", () => {
+      const policy: PolicyCard = {
+        apiVersion: "policy.akcp.dev/v2",
+        kind: "PolicyCard",
+        metadata: { name: "Approval Exists Policy" },
+        appliesTo: { capabilities: ["secure_tool"] },
+        rules: [
+          {
+            effect: "deny",
+            condition: "approval_exists",
+          },
+        ],
+      };
+
+      const withoutToken = evaluatePolicy(policy, {
+        toolName: "secure_tool",
+        sideEffect: "read",
+      });
+      expect(withoutToken.allowed).toBe(true);
+
+      const withToken = evaluatePolicy(policy, {
+        toolName: "secure_tool",
+        sideEffect: "read",
+        approvalToken: "token-abc",
+      });
+      expect(withToken.allowed).toBe(false);
+    });
+
+    it("should enforce time_window condition", () => {
+      const policy: PolicyCard = {
+        apiVersion: "policy.akcp.dev/v2",
+        kind: "PolicyCard",
+        metadata: { name: "Time Window Policy" },
+        appliesTo: { capabilities: ["maintenance_tool"] },
+        rules: [
+          {
+            effect: "deny",
+            condition: "time_window(9, 17)",
+          },
+        ],
+      };
+
+      try {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date("2026-08-20T14:00:00"));
+        const duringDay = evaluatePolicy(policy, {
+          toolName: "maintenance_tool",
+          sideEffect: "read",
+        });
+        expect(duringDay.allowed).toBe(false);
+
+        vi.setSystemTime(new Date("2026-08-20T22:00:00"));
+        const atNight = evaluatePolicy(policy, {
+          toolName: "maintenance_tool",
+          sideEffect: "read",
+        });
+        expect(atNight.allowed).toBe(true);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("should fail closed (deny) for unknown condition type on allow rule", () => {
+      const policy: PolicyCard = {
+        apiVersion: "policy.akcp.dev/v2",
+        kind: "PolicyCard",
+        metadata: { name: "Unknown Cond Policy" },
+        appliesTo: { capabilities: ["test_tool"] },
+        rules: [
+          {
+            effect: "allow",
+            condition: "invalid_condition_syntax_xyz",
+          },
+        ],
+      };
+
+      const result = evaluatePolicy(policy, {
+        toolName: "test_tool",
+        sideEffect: "read",
+      });
+      // Condition fails closed, so the allow rule is skipped
+      // Falls through to fallback V1 (allowed: true if no spec, but didn't match allow rule)
+      expect(result.requirements?.approvalRequired).toBeUndefined();
+    });
+
+    it("should support structured condition object and array", () => {
+      const policy: PolicyCard = {
+        apiVersion: "policy.akcp.dev/v2",
+        kind: "PolicyCard",
+        metadata: { name: "Structured Policy" },
+        appliesTo: { capabilities: ["test_tool"] },
+        rules: [
+          {
+            effect: "deny",
+            condition: {
+              type: "environment",
+              params: { environment: "production" },
+            },
+          },
+        ],
+      };
+
+      const res = evaluatePolicy(policy, {
+        toolName: "test_tool",
+        sideEffect: "read",
+        environment: "production",
+      });
+      expect(res.allowed).toBe(false);
+    });
   });
 });

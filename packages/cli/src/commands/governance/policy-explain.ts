@@ -65,8 +65,12 @@ export function registerPolicyExplainCommand(
           console.log(`\nAll rules evaluated:`);
           for (const e of trace.evaluatedRules) {
             const status = e.matched && e.conditionsMet ? "MATCH" : "SKIP ";
+            const condInfo =
+              e.rule.conditions && e.rule.conditions.length > 0
+                ? ` [conditions: ${e.rule.conditions.map((c) => `${c.type}${c.params && Object.keys(c.params).length > 0 ? `(${JSON.stringify(c.params)})` : ""}`).join(", ")}]`
+                : "";
             console.log(
-              `  [${status}] ${e.rule.id} (${e.rule.effect}, priority ${e.rule.priority})${e.skipReason ? " - " + e.skipReason : ""}`,
+              `  [${status}] ${e.rule.id} (${e.rule.effect}, priority ${e.rule.priority})${condInfo}${e.skipReason ? " - " + e.skipReason : ""}`,
             );
           }
         }
