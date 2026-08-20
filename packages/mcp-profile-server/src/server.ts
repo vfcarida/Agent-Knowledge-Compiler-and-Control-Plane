@@ -20,17 +20,48 @@ import {
   extractGatewayPolicies,
 } from "@akcp/core";
 
+export const UNTRUSTED_CONTENT_BOUNDARY_BEGIN =
+  "[BEGIN UNTRUSTED DOCUMENT CONTENT]";
+export const UNTRUSTED_CONTENT_BOUNDARY_END =
+  "[END UNTRUSTED DOCUMENT CONTENT]";
+
+export interface ProfileServerOptions {
+  /**
+   * Whether to wrap resource body content with untrusted boundary markers:
+   * [BEGIN UNTRUSTED DOCUMENT CONTENT] ... [END UNTRUSTED DOCUMENT CONTENT]
+   * Defaults to true.
+   */
+  enableContentBoundaries?: boolean;
+
+  /**
+   * Whether to perform an opt-in WAF scan on resource content to detect and flag
+   * potential prompt injection patterns in response metadata without modifying content.
+   * Defaults to false.
+   */
+  enableWafScan?: boolean;
+
+  /**
+   * Optional custom security gateway implementation for WAF scanning and tool checks.
+   * Defaults to LakeraGateway.
+   */
+  securityGateway?: ISecurityGateway;
+}
+
 export class AKCPProfileServer {
   private readonly server: McpServer;
   private readonly gateway: MCPGateway;
   private readonly ir: AgentKnowledgeIR;
   private readonly agentIdentity: string;
   private readonly securityGateway: ISecurityGateway;
+  private readonly options: Required<
+    Omit<ProfileServerOptions, "securityGateway">
+  >;
 
   constructor(
     ir: AgentKnowledgeIR,
     gatewayConfig?: Partial<GatewayConfig>,
     agentIdentity: string = "mcp-client",
+    options?: ProfileServerOptions,
   ) {
     this.ir = ir;
     const extractedPolicies = extractGatewayPolicies(ir);
@@ -42,7 +73,17 @@ export class AKCPProfileServer {
     };
     this.gateway = new MCPGateway(resolvedConfig);
     this.agentIdentity = agentIdentity;
-    this.securityGateway = new LakeraGateway();
+
+    const envContentBoundaries =
+      process.env["AKCP_ENABLE_CONTENT_BOUNDARIES"] !== "false";
+    const envWafScan = process.env["AKCP_ENABLE_RESOURCE_WAF"] === "true";
+
+    this.options = {
+      enableContentBoundaries:
+        options?.enableContentBoundaries ?? envContentBoundaries,
+      enableWafScan: options?.enableWafScan ?? envWafScan,
+    };
+    this.securityGateway = options?.securityGateway ?? new LakeraGateway();
 
     // Create the MCP server instance
     this.server = new McpServer({
@@ -56,6 +97,14 @@ export class AKCPProfileServer {
 
   getServerInstance(): McpServer {
     return this.server;
+  }
+
+  getOptions(): Required<Omit<ProfileServerOptions, "securityGateway">> {
+    return this.options;
+  }
+
+  getSecurityGateway(): ISecurityGateway {
+    return this.securityGateway;
   }
 
   /**
@@ -91,12 +140,43 @@ export class AKCPProfileServer {
           const summaryStr = concept.frontmatter.summary
             ? `\n> Summary: ${concept.frontmatter.summary}\n`
             : "";
+
+          let bodyContent = concept.body || "";
+          if (this.options.enableContentBoundaries) {
+            bodyContent = `${UNTRUSTED_CONTENT_BOUNDARY_BEGIN}\n${bodyContent}\n${UNTRUSTED_CONTENT_BOUNDARY_END}`;
+          }
+
+          const metadata: Record<string, unknown> = {
+            contentType: "untrusted-document",
+            injectionRisk: "possible",
+            trustLevel: "untrusted",
+            boundaryMarkers: this.options.enableContentBoundaries,
+          };
+
+          if (this.options.enableWafScan) {
+            const scanResult = await this.securityGateway.checkPrompt(
+              concept.body || "",
+            );
+            metadata.wafScan = {
+              scanned: true,
+              flagged: scanResult.flagged,
+              reason: scanResult.reason,
+              provider: scanResult.provider,
+            };
+            if (scanResult.flagged) {
+              metadata.injectionRisk = "high";
+              metadata.suspicious = true;
+            }
+          }
+
           return {
+            _meta: metadata,
             contents: [
               {
                 uri,
                 mimeType: "text/markdown",
-                text: `---\n${JSON.stringify(concept.frontmatter, null, 2)}\n---${summaryStr}\n\n${concept.body}`,
+                text: `---\n${JSON.stringify(concept.frontmatter, null, 2)}\n---${summaryStr}\n\n${bodyContent}`,
+                _meta: metadata,
               },
             ],
           };
@@ -167,7 +247,11 @@ export class AKCPProfileServer {
         if (summaryOnly && concept.frontmatter.summary) {
           fullText = `---\n${JSON.stringify(concept.frontmatter, null, 2)}\n---\n\n> Summary: ${concept.frontmatter.summary}`;
         } else {
-          fullText = `---\n${JSON.stringify(concept.frontmatter, null, 2)}\n---\n\n${concept.body}`;
+          let bodyContent = concept.body || "";
+          if (this.options.enableContentBoundaries) {
+            bodyContent = `${UNTRUSTED_CONTENT_BOUNDARY_BEGIN}\n${bodyContent}\n${UNTRUSTED_CONTENT_BOUNDARY_END}`;
+          }
+          fullText = `---\n${JSON.stringify(concept.frontmatter, null, 2)}\n---\n\n${bodyContent}`;
         }
 
         const chunk = fullText.slice(offset, offset + limit);
