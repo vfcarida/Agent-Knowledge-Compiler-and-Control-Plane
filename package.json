@@ -51,8 +51,6 @@
     "dev:automation-server": "pnpm --filter @akcp/mcp-automation-server dev",
     "dev:dashboard": "pnpm --filter @akcp/dashboard dev",
     "akcp": "node packages/cli/dist/index.js",
-    "ocf": "node packages/cli/dist/legacy-ocf-bin.js",
-    "agent-ready": "node packages/cli/dist/legacy-bin.js",
     "release": "pnpm -r publish --no-git-checks",
     "infra:up": "docker compose up -d redis",
     "infra:up:full": "docker compose --profile observability up -d",

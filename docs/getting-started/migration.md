@@ -1,10 +1,10 @@
 # Backwards Compatibility & Migration
 
-The repository was previously known as Open Career Format (OCF), ContextOps, and Agent-ready Knowledge Reference Architecture. Legacy CLI commands (`ocf`, `agent-ready`) continue to route to the main `akcp` binary while emitting a deprecation warning.
+The repository was previously known as Open Career Format (OCF), ContextOps, and Agent-ready Knowledge Reference Architecture. Legacy CLI commands (`ocf`, `agent-ready`) have been removed in favor of the canonical `akcp` binary.
 
-| Legacy Concept | Canonical AKCP Concept | Migration Status |
-| --- | --- | --- |
+| Legacy Concept             | Canonical AKCP Concept                            | Migration Status                                      |
+| -------------------------- | ------------------------------------------------- | ----------------------------------------------------- |
 | `Open Career Format (OCF)` | Agent Knowledge Compiler and Control Plane (AKCP) | Identity updated. Internal references are deprecated. |
-| `ContextOps` | AKCP Control Plane | Identity updated. |
-| `ocf` CLI command | `akcp` | Supported with deprecation warning. |
-| `agent-ready` CLI command | `akcp` | Supported with deprecation warning. |
+| `ContextOps`               | AKCP Control Plane                                | Identity updated.                                     |
+| `ocf` CLI command          | `akcp`                                            | Removed.                                              |
+| `agent-ready` CLI command  | `akcp`                                            | Removed.                                              |

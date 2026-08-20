@@ -169,7 +169,7 @@ pnpm akcp compile --config examples/domains/it-operations/akcp.yaml
 | Career (starter)         | Stable       | full walkthrough, golden outputs         |                          |
 | Customer Support         | Alpha        | sources, 8 policies, capabilities, evals | full implementation      |
 | VSCode Extension         | Experimental | syntax highlighting                      | validation, autocomplete |
-| Legacy CLI               | Deprecated   | deprecation warnings                     | removal in v1.0          |
+| Legacy CLI               | Removed      | legacy binaries deleted in v0.1.0        | —                        |
 
 For formal definitions, see the [Maturity and Status Guide](docs/status.md).
 

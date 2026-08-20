@@ -42,7 +42,6 @@ walkSync(rootDir, (filePath) => {
     filePath.includes('inventory-naming.mjs') ||
     filePath.includes('migrate-identity.mjs') ||
     filePath.includes('legacy-naming.md') || // DO NOT rewrite the migration history file we just made!
-    filePath.includes('legacy-ocf-bin.ts') || // Allow OCF in the shim file
     filePath.includes('identity.test.ts') ||
     filePath.endsWith('check-identity.mjs') ||
     filePath.includes('patch-all.mjs') ||

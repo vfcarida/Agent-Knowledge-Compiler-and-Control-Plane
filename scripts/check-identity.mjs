@@ -59,8 +59,6 @@ const result = spawnSync(
     ":(exclude)**/.akcp/*",
     ":(exclude)package.json",
     ":(exclude)packages/cli/package.json",
-    ":(exclude)packages/cli/src/legacy-bin.ts",
-    ":(exclude)packages/cli/src/legacy-ocf-bin.ts",
     ":(exclude)**/expected-output/*",
     ":(exclude)README.md",
     ":(exclude)docs/README.md",
