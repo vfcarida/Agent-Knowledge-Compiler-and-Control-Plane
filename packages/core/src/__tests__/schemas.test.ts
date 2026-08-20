@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { EducationFrontmatterSchema } from "../domain/schemas.js";
+import {
+  EducationFrontmatterSchema,
+  ProfileRegistry,
+} from "../domain/schemas.js";
 
 describe("EducationFrontmatterSchema", () => {
   it("accepts minimal valid education frontmatter", () => {
@@ -20,5 +23,20 @@ describe("EducationFrontmatterSchema", () => {
     });
 
     expect(result.success).toBe(false);
+  });
+});
+
+describe("ProfileRegistry", () => {
+  it("resolves schemas for all known profiles and fallback", () => {
+    expect(ProfileRegistry.getProfileSchema("career")).toBeDefined();
+    expect(ProfileRegistry.getProfileSchema("software-project")).toBeDefined();
+    expect(ProfileRegistry.getProfileSchema("software")).toBeDefined();
+    expect(ProfileRegistry.getProfileSchema("customer-support")).toBeDefined();
+    expect(ProfileRegistry.getProfileSchema("it-operations")).toBeDefined();
+    expect(ProfileRegistry.getProfileSchema("it-ops")).toBeDefined();
+    expect(ProfileRegistry.getProfileSchema("okf")).toBeDefined();
+    expect(ProfileRegistry.getProfileSchema("standard")).toBeDefined();
+    expect(ProfileRegistry.getProfileSchema("none")).toBeDefined();
+    expect(ProfileRegistry.getProfileSchema("unknown-profile")).toBeDefined();
   });
 });
