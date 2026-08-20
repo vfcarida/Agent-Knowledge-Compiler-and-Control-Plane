@@ -33,6 +33,15 @@ const mcp = profileServer.getServerInstance();
 const app = express();
 app.use(cors());
 
+// Health & Readiness Endpoints (NO AUTH REQUIRED)
+app.get("/healthz", (_req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
+app.get("/readyz", (_req, res) => {
+  res.status(200).json({ status: "ready", ir_loaded: true });
+});
+
 // JWT Auth Middleware
 const requireAuth = async (
   req: express.Request,
