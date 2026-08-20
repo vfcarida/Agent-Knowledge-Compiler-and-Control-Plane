@@ -10,7 +10,10 @@ import {
   TokenBucketRateLimiter,
   type RateLimiterConfig,
 } from "./rate-limiter.js";
-import type { IAuditLogService } from "../infrastructure/audit-log.js";
+import type {
+  IAuditLogService,
+  AuditRiskLevel,
+} from "../infrastructure/audit-log.js";
 import crypto from "crypto";
 
 export class MCPGatewayError extends Error {
@@ -71,7 +74,7 @@ export class MCPGateway {
           requestId: crypto.randomUUID(),
           capabilityId: request.toolName,
           decision: "deny",
-          riskLevel: "medium",
+          riskLevel: (request.riskLevel as AuditRiskLevel) || "medium",
           evidence: { reason: "Rate limit exceeded" },
         });
       }
@@ -143,7 +146,7 @@ export class MCPGateway {
           requestId,
           capabilityId: request.toolName,
           decision: "error",
-          riskLevel: "medium",
+          riskLevel: (request.riskLevel as AuditRiskLevel) || "medium",
           evidence: { reason: "No valid policy found" },
         });
       }
@@ -183,7 +186,7 @@ export class MCPGateway {
           requestId,
           capabilityId: request.toolName,
           decision: "deny",
-          riskLevel: "medium",
+          riskLevel: (request.riskLevel as AuditRiskLevel) || "medium",
           evidence: {
             payloadHash,
             policyIds: policy.id ? [policy.id] : [],
@@ -204,7 +207,7 @@ export class MCPGateway {
         requestId,
         capabilityId: request.toolName,
         decision: "allow",
-        riskLevel: "medium",
+        riskLevel: (request.riskLevel as AuditRiskLevel) || "medium",
         evidence: {
           payloadHash,
           policyIds: policy.id ? [policy.id] : [],

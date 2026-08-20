@@ -205,7 +205,11 @@ describe("MCPGateway", () => {
               forbiddenTools: [],
               approvalRequirements: [],
               piiHandling: "deny",
-              sideEffectRules: { read: "allow", write: "approval", submit: "approval" },
+              sideEffectRules: {
+                read: "allow",
+                write: "approval",
+                submit: "approval",
+              },
             },
           },
         },
@@ -253,7 +257,6 @@ describe("MCPGateway", () => {
     });
 
     it("should throw APPROVAL_REQUIRED and generate token if no token is provided", async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let error: any;
       try {
         await hitlGateway.execute(
@@ -319,6 +322,118 @@ describe("MCPGateway", () => {
           async () => ({ success: true }),
         ),
       ).rejects.toThrowError(/Invalid, expired, or tampered approval token/);
+    });
+  });
+
+  describe("Audit Log riskLevel propagation", () => {
+    const mockAuditLog = {
+      logEvent: vi.fn().mockResolvedValue(undefined),
+    };
+
+    const auditGateway = new MCPGateway({
+      policies: {
+        "agent-audit": mockPolicy,
+      },
+      auditLogService: mockAuditLog,
+    });
+
+    it("should propagate custom riskLevel to audit log on allow", async () => {
+      mockAuditLog.logEvent.mockClear();
+
+      await auditGateway.execute(
+        {
+          requestId: "req-critical",
+          toolName: "read_document",
+          sideEffect: "read",
+          agentId: "agent-audit",
+          riskLevel: "critical",
+          payload: {},
+        },
+        async () => ({ success: true }),
+      );
+
+      expect(mockAuditLog.logEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: "policy.evaluate",
+          decision: "allow",
+          riskLevel: "critical",
+        }),
+      );
+    });
+
+    it("should propagate custom riskLevel to audit log on policy deny", async () => {
+      mockAuditLog.logEvent.mockClear();
+
+      await expect(
+        auditGateway.execute(
+          {
+            requestId: "req-deny",
+            toolName: "delete_document",
+            sideEffect: "write",
+            agentId: "agent-audit",
+            riskLevel: "high",
+            payload: {},
+          },
+          async () => ({ success: true }),
+        ),
+      ).rejects.toThrowError(/Policy Violation/);
+
+      expect(mockAuditLog.logEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: "policy.evaluate",
+          decision: "deny",
+          riskLevel: "high",
+        }),
+      );
+    });
+
+    it("should fallback to medium riskLevel in audit log when riskLevel is omitted", async () => {
+      mockAuditLog.logEvent.mockClear();
+
+      await auditGateway.execute(
+        {
+          requestId: "req-no-risk",
+          toolName: "read_document",
+          sideEffect: "read",
+          agentId: "agent-audit",
+          payload: {},
+        },
+        async () => ({ success: true }),
+      );
+
+      expect(mockAuditLog.logEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: "policy.evaluate",
+          decision: "allow",
+          riskLevel: "medium",
+        }),
+      );
+    });
+
+    it("should propagate riskLevel to audit log when no valid policy is found", async () => {
+      mockAuditLog.logEvent.mockClear();
+
+      await expect(
+        auditGateway.execute(
+          {
+            requestId: "req-unauth",
+            toolName: "read_document",
+            sideEffect: "read",
+            agentId: "unknown-agent",
+            riskLevel: "critical",
+            payload: {},
+          },
+          async () => ({ success: true }),
+        ),
+      ).rejects.toThrowError(MCPGatewayError);
+
+      expect(mockAuditLog.logEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: "policy.evaluate",
+          decision: "error",
+          riskLevel: "critical",
+        }),
+      );
     });
   });
 });
