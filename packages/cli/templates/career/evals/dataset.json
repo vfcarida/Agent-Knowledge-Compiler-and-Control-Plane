@@ -10,7 +10,11 @@
     {
       "id": "q2",
       "text": "Summarize Alex Doe's impact at Acme Corp.",
-      "expectedOutputs": ["reduced latency by 40%", "migrated monolithic API", "introduced Redis"]
+      "expectedOutputs": [
+        "reduced latency by 40%",
+        "migrated monolithic API",
+        "introduced Redis"
+      ]
     },
     {
       "id": "q3",

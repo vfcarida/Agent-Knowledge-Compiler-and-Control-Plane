@@ -26,6 +26,7 @@ Production deployments to `svc-payment` are only permitted during the approved c
 ## Emergency Exceptions
 
 Emergency changes outside the window require:
+
 1. Approval from the Engineering Lead (Level 2 escalation)
 2. Documented justification in the incident ticket
 3. An automated rollback plan pre-tested in staging

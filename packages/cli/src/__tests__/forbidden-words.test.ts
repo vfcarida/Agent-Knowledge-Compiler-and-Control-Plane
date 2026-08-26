@@ -32,39 +32,40 @@ describe("Forbidden Marketing Wording", () => {
       path.join(workspaceRoot, "docs", "project", "maturity-model.md"),
     ]);
 
-    const filesToCheck = [
-      ...findFiles(docsDir),
-      ...findFiles(cliDir)
-    ].filter(f => !excludedFiles.has(f));
+    const filesToCheck = [...findFiles(docsDir), ...findFiles(cliDir)].filter(
+      (f) => !excludedFiles.has(f),
+    );
 
-    const forbiddenPhrases = [
-      "fully implemented",
-      "100% complete"
-    ];
+    const forbiddenPhrases = ["fully implemented", "100% complete"];
 
     let foundForbidden = false;
     const errors: string[] = [];
 
     for (const file of filesToCheck) {
       const content = fs.readFileSync(file, "utf-8").toLowerCase();
-      
-      // Specifically check for forbidden phrases if the context implies it's experimental, 
+
+      // Specifically check for forbidden phrases if the context implies it's experimental,
       // but to be safe we'll just check globally in docs and cli to enforce honesty.
       for (const phrase of forbiddenPhrases) {
         if (content.includes(phrase)) {
           // Allow exception in this very test file
           if (!file.includes("forbidden-words.test.ts")) {
             foundForbidden = true;
-            errors.push(`File ${file} contains forbidden marketing phrase: "${phrase}"`);
+            errors.push(
+              `File ${file} contains forbidden marketing phrase: "${phrase}"`,
+            );
           }
         }
       }
     }
 
     if (foundForbidden) {
-      throw new Error("Found forbidden marketing phrases in documentation or code:\n" + errors.join("\n"));
+      throw new Error(
+        "Found forbidden marketing phrases in documentation or code:\n" +
+          errors.join("\n"),
+      );
     }
-    
+
     expect(foundForbidden).toBe(false);
   });
 });

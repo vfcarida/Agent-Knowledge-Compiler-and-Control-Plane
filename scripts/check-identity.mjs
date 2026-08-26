@@ -7,7 +7,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const workspaceRoot = path.resolve(__dirname, "..");
-const allowlistPath = path.join(workspaceRoot, "quality", "identity-allowlist.txt");
+const allowlistPath = path.join(
+  workspaceRoot,
+  "quality",
+  "identity-allowlist.txt",
+);
 
 let allowlist = [];
 if (fs.existsSync(allowlistPath)) {
@@ -21,10 +25,20 @@ if (fs.existsSync(allowlistPath)) {
 // Check if a file/line combination is in the allowlist
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 function shouldCheckFile(filePath) {
-  if (filePath.includes('node_modules') || filePath.includes('.git') || filePath.includes('dist')) return false;
-  if (filePath.includes('quality/identity-allowlist.txt')) return false;
-  if (filePath.includes('scratch/') || filePath.includes('__snapshots__') || filePath.includes('identity.test.ts')) return false;
-  
+  if (
+    filePath.includes("node_modules") ||
+    filePath.includes(".git") ||
+    filePath.includes("dist")
+  )
+    return false;
+  if (filePath.includes("quality/identity-allowlist.txt")) return false;
+  if (
+    filePath.includes("scratch/") ||
+    filePath.includes("__snapshots__") ||
+    filePath.includes("identity.test.ts")
+  )
+    return false;
+
   // Only check text-based files
   return /\.(md|ts|js|json|yml|yaml|txt)$/.test(filePath);
 }
@@ -40,7 +54,8 @@ function isAllowlisted(filePath, lineContent) {
   return false;
 }
 
-const FORBIDDEN_REGEX = "(Open Career Format|OCF|Open-Career-Format|Agent-ready|Agent-ready Knowledge|Reference Architecture|ContextOps|open-career|agent-ready|@ocf|ocf-|ocf_|OPEN_CAREER|OPENCAREER)";
+const FORBIDDEN_REGEX =
+  "(Open Career Format|OCF|Open-Career-Format|Agent-ready|Agent-ready Knowledge|Reference Architecture|ContextOps|open-career|agent-ready|@ocf|ocf-|ocf_|OPEN_CAREER|OPENCAREER)";
 // We can use git grep for speed since it respects .gitignore
 const result = spawnSync(
   "git",
@@ -63,9 +78,9 @@ const result = spawnSync(
     ":(exclude)README.md",
     ":(exclude)docs/README.md",
     ":(exclude)docs/migrations/legacy-naming.md",
-    ":(exclude)docs/release/repository-metadata.md"
+    ":(exclude)docs/release/repository-metadata.md",
   ],
-  { cwd: workspaceRoot, encoding: "utf-8" }
+  { cwd: workspaceRoot, encoding: "utf-8" },
 );
 
 if (result.error) {
@@ -81,7 +96,7 @@ if (output) {
   for (const line of lines) {
     const [file, lineNumber, ...contentParts] = line.split(":");
     const content = contentParts.join(":");
-    
+
     // Check if this specific match is allowlisted
     if (!isAllowlisted(file, content)) {
       console.error(`\x1b[31mViolation\x1b[0m in ${file}:${lineNumber}`);
@@ -92,10 +107,16 @@ if (output) {
 }
 
 if (hasViolations) {
-  console.error(`\n\x1b[31m[FAIL]\x1b[0m Found legacy identity strings that are not allowlisted.`);
-  console.error(`Update the code or add them to quality/identity-allowlist.txt with a justification.`);
+  console.error(
+    `\n\x1b[31m[FAIL]\x1b[0m Found legacy identity strings that are not allowlisted.`,
+  );
+  console.error(
+    `Update the code or add them to quality/identity-allowlist.txt with a justification.`,
+  );
   process.exit(1);
 } else {
-  console.log(`\x1b[32m[PASS]\x1b[0m Identity check passed. No forbidden legacy strings found outside the allowlist.`);
+  console.log(
+    `\x1b[32m[PASS]\x1b[0m Identity check passed. No forbidden legacy strings found outside the allowlist.`,
+  );
   process.exit(0);
 }

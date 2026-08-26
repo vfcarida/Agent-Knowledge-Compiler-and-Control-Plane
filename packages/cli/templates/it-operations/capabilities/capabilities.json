@@ -13,9 +13,18 @@
     "inputsSchema": {
       "type": "object",
       "properties": {
-        "serviceName": { "type": "string", "description": "The service ID to query logs for." },
-        "query": { "type": "string", "description": "Log filter expression (no credentials or secrets)." },
-        "startTime": { "type": "string", "description": "ISO 8601 start time." },
+        "serviceName": {
+          "type": "string",
+          "description": "The service ID to query logs for."
+        },
+        "query": {
+          "type": "string",
+          "description": "Log filter expression (no credentials or secrets)."
+        },
+        "startTime": {
+          "type": "string",
+          "description": "ISO 8601 start time."
+        },
         "endTime": { "type": "string", "description": "ISO 8601 end time." }
       },
       "required": ["serviceName", "query"]
@@ -35,7 +44,10 @@
     "inputsSchema": {
       "type": "object",
       "properties": {
-        "runbookId": { "type": "string", "description": "The runbook document ID." }
+        "runbookId": {
+          "type": "string",
+          "description": "The runbook document ID."
+        }
       },
       "required": ["runbookId"]
     }
@@ -55,7 +67,10 @@
       "type": "object",
       "properties": {
         "title": { "type": "string" },
-        "severity": { "type": "string", "enum": ["SEV-1", "SEV-2", "SEV-3", "SEV-4", "SEV-5"] },
+        "severity": {
+          "type": "string",
+          "enum": ["SEV-1", "SEV-2", "SEV-3", "SEV-4", "SEV-5"]
+        },
         "serviceRef": { "type": "string" },
         "description": { "type": "string" }
       },
@@ -96,10 +111,19 @@
     "inputsSchema": {
       "type": "object",
       "properties": {
-        "remediationActionId": { "type": "string", "description": "The remediation action to execute (e.g., remediation-rollback-deployment)." },
+        "remediationActionId": {
+          "type": "string",
+          "description": "The remediation action to execute (e.g., remediation-rollback-deployment)."
+        },
         "serviceRef": { "type": "string" },
-        "targetVersion": { "type": "string", "description": "For rollbacks: the version to roll back to." },
-        "approvalTicketId": { "type": "string", "description": "Required: the approval ticket ID from the AKCP approval flow." }
+        "targetVersion": {
+          "type": "string",
+          "description": "For rollbacks: the version to roll back to."
+        },
+        "approvalTicketId": {
+          "type": "string",
+          "description": "Required: the approval ticket ID from the AKCP approval flow."
+        }
       },
       "required": ["remediationActionId", "serviceRef", "approvalTicketId"]
     }

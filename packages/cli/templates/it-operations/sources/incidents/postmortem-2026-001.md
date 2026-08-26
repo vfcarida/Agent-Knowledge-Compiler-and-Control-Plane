@@ -36,12 +36,12 @@ The 65-minute payment outage on 2026-04-14 was caused by a misconfigured databas
 
 ## Action Items
 
-| Item                                                             | Owner             | Due Date   | Status      |
-|------------------------------------------------------------------|-------------------|------------|-------------|
-| Add pool config validation to CI                                 | payments-team     | 2026-05-01 | Completed   |
-| Add canary stage with DB health validation                       | infra-team        | 2026-05-15 | In Progress |
-| Alert on connection pool utilization > 80%                       | observability     | 2026-04-21 | Completed   |
-| Update High CPU and DB runbooks with connection pool triage path | payments-team     | 2026-04-30 | Completed   |
+| Item                                                             | Owner         | Due Date   | Status      |
+| ---------------------------------------------------------------- | ------------- | ---------- | ----------- |
+| Add pool config validation to CI                                 | payments-team | 2026-05-01 | Completed   |
+| Add canary stage with DB health validation                       | infra-team    | 2026-05-15 | In Progress |
+| Alert on connection pool utilization > 80%                       | observability | 2026-04-21 | Completed   |
+| Update High CPU and DB runbooks with connection pool triage path | payments-team | 2026-04-30 | Completed   |
 
 ## What the Agent Did Correctly
 

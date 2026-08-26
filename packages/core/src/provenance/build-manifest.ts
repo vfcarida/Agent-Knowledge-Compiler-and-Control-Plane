@@ -1,7 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { AgentKnowledgeIR } from "../ir/types.js";
-import type { BuildManifest, ArtifactProvenance, ConformanceInfo } from "./types.js";
+import type {
+  BuildManifest,
+  ArtifactProvenance,
+  ConformanceInfo,
+} from "./types.js";
 import type { TargetOutput } from "../targets/types.js";
 
 export class ProvenanceManifestBuilder {

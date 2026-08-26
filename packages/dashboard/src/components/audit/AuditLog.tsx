@@ -29,7 +29,8 @@ import { useAuth } from "../../contexts/AuthContext.js";
 
 // No import.meta.env fallback hardcodes localhost so this keeps working out of
 // the box in local dev, but a real deployment should set VITE_API_BASE_URL.
-const API_BASE_URL = import.meta.env["VITE_API_BASE_URL"] || "http://localhost:3001";
+const API_BASE_URL =
+  import.meta.env["VITE_API_BASE_URL"] || "http://localhost:3001";
 
 export function AuditLog() {
   const [logs, setLogs] = useState<AuditEvent[]>([]);
@@ -47,14 +48,16 @@ export function AuditLog() {
         const token = user ? user.identity : "anonymous";
         const response = await fetch(`${API_BASE_URL}/api/audit/logs`, {
           headers: {
-            "Authorization": `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         if (!response.ok) {
-          throw new Error("No audit logs found (or failed to fetch /api/audit/logs)");
+          throw new Error(
+            "No audit logs found (or failed to fetch /api/audit/logs)",
+          );
         }
         const data = await response.json();
-        
+
         // Parse the MCP tool response format
         let parsedLogs: AuditEvent[] = [];
         if (data.content && data.content[0] && data.content[0].text) {
@@ -62,12 +65,15 @@ export function AuditLog() {
           if (toolResult.data && toolResult.data.logs) {
             parsedLogs = toolResult.data.logs;
           } else if (toolResult.status === "error") {
-             throw new Error(toolResult.error?.message || "Error fetching logs");
+            throw new Error(toolResult.error?.message || "Error fetching logs");
           }
         }
 
         // Sort newest first
-        parsedLogs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+        parsedLogs.sort(
+          (a, b) =>
+            new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+        );
         setLogs(parsedLogs);
       } catch (err: any) {
         setError(err.message);
@@ -186,7 +192,10 @@ export function AuditLog() {
                   </td>
                   <td className="px-6 py-4 text-zinc-300 text-xs">
                     {event.evidence ? (
-                      <div className="max-w-[200px] truncate" title={JSON.stringify(event.evidence)}>
+                      <div
+                        className="max-w-[200px] truncate"
+                        title={JSON.stringify(event.evidence)}
+                      >
                         {event.evidence.reason ||
                           JSON.stringify(event.evidence)}
                       </div>

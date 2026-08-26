@@ -7,7 +7,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const workspaceRoot = path.resolve(__dirname, "..");
 
-const result = spawnSync("git", ["ls-files", "*.md"], { cwd: workspaceRoot, encoding: "utf-8" });
+const result = spawnSync("git", ["ls-files", "*.md"], {
+  cwd: workspaceRoot,
+  encoding: "utf-8",
+});
 if (result.error) {
   console.error("Failed to run git ls-files:", result.error);
   process.exit(1);
@@ -36,7 +39,12 @@ for (const file of mdFiles) {
       let link = match[1].trim();
 
       // Ignore http/https, mailto, fragment-only links, and generated api/ link
-      if (link.startsWith("http") || link.startsWith("mailto:") || link.startsWith("#") || link === "api/") {
+      if (
+        link.startsWith("http") ||
+        link.startsWith("mailto:") ||
+        link.startsWith("#") ||
+        link === "api/"
+      ) {
         continue;
       }
 
@@ -45,7 +53,7 @@ for (const file of mdFiles) {
       if (hashIndex !== -1) {
         link = link.substring(0, hashIndex);
       }
-      
+
       // If the link is empty after stripping fragment, it was a fragment-only link, skip
       if (!link) continue;
 
@@ -61,7 +69,9 @@ for (const file of mdFiles) {
       if (!fs.existsSync(targetPath)) {
         console.error(`\x1b[31mBroken Link\x1b[0m in ${file}:${i + 1}`);
         console.error(`  Link: ${link}`);
-        console.error(`  Resolved to: ${path.relative(workspaceRoot, targetPath)}`);
+        console.error(
+          `  Resolved to: ${path.relative(workspaceRoot, targetPath)}`,
+        );
         hasBrokenLinks = true;
       }
     }

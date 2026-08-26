@@ -29,11 +29,11 @@ All incidents affecting `svc-payment` must follow this escalation ladder. AKCP e
 
 ## Levels
 
-| Level | Contact              | Timeout | Notes                                         |
-|-------|----------------------|---------|-----------------------------------------------|
-| L1    | On-call engineer     | 5 min   | Must acknowledge alert                        |
-| L2    | Engineering Lead     | 10 min  | Joins bridge call, drives mitigation          |
-| L3    | VP Engineering       | 20 min  | Authorizes emergency changes (bypasses change window) |
+| Level | Contact          | Timeout | Notes                                                 |
+| ----- | ---------------- | ------- | ----------------------------------------------------- |
+| L1    | On-call engineer | 5 min   | Must acknowledge alert                                |
+| L2    | Engineering Lead | 10 min  | Joins bridge call, drives mitigation                  |
+| L3    | VP Engineering   | 20 min  | Authorizes emergency changes (bypasses change window) |
 
 ## SEV-1 Override
 

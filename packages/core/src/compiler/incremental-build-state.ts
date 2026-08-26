@@ -21,7 +21,6 @@ export class IncrementalCompiler {
       if (fs.existsSync(workspaceDir) && fs.statSync(workspaceDir).isFile()) {
         resolvedDir = path.dirname(workspaceDir);
       }
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     } catch (e) {
       // Ignore
     }
@@ -41,7 +40,6 @@ export class IncrementalCompiler {
         const raw = fs.readFileSync(this.stateFile, "utf-8");
         this.state = JSON.parse(raw);
       }
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     } catch (e) {
       this.state = {};
     }

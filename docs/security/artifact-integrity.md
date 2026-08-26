@@ -22,6 +22,7 @@ As of the current release, AKCP extends local hash integrity with cryptographic 
 - **NPM Provenance**: Packages are published with `--provenance`, allowing consumers to verify package origin via `npm audit signatures`.
 
 Consumers can verify any release artifact:
+
 ```bash
 gh attestation verify <path/to/artifact> \
   --repo vfcarida/Agent-Knowledge-Compiler-and-Control-Plane

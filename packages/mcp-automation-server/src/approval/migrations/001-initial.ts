@@ -27,5 +27,5 @@ export const migration: Migration = {
       DROP TABLE IF EXISTS pending_approvals;
       DROP TABLE IF EXISTS audit_logs;
     `);
-  }
+  },
 };

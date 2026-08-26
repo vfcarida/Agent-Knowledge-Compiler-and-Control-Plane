@@ -7,6 +7,7 @@
 ## Vision
 
 Customer Support is the planned third enterprise flagship demonstrating policy-aware, privacy-preserving support knowledge compilation. It shows how AKCP handles:
+
 - Tickets and Customer History
 - Support Macros
 - SLA Policies
@@ -22,6 +23,7 @@ All provided documents are synthetic fixtures containing no real customer PII.
 ## Architecture
 
 This domain consists of:
+
 - **`sources/`**: The synthetic OKF documents representing the knowledge base, macros, policies, and tickets.
 - **`capabilities/`**: MCP tools governing support actions. Dangerous actions (like `issue_refund` and `delete_account`) are marked as explicitly unimplemented skeletons.
 - **`policies/`**: Formal policy cards governing agent behavior (e.g. `read_support_knowledge`, `autonomous_actions`).
@@ -30,6 +32,7 @@ This domain consists of:
 ## Expected Dashboard Requirements
 
 The future Control Plane dashboard for this domain will require:
+
 - A real-time Support Queue view.
 - Audit evidence of applied PII Redaction (showing obscured data).
 

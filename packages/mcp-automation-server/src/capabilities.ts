@@ -97,7 +97,8 @@ export const automationServerCapabilities: CapabilityManifest[] = [
     name: "classify_support_intent",
     kind: "tool",
     version: "0.1.0",
-    description: "Classifies the intent of a customer support ticket based on text. When to use: To categorize inbound requests. When not to use: For anything else. Side effects: none.",
+    description:
+      "Classifies the intent of a customer support ticket based on text. When to use: To categorize inbound requests. When not to use: For anything else. Side effects: none.",
     riskLevel: "low",
     sideEffectLevel: "local-read",
     requiredApproval: false,
@@ -107,7 +108,8 @@ export const automationServerCapabilities: CapabilityManifest[] = [
     name: "retrieve_support_context",
     kind: "tool",
     version: "0.1.0",
-    description: "Retrieves context (policies, macros, past tickets) relevant to a support ticket. When to use: To find related info. When not to use: Without ticket context. Side effects: none.",
+    description:
+      "Retrieves context (policies, macros, past tickets) relevant to a support ticket. When to use: To find related info. When not to use: Without ticket context. Side effects: none.",
     riskLevel: "low",
     sideEffectLevel: "local-read",
     requiredApproval: false,
@@ -117,7 +119,8 @@ export const automationServerCapabilities: CapabilityManifest[] = [
     name: "draft_support_reply",
     kind: "tool",
     version: "0.1.0",
-    description: "Drafts a reply to a support ticket using context. When to use: To generate a response. When not to use: To send a response. Side effects: none.",
+    description:
+      "Drafts a reply to a support ticket using context. When to use: To generate a response. When not to use: To send a response. Side effects: none.",
     riskLevel: "low",
     sideEffectLevel: "local-read",
     requiredApproval: false,
@@ -127,7 +130,8 @@ export const automationServerCapabilities: CapabilityManifest[] = [
     name: "validate_support_reply",
     kind: "tool",
     version: "0.1.0",
-    description: "Validates a drafted support reply against compliance and policy rules. When to use: Before sending a reply. When not to use: For random text. Side effects: none.",
+    description:
+      "Validates a drafted support reply against compliance and policy rules. When to use: Before sending a reply. When not to use: For random text. Side effects: none.",
     riskLevel: "low",
     sideEffectLevel: "local-read",
     requiredApproval: false,
@@ -137,7 +141,8 @@ export const automationServerCapabilities: CapabilityManifest[] = [
     name: "redact_support_pii",
     kind: "tool",
     version: "0.1.0",
-    description: "Redacts or tokenizes PII from a support payload. When to use: To hide PII. When not to use: If PII is needed. Side effects: none.",
+    description:
+      "Redacts or tokenizes PII from a support payload. When to use: To hide PII. When not to use: If PII is needed. Side effects: none.",
     riskLevel: "low",
     sideEffectLevel: "local-read",
     requiredApproval: false,
@@ -147,7 +152,8 @@ export const automationServerCapabilities: CapabilityManifest[] = [
     name: "preview_support_action",
     kind: "tool",
     version: "0.1.0",
-    description: "Dry-runs a support action (e.g. refund, escalate) to preview its impact. When to use: To see what an action would do. When not to use: To execute the action. Side effects: none.",
+    description:
+      "Dry-runs a support action (e.g. refund, escalate) to preview its impact. When to use: To see what an action would do. When not to use: To execute the action. Side effects: none.",
     riskLevel: "low",
     sideEffectLevel: "external-read",
     requiredApproval: false,
@@ -157,7 +163,8 @@ export const automationServerCapabilities: CapabilityManifest[] = [
     name: "request_support_action_approval",
     kind: "tool",
     version: "0.1.0",
-    description: "Stages a support action for human review and returns an approval token. When to use: To prepare an action for review. When not to use: To execute. Side effects: Creates pending approval.",
+    description:
+      "Stages a support action for human review and returns an approval token. When to use: To prepare an action for review. When not to use: To execute. Side effects: Creates pending approval.",
     riskLevel: "medium",
     sideEffectLevel: "external-read",
     requiredApproval: false,
@@ -167,7 +174,8 @@ export const automationServerCapabilities: CapabilityManifest[] = [
     name: "record_support_resolution",
     kind: "tool",
     version: "0.1.0",
-    description: 'Consumes an approval token to autonomously execute a support action (e.g. issue refund, close ticket). When to use: To execute an approved action. When not to use: Without approval. Side effects: Executes action. Example: `record_support_resolution({ token: "123" })`.',
+    description:
+      'Consumes an approval token to autonomously execute a support action (e.g. issue refund, close ticket). When to use: To execute an approved action. When not to use: Without approval. Side effects: Executes action. Example: `record_support_resolution({ token: "123" })`.',
     riskLevel: "critical",
     sideEffectLevel: "external-submit",
     requiredApproval: true,
@@ -177,7 +185,8 @@ export const automationServerCapabilities: CapabilityManifest[] = [
     name: "detect_support_knowledge_gap",
     kind: "tool",
     version: "0.1.0",
-    description: "Detects gaps in current support documentation based on unresolved tickets. When to use: To analyze knowledge gaps. When not to use: For individual tickets. Side effects: none.",
+    description:
+      "Detects gaps in current support documentation based on unresolved tickets. When to use: To analyze knowledge gaps. When not to use: For individual tickets. Side effects: none.",
     riskLevel: "low",
     sideEffectLevel: "local-read",
     requiredApproval: false,

@@ -1,66 +1,63 @@
 # Compile Targets
 
-O **Agent Knowledge Compiler and Control Plane (akcp)** transforma conhecimento cru e esparso em múltiplos artefatos governados (targets), desenhados para consumo de agentes e sistemas adjacentes.
+The **Agent Knowledge Compiler and Control Plane (AKCP)** compiles raw, distributed organizational knowledge into multiple governed artifacts (targets) designed for consumption by AI agents and adjacent runtime systems.
 
-## Configuração
+## Configuration
 
-No arquivo `akcp.yaml`, configure o array `targets` dentro de `compile`:
+In your `akcp.yaml` configuration file, declare the `targets` array inside the `compile` block:
 
 ```yaml
 compile:
   sources:
     - type: okf-directory
-      path: ./sample-data/.okf
+      path: ./sources
   targets:
-    - type: ir-json
+    - type: context-pack
       out: dist/agent-knowledge-ir.json
-    - type: openwiki-docs
+    - type: openwiki
       out: dist/openwiki
-    - type: agents-md
-      out: dist/agents-snippet.md
-    - type: eval-dataset
-      out: dist/eval.jsonl
+    - type: mcp-resources
+      out: dist/mcp-resources.json
+    - type: dashboard-metadata
+      out: dist/dashboard-meta.json
 ```
 
-## Targets Disponíveis
+## Available Targets
 
-### `ir-json`
+### `context-pack` (or `ir-json`)
 
-O artefato central do AKCP. Representa toda a ontologia extraída (IRConcepts e IRLinks) em um formato estruturado, incluindo metadados de budget de contexto.
-**Consumidor**: MCP Profile Server, Dashboard, CI.
+The central normalized knowledge artifact of AKCP. Represents the entire extracted ontology (`IRConcept`s and `IRLink`s) in an AST-level structured JSON format, including metadata, tags, and context budgeting telemetry.
+
+- **Consumers**: MCP Profile Server, Control Plane, Dashboard UI, CI pipeline.
 
 ### `okf-bundle`
 
-Transforma a IR de volta em um repositório rígido de `.md` com YAML Frontmatter validado. Útil para consolidar fontes mistas (como Markdown, OpenAPI e OpenWiki) em um único bundle unificado `v0.1.0`.
+Exports the normalized IR back into a clean, canonical folder of `.md` files with validated YAML frontmatter. Useful for consolidating mixed sources (such as raw Markdown, OpenAPI definitions, and OpenWiki exports) into a unified OKF v0.1.0 bundle.
 
-### `openwiki-docs`
+### `openwiki`
 
-Gera uma estrutura hierárquica de documentação em Markdown tradicional, criando arquivos de índice. Ideal para publicar documentação limpa em portais focados em desenvolvedores (ex: GitHub Pages) ou ingestão ingênua por agentes sem MCP.
+Generates a hierarchical Markdown documentation tree with generated index and navigation files. Ideal for publishing clean documentation to developer portals (e.g. GitHub Pages) or straightforward file ingestion for non-MCP agents.
 
-### `agents-md`
+### `agent-instructions` (or `agents-md`)
 
-Gera um snippet Markdown otimizado para ser embutido em `AGENTS.md` (ou `CLAUDE.md`). Contém a assinatura e o inventário do pacote de contexto.
+Generates an optimized Markdown snippet suitable for embedding into `AGENTS.md` (or `CLAUDE.md`). Contains cryptographic signatures, bundle identity, and context pack inventory blocks.
 
-### `mcp-resources-manifest`
+### `mcp-resources`
 
-Produz um manifesto JSON declarando os `resources` que um servidor MCP deve expor com base no conhecimento extraído.
+Produces a Model Context Protocol resource manifest declaring the URI templates, MIME types, and document resources exposed by an MCP server based on the compiled knowledge.
 
 ### `policy-bundle`
 
-Despeja apenas os controles de governança extraídos da IR para uso em motores de autorização isolados.
+Extracts and bundles governance constraints, Policy Cards, and capability rules from the IR for standalone authorization engines and runtime gateways.
 
 ### `eval-dataset`
 
-Gera conjuntos de QA (pares Pergunta/Documento) no formato JSONL, prontos para uso em frameworks de LLM evaluation (evidência de compliance NIST AI RMF).
+Generates synthetic and extracted QA pairs (question/document grounding datasets) in JSONL format, ready for evaluation harnesses and NIST AI RMF compliance audits.
 
-### `graph-json`
+### `dashboard-metadata`
 
-Fornece uma extração simplificada (nodes e edges) para ferramentas de visualização (ex: D3.js) ou inicialização de graph databases.
+Extracts aggregate metrics, entity relationships, dependency graphs, and summary statistics consumed by the AKCP Dashboard BFF.
 
-## Manifest de Compilação
+## Compilation Manifest
 
-Sempre que a compilação de targets for executada, um arquivo central chamado `akcp-manifest.json` é gerado. Ele contém a identidade do build e os hashes criptográficos de cada target emitido. Você pode inspecionar esse arquivo usando:
-
-```bash
-npx akcp inspect-artifact dist/akcp-manifest.json
-```
+Whenever compilation is executed, a root build manifest named `akcp-manifest.json` is generated in the target directory. It contains the build identity, tool version, source configuration hashes, and cryptographic hashes (SHA-256) of every emitted target artifact for provenance verification.

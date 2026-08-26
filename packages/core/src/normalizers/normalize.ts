@@ -8,7 +8,7 @@ import { FrontmatterParser } from "../infrastructure/frontmatter-parser.js";
 export function normalizeRawItem(item: RawKnowledgeItem): IRConcept {
   let type = "Unknown";
   let conceptId = item.metadata.conceptId;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   let frontmatter: any = {};
   let body = item.rawContent;
 
@@ -32,7 +32,6 @@ export function normalizeRawItem(item: RawKnowledgeItem): IRConcept {
       if (!conceptId) {
         conceptId = doc.conceptId;
       }
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     } catch (err: any) {
       // If it fails to parse as OKF, treat it as plain markdown
       type = "Document";

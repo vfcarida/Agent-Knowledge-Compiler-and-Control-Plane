@@ -4,7 +4,7 @@
 
 The Career domain serves as the primary **starter domain** for understanding the Agent Knowledge Compiler and Control Plane (AKCP). It provides a low-friction, easy-to-understand dataset (a personal career profile, experience, and preferences) to demonstrate how AKCP compiles human-readable knowledge into governed, versioned, testable, and agent-consumable artifacts (MCP resources, context packs, OpenWiki docs).
 
-> **Note:** AKCP is a general-purpose knowledge compiler for organizations (e.g., IT Operations, Customer Support). The Career domain is provided simply because it requires zero organizational context to understand. It is *not* the primary use-case for AKCP.
+> **Note:** AKCP is a general-purpose knowledge compiler for organizations (e.g., IT Operations, Customer Support). The Career domain is provided simply because it requires zero organizational context to understand. It is _not_ the primary use-case for AKCP.
 
 ## Domain Structure
 
@@ -18,6 +18,7 @@ The Career domain serves as the primary **starter domain** for understanding the
 ## Expected Outputs
 
 Once compiled, you can expect:
+
 - A `context-pack.json` (AK-IR) containing the parsed and budgeted OKF documents.
 - An `akcp-manifest.json` for MCP resource serving.
 - A static HTML OpenWiki in `dist/openwiki`.

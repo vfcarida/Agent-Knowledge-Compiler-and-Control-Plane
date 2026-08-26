@@ -19,10 +19,7 @@ describe("Domain Adapters Integration", () => {
     const doc = parser.parse(
       rawContent,
       sampleFilePath,
-      path.resolve(
-        evalsDir,
-        "../../../examples/domains/career/sources",
-      ),
+      path.resolve(evalsDir, "../../../examples/domains/career/sources"),
     );
 
     expect(doc).toBeDefined();

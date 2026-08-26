@@ -40,14 +40,8 @@
       "frontmatter": {
         "type": "Preference",
         "id": "pref-001",
-        "roleTypes": [
-          "Senior Software Engineer",
-          "Lead Backend Engineer"
-        ],
-        "workSettings": [
-          "Remote",
-          "Hybrid"
-        ],
+        "roleTypes": ["Senior Software Engineer", "Lead Backend Engineer"],
+        "workSettings": ["Remote", "Hybrid"],
         "targetCompensation": 180000,
         "currency": "USD"
       },
@@ -126,16 +120,11 @@
             "description": "The target job description text."
           }
         },
-        "required": [
-          "jobDescription"
-        ]
+        "required": ["jobDescription"]
       }
     }
   ],
-  "targets": [
-    "mcp-profile-server",
-    "mcp-automation-server"
-  ],
+  "targets": ["mcp-profile-server", "mcp-automation-server"],
   "sourceHashes": {
     "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\knowledge\\experience-acmecorp.md": "2b7ec7e07deca47458342f1d6f35e176f6849da677073329984d8ecfd7198ca9",
     "file://C:\\Users\\vinicius\\Documents\\GeminiCode\\Open-Career-Format-Orchestrator\\examples\\domains\\career\\knowledge\\preferences.md": "161d4fafda506925e674226de71cbd063b25d67dd66e82cf025459d7c9a7558c",

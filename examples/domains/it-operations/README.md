@@ -21,6 +21,7 @@ This domain demonstrates AKCP's full capability set:
 ## Expected Outputs
 
 Once compiled, you can expect:
+
 - A `context-pack.json` (AK-IR) containing the parsed and budgeted OKF documents.
 - An `mcp-resources.json` for MCP resource serving.
 - A static HTML OpenWiki in `dist/openwiki`.
@@ -47,13 +48,13 @@ pnpm akcp serve mcp --profile it-operations
 
 ## Capabilities
 
-| Capability ID                          | Risk     | Approval Required | Side Effects      |
-|----------------------------------------|----------|-------------------|-------------------|
-| `it-operations.query_logs`             | Low      | No                | Read (logs)       |
-| `it-operations.get_runbook`            | Low      | No                | None              |
-| `it-operations.create_incident`        | Medium   | No                | Write (record)    |
-| `it-operations.escalate_incident`      | Medium   | Yes               | External write    |
-| `it-operations.execute_remediation`    | Critical | **Yes**           | External write    |
+| Capability ID                       | Risk     | Approval Required | Side Effects   |
+| ----------------------------------- | -------- | ----------------- | -------------- |
+| `it-operations.query_logs`          | Low      | No                | Read (logs)    |
+| `it-operations.get_runbook`         | Low      | No                | None           |
+| `it-operations.create_incident`     | Medium   | No                | Write (record) |
+| `it-operations.escalate_incident`   | Medium   | Yes               | External write |
+| `it-operations.execute_remediation` | Critical | **Yes**           | External write |
 
 ---
 
@@ -82,15 +83,15 @@ The `evals/it-operations.yaml` file contains 7 evaluation scenarios:
 
 ## Files mapped in Sources
 
-| Document Type       | Purpose |
-|---------------------|---------|
-| Service             | Describes a microservice boundaries |
-| Owner               | Defines the owning team |
-| SLO                 | Defines the Service Level Objective |
-| EscalationPolicy    | Escalation path mapping |
-| ChangeWindow        | Allowed deployment windows |
-| Alert               | Mapping metrics to alerts |
-| Runbook             | Mitigation steps for alerts |
-| RemediationAction   | Automated commands for mitigation |
-| Incident            | Historical incident record |
-| Postmortem          | Post-incident review document |
+| Document Type     | Purpose                             |
+| ----------------- | ----------------------------------- |
+| Service           | Describes a microservice boundaries |
+| Owner             | Defines the owning team             |
+| SLO               | Defines the Service Level Objective |
+| EscalationPolicy  | Escalation path mapping             |
+| ChangeWindow      | Allowed deployment windows          |
+| Alert             | Mapping metrics to alerts           |
+| Runbook           | Mitigation steps for alerts         |
+| RemediationAction | Automated commands for mitigation   |
+| Incident          | Historical incident record          |
+| Postmortem        | Post-incident review document       |

@@ -57,7 +57,7 @@ export function useOKFData() {
         if (fileName === "akcp-manifest.json") {
           try {
             bundle.manifest = JSON.parse(content);
-          } catch(e) {
+          } catch (e) {
             console.warn("Failed to parse manifest");
           }
           continue;
@@ -128,10 +128,11 @@ export function useOKFData() {
             if (entry.kind === "directory" && entry.name === "dist") {
               const distDir = await handle.getDirectoryHandle("dist");
               try {
-                const manifestFile = await distDir.getFileHandle("akcp-manifest.json");
+                const manifestFile =
+                  await distDir.getFileHandle("akcp-manifest.json");
                 const file = await manifestFile.getFile();
                 bundle.manifest = JSON.parse(await file.text());
-              } catch(e) {
+              } catch (e) {
                 // dist might not contain manifest
               }
             } else if (entry.kind === "directory") {
@@ -141,7 +142,7 @@ export function useOKFData() {
                 try {
                   const file = await entry.getFile();
                   bundle.manifest = JSON.parse(await file.text());
-                } catch(e) {
+                } catch (e) {
                   console.warn("Failed to parse root manifest");
                 }
                 continue;

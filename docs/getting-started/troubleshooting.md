@@ -11,12 +11,12 @@ pnpm --version
 
 ## `akcp: command not found`
 
-If you try to run `akcp validate` directly and it fails, it's because the CLI is not installed globally. 
+If you try to run `akcp validate` directly and it fails, it's because the CLI is not installed globally.
 Always prefix commands with `pnpm` (e.g., `pnpm akcp validate`) to run the locally built workspace binary.
 
 ## Validation fails with `invalid_type` or `invalid_union_discriminator`
 
-This means your markdown frontmatter does not strictly match the expected Zod schema for the domain profile you are compiling. 
+This means your markdown frontmatter does not strictly match the expected Zod schema for the domain profile you are compiling.
 Check `packages/core/src/domain/profiles/` for the exact schema requirements for your domain (e.g., ensuring `type` is set correctly).
 
 ## MCP Client cannot connect

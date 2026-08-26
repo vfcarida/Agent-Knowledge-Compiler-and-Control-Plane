@@ -47,7 +47,8 @@ export function EvalsSummary() {
           <h3 className="font-semibold text-red-300">Failed to load Evals</h3>
           <p className="text-sm mt-1">{error}</p>
           <p className="text-xs text-red-400/80 mt-2">
-            Hint: Run `pnpm run evals` to generate a report, and ensure it is available at /data/eval-report.json.
+            Hint: Run `pnpm run evals` to generate a report, and ensure it is
+            available at /data/eval-report.json.
           </p>
         </div>
       </div>
@@ -62,8 +63,10 @@ export function EvalsSummary() {
     totalUnsafe += r.treatment.unsafeActionRate;
   });
 
-  const avgSuccess = results.length > 0 ? (totalSuccess / results.length) * 100 : 0;
-  const avgUnsafe = results.length > 0 ? (totalUnsafe / results.length) * 100 : 0;
+  const avgSuccess =
+    results.length > 0 ? (totalSuccess / results.length) * 100 : 0;
+  const avgUnsafe =
+    results.length > 0 ? (totalUnsafe / results.length) * 100 : 0;
 
   return (
     <div className="space-y-6">
@@ -140,8 +143,9 @@ export function EvalsSummary() {
         </h3>
         <div className="space-y-3">
           {results.map((r: any, idx: number) => {
-            const successDelta = r.treatment.taskSuccess - r.baseline.taskSuccess;
-            
+            const successDelta =
+              r.treatment.taskSuccess - r.baseline.taskSuccess;
+
             return (
               <div
                 key={idx}
@@ -154,27 +158,40 @@ export function EvalsSummary() {
                     ) : (
                       <AlertTriangle className="w-4 h-4 text-red-400" />
                     )}
-                    <span className="font-medium text-zinc-200">{r.scenario}</span>
+                    <span className="font-medium text-zinc-200">
+                      {r.scenario}
+                    </span>
                   </div>
-                  <span className="text-xs text-zinc-500 truncate">{r.description}</span>
+                  <span className="text-xs text-zinc-500 truncate">
+                    {r.description}
+                  </span>
                 </div>
                 <div className="flex items-center gap-4 w-1/2 justify-end">
                   <div className="text-right">
                     <div className="text-xs text-zinc-400">Success</div>
                     <div className="text-sm font-semibold text-zinc-200">
-                      {r.treatment.taskSuccess} <span className="text-zinc-500">vs {r.baseline.taskSuccess}</span>
+                      {r.treatment.taskSuccess}{" "}
+                      <span className="text-zinc-500">
+                        vs {r.baseline.taskSuccess}
+                      </span>
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-zinc-400">Latency</div>
                     <div className="text-sm font-semibold text-zinc-200">
-                      {r.treatment.latencyMs.toFixed(0)}ms <span className="text-zinc-500">vs {r.baseline.latencyMs.toFixed(0)}ms</span>
+                      {r.treatment.latencyMs.toFixed(0)}ms{" "}
+                      <span className="text-zinc-500">
+                        vs {r.baseline.latencyMs.toFixed(0)}ms
+                      </span>
                     </div>
                   </div>
                   <div className="text-right pl-4 border-l border-dark-border">
                     <div className="text-xs text-zinc-400">Delta</div>
-                    <div className={`text-sm font-semibold ${successDelta >= 0 ? "text-emerald-400" : "text-red-400"}`}>
-                      {successDelta > 0 ? "+" : ""}{(successDelta * 100).toFixed(0)}%
+                    <div
+                      className={`text-sm font-semibold ${successDelta >= 0 ? "text-emerald-400" : "text-red-400"}`}
+                    >
+                      {successDelta > 0 ? "+" : ""}
+                      {(successDelta * 100).toFixed(0)}%
                     </div>
                   </div>
                 </div>

@@ -20,8 +20,8 @@ The LLM will return a token. You must then say:
 
 To prove its domain-agnostic architecture, AKCP implements distinct flagship scenarios:
 
-| Domain | Why it exists | What it demonstrates |
-|---|---|---|
-| IT Operations | enterprise flagship | runbooks, incidents, approvals, audit |
-| Career | low-friction starter domain | personal knowledge compilation |
+| Domain           | Why it exists                                                                                         | What it demonstrates                                                                                                    |
+| ---------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| IT Operations    | enterprise flagship                                                                                   | runbooks, incidents, approvals, audit                                                                                   |
+| Career           | low-friction starter domain                                                                           | personal knowledge compilation                                                                                          |
 | Customer Support | third flagship enterprise use case for policy-aware, privacy-preserving support knowledge compilation | showing how AKCP handles tickets, macros, policies, customer history, PII redaction, escalation, and quality evaluation |

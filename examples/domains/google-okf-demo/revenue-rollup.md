@@ -28,8 +28,8 @@ computation that populates it.
 
 ## Schema
 
-| Column | Type | Description |
-|--------|------|--------------|
-| `region` | STRING | ISO region code |
-| `revenue_usd` | NUMERIC | Revenue converted to USD |
-| `rollup_date` | DATE | The date this row summarizes |
+| Column        | Type    | Description                  |
+| ------------- | ------- | ---------------------------- |
+| `region`      | STRING  | ISO region code              |
+| `revenue_usd` | NUMERIC | Revenue converted to USD     |
+| `rollup_date` | DATE    | The date this row summarizes |

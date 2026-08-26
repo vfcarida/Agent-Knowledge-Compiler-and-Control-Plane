@@ -97,8 +97,9 @@ export default function App() {
             Welcome to Agent Knowledge Compiler and Control Plane
           </h2>
           <p className="text-zinc-400 text-sm max-w-lg mb-10 leading-relaxed">
-            The open-source compiler and control plane for turning organizational
-            knowledge into versioned, governed, cost-efficient, agent-consumable artifacts.
+            The open-source compiler and control plane for turning
+            organizational knowledge into versioned, governed, cost-efficient,
+            agent-consumable artifacts.
           </p>
 
           {/* Cards for features */}
@@ -110,8 +111,8 @@ export default function App() {
               </h4>
               <p className="text-xs text-zinc-400 leading-relaxed">
                 Strict boundaries for agentic execution. Machine-readable policy
-                cards and HITL (Human-In-The-Loop) gateways ensure absolute control
-                over agent side-effects.
+                cards and HITL (Human-In-The-Loop) gateways ensure absolute
+                control over agent side-effects.
               </p>
             </div>
 

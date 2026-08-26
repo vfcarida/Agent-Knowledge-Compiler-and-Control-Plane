@@ -88,7 +88,7 @@ if (fs.existsSync(readmePath)) {
   for (const [, link] of links) {
     if (link.startsWith("docs/") || link.startsWith("./docs/")) {
       // Remove any #hash from link for file path resolution
-      const linkWithoutHash = link.split('#')[0];
+      const linkWithoutHash = link.split("#")[0];
       const resolved = path.resolve(workspaceRoot, linkWithoutHash);
       if (!fs.existsSync(resolved)) {
         errors.push(`Broken link in README: ${link}`);
@@ -114,7 +114,7 @@ for (const exampleFile of REQUIRED_EXAMPLE_FILES) {
 
 if (errors.length > 0) {
   console.error(`\n\x1b[31m[FAIL]\x1b[0m Documentation validation failed:`);
-  errors.forEach(err => console.error(` - ${err}`));
+  errors.forEach((err) => console.error(` - ${err}`));
   process.exit(1);
 } else {
   console.log(`\x1b[32m[PASS]\x1b[0m Document structure check passed.`);

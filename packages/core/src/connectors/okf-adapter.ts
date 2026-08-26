@@ -11,7 +11,6 @@ import type {
 } from "./types.js";
 
 function extractFrontmatter(content: string): {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   frontmatter: any;
   markdown: string;
 } {
@@ -23,7 +22,6 @@ function extractFrontmatter(content: string): {
         frontmatter: yaml.load(match[1] as string) || {},
         markdown: (match[2] as string).trim(),
       };
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     } catch (e) {
       return { frontmatter: {}, markdown: content };
     }
@@ -61,7 +59,6 @@ export class OkfAdapter implements SourceAdapter {
         confidence: 0.5,
         reason: "No index.md found, but might be an incomplete OKF directory",
       };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       return { isSupported: false, confidence: 0, reason: e.message };
     }

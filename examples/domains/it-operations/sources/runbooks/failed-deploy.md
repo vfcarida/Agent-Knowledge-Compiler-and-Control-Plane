@@ -45,11 +45,11 @@ Is error rate > 5x baseline?
 
 ## Safe / Unsafe Boundary
 
-| Action                  | Requires Approval | Risk     |
-|-------------------------|-------------------|----------|
-| Query deployment history| No                | Low      |
-| Stage rollback plan     | No                | Low      |
-| Execute rollback        | **Yes**           | Critical |
+| Action                   | Requires Approval | Risk     |
+| ------------------------ | ----------------- | -------- |
+| Query deployment history | No                | Low      |
+| Stage rollback plan      | No                | Low      |
+| Execute rollback         | **Yes**           | Critical |
 
 ## Post-Incident
 

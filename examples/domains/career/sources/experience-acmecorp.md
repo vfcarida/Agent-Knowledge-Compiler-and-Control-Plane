@@ -18,6 +18,7 @@ location: Remote
 - Mentored junior engineers, conducting weekly pair-programming sessions and driving best practices for testing (Jest) and code quality.
 
 ## Tech Stack
+
 - Node.js, TypeScript, Express
 - PostgreSQL, Redis, Kafka
 - AWS (ECS, S3, RDS), GitHub Actions

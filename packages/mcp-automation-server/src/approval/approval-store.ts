@@ -11,7 +11,8 @@ export class ApprovalStore implements IApprovalStore {
 
   constructor() {
     const defaultDbDir = path.resolve(
-      process.env["AKCP_BUNDLE_PATH"] || "./packages/test-fixtures/sample-data/.okf",
+      process.env["AKCP_BUNDLE_PATH"] ||
+        "./packages/test-fixtures/sample-data/.okf",
     );
     if (!fs.existsSync(defaultDbDir)) {
       fs.mkdirSync(defaultDbDir, { recursive: true });
@@ -59,7 +60,7 @@ export class ApprovalStore implements IApprovalStore {
       sideEffectLevel,
       requestedBy,
       createdAt,
-      "[]"
+      "[]",
     );
 
     return token;
@@ -75,7 +76,7 @@ export class ApprovalStore implements IApprovalStore {
     const stmt = this.db.prepare(
       `SELECT * FROM pending_approvals WHERE status = 'PENDING'`,
     );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const rows = stmt.all() as any[];
 
     return rows.map((row) => ({
@@ -96,12 +97,11 @@ export class ApprovalStore implements IApprovalStore {
     }));
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getAuditLogs(limit = 100): any[] {
     const stmt = this.db.prepare(
       `SELECT * FROM audit_logs ORDER BY timestamp DESC LIMIT ?`,
     );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const rows = stmt.all(limit) as any[];
     return rows.map((row) => ({
       ...row,
@@ -125,7 +125,7 @@ export class ApprovalStore implements IApprovalStore {
     const stmt = this.db.prepare(
       `SELECT * FROM pending_approvals WHERE token = ?`,
     );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const record = stmt.get(token) as any;
 
     if (!record) {
@@ -140,7 +140,10 @@ export class ApprovalStore implements IApprovalStore {
     }
 
     // Check tool match
-    if (record.capabilityId !== capabilityId && record.toolName !== capabilityId) {
+    if (
+      record.capabilityId !== capabilityId &&
+      record.toolName !== capabilityId
+    ) {
       this.logAudit(
         "REJECTED_TOOL_MISMATCH",
         capabilityId,
@@ -176,7 +179,11 @@ export class ApprovalStore implements IApprovalStore {
     }
 
     // Consume token (One-time use)
-    this.db.prepare(`UPDATE pending_approvals SET status = 'CONSUMED', consumedAt = ? WHERE token = ?`).run(Date.now(), token);
+    this.db
+      .prepare(
+        `UPDATE pending_approvals SET status = 'CONSUMED', consumedAt = ? WHERE token = ?`,
+      )
+      .run(Date.now(), token);
     this.logAudit(
       "CONSUMED",
       capabilityId,
@@ -191,7 +198,7 @@ export class ApprovalStore implements IApprovalStore {
     const stmt = this.db.prepare(
       `SELECT * FROM pending_approvals WHERE token = ? AND status = 'PENDING'`,
     );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const record = stmt.get(token) as any;
 
     if (record) {
@@ -216,7 +223,7 @@ export class ApprovalStore implements IApprovalStore {
     const stmt = this.db.prepare(
       `SELECT * FROM pending_approvals WHERE token = ? AND status = 'PENDING'`,
     );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const record = stmt.get(token) as any;
 
     if (record) {
@@ -256,5 +263,4 @@ export class ApprovalStore implements IApprovalStore {
       actorIdentity || null,
     );
   }
-
 }

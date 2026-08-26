@@ -13,7 +13,10 @@
     "inputsSchema": {
       "type": "object",
       "properties": {
-        "focusArea": { "type": "string", "description": "Optional specific tech stack or skill to focus on." }
+        "focusArea": {
+          "type": "string",
+          "description": "Optional specific tech stack or skill to focus on."
+        }
       }
     }
   },
@@ -31,7 +34,10 @@
     "inputsSchema": {
       "type": "object",
       "properties": {
-        "jobDescription": { "type": "string", "description": "The target job description text." }
+        "jobDescription": {
+          "type": "string",
+          "description": "The target job description text."
+        }
       },
       "required": ["jobDescription"]
     }

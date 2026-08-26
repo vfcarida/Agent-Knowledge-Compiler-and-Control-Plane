@@ -7,12 +7,26 @@ body:
     attributes:
       value: |
         **WARNING**: If you have found a critical security vulnerability, do NOT file a public issue.
-        Please send a secure report to the project maintainers following the guidelines in [SECURITY.md](https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane/blob/main/SECURITY.md).
-        This template is only for non-critical security queries, sandboxed findings, or dependency updates.
+        Please report it via [GitHub Security Advisories](https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane/security/advisories/new) following our [SECURITY.md](https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane/blob/main/SECURITY.md).
+        This template is for non-critical security discussions, sandboxed findings, or security enhancements.
+  - type: dropdown
+    id: threat-vector
+    attributes:
+      label: Threat Vector / Framework Mapping
+      options:
+        - "OWASP LLM01: Prompt Injection"
+        - "OWASP LLM02: Insecure Output Handling"
+        - "OWASP LLM06: Sensitive Information Disclosure"
+        - "OWASP LLM07: System Prompt Leakage"
+        - "OWASP LLM08: Excessive Agency"
+        - "NIST AI RMF: MAP / MEASURE / MANAGE / GOVERN"
+        - "Other / General Security"
+    validations:
+      required: true
   - type: textarea
     id: details
     attributes:
-      label: Vulnerability Details
-      description: Explain the vulnerability found in sandboxed environments.
+      label: Vulnerability / Concern Details
+      description: Provide a clear description and reproduction steps within sandboxed test environments.
     validations:
       required: true

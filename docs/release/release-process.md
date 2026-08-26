@@ -42,6 +42,7 @@ pnpm release:check
 6. Push: `git push && git push --tags`
 
 The release workflow will automatically:
+
 - Build and test
 - Publish to npm with provenance attestation
 - Create a GitHub Release with auto-generated notes
@@ -55,6 +56,7 @@ npm audit signatures @akcp/core
 ```
 
 ### Security Model
+
 - Publishing uses OIDC trusted publishing (no long-lived tokens when configured)
 - All packages include SLSA provenance attestations
 - GitHub Release is created with SHA-locked assets

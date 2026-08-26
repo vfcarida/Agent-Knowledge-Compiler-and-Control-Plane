@@ -18,8 +18,10 @@ describe("CapabilityValidator", () => {
         sideEffects: ["none"],
       } as Capability,
     ];
-    
-    expect(() => CapabilityValidator.validate(invalidCapabilities)).toThrow(/prompt injection keywords/);
+
+    expect(() => CapabilityValidator.validate(invalidCapabilities)).toThrow(
+      /prompt injection keywords/,
+    );
   });
 
   it("should validate correctly formatted capabilities", () => {
@@ -34,7 +36,7 @@ describe("CapabilityValidator", () => {
         parameters: { type: "object", properties: {} },
       } as Capability,
     ];
-    
+
     expect(() => CapabilityValidator.validate(validCapabilities)).not.toThrow();
   });
 });

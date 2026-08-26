@@ -5,6 +5,7 @@ The RFC process is intended to provide a consistent and controlled path for new 
 ## When to write an RFC
 
 You need an RFC if your change:
+
 - Modifies any normative specification (AK-IR, Policy Cards, `akcp.yaml`).
 - Introduces a new compile target (e.g. exporting to a new Vector DB).
 - Adds a new flagship domain (e.g. Legal Discovery).
@@ -12,6 +13,7 @@ You need an RFC if your change:
 - Significantly alters the security model or capability registry.
 
 You do **not** need an RFC for:
+
 - Bug fixes.
 - Performance improvements.
 - Documentation updates.

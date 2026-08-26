@@ -50,11 +50,11 @@ echo "[SIMULATION] Status: success (simulated)"
 
 AKCP logs the following fields for every invocation of this action:
 
-| Field           | Value                            |
-|-----------------|----------------------------------|
-| `capability`    | `it-operations.execute_remediation` |
-| `action`        | `rollback_deployment`            |
-| `approvedBy`    | (email of approver)             |
-| `approvedAt`    | (ISO timestamp)                 |
-| `executedAt`    | (ISO timestamp)                 |
-| `status`        | `success` or `failed`           |
+| Field        | Value                               |
+| ------------ | ----------------------------------- |
+| `capability` | `it-operations.execute_remediation` |
+| `action`     | `rollback_deployment`               |
+| `approvedBy` | (email of approver)                 |
+| `approvedAt` | (ISO timestamp)                     |
+| `executedAt` | (ISO timestamp)                     |
+| `status`     | `success` or `failed`               |

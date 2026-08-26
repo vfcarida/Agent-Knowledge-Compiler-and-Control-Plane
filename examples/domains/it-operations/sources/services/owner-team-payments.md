@@ -18,8 +18,8 @@ The Payments Engineering team owns all services in the `sys-commerce` system. Th
 
 ## Members (Example)
 
-| Role              | Contact             |
-|-------------------|---------------------|
-| Engineering Lead  | alice@example.org   |
-| On-Call Primary   | bob@example.org     |
-| On-Call Secondary | carol@example.org   |
+| Role              | Contact           |
+| ----------------- | ----------------- |
+| Engineering Lead  | alice@example.org |
+| On-Call Primary   | bob@example.org   |
+| On-Call Secondary | carol@example.org |

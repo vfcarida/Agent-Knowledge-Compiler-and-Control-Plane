@@ -5,6 +5,7 @@ status: Resolved
 serviceRefs:
   - payment-service
 ---
+
 # Scenario: High CPU Incident on Payment Service
 
 This scenario demonstrates the safety boundaries enforced by AKCP during an autonomous agent's incident response workflow.

@@ -37,7 +37,9 @@ if (!run("pnpm test -- --run")) {
 // 3. No legacy namespace references in source
 console.log("[3/8] Checking for legacy namespaces...");
 let legacyFound = false;
-const coreTsFiles = globSync("packages/*/src/**/*.ts", { ignore: ["**/node_modules/**", "**/*.test.*"] });
+const coreTsFiles = globSync("packages/*/src/**/*.ts", {
+  ignore: ["**/node_modules/**", "**/*.test.*"],
+});
 for (const file of coreTsFiles) {
   const content = fs.readFileSync(file, "utf8");
   if (/@ocf|OCF_|OcfBundle|OCFMcp/.test(content)) {
@@ -56,7 +58,9 @@ for (const file of workflowFiles) {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     if (line.includes("uses:") && /@v[0-9]|@latest|@main|@master/.test(line)) {
-      console.log(`WARN: Unpinned action found in ${file}:${i + 1} -> ${line.trim()}`);
+      console.log(
+        `WARN: Unpinned action found in ${file}:${i + 1} -> ${line.trim()}`,
+      );
     }
   }
 }
@@ -65,7 +69,11 @@ for (const file of workflowFiles) {
 console.log("[5/8] CLI smoke test...");
 const cliPath = path.join("packages", "cli", "dist", "index.js");
 if (fs.existsSync(cliPath)) {
-  if (!run(`node ${cliPath} --help > ${process.platform === 'win32' ? 'NUL' : '/dev/null'} 2>&1`)) {
+  if (
+    !run(
+      `node ${cliPath} --help > ${process.platform === "win32" ? "NUL" : "/dev/null"} 2>&1`,
+    )
+  ) {
     console.log("FAIL: CLI --help failed");
     errors++;
   }
@@ -75,7 +83,12 @@ if (fs.existsSync(cliPath)) {
 
 // 6. Package exports resolve
 console.log("[6/8] Checking package exports...");
-const packages = ["packages/core", "packages/cli", "packages/conformance", "packages/mcp-profile-server"];
+const packages = [
+  "packages/core",
+  "packages/cli",
+  "packages/conformance",
+  "packages/mcp-profile-server",
+];
 for (const pkg of packages) {
   const pkgJsonPath = path.join(pkg, "package.json");
   if (fs.existsSync(pkgJsonPath)) {
@@ -87,7 +100,9 @@ for (const pkg of packages) {
       const mainPath = path.join(pkg, main);
       const jsMainPath = mainPath.replace(/\.js$/, ".js");
       if (!fs.existsSync(mainPath) && !fs.existsSync(jsMainPath)) {
-        console.log(`WARN: ${pkg} main entry '${main}' may not exist after build`);
+        console.log(
+          `WARN: ${pkg} main entry '${main}' may not exist after build`,
+        );
       }
     }
   }
@@ -98,7 +113,7 @@ console.log("[7/8] Checking for stale root artifacts...");
 const staleFiles = [
   "lint-results.json",
   "pnpm-lock.yaml.1147000961",
-  "debug-conformance.ts"
+  "debug-conformance.ts",
 ];
 for (const stale of staleFiles) {
   if (fs.existsSync(stale)) {
@@ -111,7 +126,9 @@ if (fs.existsSync("scratch") && fs.statSync("scratch").isDirectory()) {
 
 // 8. TypeScript strict (no any casts in core)
 console.log("[8/8] Checking for 'as any' in core...");
-const coreSrcFiles = globSync("packages/core/src/**/*.ts", { ignore: ["**/node_modules/**", "**/*.test.*"] });
+const coreSrcFiles = globSync("packages/core/src/**/*.ts", {
+  ignore: ["**/node_modules/**", "**/*.test.*"],
+});
 for (const file of coreSrcFiles) {
   const content = fs.readFileSync(file, "utf8");
   if (content.includes("as any")) {

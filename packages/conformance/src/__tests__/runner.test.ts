@@ -49,21 +49,27 @@ describe("ConformanceRunner", () => {
   });
 
   it("passes all levels for the Career flagship domain", async () => {
-    const runner = new ConformanceRunner(path.resolve(__dirname, "../../../../examples/domains/career"));
+    const runner = new ConformanceRunner(
+      path.resolve(__dirname, "../../../../examples/domains/career"),
+    );
     const report = await runner.run();
     expect(report.failed).toBe(0);
     expect(report.conformanceLevel).toBe("AKCP-control-plane-compatible");
   });
 
   it("passes all levels for the IT Operations flagship domain", async () => {
-    const runner = new ConformanceRunner(path.resolve(__dirname, "../../../../examples/domains/it-operations"));
+    const runner = new ConformanceRunner(
+      path.resolve(__dirname, "../../../../examples/domains/it-operations"),
+    );
     const report = await runner.run();
     expect(report.failed).toBe(0);
     expect(report.conformanceLevel).toBe("AKCP-control-plane-compatible");
   });
 
   it("passes all levels for the Customer Support flagship domain", async () => {
-    const runner = new ConformanceRunner(path.resolve(__dirname, "../../../../examples/domains/customer-support"));
+    const runner = new ConformanceRunner(
+      path.resolve(__dirname, "../../../../examples/domains/customer-support"),
+    );
     const report = await runner.run();
     expect(report.failed).toBe(0);
     expect(report.conformanceLevel).toBe("AKCP-control-plane-compatible");

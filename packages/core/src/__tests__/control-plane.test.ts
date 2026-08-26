@@ -1,14 +1,17 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { MCPGateway } from "../capabilities/gateway.js";
 import { InMemoryAuditLogService } from "../infrastructure/audit-log.js";
-import type { IApprovalStore, PendingApproval } from "../capabilities/approval-store.js";
+import type {
+  IApprovalStore,
+  PendingApproval,
+} from "../capabilities/approval-store.js";
 import type { PolicyCard } from "../policy/types.js";
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+
 import crypto from "crypto";
 
 class MockApprovalStore implements IApprovalStore {
   private approvals: PendingApproval[] = [];
-  
+
   async generateToken(
     requestId: string,
     capabilityId: string,
@@ -17,7 +20,7 @@ class MockApprovalStore implements IApprovalStore {
     sideEffectLevel: string,
     requestedBy: string,
     metadata?: Record<string, unknown>,
-    ttlMs?: number
+    ttlMs?: number,
   ): Promise<string> {
     const token = "mock-token-123";
     this.approvals.push({
@@ -32,7 +35,7 @@ class MockApprovalStore implements IApprovalStore {
       expiresAt: Date.now() + (ttlMs || 60000),
       status: "PENDING",
       auditEventIds: [],
-      metadata
+      metadata,
     });
     return token;
   }
@@ -40,14 +43,13 @@ class MockApprovalStore implements IApprovalStore {
   async getPendingApprovals(): Promise<PendingApproval[]> {
     return this.approvals;
   }
-  
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+
   async getAuditLogs(limit?: number): Promise<any[]> {
     return [];
   }
 
   async approveToken(token: string, actorIdentity?: string): Promise<boolean> {
-    const app = this.approvals.find(a => a.token === token);
+    const app = this.approvals.find((a) => a.token === token);
     if (app && app.status === "PENDING") {
       app.status = "APPROVED";
       app.approvedBy = actorIdentity;
@@ -56,10 +58,19 @@ class MockApprovalStore implements IApprovalStore {
     return false;
   }
 
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-  async validateAndConsume(token: string, capabilityId: string, payloadHash: string, actorIdentity?: string): Promise<boolean> {
-    const app = this.approvals.find(a => a.token === token);
-    if (app && app.status === "APPROVED" && app.capabilityId === capabilityId && app.payloadHash === payloadHash) {
+  async validateAndConsume(
+    token: string,
+    capabilityId: string,
+    payloadHash: string,
+    actorIdentity?: string,
+  ): Promise<boolean> {
+    const app = this.approvals.find((a) => a.token === token);
+    if (
+      app &&
+      app.status === "APPROVED" &&
+      app.capabilityId === capabilityId &&
+      app.payloadHash === payloadHash
+    ) {
       app.status = "CONSUMED";
       app.consumedAt = Date.now();
       return true;
@@ -67,9 +78,8 @@ class MockApprovalStore implements IApprovalStore {
     return false;
   }
 
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   async revokeToken(token: string, actorIdentity?: string): Promise<boolean> {
-    const app = this.approvals.find(a => a.token === token);
+    const app = this.approvals.find((a) => a.token === token);
     if (app && app.status === "PENDING") {
       app.status = "REVOKED";
       return true;
@@ -86,19 +96,19 @@ describe("Control Plane & Runtime Governance", () => {
   const policyAllowAll: PolicyCard = {
     metadata: { name: "allow-all" },
     appliesTo: { capabilities: ["*"] },
-    rules: [{ effect: "allow" }]
+    rules: [{ effect: "allow" }],
   };
 
   const policyDenyAll: PolicyCard = {
     metadata: { name: "deny-all" },
     appliesTo: { capabilities: ["*"] },
-    rules: [{ effect: "deny" }]
+    rules: [{ effect: "deny" }],
   };
 
   const policyRequiresApproval: PolicyCard = {
     metadata: { name: "require-approval" },
     appliesTo: { capabilities: ["akcp.external_submit"] },
-    rules: [{ effect: "require_approval" }]
+    rules: [{ effect: "require_approval" }],
   };
 
   beforeEach(() => {
@@ -109,12 +119,17 @@ describe("Control Plane & Runtime Governance", () => {
   it("should allow execution and emit policy-allow audit event", async () => {
     gateway = new MCPGateway({
       policies: { "agent-1": policyAllowAll },
-      auditLogService: auditLog
+      auditLogService: auditLog,
     });
 
     const result = await gateway.execute(
-      { agentId: "agent-1", toolName: "akcp.read_document", sideEffect: "read", payload: {} },
-      async () => "success"
+      {
+        agentId: "agent-1",
+        toolName: "akcp.read_document",
+        sideEffect: "read",
+        payload: {},
+      },
+      async () => "success",
     );
 
     expect(result).toBe("success");
@@ -126,13 +141,20 @@ describe("Control Plane & Runtime Governance", () => {
   it("should block execution and emit policy-deny audit event", async () => {
     gateway = new MCPGateway({
       policies: { "agent-1": policyDenyAll },
-      auditLogService: auditLog
+      auditLogService: auditLog,
     });
 
-    await expect(gateway.execute(
-      { agentId: "agent-1", toolName: "akcp.read_document", sideEffect: "read", payload: {} },
-      async () => "success"
-    )).rejects.toThrow("Policy Violation");
+    await expect(
+      gateway.execute(
+        {
+          agentId: "agent-1",
+          toolName: "akcp.read_document",
+          sideEffect: "read",
+          payload: {},
+        },
+        async () => "success",
+      ),
+    ).rejects.toThrow("Policy Violation");
 
     const events = await auditLog.getEvents();
     expect(events).toHaveLength(1);
@@ -143,7 +165,7 @@ describe("Control Plane & Runtime Governance", () => {
     gateway = new MCPGateway({
       policies: { "agent-1": policyRequiresApproval },
       auditLogService: auditLog,
-      approvalStore
+      approvalStore,
     });
 
     const payload = { data: "test" };
@@ -152,11 +174,15 @@ describe("Control Plane & Runtime Governance", () => {
     let generatedToken = "";
     try {
       await gateway.execute(
-        { agentId: "agent-1", toolName: "akcp.external_submit", sideEffect: "submit", payload },
-        async () => "success"
+        {
+          agentId: "agent-1",
+          toolName: "akcp.external_submit",
+          sideEffect: "submit",
+          payload,
+        },
+        async () => "success",
       );
       expect.fail("Should have thrown APPROVAL_REQUIRED");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       expect(err.code).toBe("APPROVAL_REQUIRED");
       generatedToken = err.data.approvalToken;
@@ -164,28 +190,33 @@ describe("Control Plane & Runtime Governance", () => {
 
     // Check Audit logs for approval requirement
     let events = await auditLog.getEvents();
-    expect(events.map(e => e.decision)).toContain("require_approval");
+    expect(events.map((e) => e.decision)).toContain("require_approval");
 
     // 2. Approve token out of band
     await approvalStore.approveToken(generatedToken, "human-approver");
 
     // 3. Resume execution with token
     const result = await gateway.execute(
-      { agentId: "agent-1", toolName: "akcp.external_submit", sideEffect: "submit", payload: { ...payload, _approvalToken: generatedToken } },
-      async () => "success"
+      {
+        agentId: "agent-1",
+        toolName: "akcp.external_submit",
+        sideEffect: "submit",
+        payload: { ...payload, _approvalToken: generatedToken },
+      },
+      async () => "success",
     );
 
     expect(result).toBe("success");
 
     events = await auditLog.getEvents();
-    expect(events.map(e => e.decision)).toContain("consumed");
+    expect(events.map((e) => e.decision)).toContain("consumed");
   });
 
   it("should block execution if payload hash does not match approval token", async () => {
     gateway = new MCPGateway({
       policies: { "agent-1": policyRequiresApproval },
       auditLogService: auditLog,
-      approvalStore
+      approvalStore,
     });
 
     const payload = { data: "test" };
@@ -194,11 +225,15 @@ describe("Control Plane & Runtime Governance", () => {
     let generatedToken = "";
     try {
       await gateway.execute(
-        { agentId: "agent-1", toolName: "akcp.external_submit", sideEffect: "submit", payload },
-        async () => "success"
+        {
+          agentId: "agent-1",
+          toolName: "akcp.external_submit",
+          sideEffect: "submit",
+          payload,
+        },
+        async () => "success",
       );
       expect.fail("Should have thrown APPROVAL_REQUIRED");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       generatedToken = err.data.approvalToken;
     }
@@ -207,15 +242,25 @@ describe("Control Plane & Runtime Governance", () => {
     await approvalStore.approveToken(generatedToken, "human-approver");
 
     // 3. Attempt execution with token but MODIFIED payload
-    const modifiedPayload = { data: "malicious-change", _approvalToken: generatedToken };
+    const modifiedPayload = {
+      data: "malicious-change",
+      _approvalToken: generatedToken,
+    };
 
-    await expect(gateway.execute(
-      { agentId: "agent-1", toolName: "akcp.external_submit", sideEffect: "submit", payload: modifiedPayload },
-      async () => "success"
-    )).rejects.toThrow("Invalid, expired, or tampered approval token");
+    await expect(
+      gateway.execute(
+        {
+          agentId: "agent-1",
+          toolName: "akcp.external_submit",
+          sideEffect: "submit",
+          payload: modifiedPayload,
+        },
+        async () => "success",
+      ),
+    ).rejects.toThrow("Invalid, expired, or tampered approval token");
 
     const events = await auditLog.getEvents();
-    expect(events.map(e => e.decision)).toContain("expired"); // Maps to invalid/expired
+    expect(events.map((e) => e.decision)).toContain("expired"); // Maps to invalid/expired
   });
 
   it("should rate limit excessive requests", async () => {
@@ -228,7 +273,12 @@ describe("Control Plane & Runtime Governance", () => {
     // First 3 should succeed
     for (let i = 0; i < 3; i++) {
       await gateway.execute(
-        { agentId: "agent-1", toolName: "akcp.read_document", sideEffect: "read", payload: {} },
+        {
+          agentId: "agent-1",
+          toolName: "akcp.read_document",
+          sideEffect: "read",
+          payload: {},
+        },
         async () => "success",
       );
     }
@@ -236,7 +286,12 @@ describe("Control Plane & Runtime Governance", () => {
     // 4th should be rate limited
     await expect(
       gateway.execute(
-        { agentId: "agent-1", toolName: "akcp.read_document", sideEffect: "read", payload: {} },
+        {
+          agentId: "agent-1",
+          toolName: "akcp.read_document",
+          sideEffect: "read",
+          payload: {},
+        },
         async () => "success",
       ),
     ).rejects.toThrow("Rate limit exceeded");
@@ -248,7 +303,7 @@ describe("Authentication", () => {
     const policyAllowAll = {
       metadata: { name: "allow-all" },
       appliesTo: { capabilities: ["*"] },
-      rules: [{ effect: "allow" as const }]
+      rules: [{ effect: "allow" as const }],
     };
 
     const authGateway = new MCPGateway({
@@ -256,14 +311,24 @@ describe("Authentication", () => {
       auth: {
         requireAuth: true,
         credentials: [
-          { agentId: "agent-1", apiKey: "hashed_key_here", createdAt: new Date().toISOString() },
+          {
+            agentId: "agent-1",
+            apiKey: "hashed_key_here",
+            createdAt: new Date().toISOString(),
+          },
         ],
       },
     });
 
     await expect(
       authGateway.execute(
-        { requestId: "req-1", agentId: "agent-1", toolName: "akcp.read", sideEffect: "read", payload: {} },
+        {
+          requestId: "req-1",
+          agentId: "agent-1",
+          toolName: "akcp.read",
+          sideEffect: "read",
+          payload: {},
+        },
         async () => "success",
       ),
     ).rejects.toThrow("Authentication failed");

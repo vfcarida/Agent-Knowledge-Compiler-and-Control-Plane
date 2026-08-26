@@ -10,7 +10,10 @@ export class LinkExtractStage implements PipelineStage {
 
     for (const concept of context.concepts) {
       // Frontmatter links
-      if (concept.frontmatter.links && Array.isArray(concept.frontmatter.links)) {
+      if (
+        concept.frontmatter.links &&
+        Array.isArray(concept.frontmatter.links)
+      ) {
         for (const link of concept.frontmatter.links) {
           if (link.target) {
             links.push({
@@ -32,11 +35,12 @@ export class LinkExtractStage implements PipelineStage {
               l.targetConceptId === e.targetConceptId &&
               l.relationType === e.relationType,
           );
-          if (!exists) links.push({
-            sourceConceptId: concept.conceptId,
-            targetConceptId: e.targetConceptId,
-            relationType: e.relationType,
-          });
+          if (!exists)
+            links.push({
+              sourceConceptId: concept.conceptId,
+              targetConceptId: e.targetConceptId,
+              relationType: e.relationType,
+            });
         }
       }
     }

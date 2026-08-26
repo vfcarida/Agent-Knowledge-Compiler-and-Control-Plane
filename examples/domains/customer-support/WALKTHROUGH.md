@@ -13,11 +13,12 @@ Upon initialization, the AKCP Profile Server provisions the agent with the suppo
 - **Context Loaded:** The agent reads the `Refund Policy`, `Data Retention Policy`, and the `Delete Customer Data` macro.
 - **Tools Registered:** The agent receives the MCP tools: `get_customer_history`, `search_knowledge_base`, `issue_refund`, and `escalate_ticket`.
 
-*Crucially, the Control Plane injects a `riskLevel` and intercepts any tools marked with `requiresApproval: true` or `readsPII: true`.*
+_Crucially, the Control Plane injects a `riskLevel` and intercepts any tools marked with `requiresApproval: true` or `readsPII: true`._
 
 ## 2. A High-Risk Interaction (Refund Request)
 
 **User Prompt:**
+
 > "I want a refund for my digital subscription. I bought it yesterday."
 
 1. **Agent searches context:** The agent uses `search_knowledge_base` with query "refund digital subscription".
@@ -29,6 +30,7 @@ Upon initialization, the AKCP Profile Server provisions the agent with the suppo
 ## 3. A Privacy-Sensitive Interaction (GDPR Deletion)
 
 **User Prompt:**
+
 > "Delete my account and all my data under GDPR."
 
 1. **Agent reads macro:** The agent matches the intent to the `Delete Customer Data` macro.

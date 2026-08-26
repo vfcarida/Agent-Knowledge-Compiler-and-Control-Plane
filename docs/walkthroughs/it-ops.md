@@ -100,6 +100,7 @@ The following walkthrough simulates what an agent integrated with this bundle wo
 ### Scenario: High CPU on Payment Service
 
 **Alert fires:**
+
 ```
 ALERT: alert-high-cpu-payment
 Service: svc-payment
@@ -110,12 +111,15 @@ Severity: Critical
 **Agent behavior (governed by AKCP control plane):**
 
 1. **Agent calls `get_runbook`** (low risk, no approval needed):
+
    ```json
    { "runbookId": "runbook-high-cpu" }
    ```
+
    Response: Full content of `runbooks/high-cpu.md`.
 
 2. **Agent calls `query_logs`** (low risk, no approval needed):
+
    ```json
    {
      "serviceName": "svc-payment",
@@ -124,9 +128,11 @@ Severity: Critical
      "endTime": "2026-07-14T10:30:00Z"
    }
    ```
+
    Response: Deployment event found — `svc-payment v1.4.2` deployed at `10:22 UTC`.
 
 3. **Agent surfaces remediation plan** (does NOT execute):
+
    ```
    I found a recent deployment (v1.4.2 at 10:22 UTC) that coincides with the CPU spike.
 
@@ -143,6 +149,7 @@ Severity: Critical
 4. **Human approves** (out-of-band, returns `approvalTicketId: approval-005`).
 
 5. **Agent calls `execute_remediation`** (approval-gated):
+
    ```json
    {
      "remediationActionId": "remediation-rollback-deployment",
@@ -154,7 +161,15 @@ Severity: Critical
 
 6. **AKCP control plane logs the audit event:**
    ```jsonl
-   {"schemaVersion":"akcp.audit/v1","capability":"it-operations.execute_remediation","action":"rollback_deployment","approvedBy":"alice@example.org","approvedAt":"2026-07-14T10:34:00Z","executedAt":"2026-07-14T10:34:05Z","status":"success"}
+   {
+     "schemaVersion": "akcp.audit/v1",
+     "capability": "it-operations.execute_remediation",
+     "action": "rollback_deployment",
+     "approvedBy": "alice@example.org",
+     "approvedAt": "2026-07-14T10:34:00Z",
+     "executedAt": "2026-07-14T10:34:05Z",
+     "status": "success"
+   }
    ```
 
 ---
@@ -251,14 +266,14 @@ IT Operations Evaluation Suite
 
 ## Summary: What AKCP Proves Here
 
-| Claim                                      | Evidence                                          |
-|--------------------------------------------|---------------------------------------------------|
-| AKCP is not just a doc compiler            | Capabilities, policies, and approvals are enforced |
+| Claim                                           | Evidence                                                  |
+| ----------------------------------------------- | --------------------------------------------------------- |
+| AKCP is not just a doc compiler                 | Capabilities, policies, and approvals are enforced        |
 | Agents can be grounded in operational knowledge | Context pack includes runbooks, SLOs, escalation policies |
-| Dangerous actions are never autonomous     | `execute_remediation` blocked without approval ticket |
-| Decisions are auditable                    | Every approval + execution written to `akcp.audit/v1` |
-| Post-incident learning closes the loop     | Postmortem feeds back into next compilation        |
-| Evals make quality measurable              | 7 eval scenarios cover the full incident lifecycle |
+| Dangerous actions are never autonomous          | `execute_remediation` blocked without approval ticket     |
+| Decisions are auditable                         | Every approval + execution written to `akcp.audit/v1`     |
+| Post-incident learning closes the loop          | Postmortem feeds back into next compilation               |
+| Evals make quality measurable                   | 7 eval scenarios cover the full incident lifecycle        |
 
 ---
 

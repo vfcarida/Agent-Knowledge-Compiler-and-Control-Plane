@@ -10,19 +10,28 @@ const workspaceRoot = path.resolve(__dirname, "../../../..");
 describe("CLI Smoke Tests", () => {
   // Ensure the CLI is built before running these tests
   if (!fs.existsSync(cliPath)) {
-    console.warn(`[WARN] CLI binary not found at ${cliPath}. Skipping smoke tests.`);
+    console.warn(
+      `[WARN] CLI binary not found at ${cliPath}. Skipping smoke tests.`,
+    );
     return;
   }
 
   const runCli = (args: string) => {
-    return execSync(`node ${cliPath} ${args}`, { encoding: "utf-8", stdio: "pipe", cwd: workspaceRoot });
+    return execSync(`node ${cliPath} ${args}`, {
+      encoding: "utf-8",
+      stdio: "pipe",
+      cwd: workspaceRoot,
+    });
   };
 
   const runCliError = (args: string) => {
     try {
-      execSync(`node ${cliPath} ${args}`, { encoding: "utf-8", stdio: "pipe", cwd: workspaceRoot });
+      execSync(`node ${cliPath} ${args}`, {
+        encoding: "utf-8",
+        stdio: "pipe",
+        cwd: workspaceRoot,
+      });
       throw new Error("Expected command to fail");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       return (e.stderr || "") + (e.stdout || "") + (e.message || "");
     }
@@ -68,7 +77,10 @@ describe("CLI Smoke Tests", () => {
 
   it("should throw error for unsupported targets", () => {
     const tmpFile = path.join(os.tmpdir(), "akcp-test-invalid.yaml");
-    fs.writeFileSync(tmpFile, "compile:\n  sources:\n    - path: .\n  targets:\n    - type: invalid-target");
+    fs.writeFileSync(
+      tmpFile,
+      "compile:\n  sources:\n    - path: .\n  targets:\n    - type: invalid-target",
+    );
     const output = runCliError(`compile --config ${tmpFile}`);
     expect(output).toContain("Configuration validation failed");
     expect(output).toContain("Invalid enum value");
@@ -183,22 +195,30 @@ describe("CLI Smoke Tests", () => {
   describe("Placeholder Commands (Prompt 05)", () => {
     it("should fail diff command with NOT_IMPLEMENTED", () => {
       const output = runCliError("diff");
-      expect(output).toContain("NOT_IMPLEMENTED: The diff command is a planned feature");
+      expect(output).toContain(
+        "NOT_IMPLEMENTED: The diff command is a planned feature",
+      );
     });
 
     it("should fail serve dashboard command with NOT_IMPLEMENTED", () => {
       const output = runCliError("serve dashboard");
-      expect(output).toContain("NOT_IMPLEMENTED: The dashboard is a planned feature");
+      expect(output).toContain(
+        "NOT_IMPLEMENTED: The dashboard is a planned feature",
+      );
     });
 
     it("should fail control-plane inspect command with NOT_IMPLEMENTED", () => {
       const output = runCliError("control-plane inspect");
-      expect(output).toContain("NOT_IMPLEMENTED: The control-plane inspect command");
+      expect(output).toContain(
+        "NOT_IMPLEMENTED: The control-plane inspect command",
+      );
     });
 
     it("should fail control-plane policies command with NOT_IMPLEMENTED", () => {
       const output = runCliError("control-plane policies");
-      expect(output).toContain("NOT_IMPLEMENTED: The control-plane policies command");
+      expect(output).toContain(
+        "NOT_IMPLEMENTED: The control-plane policies command",
+      );
     });
   });
 });

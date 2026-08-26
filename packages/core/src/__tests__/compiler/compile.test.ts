@@ -3,7 +3,10 @@ import { compile } from "../../compiler/compile.js";
 import path from "path";
 
 describe("compile (Result-based API)", () => {
-  const fixturesDir = path.resolve(__dirname, "../../../../test-fixtures/bundles");
+  const fixturesDir = path.resolve(
+    __dirname,
+    "../../../../test-fixtures/bundles",
+  );
 
   it("should return success for valid bundle", async () => {
     const result = await compile(path.join(fixturesDir, "valid-profile-v1"));

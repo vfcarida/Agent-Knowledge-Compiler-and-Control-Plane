@@ -12,12 +12,11 @@ export const migration: Migration = {
       "approvedBy TEXT",
       "createdAt INTEGER",
       "consumedAt INTEGER",
-      "auditEventIds TEXT"
+      "auditEventIds TEXT",
     ];
     for (const col of pendingCols) {
       try {
         db.exec(`ALTER TABLE pending_approvals ADD COLUMN ${col};`);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         if (!e.message.includes("duplicate column")) throw e;
       }
@@ -33,15 +32,14 @@ export const migration: Migration = {
       "approvedBy",
       "createdAt",
       "consumedAt",
-      "auditEventIds"
+      "auditEventIds",
     ];
     for (const col of pendingCols) {
       try {
         db.exec(`ALTER TABLE pending_approvals DROP COLUMN ${col};`);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch(e: any) {
+      } catch (e: any) {
         console.warn("Could not drop column in down migration", e.message);
       }
     }
-  }
+  },
 };

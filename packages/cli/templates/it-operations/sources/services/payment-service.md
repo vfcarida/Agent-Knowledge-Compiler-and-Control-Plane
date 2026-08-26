@@ -30,11 +30,11 @@ The Payment Service handles all credit-card and digital-wallet transactions. It 
 
 ## SLOs
 
-| Indicator         | Target  | Window |
-|-------------------|---------|--------|
-| Availability      | 99.95%  | 30d    |
-| P99 Latency       | < 500ms | 7d     |
-| Error Rate        | < 0.1%  | 7d     |
+| Indicator    | Target  | Window |
+| ------------ | ------- | ------ |
+| Availability | 99.95%  | 30d    |
+| P99 Latency  | < 500ms | 7d     |
+| Error Rate   | < 0.1%  | 7d     |
 
 ## On-Call
 

@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { authenticate, hashApiKey, generateApiKey } from "../../capabilities/auth.js";
+import {
+  authenticate,
+  hashApiKey,
+  generateApiKey,
+} from "../../capabilities/auth.js";
 import type { AuthConfig } from "../../capabilities/auth.js";
 
 describe("Authentication", () => {
@@ -73,19 +77,27 @@ describe("Brute-force protection", () => {
     const config: AuthConfig = {
       requireAuth: true,
       credentials: [
-        { agentId: "agent-1", apiKey: hashApiKey("valid_key"), createdAt: new Date().toISOString() },
+        {
+          agentId: "agent-1",
+          apiKey: hashApiKey("valid_key"),
+          createdAt: new Date().toISOString(),
+        },
       ],
     };
 
     // 5 failed attempts
     for (let i = 0; i < 5; i++) {
-      const result = authenticate("wrong_key", config, { sourceId: "attacker-ip" });
+      const result = authenticate("wrong_key", config, {
+        sourceId: "attacker-ip",
+      });
       expect(result.authenticated).toBe(false);
       expect(result.reason).toContain("Invalid");
     }
 
     // 6th attempt should be rate limited
-    const blocked = authenticate("wrong_key", config, { sourceId: "attacker-ip" });
+    const blocked = authenticate("wrong_key", config, {
+      sourceId: "attacker-ip",
+    });
     expect(blocked.authenticated).toBe(false);
     expect(blocked.reason).toContain("Too many");
   });
@@ -94,7 +106,11 @@ describe("Brute-force protection", () => {
     const config: AuthConfig = {
       requireAuth: true,
       credentials: [
-        { agentId: "agent-1", apiKey: hashApiKey("valid_key"), createdAt: new Date().toISOString() },
+        {
+          agentId: "agent-1",
+          apiKey: hashApiKey("valid_key"),
+          createdAt: new Date().toISOString(),
+        },
       ],
     };
 
@@ -104,7 +120,9 @@ describe("Brute-force protection", () => {
     }
 
     // Another source should still work
-    const result = authenticate("valid_key", config, { sourceId: "legit-user" });
+    const result = authenticate("valid_key", config, {
+      sourceId: "legit-user",
+    });
     expect(result.authenticated).toBe(true);
   });
 
@@ -112,7 +130,11 @@ describe("Brute-force protection", () => {
     const config: AuthConfig = {
       requireAuth: true,
       credentials: [
-        { agentId: "agent-1", apiKey: hashApiKey("valid_key"), createdAt: new Date().toISOString() },
+        {
+          agentId: "agent-1",
+          apiKey: hashApiKey("valid_key"),
+          createdAt: new Date().toISOString(),
+        },
       ],
     };
 

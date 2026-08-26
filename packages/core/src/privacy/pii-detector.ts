@@ -1,7 +1,7 @@
 export interface PiiMatch {
   type: string; // "email", "cpf", "ssn", "phone", "credit_card", etc.
-  value: string; // o texto matched
-  start: number; // posição no texto
+  value: string; // The matched substring
+  start: number; // Start index in the source text
   end: number;
   confidence: "high" | "medium" | "low";
   locale?: string; // "br", "us", etc.
@@ -13,9 +13,9 @@ export interface PiiDetector {
 }
 
 export interface PiiDetectorConfig {
-  locales?: string[]; // ["br", "us"] — quais locales ativar
-  customPatterns?: PiiPattern[]; // patterns adicionais do usuário
-  disabledTypes?: string[]; // tipos a ignorar
+  locales?: string[]; // ["br", "us"] — which locales to activate
+  customPatterns?: PiiPattern[]; // Additional custom user patterns
+  disabledTypes?: string[]; // PII types to ignore
   /**
    * Compose the regex detector with a heuristic (dependency-free) person-name
    * detector — see ner-lite-detector.ts. Off by default: it's best-effort and

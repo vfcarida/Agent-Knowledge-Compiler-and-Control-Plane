@@ -28,7 +28,6 @@ export class PluginLoader {
       const raw = fs.readFileSync(manifestPath, "utf-8");
       const data = JSON.parse(raw);
       return PluginManifestSchema.parse(data);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err.name === "ZodError") {
         throw new PluginValidationError(
@@ -41,7 +40,6 @@ export class PluginLoader {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async loadPlugin<T = any>(
     pluginDir: string,
     requiredPermissions: PluginPermission[] = [],
@@ -71,7 +69,6 @@ export class PluginLoader {
       // Lazy: Plugin loader dynamically imports user-provided paths
       const pluginExports = await import(pathToFileURL(entrypointPath).href);
       return { manifest, exports: pluginExports };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       throw new PluginValidationError(
         `Failed to load plugin entrypoint: ${err.message}`,

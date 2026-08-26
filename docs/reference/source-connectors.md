@@ -1,36 +1,37 @@
 # Source Connectors
 
-O **Agent Knowledge Compiler and Control Plane (akcp)** suporta a ingestão de dados de diferentes formatos usando **Source Connectors**.
+The **Agent Knowledge Compiler and Control Plane (AKCP)** supports ingesting knowledge from different data sources and formats using **Source Connectors**.
 
-Esta arquitetura plugin-based permite que agentes tenham acesso a conhecimento espalhado em OpenWiki, repositórios Markdown simples e, experimentalmente, definições OpenAPI, sem que esses arquivos precisem estar estritamente envelopados no formato OKF.
+This plugin-based ingestion architecture allows agents to discover and reason across knowledge spread across OpenWiki exports, Markdown repositories, and OpenAPI definitions, without requiring manual pre-conversion into OKF frontmatter format.
 
-## Configuração de Ingestão (`akcp.yaml`)
+## Ingestion Configuration (`akcp.yaml`)
 
-No arquivo de configuração `akcp.yaml`, você pode listar múltiplas fontes e usar a propriedade `type` para invocar diferentes connectors.
+In your `akcp.yaml` configuration file, list one or more source paths and specify the `type` property to select the corresponding connector:
 
 ```yaml
 compile:
   sources:
     - type: okf-directory
-      path: ./sample-data/.okf
+      path: ./sources
     - type: markdown-directory
       path: ./docs/product
     - type: openwiki
       path: ./openwiki-export
     - type: openapi
       path: ./api-spec.json
-  target:
-    out: ./dist/agent-knowledge-ir.json
+  targets:
+    - type: context-pack
+      out: ./dist/agent-knowledge-ir.json
 ```
 
-## Como funciona a Ingestão
+## How Ingestion Works
 
-1. **Ingest**: Cada connector é responsável por escanear o diretório ou arquivo fonte (`path`) e extrair `RawKnowledgeItem`s. Ele calcula hashes (provenance) e carrega metadados brutos (paths, etc).
-2. **Normalize**: Um estágio central (`packages/core/src/normalizers/normalize.ts`) intercepta todos os `RawKnowledgeItem`s independentemente da sua origem, extraindo `conceptId`, validando formatos OKF e transformando-os em `IRConcept`s consolidados que os agentes entendem de forma unificada.
+1. **Ingest**: Each connector scans its configured source directory or file (`path`) and extracts raw items (`RawKnowledgeItem`). It computes cryptographic provenance hashes and captures raw metadata.
+2. **Normalize**: The normalization stage (`packages/core/src/normalizers/normalize.ts`) processes all ingested items regardless of origin, parses concepts, resolves links, and compiles them into typed `IRConcept` objects for agent consumption.
 
-## Criando novos Connectors
+## Creating New Connectors
 
-Se você precisar extrair conhecimento de um sistema proprietário (ex: Jira, Confluence, etc.), poderá criar um novo connector seguindo a interface `KnowledgeSourceConnector`:
+To ingest knowledge from custom or enterprise repositories (e.g. Jira, Confluence, Notion), implement the `KnowledgeSourceConnector` interface:
 
 ```typescript
 export interface KnowledgeSourceConnector {
@@ -39,8 +40,8 @@ export interface KnowledgeSourceConnector {
 }
 ```
 
-### Regras para novos Connectors
+### Connector Best Practices
 
-- **Connectors são plugins de build-time**, não de runtime.
-- **Evite adicionar dependências pesadas**. O connector OpenAPI, por exemplo, usa regex/JSON em vez de parsers swagger complexos para evitar sobrecarregar o compilador.
-- **Nenhum segredo deve ser inserido**. Cuidado ao importar arquivos raw que contenham senhas hardcoded. No futuro, Redaction Connectors agirão em conjunto para remover PII/Secrets.
+- **Build-Time Execution**: Connectors execute during compilation/build time, not during runtime tool execution.
+- **Minimal Dependencies**: Keep external dependencies lightweight to avoid bloating build pipelines.
+- **Security & Secret Redaction**: Do not ingest hardcoded credentials or unredacted keys. Use privacy redaction stages to sanitize sensitive strings before IR emission.

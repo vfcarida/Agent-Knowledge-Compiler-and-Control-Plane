@@ -11,13 +11,15 @@ The `AUTOMATION_RUNTIME_MODE` environment variable defaults to `sandbox`. In thi
 ## 2. Policy-Bound Execution
 
 Automation is strictly governed by **Policy Cards** (`policy.yaml`). Tools are annotated with `riskLevel` boundaries:
+
 - **Low Risk**: Allowed to run autonomously if `autonomyLevel` is `autonomous`.
 - **Medium/High Risk**: Blocked unless `autonomyLevel` allows it, and strongly recommended to require explicit approval.
 - **Critical Risk**: Will always fail unless explicitly authorized by a Human-In-The-Loop (HITL) approval flow, regardless of autonomy level.
 
-## 3. Human-In-The-Loop (HITL) 
+## 3. Human-In-The-Loop (HITL)
 
 Destructive or highly sensitive actions are split into a two-phase commit:
+
 1. **Prepare**: The agent calls a preparation tool (e.g., `prepare_infrastructure_deployment` or `stage_customer_refund`). The control plane stages the payload and returns an `ApprovalToken`.
 2. **Execute**: The human reviews the staged payload. The agent calls the execution tool (e.g., `execute_deployment`) providing the token. The control plane hashes the payload to ensure it wasn't modified post-approval.
 

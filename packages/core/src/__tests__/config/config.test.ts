@@ -32,13 +32,17 @@ compile:
     fs.writeFileSync(filePath, validYaml);
 
     const config = loadAkcpConfig(filePath);
-    expect(config.compile.sources[0].path).toBe("./packages/test-fixtures/sample-data/.okf");
+    expect(config.compile.sources[0].path).toBe(
+      "./packages/test-fixtures/sample-data/.okf",
+    );
     expect(config.compile.targets[0].out).toBe("./dist/context-pack.json");
     expect(config.controlPlane?.policies?.disableDangerousTools).toBe(true);
 
     // Test planner
     const plan = generateBuildPlan(config);
-    expect(plan.sourcesToRead[0]).toBe("./packages/test-fixtures/sample-data/.okf");
+    expect(plan.sourcesToRead[0]).toBe(
+      "./packages/test-fixtures/sample-data/.okf",
+    );
     expect(plan.targetsToGenerate[0]).toContain("./dist/context-pack.json");
     expect(plan.activePolicies).toContain("disableDangerousTools");
   });

@@ -23,14 +23,14 @@ The **Payment Service Availability SLO** requires that the service successfully 
 ## Error Budget
 
 | Window | Allowed Downtime |
-|--------|-----------------|
-| 30d    | ~21.6 minutes   |
-| 7d     | ~5 minutes      |
+| ------ | ---------------- |
+| 30d    | ~21.6 minutes    |
+| 7d     | ~5 minutes       |
 
 ## Burn Rate Alerts
 
-| Burn Rate | Alert Window | Action                          |
-|-----------|--------------|---------------------------------|
+| Burn Rate | Alert Window | Action                           |
+| --------- | ------------ | -------------------------------- |
 | 14x       | 1 hour       | Page primary on-call immediately |
 | 6x        | 6 hours      | Notify team, begin investigation |
 | 3x        | 1 day        | Create a tracking issue          |

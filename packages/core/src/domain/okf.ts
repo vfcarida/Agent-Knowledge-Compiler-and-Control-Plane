@@ -67,9 +67,7 @@ const OkfAttesterSchema = z.object({
  */
 export const OKFFrontmatterSchema = z
   .object({
-    type: z
-      .string()
-      .min(1, 'The "type" field is required by OKF v0.2 spec'),
+    type: z.string().min(1, 'The "type" field is required by OKF v0.2 spec'),
     title: z.string().optional(),
     description: z.string().optional(),
     resource: z.string().optional(),

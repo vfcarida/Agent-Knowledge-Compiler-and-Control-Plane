@@ -45,7 +45,13 @@ export const ITOpsRunbookSchema = OKFFrontmatterSchema.extend({
 export const ITOpsIncidentSchema = OKFFrontmatterSchema.extend({
   type: z.literal(ITOperationsDocumentType.Incident),
   severity: z.enum(["SEV-1", "SEV-2", "SEV-3", "SEV-4", "SEV-5"]),
-  status: z.enum(["Investigating", "Identified", "Monitoring", "Resolved", "Closed"]),
+  status: z.enum([
+    "Investigating",
+    "Identified",
+    "Monitoring",
+    "Resolved",
+    "Closed",
+  ]),
   serviceRefs: z.array(z.string()).optional(),
   commanderRef: z.string().optional(),
   startTime: z.string().optional(),
@@ -70,13 +76,15 @@ export const ITOpsSLOSchema = OKFFrontmatterSchema.extend({
 export const ITOpsEscalationPolicySchema = OKFFrontmatterSchema.extend({
   type: z.literal(ITOperationsDocumentType.EscalationPolicy),
   serviceRef: z.string().optional(),
-  levels: z.array(
-    z.object({
-      level: z.number(),
-      ownerRef: z.string(),
-      timeoutMinutes: z.number(),
-    })
-  ).optional(),
+  levels: z
+    .array(
+      z.object({
+        level: z.number(),
+        ownerRef: z.string(),
+        timeoutMinutes: z.number(),
+      }),
+    )
+    .optional(),
 });
 
 export const ITOpsOwnerSchema = OKFFrontmatterSchema.extend({

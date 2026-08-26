@@ -1,3 +1,3 @@
 # Agent Knowledge IR
 
-*This formal specification is under development.*
+_This formal specification is under development._

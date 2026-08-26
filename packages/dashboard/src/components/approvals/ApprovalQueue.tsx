@@ -44,7 +44,11 @@ export function ApprovalQueue() {
     setModalOpen(true);
   };
 
-  const showConfirm = (title: string, message: React.ReactNode, onConfirm: () => void) => {
+  const showConfirm = (
+    title: string,
+    message: React.ReactNode,
+    onConfirm: () => void,
+  ) => {
     setModalConfig({ title, message, type: "confirm", onConfirm });
     setModalOpen(true);
   };
@@ -53,8 +57,8 @@ export function ApprovalQueue() {
     try {
       const res = await fetch("/api/automation/approvals", {
         headers: {
-          "Authorization": user ? `Bearer ${user.identity}` : ""
-        }
+          Authorization: user ? `Bearer ${user.identity}` : "",
+        },
       });
       if (!res.ok) throw new Error("Failed to fetch approvals from server");
       const data = await res.json();
@@ -85,15 +89,20 @@ export function ApprovalQueue() {
 
   const handleApprove = async (token: string, jobUrl?: string) => {
     if (!user) {
-      showAlert("Authentication Required", "You must be logged in to approve actions.");
+      showAlert(
+        "Authentication Required",
+        "You must be logged in to approve actions.",
+      );
       return;
     }
-    
+
     showConfirm(
       "Authorize Execution",
       <div className="space-y-2">
         <p>Are you sure you want to authorize this operation?</p>
-        <p className="text-xs text-zinc-400">The agent will immediately execute this payload.</p>
+        <p className="text-xs text-zinc-400">
+          The agent will immediately execute this payload.
+        </p>
       </div>,
       async () => {
         setModalOpen(false);
@@ -101,9 +110,9 @@ export function ApprovalQueue() {
         try {
           const res = await fetch("/api/automation/approve", {
             method: "POST",
-            headers: { 
+            headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${user.identity}` 
+              Authorization: `Bearer ${user.identity}`,
             },
             body: JSON.stringify({
               approvalToken: token,
@@ -120,7 +129,10 @@ export function ApprovalQueue() {
             if (parsed.ok === false) {
               showAlert("Approval Failed", parsed.error?.message);
             } else {
-              showAlert("Success", "Action successfully approved and submitted to the agent.");
+              showAlert(
+                "Success",
+                "Action successfully approved and submitted to the agent.",
+              );
               await fetchApprovals();
             }
           }
@@ -129,21 +141,27 @@ export function ApprovalQueue() {
         } finally {
           setProcessing(null);
         }
-      }
+      },
     );
   };
 
   const handleRevoke = async (token: string) => {
     if (!user) {
-      showAlert("Authentication Required", "You must be logged in to revoke actions.");
+      showAlert(
+        "Authentication Required",
+        "You must be logged in to revoke actions.",
+      );
       return;
     }
-    
+
     showConfirm(
       "Revoke Token",
       <div className="space-y-2 text-red-400">
         <p>Are you sure you want to revoke this approval token?</p>
-        <p className="text-xs">The agent will be denied execution and the token will be invalidated permanently.</p>
+        <p className="text-xs">
+          The agent will be denied execution and the token will be invalidated
+          permanently.
+        </p>
       </div>,
       async () => {
         setModalOpen(false);
@@ -151,9 +169,9 @@ export function ApprovalQueue() {
         try {
           const res = await fetch("/api/automation/revoke", {
             method: "POST",
-            headers: { 
+            headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${user.identity}`
+              Authorization: `Bearer ${user.identity}`,
             },
             body: JSON.stringify({
               approvalToken: token,
@@ -176,7 +194,7 @@ export function ApprovalQueue() {
         } finally {
           setProcessing(null);
         }
-      }
+      },
     );
   };
 
@@ -344,23 +362,25 @@ export function ApprovalQueue() {
       {modalOpen && modalConfig && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-200">
-            <div className={`p-4 border-b ${modalConfig.type === 'confirm' ? 'border-white/5 bg-zinc-800/50' : 'border-red-500/20 bg-red-500/5'}`}>
+            <div
+              className={`p-4 border-b ${modalConfig.type === "confirm" ? "border-white/5 bg-zinc-800/50" : "border-red-500/20 bg-red-500/5"}`}
+            >
               <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
-                {modalConfig.type === 'alert' && <AlertTriangle className="w-5 h-5 text-red-400" />}
+                {modalConfig.type === "alert" && (
+                  <AlertTriangle className="w-5 h-5 text-red-400" />
+                )}
                 {modalConfig.title}
               </h3>
             </div>
-            <div className="p-6 text-zinc-300">
-              {modalConfig.message}
-            </div>
+            <div className="p-6 text-zinc-300">{modalConfig.message}</div>
             <div className="p-4 border-t border-white/5 bg-zinc-950/50 flex justify-end gap-3">
               <button
                 onClick={() => setModalOpen(false)}
                 className="px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white bg-zinc-800 hover:bg-zinc-700 rounded-lg transition-colors cursor-pointer"
               >
-                {modalConfig.type === 'confirm' ? 'Cancel' : 'Close'}
+                {modalConfig.type === "confirm" ? "Cancel" : "Close"}
               </button>
-              {modalConfig.type === 'confirm' && (
+              {modalConfig.type === "confirm" && (
                 <button
                   onClick={modalConfig.onConfirm}
                   className="px-4 py-2 text-sm font-medium text-white bg-neon-indigo hover:bg-neon-purple rounded-lg shadow-lg shadow-neon-indigo/20 transition-colors cursor-pointer"

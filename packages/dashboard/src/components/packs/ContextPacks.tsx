@@ -46,8 +46,9 @@ export function ContextPacks({ data }: { data: CareerBundleData | null }) {
           <div>
             <h4 className="font-bold">Manifest Not Found</h4>
             <p className="text-sm mt-1">
-              Could not find <code>akcp-manifest.json</code> in the loaded directory or <code>dist/</code> folder. 
-              Make sure you have compiled the context pack.
+              Could not find <code>akcp-manifest.json</code> in the loaded
+              directory or <code>dist/</code> folder. Make sure you have
+              compiled the context pack.
             </p>
           </div>
         </div>

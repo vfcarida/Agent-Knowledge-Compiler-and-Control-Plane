@@ -13,6 +13,7 @@ This prevents supply-chain attacks where a compromised action tag is redirected 
 malicious code.
 
 When updating actions:
+
 1. Find the new SHA from the action's releases page
 2. Update the SHA in the workflow file
 3. Keep the version comment up to date (e.g., `# v4.2.3`)
@@ -24,12 +25,12 @@ CI and release builds always use `pnpm install --frozen-lockfile`. This prevents
 
 ### 3. Automated Scanning
 
-| Control | Tool | Scope |
-|---------|------|-------|
-| Static analysis | **CodeQL** | PRs + scheduled |
-| Dependency vulnerabilities | **Dependabot** | npm + GitHub Actions |
-| PR vulnerability gate | **Dependency Review** | New PRs |
-| Scorecard | **OpenSSF Scorecard** | Weekly |
+| Control                    | Tool                  | Scope                |
+| -------------------------- | --------------------- | -------------------- |
+| Static analysis            | **CodeQL**            | PRs + scheduled      |
+| Dependency vulnerabilities | **Dependabot**        | npm + GitHub Actions |
+| PR vulnerability gate      | **Dependency Review** | New PRs              |
+| Scorecard                  | **OpenSSF Scorecard** | Weekly               |
 
 ### 4. Least-Privilege Workflows
 
@@ -104,15 +105,15 @@ gh attestation verify sbom.spdx.json \
 > [!IMPORTANT]
 > AKCP makes **no false SLSA level claims**. The current posture is documented honestly below.
 
-| SLSA Requirement | Status | Notes |
-|---|---|---|
-| L1 — Build scripts checked in | ✅ | All build scripts in `.github/workflows/` |
-| L1 — Build provenance available | ✅ | `actions/attest-build-provenance` on every release |
-| L2 — Hosted build platform | ✅ | GitHub Actions (hosted runners) |
-| L2 — Build provenance authenticated | ✅ | Sigstore-backed via GitHub OIDC |
-| L2 — Hermetic build | ⚠️ Partial | `--frozen-lockfile` + `--ignore-scripts` on release, but network access remains |
-| L3 — Isolated build | ❌ Not yet | Requires ephemeral, isolated runners (e.g., GitHub's hardened runners) |
-| L3 — Tamper-evident log | ❌ Not yet | Requires Rekor log integration |
+| SLSA Requirement                    | Status     | Notes                                                                           |
+| ----------------------------------- | ---------- | ------------------------------------------------------------------------------- |
+| L1 — Build scripts checked in       | ✅         | All build scripts in `.github/workflows/`                                       |
+| L1 — Build provenance available     | ✅         | `actions/attest-build-provenance` on every release                              |
+| L2 — Hosted build platform          | ✅         | GitHub Actions (hosted runners)                                                 |
+| L2 — Build provenance authenticated | ✅         | Sigstore-backed via GitHub OIDC                                                 |
+| L2 — Hermetic build                 | ⚠️ Partial | `--frozen-lockfile` + `--ignore-scripts` on release, but network access remains |
+| L3 — Isolated build                 | ❌ Not yet | Requires ephemeral, isolated runners (e.g., GitHub's hardened runners)          |
+| L3 — Tamper-evident log             | ❌ Not yet | Requires Rekor log integration                                                  |
 
 **Current level: SLSA L1 (provenance available) → approaching L2 (authenticated provenance).**
 
@@ -128,15 +129,15 @@ See [docs/release/release-process.md](../release/release-process.md) for the ful
 
 ## Roadmap
 
-| Item | Status |
-|------|--------|
-| SBOM generation | ✅ Implemented |
-| Build provenance attestation | ✅ Implemented |
-| SBOM attestation | ✅ Implemented |
-| NPM `--provenance` publish | ✅ Implemented |
-| Commit + tag signing (GPG/SSH) | 🗓️ Planned |
-| SLSA L3 isolated runner | 🗓️ Planned |
-| CycloneDX SBOM format | 🗓️ Planned |
+| Item                           | Status         |
+| ------------------------------ | -------------- |
+| SBOM generation                | ✅ Implemented |
+| Build provenance attestation   | ✅ Implemented |
+| SBOM attestation               | ✅ Implemented |
+| NPM `--provenance` publish     | ✅ Implemented |
+| Commit + tag signing (GPG/SSH) | 🗓️ Planned     |
+| SLSA L3 isolated runner        | 🗓️ Planned     |
+| CycloneDX SBOM format          | 🗓️ Planned     |
 
 > [!NOTE]
 > These controls apply across all AKCP domains (Career, IT Operations, Customer Support). No new package or binary should bypass these validation phases.

@@ -15,19 +15,29 @@ export class EnrichStage implements PipelineStage {
         concept.provenance = {
           conceptId: concept.conceptId,
           sourceFile: concept.source?.filePath || "",
-          sourceHash: context.sourceHashes[concept.source?.filePath || ""] || "",
+          sourceHash:
+            context.sourceHashes[concept.source?.filePath || ""] || "",
           timestamp: new Date().toISOString(),
         };
       }
-      
+
       // Auto-summarization for Context Compression
-      if (!concept.frontmatter.summary && concept.body && concept.body.length > 500) {
+      if (
+        !concept.frontmatter.summary &&
+        concept.body &&
+        concept.body.length > 500
+      ) {
         // Very naive extractive summary (first paragraph or first 500 chars)
-        const firstParagraph = concept.body.split("\n\n").find(p => p.trim().length > 20 && !p.startsWith("#"));
+        const firstParagraph = concept.body
+          .split("\n\n")
+          .find((p) => p.trim().length > 20 && !p.startsWith("#"));
         if (firstParagraph) {
-          concept.frontmatter.summary = firstParagraph.substring(0, 300).trim() + (firstParagraph.length > 300 ? "..." : "");
+          concept.frontmatter.summary =
+            firstParagraph.substring(0, 300).trim() +
+            (firstParagraph.length > 300 ? "..." : "");
         } else {
-          concept.frontmatter.summary = concept.body.substring(0, 300).replace(/\n/g, " ").trim() + "...";
+          concept.frontmatter.summary =
+            concept.body.substring(0, 300).replace(/\n/g, " ").trim() + "...";
         }
       }
     }

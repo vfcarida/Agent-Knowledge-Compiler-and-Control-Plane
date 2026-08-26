@@ -28,9 +28,9 @@ export class DashboardMetadataTarget implements CompileTarget {
       policiesCount: 0, // This is loaded externally typically, or could be extracted from IR if available
       health: {
         status: "healthy",
-        lastCompiled: new Date().toISOString()
+        lastCompiled: new Date().toISOString(),
       },
-      concepts: ir.concepts.map(c => ({
+      concepts: ir.concepts.map((c) => ({
         id: c.conceptId,
         type: c.type,
         title: c.frontmatter?.title || c.conceptId,

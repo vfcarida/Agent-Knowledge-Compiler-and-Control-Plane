@@ -28,8 +28,8 @@ test.describe("Audit Log Visual Inspection", () => {
                       riskLevel: "high",
                       evidence: {
                         payloadHash: "deadbeef",
-                        reason: "Policy violation: destructive action"
-                      }
+                        reason: "Policy violation: destructive action",
+                      },
                     },
                     {
                       schemaVersion: "akcp.audit/v1",
@@ -42,30 +42,33 @@ test.describe("Audit Log Visual Inspection", () => {
                       decision: "allow",
                       riskLevel: "low",
                       evidence: {
-                        payloadHash: "cafebabe"
-                      }
-                    }
-                  ]
-                }
-              })
-            }
-          ]
-        })
+                        payloadHash: "cafebabe",
+                      },
+                    },
+                  ],
+                },
+              }),
+            },
+          ],
+        }),
       });
     });
 
     // Navigate to the app and bypass the directory picker by simulating data load
     await page.goto("/");
-    
+
     // Evaluate to mock the auth
     await page.evaluate(() => {
-      window.localStorage.setItem("mockUser", JSON.stringify({
-        identity: "admin-tester",
-        name: "Test Admin",
-        role: "admin",
-      }));
+      window.localStorage.setItem(
+        "mockUser",
+        JSON.stringify({
+          identity: "admin-tester",
+          name: "Test Admin",
+          role: "admin",
+        }),
+      );
     });
-    
+
     // Reload to apply auth state
     await page.reload();
   });
@@ -75,9 +78,9 @@ test.describe("Audit Log Visual Inspection", () => {
     await page.evaluate(() => {
       (window as any).showDirectoryPicker = async () => {
         return {
-          kind: 'directory',
-          name: 'mock-okf-dir',
-          values: async function* () {} // empty directory
+          kind: "directory",
+          name: "mock-okf-dir",
+          values: async function* () {}, // empty directory
         };
       };
     });
@@ -92,13 +95,15 @@ test.describe("Audit Log Visual Inspection", () => {
     await page.click("button:has-text('Audit Log')");
 
     // Check if the Audit Logs page rendered
-    await expect(page.locator("h2").filter({ hasText: "Audit Log" })).toBeVisible();
-    
+    await expect(
+      page.locator("h2").filter({ hasText: "Audit Log" }),
+    ).toBeVisible();
+
     // Verify specific log contents
     await expect(page.locator("text=test-user@corp.com").first()).toBeVisible();
     await expect(page.locator("text=delete_database")).toBeVisible();
     await expect(page.locator("text=read_logs")).toBeVisible();
-    
+
     // Verify badges (deny vs allow)
     await expect(page.locator("text=deny")).toBeVisible();
     await expect(page.locator("text=allow")).toBeVisible();

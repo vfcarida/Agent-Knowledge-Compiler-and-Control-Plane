@@ -53,9 +53,13 @@ describe("Compiler Pipeline Benchmarks", () => {
     await buildKnowledgeIR(bundle100);
   });
 
-  bench("compile 1000 documents", async () => {
-    await buildKnowledgeIR(bundle1000);
-  }, { iterations: 5 });
+  bench(
+    "compile 1000 documents",
+    async () => {
+      await buildKnowledgeIR(bundle1000);
+    },
+    { iterations: 5 },
+  );
 
   bench("compile 100 documents with provenance", async () => {
     await buildKnowledgeIR(bundle100, { generateProvenance: true });

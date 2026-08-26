@@ -20,18 +20,19 @@ export class PiiReport {
     totalFindings: 0,
     blockedCount: 0,
     findingsByType: {},
-    details: []
+    details: [],
   };
 
   addFinding(file: string, finding: PiiMatch) {
     this.data.totalFindings++;
-    this.data.findingsByType[finding.type] = (this.data.findingsByType[finding.type] || 0) + 1;
+    this.data.findingsByType[finding.type] =
+      (this.data.findingsByType[finding.type] || 0) + 1;
     this.data.details.push({
       file,
       type: finding.type,
       start: finding.start,
       end: finding.end,
-      confidence: finding.confidence
+      confidence: finding.confidence,
     });
   }
 

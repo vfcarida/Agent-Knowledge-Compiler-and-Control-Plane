@@ -6,10 +6,10 @@ This directory contains the flagship examples demonstrating the Agent Knowledge 
 
 AKCP proves its domain-agnostic architecture through three flagship domains. You can use these to test the compiler, inspect generated Agent Knowledge IR (AK-IR), or serve local MCP resources.
 
-| Domain | Directory | Maturity Status | What it demonstrates |
-|--------|-----------|-----------------|----------------------|
-| **Career** | `domains/career` | **Stable** | A low-friction starter domain for personal knowledge compilation. |
-| **IT Operations** | `domains/it-operations` | **Beta** | The enterprise flagship. Demonstrates runbooks, incidents, system architectures, approvals, and immutable audit trails. |
+| Domain               | Directory                  | Maturity Status  | What it demonstrates                                                                                                    |
+| -------------------- | -------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| **Career**           | `domains/career`           | **Stable**       | A low-friction starter domain for personal knowledge compilation.                                                       |
+| **IT Operations**    | `domains/it-operations`    | **Beta**         | The enterprise flagship. Demonstrates runbooks, incidents, system architectures, approvals, and immutable audit trails. |
 | **Customer Support** | `domains/customer-support` | **Experimental** | Demonstrates policy-aware, privacy-preserving support knowledge compilation (tickets, macros, policies, PII redaction). |
 
 ## How to use an example

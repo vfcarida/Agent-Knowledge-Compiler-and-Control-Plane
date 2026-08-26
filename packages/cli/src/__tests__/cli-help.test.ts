@@ -35,7 +35,6 @@ test("invalid commands suggest alternatives", () => {
 
   try {
     execSync(`node ${cliPath} buil`, { stdio: "pipe" });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     const stderr = err.stderr.toString();
     expect(stderr).toContain("error: unknown command 'buil'");
@@ -47,7 +46,6 @@ test("invalid commands suggest alternatives", () => {
 
   try {
     execSync(`node ${cliPath} compie`, { stdio: "pipe" });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     const stderr = err.stderr.toString();
     expect(stderr).toContain("error: unknown command 'compie'");

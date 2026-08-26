@@ -19,6 +19,7 @@ All commands below should be run from the repository root.
 The source data is located in examples/domains/career/knowledge/. It uses the Open Knowledge Format (OKF) convention: frontmatter metadata combined with Markdown content.
 
 Take a look at the files:
+
 - **profile.md**: Basic profile info.
 - **experience-acmecorp.md**: Job experience details.
 - **preferences.md**: Work constraints and salary targets.
@@ -52,6 +53,7 @@ pnpm akcp inspect examples/domains/career
 \\\
 
 **What to look for:**
+
 - ir-json (Context Pack): For embedding directly into agent prompts.
 - openwiki: For human and LLM-readable RAG integration.
 - mcp-resources: The tool descriptors and policy definitions for the Model Context Protocol.

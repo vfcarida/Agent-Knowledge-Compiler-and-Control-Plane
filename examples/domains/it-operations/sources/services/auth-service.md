@@ -29,7 +29,7 @@ The Auth Service manages JWT issuance, token validation, and user session lifecy
 ## SLOs
 
 | Indicator    | Target  | Window |
-|--------------|---------|--------|
+| ------------ | ------- | ------ |
 | Availability | 99.99%  | 30d    |
 | P99 Latency  | < 50ms  | 7d     |
 | Error Rate   | < 0.01% | 7d     |

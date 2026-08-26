@@ -7,7 +7,6 @@ export const migration: Migration = {
       db.exec(
         `ALTER TABLE pending_approvals ADD COLUMN status TEXT DEFAULT 'PENDING';`,
       );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if (!e.message.includes("duplicate column")) throw e;
     }
@@ -15,9 +14,8 @@ export const migration: Migration = {
   down: (db) => {
     try {
       db.exec(`ALTER TABLE pending_approvals DROP COLUMN status;`);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch(e: any) {
+    } catch (e: any) {
       console.warn("Could not drop columns in down migration", e.message);
     }
-  }
+  },
 };

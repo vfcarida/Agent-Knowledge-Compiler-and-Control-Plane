@@ -62,10 +62,10 @@ The Evidence Store is an immutable, append-only audit log. Every MCP tool call, 
 
 AKCP wraps the [Model Context Protocol (MCP)](https://modelcontextprotocol.io) with the governance components above. Two server types are provided:
 
-| Server | Package | Purpose |
-|--------|---------|---------|
-| **Profile Server** | `@akcp/mcp-profile-server` | Exposes read-only resources and prompts — compiled context packs, domain knowledge, agent instructions |
-| **Automation Server** | `@akcp/mcp-automation-server` | Exposes side-effect tools (e.g., browser automation, API calls) with HITL and risk-level enforcement |
+| Server                | Package                       | Purpose                                                                                                |
+| --------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------ |
+| **Profile Server**    | `@akcp/mcp-profile-server`    | Exposes read-only resources and prompts — compiled context packs, domain knowledge, agent instructions |
+| **Automation Server** | `@akcp/mcp-automation-server` | Exposes side-effect tools (e.g., browser automation, API calls) with HITL and risk-level enforcement   |
 
 ### Transport Topologies
 
@@ -78,11 +78,11 @@ AKCP wraps the [Model Context Protocol (MCP)](https://modelcontextprotocol.io) w
 
 A compliant MCP server exposes three categories of primitives:
 
-| Primitive | Description | AKCP Usage |
-|-----------|-------------|------------|
+| Primitive     | Description                             | AKCP Usage                                                |
+| ------------- | --------------------------------------- | --------------------------------------------------------- |
 | **Resources** | Read-only data nodes exposed to the LLM | Compiled context packs, domain concepts, policy summaries |
-| **Prompts** | Structured system-level templates | Agent instruction sets, task-specific context |
-| **Tools** | Executable functions with side effects | Browser automation, API calls, approval workflows |
+| **Prompts**   | Structured system-level templates       | Agent instruction sets, task-specific context             |
+| **Tools**     | Executable functions with side effects  | Browser automation, API calls, approval workflows         |
 
 All tools must validate inputs against strict JSON schemas and return structured `ToolSuccess<T>` or `ToolFailure` responses. See [MCP Tool Contracts](../specs/mcp-tool-contracts.md).
 
@@ -104,12 +104,12 @@ See [Spec Governance](../governance/spec-governance.md) and [Conformance Specifi
 
 ## Quality Assurance
 
-| Layer | Approach |
-|---|---|
+| Layer                        | Approach                                                                                        |
+| ---------------------------- | ----------------------------------------------------------------------------------------------- |
 | **Deterministic Validation** | Parsers check YAML syntax against schema boundaries; missing required fields cause fatal errors |
-| **MCP Fault Injection** | Mock servers test retry behavior under rate limits and malformed payloads |
-| **Contract Tests** | `ToolSuccess<T>` / `ToolFailure` response contracts are tested against every exposed tool |
-| **Security Tests** | Prompt injection, path traversal, and output validation are tested in isolation |
+| **MCP Fault Injection**      | Mock servers test retry behavior under rate limits and malformed payloads                       |
+| **Contract Tests**           | `ToolSuccess<T>` / `ToolFailure` response contracts are tested against every exposed tool       |
+| **Security Tests**           | Prompt injection, path traversal, and output validation are tested in isolation                 |
 
 See [Testing Guide](../guides/testing.md).
 

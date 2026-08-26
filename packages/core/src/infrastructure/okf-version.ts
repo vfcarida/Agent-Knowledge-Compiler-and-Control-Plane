@@ -10,9 +10,7 @@ import matter from "gray-matter";
  * per the spec, which explicitly forbids consumers from rejecting a bundle
  * over this.
  */
-export function detectSourceOkfVersion(
-  bundleRoot: string,
-): string | undefined {
+export function detectSourceOkfVersion(bundleRoot: string): string | undefined {
   const indexPath = path.join(bundleRoot, "index.md");
   if (!fs.existsSync(indexPath)) return undefined;
 

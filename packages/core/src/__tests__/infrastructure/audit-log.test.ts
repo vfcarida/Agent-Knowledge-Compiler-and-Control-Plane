@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import fs from "fs";
 import path from "path";
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+
 import crypto from "crypto";
 import { FileAuditLogService } from "../../infrastructure/audit-log.js";
 import type { AuditEvent } from "../../infrastructure/audit-log.js";
@@ -36,7 +36,7 @@ describe("FileAuditLogService", () => {
       action: "capability.invoke",
       decision: "allow",
       riskLevel: "low",
-      evidence: { payloadHash: "abc" }
+      evidence: { payloadHash: "abc" },
     });
 
     expect(id).toBeDefined();
@@ -60,7 +60,7 @@ describe("FileAuditLogService", () => {
       action: "policy.evaluate",
       decision: "allow",
       riskLevel: "low",
-      evidence: {}
+      evidence: {},
     });
     await service.logEvent({
       actor: "agent-2",
@@ -68,7 +68,7 @@ describe("FileAuditLogService", () => {
       action: "policy.evaluate",
       decision: "deny",
       riskLevel: "high",
-      evidence: {}
+      evidence: {},
     });
 
     const events = await service.getEvents();

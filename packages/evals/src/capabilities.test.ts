@@ -4,7 +4,6 @@ import { profileServerCapabilities } from "@akcp/mcp-profile-server/dist/capabil
 import { automationServerCapabilities } from "@akcp/mcp-automation-server/dist/capabilities.js";
 
 describe("Capability Registry", () => {
-
   it("profile-server registry is valid", () => {
     const registry = profileServerCapabilities;
     expect(Array.isArray(registry)).toBe(true);

@@ -15,9 +15,9 @@ services:
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.100.0
     ports:
-      - "4317:4317"   # gRPC OTLP
-      - "4318:4318"   # HTTP OTLP
-      - "8889:8889"   # Prometheus metrics
+      - "4317:4317" # gRPC OTLP
+      - "4318:4318" # HTTP OTLP
+      - "8889:8889" # Prometheus metrics
     volumes:
       - ./docker/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
     profiles:

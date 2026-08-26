@@ -55,12 +55,12 @@ If an isolated pod is consuming excessive CPU:
 
 ## Safe / Unsafe Boundary
 
-| Action                  | Requires Approval | Risk   |
-|-------------------------|-------------------|--------|
-| Query logs              | No                | Low    |
-| Scale replicas (suggest)| No (suggest only) | Medium |
-| Restart pod             | **Yes**           | High   |
-| Rollback deployment     | **Yes**           | Critical |
+| Action                   | Requires Approval | Risk     |
+| ------------------------ | ----------------- | -------- |
+| Query logs               | No                | Low      |
+| Scale replicas (suggest) | No (suggest only) | Medium   |
+| Restart pod              | **Yes**           | High     |
+| Rollback deployment      | **Yes**           | Critical |
 
 ## Post-Incident
 

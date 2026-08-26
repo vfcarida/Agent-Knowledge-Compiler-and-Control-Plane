@@ -17,6 +17,7 @@ category: refunds
 ## Execution Requirements
 
 Before issuing a refund using the `issue_refund` capability:
+
 - The agent **MUST** verify the original purchase date in the customer history.
 - The agent **MUST** request a Human-in-the-Loop (HITL) approval via the Control Plane if the refund exceeds $100 USD.
 - The agent **MUST NOT** hallucinate an approval. If the control plane denies the request, escalate the ticket.

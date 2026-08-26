@@ -25,14 +25,19 @@ export interface BenchmarkReport {
 }
 
 export interface LLMProvider {
-  // eslint-disable-next-line no-unused-vars
-  chat(systemPrompt: string, userMessage: string): Promise<{ text: string, tokens: number }>;
+  chat(
+    systemPrompt: string,
+    userMessage: string,
+  ): Promise<{ text: string; tokens: number }>;
 }
 
 export class MockLLMProvider implements LLMProvider {
   async chat(_systemPrompt: string, _userMessage: string) {
     // Return a mocked success response
-    return { text: "MOCK_RESPONSE: I am avoiding unsafe actions and following the rules.", tokens: 150 };
+    return {
+      text: "MOCK_RESPONSE: I am avoiding unsafe actions and following the rules.",
+      tokens: 150,
+    };
   }
 }
 
@@ -49,35 +54,36 @@ export class OpenAIProvider implements LLMProvider {
 
   async chat(systemPrompt: string, userMessage: string) {
     if (!this.apiKey) {
-      console.warn("[WARN] OPENAI_API_KEY not set. Falling back to MockLLMProvider.");
+      console.warn(
+        "[WARN] OPENAI_API_KEY not set. Falling back to MockLLMProvider.",
+      );
       return new MockLLMProvider().chat(systemPrompt, userMessage);
     }
     const res = await fetch(`${this.baseUrl}/chat/completions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${this.apiKey}`
+        Authorization: `Bearer ${this.apiKey}`,
       },
       body: JSON.stringify({
         model: this.model,
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: userMessage }
+          { role: "user", content: userMessage },
         ],
-        temperature: 0.0
-      })
+        temperature: 0.0,
+      }),
     });
-    
+
     if (!res.ok) {
       const errorText = await res.text();
       throw new Error(`OpenAI API Error: ${res.status} - ${errorText}`);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data: any = await res.json();
     return {
       text: data.choices[0].message.content,
-      tokens: data.usage?.total_tokens || 0
+      tokens: data.usage?.total_tokens || 0,
     };
   }
 }
@@ -87,18 +93,21 @@ export class EvalsHarness {
   public provider: LLMProvider;
 
   constructor(provider?: LLMProvider) {
-    this.provider = provider || (process.env.OPENAI_API_KEY ? new OpenAIProvider() : new MockLLMProvider());
+    this.provider =
+      provider ||
+      (process.env.OPENAI_API_KEY
+        ? new OpenAIProvider()
+        : new MockLLMProvider());
   }
 
   async runScenario(
     name: string,
     description: string,
-    // eslint-disable-next-line no-unused-vars
+
     baselineRunner: (provider: LLMProvider) => Promise<BenchmarkMetrics>,
-    // eslint-disable-next-line no-unused-vars
+
     treatmentRunner: (provider: LLMProvider) => Promise<BenchmarkMetrics>,
   ) {
-    // eslint-disable-next-line no-console
     console.log(`[Evals] Running scenario: ${name}...`);
 
     let baselineMetrics: BenchmarkMetrics;
@@ -106,7 +115,6 @@ export class EvalsHarness {
       const startB = performance.now();
       baselineMetrics = await baselineRunner(this.provider);
       baselineMetrics.latencyMs = performance.now() - startB;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       console.error(`[Evals] Baseline failed: ${e.message}`);
       baselineMetrics = this.fallbackMetrics();
@@ -117,7 +125,6 @@ export class EvalsHarness {
       const startT = performance.now();
       treatmentMetrics = await treatmentRunner(this.provider);
       treatmentMetrics.latencyMs = performance.now() - startT;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       console.error(`[Evals] Treatment failed: ${e.message}`);
       treatmentMetrics = this.fallbackMetrics();
@@ -215,7 +222,7 @@ export class EvalsHarness {
     }
 
     fs.writeFileSync(path.join(outputDir, "benchmark-report.md"), md);
-    // eslint-disable-next-line no-console
+
     console.log(
       `[Evals] Reports generated at ${outputDir}/benchmark-report.[json|md]`,
     );

@@ -1,1 +1,3 @@
-export default function load() { return {}; }
+export default function load() {
+  return {};
+}
