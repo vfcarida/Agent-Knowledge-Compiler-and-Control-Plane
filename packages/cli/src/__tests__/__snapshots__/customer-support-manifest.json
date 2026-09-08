@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "akcp.artifact-manifest/v1",
+  "buildId": "deterministic_build_id",
+  "createdAt": "2026-01-01T00:00:00.000Z",
+  "source": {
+    "root": "<WORKSPACE>/examples/domains/customer-support",
+    "config": "akcp.yaml",
+    "hash": "deterministic_config_hash"
+  },
+  "compiler": {
+    "name": "akcp",
+    "version": "0.1.0"
+  },
+  "targets": [
+    {
+      "name": "ir-json",
+      "status": "success",
+      "outputs": [
+        "<WORKSPACE>/examples/domains/customer-support/dist/agent-knowledge-ir.json"
+      ],
+      "hash": "deterministic_hash",
+      "sizeBytes": 0
+    },
+    {
+      "name": "mcp-resources-manifest",
+      "status": "success",
+      "outputs": [
+        "<WORKSPACE>/examples/domains/customer-support/dist/mcp-resources.json"
+      ],
+      "hash": "deterministic_hash",
+      "sizeBytes": 0
+    },
+    {
+      "name": "openwiki",
+      "status": "success",
+      "outputs": [
+        "<WORKSPACE>/examples/domains/customer-support/dist/openwiki"
+      ],
+      "hash": "deterministic_hash",
+      "sizeBytes": 0
+    },
+    {
+      "name": "dashboard-metadata",
+      "status": "success",
+      "outputs": [
+        "<WORKSPACE>/examples/domains/customer-support/dist/dashboard-meta.json"
+      ],
+      "hash": "deterministic_hash",
+      "sizeBytes": 0
+    }
+  ],
+  "diagnostics": [],
+  "conformance": {
+    "level": "AKCP-control-plane-compatible",
+    "checks": []
+  },
+  "timestamp": "2026-01-01T00:00:00.000Z"
+}

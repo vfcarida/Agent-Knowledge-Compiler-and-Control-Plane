@@ -16,16 +16,16 @@ AKCP uses strict, evidence-based maturity levels. We do not claim production rea
 
 ## Current Feature Inventory
 
-| Area                     | Status       | Evidence                                 | Next milestone           |
-| ------------------------ | ------------ | ---------------------------------------- | ------------------------ |
-| AKCP CLI                 | Beta         | tests, examples, init command            | npm publish              |
-| AK-IR Compiler           | Beta         | spec, fixtures, pipeline stages          | auto-normalization       |
-| MCP Profile Server       | Beta         | contract tests, SSE transport            | remote hosting           |
-| MCP Automation Server    | Alpha        | safety tests, browser automation         | real cloud integrations  |
-| Control Plane (Gateway)  | Beta         | auth, rate limit, HITL, PII, WAF         | distributed deployment   |
-| Dashboard UI             | Alpha        | React app, e2e tests, Express server     | feature completion       |
-| IT Operations (flagship) | Beta         | policies, evals, expected-output         | real infrastructure      |
-| Career (starter)         | Stable       | full walkthrough, golden outputs         |                          |
-| Customer Support         | Alpha        | sources, 8 policies, capabilities, evals | full implementation      |
-| VSCode Extension         | Experimental | syntax highlighting                      | validation, autocomplete |
-| Legacy CLI               | Removed      | legacy binaries deleted in v0.1.0        | —                        |
+| Area                     | Status       | Evidence                                                 | Next milestone           |
+| ------------------------ | ------------ | -------------------------------------------------------- | ------------------------ |
+| AKCP CLI                 | Beta         | tests, examples, init command                            | npm publish              |
+| AK-IR Compiler           | Beta         | spec, fixtures, pipeline stages                          | auto-normalization       |
+| MCP Profile Server       | Beta         | contract tests, SSE transport                            | remote hosting           |
+| MCP Automation Server    | Alpha        | safety tests, browser automation                         | real cloud integrations  |
+| Control Plane (Gateway)  | Beta         | auth, rate limit, HITL, PII, WAF                         | distributed deployment   |
+| Dashboard UI             | Alpha        | React app, e2e tests, Express server                     | feature completion       |
+| IT Operations (flagship) | Beta         | policies, evals, expected-output                         | real infrastructure      |
+| Career (starter)         | Stable       | full walkthrough, golden outputs                         |                          |
+| Customer Support         | Beta         | sources, 8 policies, capabilities, evals, golden outputs | production CRM connector |
+| VSCode Extension         | Experimental | syntax highlighting                                      | validation, autocomplete |
+| Legacy CLI               | Removed      | legacy binaries deleted in v0.1.0                        | —                        |

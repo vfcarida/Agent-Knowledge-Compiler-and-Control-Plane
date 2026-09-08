@@ -117,4 +117,33 @@ describe("Golden Compiler Tests", () => {
       "__snapshots__/it-operations-manifest.json",
     );
   });
+
+  it("compiles Customer Support domain bundle deterministically", async () => {
+    const dir = path.resolve(
+      workspaceRoot,
+      "examples/domains/customer-support",
+    );
+    const outManifest = path.resolve(dir, "dist/akcp-manifest.json");
+
+    // Clean previous
+    if (fs.existsSync(outManifest)) {
+      fs.rmSync(outManifest);
+    }
+
+    // Run compile
+    const output = runCli("compile --config akcp.yaml", dir);
+    expect(output).toContain("Compilation complete");
+
+    // Check manifest exists
+    expect(fs.existsSync(outManifest)).toBe(true);
+
+    // Snapshot manifest (scrubbed of machine-dependent values; see comment above)
+    const manifest = scrubManifest(
+      JSON.parse(fs.readFileSync(outManifest, "utf-8")),
+    );
+
+    await expect(JSON.stringify(manifest, null, 2)).toMatchFileSnapshot(
+      "__snapshots__/customer-support-manifest.json",
+    );
+  });
 });

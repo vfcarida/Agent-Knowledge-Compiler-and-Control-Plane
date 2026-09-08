@@ -1,8 +1,8 @@
 # Customer Support Domain Walkthrough
 
-> **Status:** Alpha
+> **Status:** Beta
 >
-> **Note:** The Customer Support Flagship is currently an experimental readiness bridge. Its capabilities (like refunds) are skeletal placeholders to demonstrate policy-gated architecture and PII redaction.
+> **Note:** The Customer Support Flagship demonstrates policy-gated architecture, Level 4 conformance, and PII redaction. High-risk capabilities (like refunds) demonstrate HITL approval gating.
 
 This walkthrough outlines how an autonomous agent, equipped with the compiled Customer Support context pack and MCP resources, interacts with a simulated user while strictly adhering to the configured policies (PII redaction and HITL approvals).
 
