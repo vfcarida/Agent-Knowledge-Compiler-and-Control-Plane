@@ -327,7 +327,7 @@ export class MCPGateway {
       }
 
       if (denyPii) {
-        if (await this.containsPII(result)) {
+        if (await this.containsPII(finalResult)) {
           throw new MCPGatewayError(
             `[LLM06: Sensitive Information] Policy Violation: PII detected in output for tool '${request.toolName}' while policy dictates 'deny'.`,
             "POLICY_VIOLATION",
@@ -386,23 +386,51 @@ export class MCPGateway {
   }
 
   private async sanitizeOutput<T>(output: T): Promise<T> {
-    let str = JSON.stringify(output);
-    const matches: PiiMatch[] = await this.detector.detect(str);
-
-    const sorted = [...matches].sort((a, b) => b.start - a.start);
-    for (const match of sorted) {
-      str =
-        str.slice(0, match.start) +
-        `[REDACTED_${match.type.toUpperCase()}]` +
-        str.slice(match.end);
+    if (output === null || output === undefined) {
+      return output;
     }
-
-    return JSON.parse(str) as T;
+    if (typeof output === "string") {
+      const matches: PiiMatch[] = await this.detector.detect(output);
+      const sorted = [...matches].sort((a, b) => b.start - a.start);
+      let result = output;
+      for (const match of sorted) {
+        result =
+          result.slice(0, match.start) +
+          `[REDACTED_${match.type.toUpperCase()}]` +
+          result.slice(match.end);
+      }
+      return result as unknown as T;
+    }
+    if (Array.isArray(output)) {
+      const sanitizedArray = [];
+      for (const item of output) {
+        sanitizedArray.push(await this.sanitizeOutput(item));
+      }
+      return sanitizedArray as unknown as T;
+    }
+    if (typeof output === "object") {
+      const sanitizedObj: Record<string, unknown> = {};
+      for (const [key, value] of Object.entries(
+        output as Record<string, unknown>,
+      )) {
+        sanitizedObj[key] = await this.sanitizeOutput(value);
+      }
+      return sanitizedObj as unknown as T;
+    }
+    return output;
   }
 
   private async containsPII(output: unknown): Promise<boolean> {
-    const str = JSON.stringify(output);
-    const matches: PiiMatch[] = await this.detector.detect(str);
-    return matches.some((m) => m.confidence === "high");
+    if (output === null || output === undefined) return false;
+    if (typeof output === "string") {
+      const matches: PiiMatch[] = await this.detector.detect(output);
+      return matches.some((m) => m.confidence === "high");
+    }
+    if (typeof output === "object") {
+      const str = JSON.stringify(output);
+      const matches: PiiMatch[] = await this.detector.detect(str);
+      return matches.some((m) => m.confidence === "high");
+    }
+    return false;
   }
 }

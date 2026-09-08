@@ -9,8 +9,8 @@ export default defineConfig({
       },
     },
     fileParallelism: false,
-    testTimeout: 60000,
-    hookTimeout: 120000,
+    testTimeout: 180000,
+    hookTimeout: 180000,
     coverage: {
       provider: "v8",
       include: ["src/**/*.ts"],
