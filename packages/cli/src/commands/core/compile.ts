@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import type { CLIContext } from "../../types.js";
+import { resolveIrPolicies } from "../../utils/policy.js";
 
 export function registerCompileCommand(
   program: Command,
@@ -26,13 +27,24 @@ export function registerCompileCommand(
       "Enable full cryptographic provenance tracking",
       false,
     )
+    .option(
+      "--strict",
+      "Treat compiler and policy warnings as errors (exit non-zero)",
+      false,
+    )
+    .option(
+      "--force",
+      "Bypass the incremental-build cache and force recompilation of all targets",
+      false,
+    )
     .action(async (options) => {
       const fs = await import("fs");
       const path = await import("path");
       const crypto = await import("crypto");
       const {
         loadAkcpConfig,
-        buildKnowledgeIR,
+        compile: compileToIR,
+        loadPolicy,
         IrJsonTarget,
         OpenWikiDocsTarget,
         AgentsMdTarget,
@@ -60,6 +72,33 @@ export function registerCompileCommand(
 
         const config = loadAkcpConfig(configPath);
 
+        // Validate referenced policy files early so broken policies fail fast
+        const referencedPolicyPaths: string[] = (config as any).policy
+          ?.policies;
+        if (Array.isArray(referencedPolicyPaths)) {
+          const policyErrors: string[] = [];
+          for (const relPolicyPath of referencedPolicyPaths) {
+            const fullPolicyPath = path.resolve(targetDir, relPolicyPath);
+            try {
+              loadPolicy(fullPolicyPath);
+            } catch (err: any) {
+              policyErrors.push(`${relPolicyPath}: ${err.message}`);
+            }
+          }
+          if (policyErrors.length > 0) {
+            console.warn(
+              `[WARN] ${policyErrors.length} policy file(s) referenced in akcp.yaml failed to parse/validate:`,
+            );
+            for (const e of policyErrors) console.warn(`  - ${e}`);
+            if (options.strict) {
+              console.error(
+                `[ERROR] Exiting non-zero due to --strict and the policy issue(s) above.`,
+              );
+              process.exit(1);
+            }
+          }
+        }
+
         let capabilitiesPath = path.join(targetDir, "capabilities.json");
         if (!fs.existsSync(capabilitiesPath)) {
           capabilitiesPath = path.join(
@@ -79,13 +118,43 @@ export function registerCompileCommand(
           }
         }
 
-        // 1. Build IR
-        const ir = await buildKnowledgeIR(targetDir, {
+        // 1. Build IR via compileToIR
+        const compileResult = await compileToIR(targetDir, {
           sources: config.compile?.sources,
           generateProvenance: options.provenance,
           privacy: config.privacy,
           capabilities,
+          policies: resolveIrPolicies(config),
         });
+
+        if (!compileResult.ok) {
+          console.error(`[ERROR] Compilation failed:`);
+          for (const e of compileResult.error) {
+            console.error(`  - [${e.type}] ${e.message}`);
+          }
+          process.exit(1);
+        }
+
+        const { ir, warnings } = compileResult.value;
+
+        const frontmatterWarnings = warnings.filter(
+          (w) => w.type === "frontmatter_parse_error",
+        );
+        if (frontmatterWarnings.length > 0) {
+          console.warn(
+            `[WARN] ${frontmatterWarnings.length} document(s) had malformed or invalid frontmatter and were compiled as generic untyped documents:`,
+          );
+          for (const w of frontmatterWarnings) {
+            console.warn(`  - ${w.message}`);
+          }
+          if (options.strict) {
+            console.error(
+              `[ERROR] Exiting non-zero due to --strict and the frontmatter issue(s) above.`,
+            );
+            process.exit(1);
+          }
+        }
+
         const configHashStr = options.provenance ? hashConfig(config) : "none";
 
         const irSourceHashesStr = JSON.stringify(ir.sourceHashes || {});
@@ -98,7 +167,11 @@ export function registerCompileCommand(
         const fullManifestPath = path.resolve(targetDir, manifestPath);
         let skipTargetGeneration = false;
 
-        if (fs.existsSync(fullManifestPath)) {
+        if (options.force) {
+          console.log(
+            "[INFO] --force set: bypassing the incremental-build cache.",
+          );
+        } else if (fs.existsSync(fullManifestPath)) {
           try {
             const oldManifest = JSON.parse(
               fs.readFileSync(fullManifestPath, "utf-8"),
@@ -118,10 +191,8 @@ export function registerCompileCommand(
         }
 
         // 2. Select targets
-
         let targetsToRun: any[] = config.compile?.targets || [];
         if (options.target !== "all") {
-          // filter or force
           targetsToRun = (config.compile?.targets || []).filter(
             (t: any) => t.type === options.target,
           );
@@ -138,21 +209,14 @@ export function registerCompileCommand(
         // Run Conformance
         try {
           const { ConformanceRunner } = await import("@akcp/conformance");
-          const profile = config.profile || "career";
-          const runner = new ConformanceRunner(targetDir, profile);
+          const runner = new ConformanceRunner(targetDir);
           const report = await runner.run();
           manifestBuilder.setConformance({
             level: report.conformanceLevel,
-            checks: report.details.map((d) => ({
-              check: d.ruleId || "unknown",
-              passed: d.type !== "error",
-              target: d.file,
-              message: d.message,
-              severity: d.type,
-            })),
+            checks: report.details,
           });
 
-          const confOutDir = path.resolve(process.cwd(), "dist/akcp");
+          const confOutDir = path.resolve(targetDir, "dist/akcp");
           if (!fs.existsSync(confOutDir)) {
             fs.mkdirSync(confOutDir, { recursive: true });
           }
@@ -188,10 +252,14 @@ export function registerCompileCommand(
 
             const targetImpl = targetInstances[targetConf.type];
             if (targetImpl) {
+              const resolvedTargetConf = {
+                ...targetConf,
+                out: path.resolve(targetDir, targetConf.out),
+              };
               console.log(
-                `[INFO] Running target: ${targetConf.type} -> ${targetConf.out}`,
+                `[INFO] Running target: ${targetConf.type} -> ${resolvedTargetConf.out}`,
               );
-              const output = await targetImpl.compile(ir, targetConf);
+              const output = await targetImpl.compile(ir, resolvedTargetConf);
               manifestBuilder.addOutput(output);
             } else {
               console.error(

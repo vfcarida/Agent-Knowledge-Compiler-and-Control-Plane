@@ -23,7 +23,6 @@ export function registerValidateCommand(
       const fs = await import("fs");
       const path = await import("path");
       const { execSync } = await import("child_process");
-      const { createRequire } = await import("module");
 
       const targetDir = path.resolve(
         process.cwd(),
@@ -37,9 +36,10 @@ export function registerValidateCommand(
       }
 
       try {
-        const require = createRequire(import.meta.url);
-        const validatorPath =
-          require.resolve("@akcp/core/dist/cli/validate-bundle.js");
+        const { fileURLToPath } = await import("url");
+        const resolvedUrl = await import.meta
+          .resolve("@akcp/core/dist/cli/validate-bundle.js");
+        const validatorPath = fileURLToPath(resolvedUrl);
         execSync(
           `node ${validatorPath} --bundle ${targetDir} --format ${options.format} --profile ${options.profile}`,
           { encoding: "utf-8", stdio: "inherit" },

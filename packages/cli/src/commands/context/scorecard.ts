@@ -26,6 +26,8 @@ export function registerScorecardCommand(
       const { formatScorecardMarkdown } =
         await import("../../formatters/markdown.js");
 
+      const { resolveIrPolicies } = await import("../../utils/policy.js");
+
       try {
         const targetDir = path.resolve(process.cwd(), options.bundle);
 
@@ -41,6 +43,7 @@ export function registerScorecardCommand(
         console.log(`[INFO] Building IR for Scorecard from ${targetDir}`);
         const ir = await buildKnowledgeIR(targetDir, {
           sources: config.compile?.sources,
+          policies: resolveIrPolicies(config),
         });
 
         // Collect raw files to pass to scorecard calculation

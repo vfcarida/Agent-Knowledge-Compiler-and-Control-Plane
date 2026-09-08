@@ -35,7 +35,7 @@ export function registerServeMcpCommand(
     .action(async (options) => {
       const path = await import("path");
       const { spawn } = await import("child_process");
-      const { createRequire } = await import("module");
+      const { fileURLToPath } = await import("url");
 
       const targetDir = process.cwd(); // Assume we are in the bundle directory
       const irPath = path.resolve(process.cwd(), options.ir);
@@ -43,7 +43,7 @@ export function registerServeMcpCommand(
       if (options.transport !== "stdio" && !options.insecureNoAuth) {
         if (!process.env["AKCP_JWT_SECRET"] && !process.env["AKCP_JWKS_URI"]) {
           console.error(
-            "[ERROR] Remote transport requires auth config (AKCP_JWT_SECRET or AKCP_JWKS_URI).\\n" +
+            "[ERROR] Remote transport requires auth config (AKCP_JWT_SECRET or AKCP_JWKS_URI).\n" +
               "Use --insecure-no-auth for local development.",
           );
           process.exit(1);
@@ -61,17 +61,20 @@ export function registerServeMcpCommand(
       );
 
       try {
-        const require = createRequire(import.meta.url);
-
-        let serverPath = require.resolve("@akcp/mcp-profile-server");
+        let serverPath: string;
         if (
           options.transport === "http-sse" ||
           options.transport === "sse" ||
           options.transport === "streamable-http"
         ) {
           // Both sse and streamable-http use the new unified http-server
-          serverPath =
-            require.resolve("@akcp/mcp-profile-server/dist/http-server.js");
+          const resolvedUrl = await import.meta
+            .resolve("@akcp/mcp-profile-server/dist/http-server.js");
+          serverPath = fileURLToPath(resolvedUrl);
+        } else {
+          const resolvedUrl = await import.meta
+            .resolve("@akcp/mcp-profile-server");
+          serverPath = fileURLToPath(resolvedUrl);
         }
 
         const envVars: Record<string, string | undefined> = {

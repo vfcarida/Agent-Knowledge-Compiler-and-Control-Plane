@@ -34,26 +34,24 @@ export function registerInitCommand(program: Command, _ctx: CLIContext): void {
       // Attempt to copy from Domain Adapter templates if available
       try {
         const cliDir = path.dirname(fileURLToPath(import.meta.url));
-        const profile = options.template || options.profile || "career";
+        const requestedProfile =
+          options.template || options.profile || "career";
+        const TEMPLATE_ALIASES: Record<string, string> = {
+          "it-ops": "it-operations",
+        };
+        const profile = TEMPLATE_ALIASES[requestedProfile] || requestedProfile;
 
-        let templateDir = path.resolve(cliDir, "../../../templates", profile); // If from dist/commands/core, goes to dist/templates. If from src/commands/core, goes to src/templates.
-        if (!fs.existsSync(templateDir)) {
-          // If we are in packages/cli/dist/commands/core or packages/cli/src/commands/core
-          // We need to go up 4 levels to get to packages/cli, then up 1 more to get to packages, then up 1 more to get to root. Wait.
-          // cliDir = packages/cli/src/commands/core
-          // cliDir/.. = commands
-          // cliDir/../.. = src
-          // cliDir/../../.. = cli
-          // cliDir/../../../.. = packages
-          // cliDir/../../../../.. = root
-          templateDir = path.resolve(
-            cliDir,
-            "../../../../../examples/domains",
-            profile,
-          );
-        }
+        const candidates = [
+          path.resolve(cliDir, "../../../templates", profile),
+          path.resolve(cliDir, "../templates", profile),
+          path.resolve(cliDir, "../../../../../examples/domains", profile),
+          path.resolve(cliDir, "../../../../examples/domains", profile),
+          path.resolve(cliDir, "../../../examples/domains", profile),
+          path.resolve(process.cwd(), "examples/domains", profile),
+        ];
+        const templateDir = candidates.find((c) => fs.existsSync(c));
 
-        if (fs.existsSync(templateDir)) {
+        if (templateDir && fs.existsSync(templateDir)) {
           fs.cpSync(templateDir, targetDir, { recursive: true });
 
           // Ensure .akcp/cache is not copied over if it existed in the source

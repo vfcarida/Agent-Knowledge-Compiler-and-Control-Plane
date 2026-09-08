@@ -16,11 +16,7 @@ export function registerConformanceRunCommand(
     .command("run")
     .description("Run conformance suite on a target bundle")
     .requiredOption("-b, --bundle <directory>", "Path to the context bundle")
-    .option(
-      "-l, --level <level>",
-      "Conformance level (basic | standard | strict)",
-      "standard",
-    )
+    .option("-p, --profile <profile>", "AKCP profile to test against", "career")
     .option("-f, --format <format>", "Output format (text or json)", "text")
     .action(async (options) => {
       const path = await import("path");
@@ -28,61 +24,81 @@ export function registerConformanceRunCommand(
 
       try {
         const bundlePath = path.resolve(process.cwd(), options.bundle);
-        const level = options.level as "basic" | "standard" | "strict";
 
-        if (!["basic", "standard", "strict"].includes(level)) {
-          console.error(
-            `[ERROR] Invalid level: ${level}. Must be basic, standard, or strict.`,
-          );
-          process.exit(1);
-        }
-
-        const runner = new ConformanceRunner(bundlePath);
+        const runner = new ConformanceRunner(bundlePath, options.profile);
         const report = await runner.run();
-
-        const conformant = report.failed === 0;
 
         if (options.format === "json") {
           console.log(JSON.stringify(report, null, 2));
         } else {
+          const levels = [
+            {
+              name: "OKF-compatible",
+              label: "Level 1: OKF-compatible (Base Spec)",
+            },
+            {
+              name: "AKCP-profile-compatible",
+              label: "Level 2: AKCP-profile-compatible",
+            },
+            {
+              name: "AKCP-compiler-compatible",
+              label: "Level 3: AKCP-compiler-compatible",
+            },
+            {
+              name: "AKCP-control-plane-compatible",
+              label: "Level 4: AKCP-control-plane-compatible",
+            },
+          ];
+
           console.log("\n=============================================");
           console.log("         AKCP CONFORMANCE REPORT");
           console.log("=============================================");
           console.log(`Bundle Path:       ${bundlePath}`);
+          console.log(`Profile:           ${options.profile}`);
           console.log(
             `Conformance Level: [${report.conformanceLevel.toUpperCase()}]`,
           );
-          console.log(
-            `Status:            ${conformant ? "✅ PASS" : "❌ FAIL"}`,
-          );
           console.log("---------------------------------------------");
 
-          for (const check of report.details) {
-            let statusIcon = check.type !== "error" ? "✅ PASSED" : "❌ FAILED";
-            if (check.type === "warning") {
-              statusIcon = "⚠️  WARNING";
-            }
-            const targetStr = check.file ? ` (${check.file})` : "";
-            console.log(
-              `[${statusIcon}] ${check.ruleId || "unknown"}${targetStr}`,
-            );
+          const reachedNone = report.conformanceLevel === "none";
+          let currentLevelFound = false;
 
-            if (check.message) {
-              console.log(`    ↳ ${check.message}`);
+          for (const lvl of levels) {
+            if (reachedNone) {
+              console.log(`[ ] ❌ ${lvl.label} (Not Reached)`);
+              continue;
             }
+
+            if (lvl.name === report.conformanceLevel) {
+              console.log(`[*] ✅ ${lvl.label} (Current Level)`);
+              currentLevelFound = true;
+            } else if (!currentLevelFound) {
+              console.log(`[x] ✅ ${lvl.label}`);
+            } else {
+              console.log(`[ ] ⚠️  ${lvl.label} (Not Reached)`);
+            }
+          }
+
+          if (report.details.length > 0) {
+            console.log("\n[DETAILS]");
+
+            report.details.forEach((det: any) => {
+              const fileStr = det.file ? ` (${det.file})` : "";
+              const typeStr = det.type === "error" ? "❌ ERROR" : "⚠️  WARN";
+              console.log(
+                `  - [${typeStr}] [${det.ruleId}]${fileStr}: ${det.message}`,
+              );
+            });
           }
 
           console.log("\nSummary:");
           console.log(`- Passed Checks: ${report.passed}`);
           console.log(`- Failed Checks: ${report.failed}`);
           console.log(`- Warnings:      ${report.warnings}`);
-          console.log(
-            `- Total Checks:  ${report.passed + report.failed + report.warnings}`,
-          );
           console.log("=============================================\n");
         }
 
-        if (!conformant) {
+        if (report.conformanceLevel === "none") {
           process.exit(1);
         }
       } catch (e: any) {
