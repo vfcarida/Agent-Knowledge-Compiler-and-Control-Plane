@@ -1,7 +1,12 @@
 import type { CapabilityRequest } from "./request.js";
 import type { PolicyCard } from "../policy/types.js";
-import { evaluatePolicies } from "../policies/engine.js";
+import {
+  evaluatePolicies,
+  type PolicyRequest,
+  type PolicyDecision,
+} from "../policies/engine.js";
 import { adaptPolicyCardToRules } from "../policies/adapter.js";
+import type { PolicyProvider } from "../policies/provider.js";
 import type { IApprovalStore } from "./approval-store.js";
 import { authenticate, type AuthConfig } from "./auth.js";
 import { createPiiDetector } from "../privacy/create-detector.js";
@@ -42,8 +47,9 @@ export class MCPGatewayError extends Error {
 }
 
 export interface GatewayConfig {
-  policies: Record<string, PolicyCard>; // Map of agentId -> PolicyCard
+  policies?: Record<string, PolicyCard>; // Map of agentId -> PolicyCard (optional if policyProvider is provided)
   defaultPolicy?: PolicyCard;
+  policyProvider?: PolicyProvider;
   approvalStore?: IApprovalStore;
   auditLogService?: IAuditLogService;
   piiDetector?: PiiDetector;
@@ -72,15 +78,15 @@ export class MCPGateway {
     request: CapabilityRequest,
     executor: () => Promise<T>,
   ): Promise<T> {
-    const agentKey = request.agentId || "anonymous";
+    let effectiveAgentId = request.agentId || "anonymous";
     const requestId = request.requestId || crypto.randomUUID();
 
     // Rate limiting check
-    if (this.limiter && !(await this.limiter.consume(agentKey))) {
+    if (this.limiter && !(await this.limiter.consume(effectiveAgentId))) {
       if (this.config.auditLogService) {
         await this.config.auditLogService.logEvent({
           action: "rate_limit.exceeded",
-          actor: agentKey,
+          actor: effectiveAgentId,
           requestId: crypto.randomUUID(),
           capabilityId: request.toolName,
           decision: "deny",
@@ -89,7 +95,7 @@ export class MCPGateway {
         });
       }
       throw new MCPGatewayError(
-        `Rate limit exceeded for agent '${agentKey}'. Try again later.`,
+        `Rate limit exceeded for agent '${effectiveAgentId}'. Try again later.`,
         "RATE_LIMITED",
       );
     }
@@ -99,14 +105,14 @@ export class MCPGateway {
     // Authentication check
     if (this.config.auth) {
       const authResult = authenticate(request.apiKey, this.config.auth, {
-        sourceId: request.sourceId || request.agentId || "unknown",
+        sourceId: request.sourceId || effectiveAgentId,
       });
 
       if (!authResult.authenticated) {
         if (this.config.auditLogService) {
           await this.config.auditLogService.logEvent({
             action: "auth.failed",
-            actor: request.agentId || "unknown",
+            actor: effectiveAgentId,
             requestId,
             capabilityId: request.toolName,
             decision: "deny",
@@ -120,8 +126,8 @@ export class MCPGateway {
         );
       }
 
-      // Override self-declared agentId with authenticated identity
-      request.agentId = authResult.agentId;
+      // Track authenticated identity without mutating request object in-place
+      effectiveAgentId = authResult.agentId || "anonymous";
 
       // Check scope restriction
       if (authResult.scopes && authResult.scopes.length > 0) {
@@ -142,17 +148,17 @@ export class MCPGateway {
       }
     }
 
-    const policy = this.resolvePolicy(request.agentId);
+    const policy = this.resolvePolicy(effectiveAgentId);
     const payloadHash = crypto
       .createHash("sha256")
       .update(JSON.stringify(request.payload || {}))
       .digest("hex");
 
-    if (!policy) {
+    if (!policy && !this.config.policyProvider) {
       if (this.config.auditLogService) {
         await this.config.auditLogService.logEvent({
           action: "policy.evaluate",
-          actor: request.agentId || "anonymous",
+          actor: effectiveAgentId,
           requestId,
           capabilityId: request.toolName,
           decision: "error",
@@ -161,7 +167,7 @@ export class MCPGateway {
         });
       }
       throw new MCPGatewayError(
-        `Unauthorized: No valid policy found for agent '${request.agentId || "anonymous"}'.`,
+        `Unauthorized: No valid policy found for agent '${effectiveAgentId}'.`,
         "UNAUTHORIZED_AGENT",
       );
     }
@@ -170,36 +176,47 @@ export class MCPGateway {
     const payloadObj = (request.payload as Record<string, unknown>) || {};
     const token = payloadObj._approvalToken as string | undefined;
 
-    // Evaluate Policies
-    const rules = adaptPolicyCardToRules(policy);
-    const evalResult = evaluatePolicies(rules, {
+    // Evaluate Policies via PolicyProvider (if configured) or adapted PolicyCard rules
+    const policyRequest: PolicyRequest = {
       tool: request.toolName,
-      agentId: request.agentId || "anonymous",
-      // Was hardcoded to "medium" for every request regardless of the
-      // capability's actual declared risk level, which made any policy rule
-      // scoped by risk level (e.g. "deny critical-risk tools") silently
-      // unenforceable — every request looked medium-risk to the engine.
-      // Callers that know the capability's real riskLevel (see
-      // CapabilityRequest.riskLevel) now pass it through; "medium" remains
-      // the fallback for callers that don't.
+      agentId: effectiveAgentId,
       riskLevel: request.riskLevel || "medium",
       scopes: activeScopes,
       approvalToken: token,
       sideEffect: request.sideEffect,
-    });
+    };
+
+    let evalResult: PolicyDecision;
+    if (this.config.policyProvider) {
+      evalResult = await this.config.policyProvider.evaluate(policyRequest);
+    } else if (policy) {
+      const rules = adaptPolicyCardToRules(policy);
+      evalResult = evaluatePolicies(rules, policyRequest);
+    } else {
+      throw new MCPGatewayError(
+        `Unauthorized: No valid policy found for agent '${effectiveAgentId}'.`,
+        "UNAUTHORIZED_AGENT",
+      );
+    }
+
+    const resolvedPolicyIds: string[] = policy?.id
+      ? [policy.id]
+      : evalResult.matchedRule?.id
+        ? [evalResult.matchedRule.id]
+        : [];
 
     if (evalResult.effect === "deny") {
       if (this.config.auditLogService) {
         await this.config.auditLogService.logEvent({
           action: "policy.evaluate",
-          actor: request.agentId || "anonymous",
+          actor: effectiveAgentId,
           requestId,
           capabilityId: request.toolName,
           decision: "deny",
           riskLevel: (request.riskLevel as AuditRiskLevel) || "medium",
           evidence: {
             payloadHash,
-            policyIds: policy.id ? [policy.id] : [],
+            policyIds: resolvedPolicyIds,
             reason: evalResult.reason,
           },
         });
@@ -236,14 +253,14 @@ export class MCPGateway {
         if (this.config.auditLogService) {
           await this.config.auditLogService.logEvent({
             action: "approval.request",
-            actor: request.agentId || "anonymous",
+            actor: effectiveAgentId,
             requestId,
             capabilityId: request.toolName,
             decision: "require_approval",
             riskLevel: "high",
             evidence: {
               payloadHash: cleanPayloadHash,
-              policyIds: policy.id ? [policy.id] : [],
+              policyIds: resolvedPolicyIds,
             },
           });
         }
@@ -254,7 +271,7 @@ export class MCPGateway {
           cleanPayloadHash,
           "high",
           request.sideEffect,
-          request.agentId || "anonymous",
+          effectiveAgentId,
           { payload: cleanPayload },
         );
         throw new MCPGatewayError(
@@ -269,20 +286,20 @@ export class MCPGateway {
         token,
         request.toolName,
         cleanPayloadHash,
-        request.agentId,
+        effectiveAgentId,
       );
       if (!isValid) {
         if (this.config.auditLogService) {
           await this.config.auditLogService.logEvent({
             action: "approval.expire",
-            actor: request.agentId || "anonymous",
+            actor: effectiveAgentId,
             requestId,
             capabilityId: request.toolName,
             decision: "expired",
             riskLevel: "high",
             evidence: {
               payloadHash: cleanPayloadHash,
-              policyIds: policy.id ? [policy.id] : [],
+              policyIds: resolvedPolicyIds,
             },
           });
         }
@@ -295,20 +312,17 @@ export class MCPGateway {
       if (this.config.auditLogService) {
         await this.config.auditLogService.logEvent({
           action: "approval.consume",
-          actor: request.agentId || "anonymous",
+          actor: effectiveAgentId,
           requestId,
           capabilityId: request.toolName,
           decision: "consumed",
           riskLevel: "high",
           evidence: {
             payloadHash: cleanPayloadHash,
-            policyIds: policy.id ? [policy.id] : [],
+            policyIds: resolvedPolicyIds,
           },
         });
       }
-
-      // Ensure execution continues with the cleaned payload
-      request.payload = cleanPayload;
     }
 
     try {
@@ -341,7 +355,7 @@ export class MCPGateway {
         finalResult,
       );
       const usage = this.costTracker.recordUsage(
-        agentKey,
+        effectiveAgentId,
         estimatedTokens,
         request.toolName,
       );
@@ -349,14 +363,14 @@ export class MCPGateway {
       if (this.config.auditLogService) {
         await this.config.auditLogService.logEvent({
           action: "policy.evaluate",
-          actor: request.agentId || "anonymous",
+          actor: effectiveAgentId,
           requestId,
           capabilityId: request.toolName,
           decision: "allow",
           riskLevel: (request.riskLevel as AuditRiskLevel) || "medium",
           evidence: {
             payloadHash,
-            policyIds: policy.id ? [policy.id] : [],
+            policyIds: resolvedPolicyIds,
             estimatedTokens,
             cumulativeTokens: usage.cumulativeTokens,
             budgetExceeded: usage.budgetExceeded,
@@ -375,7 +389,7 @@ export class MCPGateway {
   }
 
   private resolvePolicy(agentId?: string): PolicyCard | undefined {
-    if (agentId && this.config.policies[agentId]) {
+    if (agentId && this.config.policies && this.config.policies[agentId]) {
       return this.config.policies[agentId];
     }
     return this.config.defaultPolicy;
@@ -392,7 +406,7 @@ export class MCPGateway {
     if (typeof output === "string") {
       const matches: PiiMatch[] = await this.detector.detect(output);
       const sorted = [...matches].sort((a, b) => b.start - a.start);
-      let result = output;
+      let result: string = output;
       for (const match of sorted) {
         result =
           result.slice(0, match.start) +

@@ -1,5 +1,6 @@
 import type { PolicyRule, PolicyRequest, PolicyDecision } from "./engine.js";
 import type { PolicyTrace } from "./trace.js";
+import type { PolicyCard } from "../policy/types.js";
 
 /**
  * PolicyProvider abstracts the policy evaluation engine.
@@ -35,4 +36,5 @@ export interface PolicySource {
   type: "file" | "directory" | "url" | "inline";
   path?: string;
   policies?: PolicyRule[];
+  policyCard?: PolicyCard;
 }

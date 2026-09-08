@@ -142,6 +142,10 @@ export * from "./policy/extract-gateway-policies.js";
 export * from "./policies/engine.js";
 export * from "./policies/adapter.js";
 export * from "./policies/trace.js";
+export * from "./policies/provider.js";
+export * from "./policies/internal-provider.js";
+export * from "./policies/cedar-provider.js";
+export * from "./policies/opa-provider.js";
 
 // Identity & Capabilities
 export * from "./identity/types.js";

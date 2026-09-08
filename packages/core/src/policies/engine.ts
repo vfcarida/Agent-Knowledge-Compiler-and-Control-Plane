@@ -18,7 +18,12 @@ export interface PolicyMatcher {
 
 export interface PolicyCondition {
   type:
-    "time_window" | "environment" | "approval_exists" | "custom" | "unknown";
+    | "time_window"
+    | "environment"
+    | "approval_exists"
+    | "expression"
+    | "custom"
+    | "unknown";
   params: Record<string, unknown>;
 }
 
@@ -145,6 +150,8 @@ export function meetsConditions(
         return request.environment === condition.params.environment;
       case "approval_exists":
         return request.approvalToken != null;
+      case "expression":
+        return evaluateExpressionCondition(condition.params, request);
       case "custom":
         // Not implemented in MVP, assume true or pass to a plugin system
         return true;
@@ -152,6 +159,99 @@ export function meetsConditions(
         return false; // Unknown condition type = deny
     }
   });
+}
+
+function evaluateExpressionCondition(
+  params: Record<string, unknown>,
+  request: PolicyRequest,
+): boolean {
+  if (params.field && params.op) {
+    const field = String(params.field);
+    const op = String(params.op);
+    const expected = params.value;
+    const actual = resolveRequestField(field, request);
+    return compareValues(actual, op, expected);
+  }
+
+  if (typeof params.expr === "string") {
+    return evaluateExpressionString(params.expr, request);
+  }
+
+  return false;
+}
+
+function resolveRequestField(field: string, request: PolicyRequest): unknown {
+  switch (field.toLowerCase()) {
+    case "environment":
+    case "env":
+      return request.environment;
+    case "risklevel":
+      return request.riskLevel;
+    case "tool":
+    case "toolname":
+      return request.tool;
+    case "agentid":
+      return request.agentId;
+    case "sideeffect":
+      return request.sideEffect;
+    case "approvaltoken":
+      return request.approvalToken;
+    default:
+      return undefined;
+  }
+}
+
+function compareValues(
+  actual: unknown,
+  op: string,
+  expected: unknown,
+): boolean {
+  switch (op) {
+    case "==":
+    case "=":
+      return actual === expected || String(actual) === String(expected);
+    case "!=":
+      return actual !== expected && String(actual) !== String(expected);
+    case "<":
+      return Number(actual) < Number(expected);
+    case "<=":
+      return Number(actual) <= Number(expected);
+    case ">":
+      return Number(actual) > Number(expected);
+    case ">=":
+      return Number(actual) >= Number(expected);
+    default:
+      return false;
+  }
+}
+
+function evaluateExpressionString(
+  expr: string,
+  request: PolicyRequest,
+): boolean {
+  const match = expr.trim().match(/^([a-zA-Z_]+)\s*(==|!=|<=|>=|<|>)\s*(.*)$/);
+  if (!match) return false;
+  const [, field, op, rawVal] = match;
+  if (!field || !op || rawVal === undefined) return false;
+  let parsedVal: unknown = rawVal.trim();
+  if (
+    (typeof parsedVal === "string" &&
+      parsedVal.startsWith("'") &&
+      parsedVal.endsWith("'")) ||
+    (typeof parsedVal === "string" &&
+      parsedVal.startsWith('"') &&
+      parsedVal.endsWith('"'))
+  ) {
+    parsedVal = (parsedVal as string).slice(1, -1);
+  } else if (parsedVal === "true") {
+    parsedVal = true;
+  } else if (parsedVal === "false") {
+    parsedVal = false;
+  } else if (!isNaN(Number(parsedVal))) {
+    parsedVal = Number(parsedVal);
+  }
+  const actual = resolveRequestField(field, request);
+  return compareValues(actual, op, parsedVal);
 }
 
 function isWithinTimeWindow(params: {

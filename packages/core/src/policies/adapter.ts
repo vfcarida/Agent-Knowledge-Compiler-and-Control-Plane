@@ -178,7 +178,22 @@ function normalizeSingleConditionString(str: string): PolicyCondition {
     return { type: "custom", params: {} };
   }
 
-  // 5. Unknown condition type -> fail closed
+  // 5. Attribute expression (e.g. riskLevel == 'critical', sideEffect != 'read')
+  const exprMatch = trimmed.match(
+    /^(riskLevel|sideEffect|tool|agentId)\s*(==|!=|<=|>=|<|>)\s*['"]?([a-zA-Z0-9_\-.]+)['"]?$/i,
+  );
+  if (exprMatch && exprMatch[1] && exprMatch[2] && exprMatch[3]) {
+    return {
+      type: "expression",
+      params: {
+        field: exprMatch[1],
+        op: exprMatch[2],
+        value: exprMatch[3],
+      },
+    };
+  }
+
+  // 6. Unknown condition type -> fail closed
   return { type: "unknown", params: { raw: trimmed } };
 }
 

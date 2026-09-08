@@ -107,6 +107,21 @@ describe("PolicyCard Adapter Condition Normalization", () => {
     expect(normalizeConditions("   ")).toBeUndefined();
   });
 
+  it("normalizes attribute expression condition strings", () => {
+    expect(normalizeConditions("riskLevel == 'critical'")).toEqual([
+      {
+        type: "expression",
+        params: { field: "riskLevel", op: "==", value: "critical" },
+      },
+    ]);
+    expect(normalizeConditions('sideEffect != "read"')).toEqual([
+      {
+        type: "expression",
+        params: { field: "sideEffect", op: "!=", value: "read" },
+      },
+    ]);
+  });
+
   it("normalizes unknown condition to unknown type (fail-closed)", () => {
     const res = normalizeConditions("unknown_custom_expression_xyz");
     expect(res).toBeDefined();
@@ -292,5 +307,39 @@ describe("PolicyCard Adapter Rule Mapping & Engine Enforcement", () => {
     expect(rules[0].conditions).toEqual([
       { type: "environment", params: { environment: "production" } },
     ]);
+  });
+
+  it("enforces attribute expression conditions at evaluation time", () => {
+    const policy: PolicyCard = {
+      apiVersion: "policy.akcp.dev/v2",
+      kind: "PolicyCard",
+      metadata: { name: "risk-expr-policy" },
+      appliesTo: { capabilities: ["deploy_tool"] },
+      rules: [
+        {
+          effect: "deny",
+          condition: "riskLevel == 'critical'",
+        },
+        {
+          effect: "allow",
+        },
+      ],
+    };
+
+    const rules = adaptPolicyCardToRules(policy);
+
+    // Request with critical risk matches deny rule
+    const criticalReq: PolicyRequest = {
+      ...baseRequest,
+      riskLevel: "critical",
+    };
+    expect(evaluatePolicies(rules, criticalReq).effect).toBe("deny");
+
+    // Request with low risk bypasses deny rule and matches allow
+    const lowReq: PolicyRequest = {
+      ...baseRequest,
+      riskLevel: "low",
+    };
+    expect(evaluatePolicies(rules, lowReq).effect).toBe("allow");
   });
 });
