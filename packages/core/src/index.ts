@@ -146,6 +146,7 @@ export * from "./policies/provider.js";
 export * from "./policies/internal-provider.js";
 export * from "./policies/cedar-provider.js";
 export * from "./policies/opa-provider.js";
+export * from "./policies/linter.js";
 
 // Identity & Capabilities
 export * from "./identity/types.js";

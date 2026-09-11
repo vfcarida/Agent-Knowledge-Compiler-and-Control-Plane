@@ -11,6 +11,7 @@ export interface BuildOptions {
   sources?: ConnectorConfig[];
   generateProvenance?: boolean;
   privacy?: PrivacyConfigInput;
+  strict?: boolean;
 }
 
 export async function buildKnowledgeIR(

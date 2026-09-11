@@ -34,6 +34,7 @@ export interface CompilerWarning {
     | "stale_document"
     | "unknown_source_type"
     | "missing_link_target"
+    | "circular_dependency"
     | "pii_redacted"
     | "frontmatter_parse_error";
   message: string;

@@ -29,5 +29,6 @@ AKCP uses strict, evidence-based maturity levels. We do not claim production rea
 | Career (starter)         | Stable       | full walkthrough, golden outputs                         |                          |
 | Customer Support         | Beta         | sources, 8 policies, capabilities, evals, golden outputs | production CRM connector |
 | Semantic Diff Engine     | Beta         | unit tests, CLI diff tests, multi-format output          | git rev integration      |
+| Graph & Policy Linter    | Beta         | link target validation, cycle detection, policy linter   | CLI policy lint command  |
 | VSCode Extension         | Experimental | syntax highlighting                                      | validation, autocomplete |
 | Legacy CLI               | Removed      | legacy binaries deleted in v0.1.0                        | —                        |
