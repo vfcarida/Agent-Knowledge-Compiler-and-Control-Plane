@@ -200,25 +200,37 @@ describe("CLI Smoke Tests", () => {
     expect(output).toContain("Concepts:");
   });
 
-  describe("Placeholder Commands (Prompt 05)", () => {
+  describe("Control Plane Commands", () => {
     it("should output help for serve dashboard command", async () => {
       const output = await runCli("serve dashboard --help");
       expect(output).toContain("Launch the AKCP Control Plane Dashboard");
       expect(output).toContain("--port <number>");
     });
 
-    it("should fail control-plane inspect command with NOT_IMPLEMENTED", async () => {
-      const output = await runCliError("control-plane inspect");
-      expect(output).toContain(
-        "NOT_IMPLEMENTED: The control-plane inspect command",
-      );
+    it("should output help for control-plane inspect command", async () => {
+      const output = await runCli("control-plane inspect --help");
+      expect(output).toContain("Inspect runtime governance state");
+      expect(output).toContain("--ir <path>");
     });
 
-    it("should fail control-plane policies command with NOT_IMPLEMENTED", async () => {
-      const output = await runCliError("control-plane policies");
+    it("should output help for control-plane policies command", async () => {
+      const output = await runCli("control-plane policies --help");
+      expect(output).toContain("List registered policy cards");
+      expect(output).toContain("--provider <type>");
+    });
+
+    it("should output help for control-plane approvals command", async () => {
+      const output = await runCli("control-plane approvals --help");
       expect(output).toContain(
-        "NOT_IMPLEMENTED: The control-plane policies command",
+        "List and inspect pending and historic HITL approval requests",
       );
+      expect(output).toContain("--status <status>");
+    });
+
+    it("should output help for control-plane audit command", async () => {
+      const output = await runCli("control-plane audit --help");
+      expect(output).toContain("Query or tail the runtime audit log events");
+      expect(output).toContain("--lines <number>");
     });
   });
 });

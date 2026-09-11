@@ -23,7 +23,8 @@ AKCP uses strict, evidence-based maturity levels. We do not claim production rea
 | MCP Profile Server       | Beta         | contract tests, SSE transport                            | remote hosting           |
 | MCP Automation Server    | Alpha        | safety tests, browser automation                         | real cloud integrations  |
 | Control Plane (Gateway)  | Beta         | auth, rate limit, HITL, PII, WAF                         | distributed deployment   |
-| Dashboard UI             | Alpha        | React app, e2e tests, Express server                     | feature completion       |
+| Control Plane CLI        | Beta         | inspect, policies, approvals, audit commands & CLI tests | remote control API       |
+| Dashboard UI & Serve     | Beta         | React app, e2e tests, Express BFF serve command          | feature completion       |
 | IT Operations (flagship) | Beta         | policies, evals, expected-output                         | real infrastructure      |
 | Career (starter)         | Stable       | full walkthrough, golden outputs                         |                          |
 | Customer Support         | Beta         | sources, 8 policies, capabilities, evals, golden outputs | production CRM connector |
