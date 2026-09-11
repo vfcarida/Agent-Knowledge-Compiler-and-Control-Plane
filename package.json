@@ -38,6 +38,9 @@
     "lint:fix": "eslint . --fix",
     "docs:api": "typedoc",
     "docs:api:watch": "typedoc --watch",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
     "typecheck": "pnpm -r run typecheck",
     "clean": "pnpm -r run clean",
     "format:check": "prettier --check .",
@@ -73,6 +76,7 @@
     "typedoc-plugin-markdown": "catalog:",
     "typescript": "^5.8.0",
     "typescript-eslint": "catalog:",
+    "vitepress": "^1.6.4",
     "vitest": "^3.2.0"
   },
   "repository": {

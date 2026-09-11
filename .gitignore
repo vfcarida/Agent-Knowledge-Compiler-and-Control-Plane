@@ -41,6 +41,8 @@ docker/data/
 
 # Documentation
 docs/api/
+docs/.vitepress/dist/
+docs/.vitepress/cache/
 
 # Generated artifacts (never commit)
 lint-results.json
