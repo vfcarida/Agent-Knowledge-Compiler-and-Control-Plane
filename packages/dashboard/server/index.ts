@@ -3,6 +3,7 @@ import cors from "cors";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import path from "node:path";
+import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import { createAuthMiddleware } from "./auth-middleware.js";
 import { createCsrfMiddleware } from "./csrf-middleware.js";
@@ -240,8 +241,6 @@ app.get("/api/audit/logs", async (req, res) => {
   }
 });
 
-import fs from "node:fs";
-
 app.get("/api/evals/report", (req, res) => {
   try {
     const reportPath = path.resolve(
@@ -305,7 +304,18 @@ app.get("/api/mcp/tools", (req, res) => {
   }
 });
 
-app.listen(PORT, async () => {
+// Serve static frontend assets if built
+const clientDistPath = path.resolve(__dirname, "../dist");
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+  app.get(/^(?!\/api).*/, (_req, res) => {
+    res.sendFile(path.join(clientDistPath, "index.html"));
+  });
+}
+
+const server = app.listen(PORT, async () => {
   console.log(`[BFF] Express server running on port ${PORT}`);
   await startMCPClients();
 });
+
+export { app, server, startMCPClients };

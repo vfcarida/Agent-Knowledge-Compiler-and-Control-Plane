@@ -201,11 +201,10 @@ describe("CLI Smoke Tests", () => {
   });
 
   describe("Placeholder Commands (Prompt 05)", () => {
-    it("should fail serve dashboard command with NOT_IMPLEMENTED", async () => {
-      const output = await runCliError("serve dashboard");
-      expect(output).toContain(
-        "NOT_IMPLEMENTED: The dashboard is a planned feature",
-      );
+    it("should output help for serve dashboard command", async () => {
+      const output = await runCli("serve dashboard --help");
+      expect(output).toContain("Launch the AKCP Control Plane Dashboard");
+      expect(output).toContain("--port <number>");
     });
 
     it("should fail control-plane inspect command with NOT_IMPLEMENTED", async () => {
