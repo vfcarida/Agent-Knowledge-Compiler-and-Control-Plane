@@ -18,6 +18,7 @@ These features are implemented, tested, and considered stable as of the current 
 - **Conformance Suite** — Automated verification of AKCP conformance claims.
 - **Agent Knowledge Readiness Scorecard** — Quantified bundle quality scoring (0-100).
 - **Plugin Architecture** — Declarative `akcp-plugin.json` manifest for build-time connectors.
+- **Semantic Diff (`akcp diff`)** — Human- and machine-readable diffing of AK-IR snapshots for change review and CI/CD gating.
 
 ---
 
@@ -39,7 +40,6 @@ These are speculative research directions. No implementation is planned yet.
 
 - **Remote MCP Authentication** — Standardized OAuth 2.0 flows for externally-hosted MCP servers.
 - **Federated Knowledge Registries** — Cross-organization knowledge sharing with provenance verification.
-- **Semantic Diff** — Human-readable diff of two AK-IR snapshots for change review.
 - **LLM-Assisted OKF Authoring** — Using agents to suggest OKF frontmatter for new documents.
 
 ---

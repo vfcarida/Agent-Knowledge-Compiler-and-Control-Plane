@@ -253,3 +253,6 @@ export { RegexPiiDetector } from "./privacy/regex-pii-detector.js";
  */
 export { createPiiDetector } from "./privacy/create-detector.js";
 export * from "./privacy/waf.js";
+
+// Semantic & Policy Diffing
+export * from "./diff/index.js";
