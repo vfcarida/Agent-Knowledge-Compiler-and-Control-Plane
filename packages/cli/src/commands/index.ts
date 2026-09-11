@@ -3,6 +3,7 @@ import type { CLIContext } from "../types.js";
 
 // Core
 import { registerInitCommand } from "./core/init.js";
+import { registerQuickstartCommand } from "./core/quickstart.js";
 import { registerValidateCommand } from "./core/validate.js";
 import { registerCompileCommand } from "./core/compile.js";
 import { registerScanCommand } from "./core/scan.js";
@@ -46,6 +47,7 @@ import { registerDiffCommand } from "./utility/diff.js";
 export function registerAllCommands(program: Command, ctx: CLIContext): void {
   // Core
   registerInitCommand(program, ctx);
+  registerQuickstartCommand(program, ctx);
   registerValidateCommand(program, ctx);
   registerCompileCommand(program, ctx);
   registerScanCommand(program, ctx);

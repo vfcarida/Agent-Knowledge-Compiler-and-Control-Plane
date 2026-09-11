@@ -8,6 +8,7 @@ The Agent Knowledge Compiler and Control Plane (AKCP) CLI.
 akcp [options] [command]
 
 Commands:
+  quickstart [options] [dir]      Bootstrap, compile, and boot Control Plane dashboard in one command
   init [options] [directory]      Initialize a new .agent-context structure
   validate [options] [directory]  Strict offline schema validation of an OKF/Context bundle
   scan [options] [directory]      Analyze repository and suggest context document structures
@@ -21,6 +22,10 @@ Commands:
 ### Examples
 
 ```bash
+# Zero-to-Control-Plane single command
+akcp quickstart ./my-agent-context
+
+# Granular workflow commands
 akcp init --template it-operations
 akcp validate --bundle examples/domains/it-operations --profile it-operations
 akcp compile --config examples/domains/it-operations/akcp.yaml

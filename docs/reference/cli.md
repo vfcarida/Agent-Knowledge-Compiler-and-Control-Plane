@@ -4,6 +4,7 @@ This document maps the currently implemented commands in `packages/cli/src/index
 
 | Implemented Command     | Documented in `docs/specs/cli.md`? | Mentioned in README? | Status       | Notes                                                          |
 | ----------------------- | :--------------------------------: | :------------------: | ------------ | -------------------------------------------------------------- |
+| `akcp quickstart`       |                Yes                 |         Yes          | Stable       | Bootstrap, compile, and launch Control Plane in one command.   |
 | `akcp init`             |                Yes                 |         Yes          | Stable       | Initializes `.agent-context`.                                  |
 | `akcp validate`         |                Yes                 |         Yes          | Beta         | Offline schema validation.                                     |
 | `akcp scan`             |                Yes                 |          No          | Beta         | Analyzes raw repo and suggests OKF template mapping.           |
@@ -36,6 +37,28 @@ This document maps the currently implemented commands in `packages/cli/src/index
 | `akcp completion`       |                 No                 |          No          | Beta         | Generate shell autocompletion script.                          |
 
 ## Core Commands (Stable/Beta)
+
+### `akcp quickstart`
+
+**Status**: Stable
+
+Zero-to-Control-Plane command that bootstraps a knowledge bundle from a chosen template, runs compiler pipeline, emits runtime IR & control-plane metadata, and launches the interactive dashboard.
+
+```bash
+akcp quickstart [directory] [options]
+```
+
+**Options:**
+
+```
+-t, --template <name>     Template domain (e.g. it-operations, career, customer-support) (default: "it-operations")
+-p, --port <number>       Port to bind the dashboard server to (default: "3001")
+--host <host>             Host address to bind (default: "localhost")
+-o, --open                Automatically open dashboard in default browser (default: true)
+--no-open                 Do not automatically open browser
+--no-serve                Only bootstrap and compile without starting the server
+-h, --help                display help for command
+```
 
 ### `akcp init`
 
