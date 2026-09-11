@@ -1,5 +1,41 @@
 import { Command } from "commander";
+import path from "node:path";
+import fs from "node:fs";
+import { spawn, exec } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import type { CLIContext } from "../../types.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export function getBrowserOpenCommand(
+  url: string,
+  platform = process.platform,
+): string {
+  switch (platform) {
+    case "darwin":
+      return `open "${url}"`;
+    case "win32":
+      return `start "" "${url}"`;
+    default:
+      return `xdg-open "${url}"`;
+  }
+}
+
+export function openBrowser(url: string, platform = process.platform): void {
+  if (process.env.CI === "true") {
+    console.log("[INFO] CI environment detected. Skipping browser launch.");
+    return;
+  }
+  const cmd = getBrowserOpenCommand(url, platform);
+  exec(cmd, (err) => {
+    if (err) {
+      console.warn(
+        `[WARN] Could not automatically open browser: ${err.message}`,
+      );
+    }
+  });
+}
 
 export function registerServeDashboardCommand(
   program: Command,
@@ -31,15 +67,12 @@ export function registerServeDashboardCommand(
       true,
     )
     .option("--no-demo", "Disable demo mode (requires DASHBOARD_JWT_SECRET)")
+    .option(
+      "-o, --open",
+      "Automatically open the dashboard in the default browser",
+      false,
+    )
     .action(async (options) => {
-      const path = await import("path");
-      const fs = await import("fs");
-      const { spawn } = await import("child_process");
-      const { fileURLToPath } = await import("url");
-
-      const __filename = fileURLToPath(import.meta.url);
-      const __dirname = path.dirname(__filename);
-
       console.log(
         `[INFO] Booting AKCP Dashboard on http://${options.host}:${options.port}...`,
       );
@@ -75,6 +108,21 @@ export function registerServeDashboardCommand(
         process.exit(1);
       }
 
+      // Locate static SPA bundle if available
+      const candidateStaticPaths = [
+        path.resolve(process.cwd(), "packages/dashboard/dist"),
+        path.resolve(__dirname, "../../../../dashboard/dist"),
+        path.resolve(__dirname, "../../../dashboard/dist"),
+        path.resolve(process.cwd(), "node_modules/@akcp/dashboard/dist"),
+      ];
+      let staticDir: string | undefined;
+      for (const cand of candidateStaticPaths) {
+        if (fs.existsSync(path.join(cand, "index.html"))) {
+          staticDir = cand;
+          break;
+        }
+      }
+
       const envVars: Record<string, string | undefined> = {
         ...process.env,
         PORT: String(options.port),
@@ -82,14 +130,50 @@ export function registerServeDashboardCommand(
         AKCP_IR_PATH: irPath,
         AKCP_BUNDLE_PATH: targetDir,
         DASHBOARD_DEMO_MODE: options.demo ? "true" : "false",
+        ...(staticDir ? { DASHBOARD_STATIC_PATH: staticDir } : {}),
       };
 
       const isWindows = process.platform === "win32";
       const tsxCmd = isWindows ? "npx.cmd" : "npx";
       const child = spawn(tsxCmd, ["tsx", serverScriptPath], {
-        stdio: "inherit",
+        stdio: options.open ? ["inherit", "pipe", "pipe"] : "inherit",
         env: envVars,
       });
+
+      if (options.open) {
+        let opened = false;
+        const targetUrl = `http://${options.host}:${options.port}`;
+        const triggerOpen = () => {
+          if (!opened) {
+            opened = true;
+            console.log(`[INFO] Opening browser at ${targetUrl}...`);
+            openBrowser(targetUrl);
+          }
+        };
+
+        if (child.stdout) {
+          child.stdout.on("data", (chunk: Buffer) => {
+            const str = chunk.toString();
+            process.stdout.write(str);
+            if (str.includes("Express server running on port")) {
+              triggerOpen();
+            }
+          });
+        }
+        if (child.stderr) {
+          child.stderr.on("data", (chunk: Buffer) => {
+            process.stderr.write(chunk.toString());
+          });
+        }
+
+        const fallbackTimer = setTimeout(() => {
+          triggerOpen();
+        }, 3000);
+
+        child.on("close", () => {
+          clearTimeout(fallbackTimer);
+        });
+      }
 
       child.on("close", (code) => {
         process.exit(code ?? 0);

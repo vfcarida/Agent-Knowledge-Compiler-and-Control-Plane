@@ -305,11 +305,53 @@ app.get("/api/mcp/tools", (req, res) => {
 });
 
 // Serve static frontend assets if built
-const clientDistPath = path.resolve(__dirname, "../dist");
-if (fs.existsSync(clientDistPath)) {
+const candidateDistPaths = [
+  process.env.DASHBOARD_STATIC_PATH,
+  path.resolve(__dirname, "../dist"),
+  path.resolve(process.cwd(), "packages/dashboard/dist"),
+  path.resolve(process.cwd(), "dist"),
+].filter(Boolean) as string[];
+
+const clientDistPath = candidateDistPaths.find((cand) =>
+  fs.existsSync(path.join(cand, "index.html")),
+);
+
+if (clientDistPath) {
+  console.log(`[BFF] Serving compiled Dashboard SPA from: ${clientDistPath}`);
   app.use(express.static(clientDistPath));
-  app.get(/^(?!\/api).*/, (_req, res) => {
-    res.sendFile(path.join(clientDistPath, "index.html"));
+  // SPA fallback for non-API client routes
+  app.use((req, res, next) => {
+    if (req.method === "GET" && !req.path.startsWith("/api")) {
+      return res.sendFile(path.join(clientDistPath, "index.html"));
+    }
+    next();
+  });
+} else {
+  console.log(
+    "[BFF] Static frontend bundle not found. Running in API-only mode. Run 'pnpm --filter @akcp/dashboard build' to compile the client dashboard.",
+  );
+  app.get("/", (_req, res) => {
+    res.status(200).send(
+      `<!DOCTYPE html>
+<html>
+<head><title>AKCP Control Plane BFF</title><meta charset="utf-8"/></head>
+<body style="font-family:system-ui,-apple-system,sans-serif;max-width:700px;margin:50px auto;line-height:1.6;padding:0 20px;">
+  <h1>AKCP Control Plane BFF is Running</h1>
+  <p>The Control Plane backend is active, but the frontend dashboard SPA assets have not been compiled yet.</p>
+  <p>To compile and serve the frontend dashboard:</p>
+  <pre style="background:#f4f4f4;padding:12px;border-radius:6px;"><code>pnpm --filter @akcp/dashboard build</code></pre>
+  <p>Available API endpoints:</p>
+  <ul>
+    <li><code>/api/manifest/graph</code></li>
+    <li><code>/api/automation/approvals</code></li>
+    <li><code>/api/audit/logs</code></li>
+    <li><code>/api/evals/report</code></li>
+    <li><code>/api/manifest</code></li>
+    <li><code>/api/mcp/tools</code></li>
+  </ul>
+</body>
+</html>`,
+    );
   });
 }
 
