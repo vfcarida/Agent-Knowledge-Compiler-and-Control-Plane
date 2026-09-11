@@ -41,15 +41,24 @@ export class MockLLMProvider implements LLMProvider {
   }
 }
 
+export interface OpenAIProviderOptions {
+  apiKey?: string;
+  baseUrl?: string;
+  model?: string;
+}
+
 export class OpenAIProvider implements LLMProvider {
   private apiKey: string;
   private baseUrl: string;
   private model: string;
 
-  constructor() {
-    this.apiKey = process.env.OPENAI_API_KEY || "";
-    this.baseUrl = process.env.OPENAI_BASE_URL || "https://api.openai.com/v1";
-    this.model = process.env.OPENAI_MODEL || "gpt-3.5-turbo";
+  constructor(options?: OpenAIProviderOptions) {
+    this.apiKey = options?.apiKey || process.env.OPENAI_API_KEY || "";
+    this.baseUrl =
+      options?.baseUrl ||
+      process.env.OPENAI_BASE_URL ||
+      "https://api.openai.com/v1";
+    this.model = options?.model || process.env.OPENAI_MODEL || "gpt-4o-mini";
   }
 
   async chat(systemPrompt: string, userMessage: string) {
@@ -82,10 +91,73 @@ export class OpenAIProvider implements LLMProvider {
 
     const data: any = await res.json();
     return {
-      text: data.choices[0].message.content,
+      text: data.choices?.[0]?.message?.content || "",
       tokens: data.usage?.total_tokens || 0,
     };
   }
+}
+
+export interface OllamaProviderOptions {
+  baseUrl?: string;
+  model?: string;
+}
+
+export class OllamaProvider implements LLMProvider {
+  private baseUrl: string;
+  private model: string;
+
+  constructor(options?: OllamaProviderOptions) {
+    this.baseUrl = (
+      options?.baseUrl ||
+      process.env.OLLAMA_BASE_URL ||
+      "http://localhost:11434"
+    ).replace(/\/$/, "");
+    this.model = options?.model || process.env.OLLAMA_MODEL || "llama3.2";
+  }
+
+  async chat(systemPrompt: string, userMessage: string) {
+    try {
+      const res = await fetch(`${this.baseUrl}/api/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: this.model,
+          system: systemPrompt,
+          prompt: userMessage,
+          stream: false,
+          options: { temperature: 0.0 },
+        }),
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Ollama API Error: ${res.status} - ${errorText}`);
+      }
+
+      const data: any = await res.json();
+      const evalCount = data.eval_count || 0;
+      const promptEvalCount = data.prompt_eval_count || 0;
+      return {
+        text: data.response || "",
+        tokens: evalCount + promptEvalCount,
+      };
+    } catch (err: any) {
+      console.warn(
+        `[WARN] Ollama request failed (${err.message}). Falling back to MockLLMProvider.`,
+      );
+      return new MockLLMProvider().chat(systemPrompt, userMessage);
+    }
+  }
+}
+
+export function createLLMProvider(): LLMProvider {
+  if (process.env.OLLAMA_MODEL || process.env.OLLAMA_BASE_URL) {
+    return new OllamaProvider();
+  }
+  if (process.env.OPENAI_API_KEY) {
+    return new OpenAIProvider();
+  }
+  return new MockLLMProvider();
 }
 
 export class EvalsHarness {
@@ -93,11 +165,7 @@ export class EvalsHarness {
   public provider: LLMProvider;
 
   constructor(provider?: LLMProvider) {
-    this.provider =
-      provider ||
-      (process.env.OPENAI_API_KEY
-        ? new OpenAIProvider()
-        : new MockLLMProvider());
+    this.provider = provider || createLLMProvider();
   }
 
   async runScenario(
