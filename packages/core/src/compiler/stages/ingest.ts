@@ -24,7 +24,7 @@ export class IngestStage implements PipelineStage {
     const allRawItems: RawKnowledgeItem[] = [];
     const warnings: CompilerWarning[] = [...context.warnings];
 
-    for (const sourceConfig of sources) {
+    const ingestPromises = sources.map(async (sourceConfig) => {
       const resolvedConfig = { ...sourceConfig };
       if (resolvedConfig.path) {
         resolvedConfig.path = path.resolve(
@@ -34,6 +34,8 @@ export class IngestStage implements PipelineStage {
       }
 
       let items: RawKnowledgeItem[] = [];
+      const sourceWarnings: CompilerWarning[] = [];
+
       switch (resolvedConfig.type) {
         case "okf-directory":
           items = await new OKFDirectoryConnector(fsAdapter).ingest(
@@ -55,14 +57,21 @@ export class IngestStage implements PipelineStage {
           items = await new MockZendeskConnector().ingest(resolvedConfig);
           break;
         default:
-          warnings.push({
+          sourceWarnings.push({
             type: "unknown_source_type",
             message: `Unknown connector type "${resolvedConfig.type}" was skipped.`,
             source: resolvedConfig.path,
           });
           break;
       }
-      allRawItems.push(...items);
+
+      return { items, warnings: sourceWarnings };
+    });
+
+    const results = await Promise.all(ingestPromises);
+    for (const res of results) {
+      allRawItems.push(...res.items);
+      warnings.push(...res.warnings);
     }
 
     return { ...context, rawItems: allRawItems, warnings };
