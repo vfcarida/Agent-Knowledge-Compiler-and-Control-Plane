@@ -92,8 +92,9 @@ OWASP LLM Top 10: LLM08: Excessive Agency
 > migrating them surfaced and fixed a deeper one along the way — `MCPGateway` was hardcoding
 > every request's risk level to `"medium"`, which made any policy rule scoped by risk level
 > silently unenforceable regardless of file format (see `appliesTo.riskLevels` in
-> [docs/specs/policy-cards.md](docs/specs/policy-cards.md)). Remaining known gap: `rules[].condition`
-> is accepted by the schema but not yet evaluated by either enforcement path — see that same doc.
+> [docs/specs/policy-cards.md](docs/specs/policy-cards.md)). Runtime condition evaluation (`rules[].condition`)
+> is fully enforced for environments, time windows, approval tokens, and attribute expressions,
+> complemented by build-time policy linting to detect shadowed rules and contradictory constraints.
 
 </details>
 
@@ -120,12 +121,14 @@ flowchart LR
 
 ## Key Features
 
-- **Compiler Pipeline**: Ingests raw organizational knowledge (OKF, wikis) and normalizes it into AST-level Agent Knowledge IR (AK-IR).
+- **Compiler Pipeline**: Ingests raw organizational knowledge (OKF, wikis, APIs) and normalizes it into AST-level Agent Knowledge IR (AK-IR) with concurrent source ingestion.
+- **Semantic Diffing (`akcp diff`)**: Compares knowledge graphs and governance policies with text, JSON, and Markdown outputs plus `--strict` breaking-change CI gating.
+- **Graph & Policy Linter**: Validates link target references, detects circular prerequisite chains (DFS), and flags shadowed rules or contradictory constraints.
 - **Compile Targets**: Generates optimized outputs like Context Packs, MCP Resources, OpenWiki Docs, and Eval datasets.
-- **Control Plane**: Governs agent interactions at runtime with strict capability mapping and audit telemetry.
-- **Policy Cards**: Define strict constraints on autonomy, tools, and side-effects.
+- **Runtime Control Plane**: Governs agent interactions at runtime with capability mapping, audit telemetry, and CLI `inspect`, `policies`, `approvals`, and `audit` commands.
+- **Policy Cards**: Define machine-readable constraints on autonomy levels, allowed tools, side-effects, and PII handling.
 - **Human-In-The-Loop**: Two-phase commits to pause agent execution for critical real-world side-effects.
-- **MCP Compatibility**: Natively supports the Model Context Protocol for tools, resources, and prompts.
+- **MCP Compatibility**: Natively supports the Model Context Protocol for tools, resources, and prompts over stdio, SSE, and Streamable HTTP.
 
 ## Quickstart
 
@@ -143,6 +146,18 @@ pnpm akcp validate --bundle examples/domains/it-operations --profile it-operatio
 pnpm akcp compile --config examples/domains/it-operations/akcp.yaml
 ```
 
+## Performance Benchmarks
+
+Measured on local hardware using `pnpm run bench` (`vitest bench`):
+
+| Operation                                 |     Throughput     | Mean Latency | p99 Latency | Rationale                                        |
+| :---------------------------------------- | :----------------: | :----------: | :---------: | :----------------------------------------------- |
+| **Gateway Execution (Allow, No Audit)**   | **89,830 ops/sec** |   0.011 ms   |  0.030 ms   | Sub-millisecond pass-through                     |
+| **Gateway Execution (Policy Evaluation)** | **76,272 ops/sec** |   0.013 ms   |  0.033 ms   | Zero perceptible overhead on agent tool calls    |
+| **Compile 100 Documents (Provenance)**    | **11.61 ops/sec**  |   86.10 ms   |  89.76 ms   | Full AST parsing + SHA-256 provenance            |
+| **Compile 100 Documents (PII Redaction)** | **11.81 ops/sec**  |   84.68 ms   |  88.81 ms   | Build-time NER / regex PII redaction             |
+| **Compile 1,000 Documents**               |  **1.09 ops/sec**  |  920.26 ms   | 1,098.56 ms | Sub-second compilation for large knowledge bases |
+
 ## Documentation
 
 | Topic                     | Links                                                                                                                                                                                           |
@@ -157,19 +172,22 @@ pnpm akcp compile --config examples/domains/it-operations/akcp.yaml
 
 ## Current Maturity Status
 
-| Area                     | Status       | Evidence                                 | Next milestone           |
-| ------------------------ | ------------ | ---------------------------------------- | ------------------------ |
-| AKCP CLI                 | Beta         | tests, examples, init command            | npm publish              |
-| AK-IR Compiler           | Beta         | spec, fixtures, pipeline stages          | auto-normalization       |
-| MCP Profile Server       | Beta         | contract tests, SSE transport            | remote hosting           |
-| MCP Automation Server    | Alpha        | safety tests, browser automation         | real cloud integrations  |
-| Control Plane (Gateway)  | Beta         | auth, rate limit, HITL, PII, WAF         | distributed deployment   |
-| Dashboard UI             | Alpha        | React app, e2e tests, Express server     | feature completion       |
-| IT Operations (flagship) | Beta         | policies, evals, expected-output         | real infrastructure      |
-| Career (starter)         | Stable       | full walkthrough, golden outputs         |                          |
-| Customer Support         | Alpha        | sources, 8 policies, capabilities, evals | full implementation      |
-| VSCode Extension         | Experimental | syntax highlighting                      | validation, autocomplete |
-| Legacy CLI               | Removed      | legacy binaries deleted in v0.1.0        | —                        |
+| Area                     | Status       | Evidence                                                 | Next milestone           |
+| ------------------------ | ------------ | -------------------------------------------------------- | ------------------------ |
+| AKCP CLI                 | Beta         | tests, examples, init command                            | npm publish              |
+| AK-IR Compiler           | Beta         | spec, fixtures, pipeline stages                          | auto-normalization       |
+| MCP Profile Server       | Beta         | contract tests, SSE transport                            | remote hosting           |
+| MCP Automation Server    | Alpha        | safety tests, browser automation                         | real cloud integrations  |
+| Control Plane (Gateway)  | Beta         | auth, rate limit, HITL, PII, WAF                         | distributed deployment   |
+| Control Plane CLI        | Beta         | inspect, policies, approvals, audit commands & CLI tests | remote control API       |
+| Dashboard UI & Serve     | Beta         | React app, e2e tests, Express BFF serve command          | feature completion       |
+| IT Operations (flagship) | Beta         | policies, evals, expected-output                         | real infrastructure      |
+| Career (starter)         | Stable       | full walkthrough, golden outputs                         |                          |
+| Customer Support         | Beta         | sources, 8 policies, capabilities, evals, golden outputs | production CRM connector |
+| Semantic Diff Engine     | Beta         | unit tests, CLI diff tests, multi-format output          | git rev integration      |
+| Graph & Policy Linter    | Beta         | link target validation, cycle detection, policy linter   | CLI policy lint command  |
+| VSCode Extension         | Experimental | syntax highlighting                                      | validation, autocomplete |
+| Legacy CLI               | Removed      | legacy binaries deleted in v0.1.0                        | —                        |
 
 For formal definitions, see the [Maturity and Status Guide](docs/status.md).
 
