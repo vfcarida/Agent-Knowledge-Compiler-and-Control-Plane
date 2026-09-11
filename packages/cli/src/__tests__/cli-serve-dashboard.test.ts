@@ -98,5 +98,13 @@ describe("CLI serve dashboard Command", () => {
       expect(html).toContain("<!doctype html>");
       expect(html).toContain("/assets/");
     });
+
+    it("should locate compiled backend server script in packages/dashboard/dist/server/index.js", () => {
+      const serverScript = path.resolve(
+        workspaceRoot,
+        "packages/dashboard/dist/server/index.js",
+      );
+      expect(fs.existsSync(serverScript)).toBe(true);
+    });
   });
 });

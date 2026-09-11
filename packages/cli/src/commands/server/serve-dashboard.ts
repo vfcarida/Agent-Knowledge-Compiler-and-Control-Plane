@@ -82,8 +82,15 @@ export function registerServeDashboardCommand(
         ? path.resolve(process.cwd(), options.ir)
         : path.join(targetDir, "dist", "agent-knowledge-ir.json");
 
-      // Find the dashboard server script path
+      // Find the dashboard server script path (prefers precompiled JS, falls back to TS)
       const candidatePaths = [
+        path.resolve(process.cwd(), "packages/dashboard/dist/server/index.js"),
+        path.resolve(__dirname, "../../../../dashboard/dist/server/index.js"),
+        path.resolve(__dirname, "../../../dashboard/dist/server/index.js"),
+        path.resolve(
+          process.cwd(),
+          "node_modules/@akcp/dashboard/dist/server/index.js",
+        ),
         path.resolve(process.cwd(), "packages/dashboard/server/index.ts"),
         path.resolve(__dirname, "../../../../dashboard/server/index.ts"),
         path.resolve(__dirname, "../../../dashboard/server/index.ts"),
@@ -133,9 +140,21 @@ export function registerServeDashboardCommand(
         ...(staticDir ? { DASHBOARD_STATIC_PATH: staticDir } : {}),
       };
 
+      const isCompiled = serverScriptPath.endsWith(".js");
       const isWindows = process.platform === "win32";
-      const tsxCmd = isWindows ? "npx.cmd" : "npx";
-      const child = spawn(tsxCmd, ["tsx", serverScriptPath], {
+
+      let runnerCmd: string;
+      let runnerArgs: string[];
+
+      if (isCompiled) {
+        runnerCmd = "node";
+        runnerArgs = [serverScriptPath];
+      } else {
+        runnerCmd = isWindows ? "npx.cmd" : "npx";
+        runnerArgs = ["tsx", serverScriptPath];
+      }
+
+      const child = spawn(runnerCmd, runnerArgs, {
         stdio: options.open ? ["inherit", "pipe", "pipe"] : "inherit",
         env: envVars,
       });

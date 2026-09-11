@@ -1,4 +1,4 @@
-import express from "express";
+import express, { type Request, type Response } from "express";
 import cors from "cors";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
@@ -45,14 +45,34 @@ let automationClient: Client | null = null;
 
 async function startMCPClients() {
   try {
-    const profileScript = path.resolve(
-      __dirname,
-      "../../mcp-profile-server/dist/index.js",
-    );
-    const automationScript = path.resolve(
-      __dirname,
-      "../../mcp-automation-server/dist/index.js",
-    );
+    const candidateProfileScripts = [
+      path.resolve(__dirname, "../../mcp-profile-server/dist/index.js"),
+      path.resolve(__dirname, "../../../mcp-profile-server/dist/index.js"),
+      path.resolve(process.cwd(), "packages/mcp-profile-server/dist/index.js"),
+      path.resolve(
+        process.cwd(),
+        "node_modules/@akcp/mcp-profile-server/dist/index.js",
+      ),
+    ];
+    const profileScript =
+      candidateProfileScripts.find((p) => fs.existsSync(p)) ||
+      candidateProfileScripts[0];
+
+    const candidateAutomationScripts = [
+      path.resolve(__dirname, "../../mcp-automation-server/dist/index.js"),
+      path.resolve(__dirname, "../../../mcp-automation-server/dist/index.js"),
+      path.resolve(
+        process.cwd(),
+        "packages/mcp-automation-server/dist/index.js",
+      ),
+      path.resolve(
+        process.cwd(),
+        "node_modules/@akcp/mcp-automation-server/dist/index.js",
+      ),
+    ];
+    const automationScript =
+      candidateAutomationScripts.find((p) => fs.existsSync(p)) ||
+      candidateAutomationScripts[0];
 
     const env = {
       ...process.env,
@@ -307,7 +327,8 @@ app.get("/api/mcp/tools", (req, res) => {
 // Serve static frontend assets if built
 const candidateDistPaths = [
   process.env.DASHBOARD_STATIC_PATH,
-  path.resolve(__dirname, "../dist"),
+  path.resolve(__dirname, ".."), // when running from dist/server
+  path.resolve(__dirname, "../dist"), // when running from server
   path.resolve(process.cwd(), "packages/dashboard/dist"),
   path.resolve(process.cwd(), "dist"),
 ].filter(Boolean) as string[];
