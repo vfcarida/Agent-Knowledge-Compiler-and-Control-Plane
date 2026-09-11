@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.6" />
+      <stop offset="50%" stop-color="#818cf8" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0.5" />
+    </linearGradient>
+
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.9" />
+    </linearGradient>
+
+    <linearGradient id="blueGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#6366f1" />
+    </linearGradient>
+
+    <linearGradient id="emeraldGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <style>
+    .title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 700; font-size: 20px; fill: #f8fafc; }
+    .subtitle { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; fill: #94a3b8; }
+    .header-tag { font-family: "JetBrains Mono", Consolas, monospace; font-size: 11px; font-weight: 600; fill: #38bdf8; letter-spacing: 1px; }
+    .card-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 600; font-size: 15px; fill: #f1f5f9; }
+    .card-subtitle { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; fill: #64748b; }
+    .code { font-family: "JetBrains Mono", Consolas, monospace; font-size: 12px; fill: #e2e8f0; }
+    .badge { font-family: "JetBrains Mono", Consolas, monospace; font-size: 10px; font-weight: 600; }
+    .connector { stroke: #334155; stroke-width: 2; stroke-dasharray: 4,4; }
+    .active-flow { stroke: url(#blueGlow); stroke-width: 2.5; }
+  </style>
+
+  <!-- Background Canvas -->
+  <rect width="960" height="540" rx="16" fill="url(#bgGrad)" />
+  <rect width="958" height="538" x="1" y="1" rx="15" fill="none" stroke="url(#borderGrad)" stroke-width="1.5" />
+
+  <!-- Top Navigation / Hero Header -->
+  <g transform="translate(40, 36)">
+    <rect width="28" height="28" rx="6" fill="#38bdf8" fill-opacity="0.2" stroke="#38bdf8" stroke-width="1.5" />
+    <path d="M 6 14 L 14 6 L 22 14 L 14 22 Z" fill="#38bdf8" />
+    <text x="38" y="14" class="header-tag">AGENT KNOWLEDGE COMPILER &amp; CONTROL PLANE</text>
+    <text x="38" y="32" class="title">Zero-to-Control-Plane Architecture</text>
+    <text x="460" y="32" class="subtitle">Deterministic compilation pipeline &amp; runtime governance</text>
+  </g>
+
+  <!-- Flow Steps Indicator -->
+  <!-- 1. SOURCE PACKS -->
+  <g transform="translate(40, 100)" filter="url(#shadow)">
+    <rect width="250" height="230" rx="12" fill="url(#cardGrad)" stroke="#334155" stroke-width="1.5" />
+    <rect width="250" height="40" rx="12" fill="#1e293b" fill-opacity="0.5" />
+    <circle cx="24" cy="20" r="6" fill="#38bdf8" />
+    <text x="38" y="24" class="card-title">1. Knowledge Sources</text>
+    
+    <g transform="translate(18, 55)">
+      <!-- Item 1 -->
+      <rect width="214" height="42" rx="6" fill="#0f172a" stroke="#1e293b" />
+      <text x="12" y="20" class="code" font-size="11px">📄 runbooks/*.md</text>
+      <text x="12" y="34" class="card-subtitle">OKF Markdown + YAML Frontmatter</text>
+      
+      <!-- Item 2 -->
+      <rect width="214" height="42" y="50" rx="6" fill="#0f172a" stroke="#1e293b" />
+      <text x="12" y="70" class="code" font-size="11px">🛡️ *.policy.yaml</text>
+      <text x="12" y="84" class="card-subtitle">NIST AI RMF / OWASP Policy Cards</text>
+
+      <!-- Item 3 -->
+      <rect width="214" height="42" y="100" rx="6" fill="#0f172a" stroke="#1e293b" />
+      <text x="12" y="120" class="code" font-size="11px">⚙️ akcp.yaml</text>
+      <text x="12" y="134" class="card-subtitle">Bundle config, targets, privacy rules</text>
+    </g>
+  </g>
+
+  <!-- Arrow 1 -> 2 -->
+  <path d="M 290 215 L 345 215" class="active-flow" marker-end="url(#arrow)" />
+  <polygon points="345,210 355,215 345,220" fill="#6366f1" />
+
+  <!-- 2. AKCP COMPILER PIPELINE -->
+  <g transform="translate(355, 100)" filter="url(#shadow)">
+    <rect width="260" height="230" rx="12" fill="url(#cardGrad)" stroke="#6366f1" stroke-width="1.5" />
+    <rect width="260" height="40" rx="12" fill="#6366f1" fill-opacity="0.15" />
+    <circle cx="24" cy="20" r="6" fill="#818cf8" />
+    <text x="38" y="24" class="card-title">2. AKCP Compiler</text>
+    
+    <g transform="translate(18, 55)">
+      <!-- Stage 1 -->
+      <rect width="224" height="34" rx="6" fill="#0f172a" stroke="#334155" />
+      <text x="10" y="22" class="code" font-size="11px">🔍 Parser &amp; OKF Validator</text>
+      
+      <!-- Stage 2 -->
+      <rect width="224" height="34" y="40" rx="6" fill="#0f172a" stroke="#334155" />
+      <text x="10" y="62" class="code" font-size="11px">🔒 PII Redaction &amp; Privacy Gating</text>
+
+      <!-- Stage 3 -->
+      <rect width="224" height="34" y="80" rx="6" fill="#0f172a" stroke="#334155" />
+      <text x="10" y="102" class="code" font-size="11px">🕸️ Concept Graph &amp; Synthesis</text>
+
+      <!-- Stage 4 -->
+      <rect width="224" height="34" y="120" rx="6" fill="#0f172a" stroke="#334155" />
+      <text x="10" y="142" class="code" font-size="11px">⚡ Incremental Hash Cache</text>
+    </g>
+  </g>
+
+  <!-- Arrow 2 -> 3 -->
+  <path d="M 615 215 L 670 215" class="active-flow" marker-end="url(#arrow)" />
+  <polygon points="670,210 680,215 670,220" fill="#10b981" />
+
+  <!-- 3. CONTROL PLANE RUNTIME -->
+  <g transform="translate(680, 100)" filter="url(#shadow)">
+    <rect width="240" height="230" rx="12" fill="url(#cardGrad)" stroke="#10b981" stroke-width="1.5" />
+    <rect width="240" height="40" rx="12" fill="#10b981" fill-opacity="0.15" />
+    <circle cx="24" cy="20" r="6" fill="#10b981" />
+    <text x="38" y="24" class="card-title">3. Control Plane Runtime</text>
+    
+    <g transform="translate(16, 55)">
+      <!-- Target 1 -->
+      <rect width="208" height="46" rx="6" fill="#0f172a" stroke="#1e293b" />
+      <text x="10" y="20" class="code" font-size="11px">🖥️ Control Plane UI (:3001)</text>
+      <text x="10" y="36" class="card-subtitle">HITL approvals, graph &amp; audit</text>
+
+      <!-- Target 2 -->
+      <rect width="208" height="46" y="52" rx="6" fill="#0f172a" stroke="#1e293b" />
+      <text x="10" y="72" class="code" font-size="11px">🔌 MCP Profile Server</text>
+      <text x="10" y="88" class="card-subtitle">Gated tools &amp; resources</text>
+
+      <!-- Target 3 -->
+      <rect width="208" height="46" y="104" rx="6" fill="#0f172a" stroke="#1e293b" />
+      <text x="10" y="124" class="code" font-size="11px">🤖 Agent Runtimes</text>
+      <text x="10" y="140" class="card-subtitle">Claude, Antigravity, Cursor, Swarms</text>
+    </g>
+  </g>
+
+  <!-- Bottom Hero Banner: One-Command Quickstart Experience -->
+  <g transform="translate(40, 360)" filter="url(#shadow)">
+    <rect width="880" height="145" rx="12" fill="#090d16" stroke="#1e293b" stroke-width="1.5" />
+    
+    <!-- Terminal Header -->
+    <rect width="880" height="32" rx="12" fill="#111827" />
+    <circle cx="20" cy="16" r="5" fill="#ef4444" />
+    <circle cx="36" cy="16" r="5" fill="#f59e0b" />
+    <circle cx="52" cy="16" r="5" fill="#10b981" />
+    <text x="80" y="20" class="code" font-size="11px" fill="#64748b">Terminal — Zero to Control Plane</text>
+    
+    <!-- Code output line -->
+    <g transform="translate(24, 52)">
+      <text x="0" y="16" class="code" fill="#38bdf8" font-weight="700">$ npx akcp quickstart ./my-bundle --open</text>
+      <text x="0" y="38" class="code" fill="#94a3b8">[1/3] Initializing bundle from template 'it-operations'...</text>
+      <text x="0" y="56" class="code" fill="#94a3b8">[2/3] Compiling knowledge artifacts to Agent Knowledge IR... ✓ (14 concepts, 4 capabilities)</text>
+      <text x="0" y="74" class="code" fill="#34d399">[3/3] Control Plane Dashboard live at http://localhost:3001 (BFF server ready)</text>
+    </g>
+  </g>
+</svg>

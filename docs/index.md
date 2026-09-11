@@ -29,6 +29,10 @@ features:
 
 Welcome to the **Agent Knowledge Compiler and Control Plane (AKCP)** documentation. Use the sections below or the sidebar to navigate every part of the project.
 
+<p align="center">
+  <img src="/akcp-workflow.svg" alt="AKCP Architecture and Zero-to-Control-Plane Flow" width="100%" />
+</p>
+
 ---
 
 ## 🚀 Start Here

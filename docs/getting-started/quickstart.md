@@ -7,9 +7,20 @@ Welcome to Agent Knowledge Compiler and Control Plane (AKCP). This guide will he
 - Node.js >= 20.0.0
 - [Corepack](https://nodejs.org/api/corepack.html) enabled (`corepack enable`)
 
-## Minimal Happy Path
+## ⚡ Single-Command Quickstart
 
-As AKCP is not yet published to the npm registry, the fastest way to use it is by cloning the repository and running the CLI directly from the source workspace.
+The fastest way to experience AKCP from zero to interactive control plane:
+
+```bash
+# Bootstrap an example bundle, compile knowledge IR, and boot the Control Plane Dashboard
+npx akcp quickstart ./my-agent-knowledge --open
+```
+
+This bootstraps a knowledge bundle from the `it-operations` domain template, runs the compiler pipeline emitting all target manifests, and boots the local Control Plane dashboard at `http://localhost:3001`.
+
+## Granular CLI Workflow
+
+If you prefer step-by-step execution or are working from a cloned workspace:
 
 ```bash
 git clone https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane.git
