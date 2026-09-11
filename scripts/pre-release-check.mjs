@@ -81,13 +81,15 @@ if (fs.existsSync(cliPath)) {
   console.log(`WARN: CLI not built at ${cliPath}`);
 }
 
-// 6. Package exports resolve
-console.log("[6/8] Checking package exports...");
+// 6. Package exports and types resolve
+console.log("[6/8] Checking package exports and types...");
 const packages = [
   "packages/core",
   "packages/cli",
   "packages/conformance",
   "packages/mcp-profile-server",
+  "packages/mcp-automation-server",
+  "packages/evals",
 ];
 for (const pkg of packages) {
   const pkgJsonPath = path.join(pkg, "package.json");
@@ -98,11 +100,21 @@ for (const pkg of packages) {
       console.log(`WARN: ${pkg} has no main/exports entry`);
     } else {
       const mainPath = path.join(pkg, main);
-      const jsMainPath = mainPath.replace(/\.js$/, ".js");
-      if (!fs.existsSync(mainPath) && !fs.existsSync(jsMainPath)) {
+      if (!fs.existsSync(mainPath)) {
         console.log(
-          `WARN: ${pkg} main entry '${main}' may not exist after build`,
+          `FAIL: ${pkg} main entry '${main}' does not exist after build`,
         );
+        errors++;
+      }
+    }
+
+    if (pkgJson.types) {
+      const typesPath = path.join(pkg, pkgJson.types);
+      if (!fs.existsSync(typesPath)) {
+        console.log(
+          `FAIL: ${pkg} types entry '${pkgJson.types}' does not exist after build`,
+        );
+        errors++;
       }
     }
   }
