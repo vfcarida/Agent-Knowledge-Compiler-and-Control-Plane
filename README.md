@@ -19,11 +19,26 @@ npx akcp quickstart ./my-agent-knowledge --open
 
 ## Why AKCP
 
-AI agents today suffer from structural hallucination: they lack deterministic grounding.
+AI agents today suffer from structural hallucination: they lack deterministic grounding and fail-closed runtime safety.
 
-- **Supply Chain Trust**: Provides a cohesive pipeline from raw documentation to controlled agent side-effects.
-- **Deterministic Grounding**: Stops unpredictable behavior by compiling knowledge into strictly-typed artifacts.
+- **Supply Chain Trust**: Provides a cohesive pipeline from raw documentation to controlled agent side-effects with SHA-256 provenance.
+- **Deterministic Grounding**: Stops unpredictable behavior by compiling knowledge into strictly-typed AST artifacts and graph-validated context packs.
 - **Enterprise Safety**: Adds Human-In-The-Loop approvals, policy constraints, and audit telemetry to agent actions.
+
+### Enterprise Safety & OWASP Agentic Top 10 (2026) Mitigation
+
+Autonomous agents operating on unverified markdown or calling unconstrained tools risk prompt injection, privilege escalation, and runaway execution. AKCP implements turnkey architectural mitigations:
+
+| OWASP Risk                    | Description                                                 | AKCP Defense Mechanism                                                                   |
+| :---------------------------- | :---------------------------------------------------------- | :--------------------------------------------------------------------------------------- |
+| **ASI01: Goal Hijacking**     | Indirect prompt injection via ingested docs or tool results | Build-time AST parsing, NER/regex PII redaction, and isolated JSON-RPC data delivery     |
+| **ASI02: Tool Misuse**        | Execution of unapproved or destructive tools                | Zero-Trust `MCPGateway` enforcing fail-closed Policy Cards and risk-level controls       |
+| **ASI03: Privilege Abuse**    | Agent overstepping declared authorization                   | HMAC-SHA256 approval tokens cryptographically bound to payload, single-use with 15m TTL  |
+| **ASI04: Supply Chain**       | Poisoned runbooks or tampered knowledge packs               | Byte-reproducible IR compilation, SHA-256 manifests, and GitHub Actions build provenance |
+| **ASI06: Context Poisoning**  | Circular references or corrupted runbooks in context        | Semantic Graph Linter detecting cycles, broken references, and budget overflows          |
+| **ASI08: Cascading Failures** | Infinite retry loops or autonomous runaway execution        | Token-bucket & sliding-window rate limiters, session timeouts, and two-phase HITL gates  |
+
+_For full threat modeling and NIST AI RMF mappings, see [AKCP Threat Model](docs/security/threat-model.md) and [HITL Security](docs/security/hitl.md)._
 
 ## What it does
 

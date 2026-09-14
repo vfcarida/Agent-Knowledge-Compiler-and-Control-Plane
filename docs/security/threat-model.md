@@ -71,6 +71,23 @@ Given AKCP's heavy reliance on the Model Context Protocol, the following MCP-spe
 **Risk**: An attacker on the local machine intercepts the MCP stdio streams.
 **Mitigation**: MCP stdio relies on local OS boundaries (process isolation). For remote deployments, MCP over SSE with mutual TLS (mTLS) must be used.
 
+## OWASP Top 10 for Agentic Applications (2026) Mapping
+
+As autonomous AI agents transition into enterprise production, security risks shift from prompt injection alone to compound agentic execution risks. AKCP provides native, architectural mitigations for the **OWASP Top 10 for Agentic Applications (2026)**:
+
+| Risk Code | Risk Title                                           | Primary Vector                                                                          | AKCP Architectural Defense                                                                                                                                                                                                                                                                            |
+| :-------- | :--------------------------------------------------- | :-------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ASI01** | **Agent Goal Hijacking & Indirect Prompt Injection** | Untrusted content in docs, tickets, or web pages overriding system instructions         | • Knowledge isolation: raw sources are parsed into AST and validated at build time.<br>• Build-time NER and regex PII/injection redaction.<br>• MCP tools return typed `ToolSuccess<T>` data payloads, not prompt overrides.<br>• Resources delivered as isolated JSON data nodes.                    |
+| **ASI02** | **Tool Misuse & Unchecked Execution**                | Agent invokes high-risk tools with excessive arguments or invalid context               | • Zero-Trust `MCPGateway` evaluates Policy Cards before every tool execution.<br>• Fail-closed policy evaluation: unlisted tools or unfulfilled conditions deny by default.<br>• Mandatory two-phase commit Human-in-the-Loop (HITL) gates for mutating actions.                                      |
+| **ASI03** | **Identity & Privilege Abuse**                       | Agent uses authority of one user/session to perform unauthorized operations             | • Granular capability mapping: tools scoped strictly to declared agent role.<br>• Approval tokens signed with HMAC-SHA256, cryptographically bound to request digest.<br>• Strict token single-use invalidation with 15-minute TTL.                                                                   |
+| **ASI04** | **Agentic Supply Chain Compromise**                  | Tampered runbooks, poisoned context packs, or compromised tool registries               | • Deterministic compilation produces byte-reproducible Agent Knowledge IR.<br>• SHA-256 cryptographic provenance in `akcp-manifest.json`.<br>• Automated GitHub Actions build provenance attestation (`actions/attest-build-provenance`).<br>• Strict pinning of all CI dependencies and action SHAs. |
+| **ASI05** | **Memory & State Tampering**                         | Manipulating agent memory, state caches, or past audit records                          | • Runtime knowledge graph is read-only and immutable.<br>• `ApprovalStore` state persisted in SQLite with cryptographic HMAC validation.<br>• Audit trail (`audit.jsonl`) is structured, append-only, and tamper-evident.                                                                             |
+| **ASI06** | **Context Poisoning & Runbook Drift**                | Contradictory runbooks, circular references, or context-window flooding                 | • Semantic Graph Linter validates all link targets and cross-document dependencies.<br>• Tarjan/DFS cycle detection flags circular prerequisite chains.<br>• Build-time context budget compiler lowers docs into optimal token allocations.                                                           |
+| **ASI07** | **Insecure Inter-Agent Communication**               | Eavesdropping or spoofing agent-to-agent or agent-to-tool RPC messages                  | • Standardized Model Context Protocol (MCP) JSON-RPC 2.0 transport over isolated stdio or authenticated HTTP/SSE.<br>• Token-bucket and sliding-window rate limiters prevent message flooding.                                                                                                        |
+| **ASI08** | **Cascading Failures & Autonomous Loops**            | Agent gets trapped in infinite retry loops, causing denial of service or financial loss | • Per-session and per-agent token-bucket rate limiting (`RateLimiter`).<br>• Configurable session timeout bounds.<br>• Two-phase commit HITL pause mechanisms interrupt autonomous cascade.                                                                                                           |
+| **ASI09** | **Audit Repudiation & Non-Attribution**              | Inability to trace which agent, policy, or human authorized a critical action           | • Structured JSON-Lines audit trail (`audit.jsonl`) capturing caller ID, tool name, payload digest, policy decision, approval token, and ISO timestamp.<br>• Replay-resistant cryptographic token verification.                                                                                       |
+| **ASI10** | **Excessive Autonomy & Unbounded Agency**            | Agent performing high-consequence operations without human oversight                    | • Policy Cards enforce strict autonomy limits (`sandbox`, `human-in-the-loop`, `autonomous`).<br>• High-risk tools require explicit human sign-off via Control Plane dashboard.                                                                                                                       |
+
 ## Policy and Governance
 
 AKCP mitigates these threats primarily through **Policy Cards**. A policy card dictates:
@@ -78,5 +95,13 @@ AKCP mitigates these threats primarily through **Policy Cards**. A policy card d
 - Maximum allowed autonomy level (`sandbox`, `human-in-the-loop`, `autonomous`).
 - PII Handling (`redact`, `deny`, `allow`).
 - Maximum risk level of tools that can be executed.
+- Explicit approval requirements for write, submit, or delete actions.
+- Framework mappings to NIST AI RMF and OWASP LLM / Agentic Top 10.
 
-For more details, see [MCP Hardening](mcp-hardening.md) and [Automation Safety](automation-safety.md).
+For more details, see:
+
+- [MCP Hardening](mcp-hardening.md)
+- [Automation Safety](automation-safety.md)
+- [Human-in-the-Loop Security Architecture](hitl.md)
+- [MCP Zero-Trust Gateway](mcp-zero-trust-gateway.md)
+- [Supply Chain Integrity](supply-chain.md)
