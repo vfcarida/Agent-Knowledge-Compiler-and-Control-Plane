@@ -24,6 +24,7 @@ export default defineConfig({
         items: [
           { text: "Documentation Hub", link: "/" },
           { text: "Quickstart Guide", link: "/getting-started/quickstart" },
+          { text: "Production Deployment", link: "/getting-started/deployment" },
           { text: "Development Setup", link: "/getting-started/development" },
           { text: "Examples Overview", link: "/getting-started/examples" },
           { text: "Troubleshooting", link: "/getting-started/troubleshooting" },

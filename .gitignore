@@ -36,7 +36,6 @@ test-results/
 playwright-report/
 
 # Docker
-Docker
 docker/data/
 
 # Documentation

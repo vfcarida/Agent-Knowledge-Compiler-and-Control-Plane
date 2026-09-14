@@ -1,4 +1,37 @@
 services:
+  # AKCP Control Plane Dashboard BFF & Gateway
+  akcp-control-plane:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: akcp/control-plane:latest
+    ports:
+      - "3001:3001"
+      - "8080:8080"
+    environment:
+      - PORT=3001
+      - HOST=0.0.0.0
+      - REDIS_URL=redis://redis:6379
+      - NODE_ENV=production
+    depends_on:
+      redis:
+        condition: service_healthy
+    command:
+      [
+        "node",
+        "packages/cli/dist/index.js",
+        "serve",
+        "dashboard",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "3001",
+        "--bundle",
+        "examples/domains/it-operations",
+      ]
+    restart: unless-stopped
+
+  # High-throughput Rate Limiting and Session Store
   redis:
     image: redis:7-alpine
     ports:
