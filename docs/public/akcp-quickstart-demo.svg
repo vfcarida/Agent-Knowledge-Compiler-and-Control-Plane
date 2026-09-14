@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="100%" height="100%">
+  <defs>
+    <!-- Background & Canvas Gradients -->
+    <linearGradient id="demoBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+
+    <linearGradient id="demoBorderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.7" />
+      <stop offset="50%" stop-color="#818cf8" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0.6" />
+    </linearGradient>
+
+    <linearGradient id="terminalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0d1527" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#060b14" stop-opacity="0.98" />
+    </linearGradient>
+
+    <linearGradient id="browserCardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.95" />
+    </linearGradient>
+
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#34d399" />
+    </linearGradient>
+
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#818cf8" />
+      <stop offset="100%" stop-color="#c084fc" />
+    </linearGradient>
+
+    <!-- Drop Shadows -->
+    <filter id="demoShadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000000" flood-opacity="0.65" />
+    </filter>
+  </defs>
+
+  <style>
+    .term-text { font-family: "JetBrains Mono", Consolas, Menlo, monospace; font-size: 13px; fill: #f1f5f9; }
+    .term-muted { font-family: "JetBrains Mono", Consolas, Menlo, monospace; font-size: 13px; fill: #64748b; }
+    .term-cyan { font-family: "JetBrains Mono", Consolas, Menlo, monospace; font-size: 13px; fill: #38bdf8; font-weight: 600; }
+    .term-green { font-family: "JetBrains Mono", Consolas, Menlo, monospace; font-size: 13px; fill: #34d399; font-weight: 600; }
+    .term-yellow { font-family: "JetBrains Mono", Consolas, Menlo, monospace; font-size: 13px; fill: #fbbf24; }
+    .term-purple { font-family: "JetBrains Mono", Consolas, Menlo, monospace; font-size: 13px; fill: #c084fc; }
+    .ui-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 700; font-size: 14px; fill: #f8fafc; }
+    .ui-subtitle { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; fill: #94a3b8; }
+    .badge-text { font-family: "JetBrains Mono", Consolas, monospace; font-size: 10px; font-weight: 600; }
+  </style>
+
+  <!-- Outer Canvas with Subtle Border -->
+  <rect width="960" height="520" rx="16" fill="url(#demoBgGrad)" />
+  <rect width="958" height="518" x="1" y="1" rx="15" fill="none" stroke="url(#demoBorderGrad)" stroke-width="1.5" />
+
+  <!-- LEFT: Terminal Window -->
+  <g transform="translate(32, 28)" filter="url(#demoShadow)">
+    <!-- Terminal Chrome -->
+    <rect width="530" height="464" rx="10" fill="url(#terminalGrad)" stroke="#334155" stroke-width="1" />
+    <path d="M 0 10 C 0 4.477 4.477 0 10 0 L 520 0 C 525.523 0 530 4.477 530 10 L 530 36 L 0 36 Z" fill="#1e293b" />
+    <line x1="0" y1="36" x2="530" y2="36" stroke="#334155" stroke-width="1" />
+
+    <!-- Terminal Window Controls -->
+    <circle cx="20" cy="18" r="6" fill="#ef4444" />
+    <circle cx="38" cy="18" r="6" fill="#f59e0b" />
+    <circle cx="56" cy="18" r="6" fill="#10b981" />
+    <text x="265" y="22" font-family="-apple-system, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">zsh — akcp quickstart (zero-to-control-plane)</text>
+
+    <!-- Terminal Content -->
+    <g transform="translate(24, 64)">
+      <!-- Command Line -->
+      <text x="0" y="0" class="term-cyan">$</text>
+      <text x="16" y="0" class="term-text"><tspan fill="#38bdf8">npx akcp quickstart</tspan> ./my-agent-knowledge --open</text>
+
+      <!-- Step 1: Scaffolding -->
+      <text x="0" y="32" class="term-muted">[1/4]</text>
+      <text x="44" y="32" class="term-text">Scaffolding bundle from <tspan fill="#818cf8">it-operations</tspan> template...</text>
+      <text x="44" y="52" class="term-muted">↳ Created 10 runbooks, 2 policy cards, akcp.yaml</text>
+
+      <!-- Step 2: AST Compilation -->
+      <text x="0" y="86" class="term-muted">[2/4]</text>
+      <text x="44" y="86" class="term-text">Compiling knowledge AST &amp; generating IR...</text>
+      <text x="44" y="106" class="term-green">✓ AST parsed (10/10) • Graph integrity 100% • 0 cycles</text>
+      <text x="44" y="126" class="term-green">✓ IR emitted: dist/agent-knowledge-ir.json (SHA: 4a2f8c)</text>
+
+      <!-- Step 3: Zero-Trust Gateway -->
+      <text x="0" y="160" class="term-muted">[3/4]</text>
+      <text x="44" y="160" class="term-text">Arming Zero-Trust Policy Gateway &amp; HITL store...</text>
+      <text x="44" y="180" class="term-green">✓ 2 Policy Cards active (execute_remediation, strict_audit)</text>
+      <text x="44" y="200" class="term-purple">⚡ HMAC-SHA256 Token Store ready (SQLite in-memory)</text>
+
+      <!-- Step 4: Dashboard Server Boot -->
+      <text x="0" y="234" class="term-muted">[4/4]</text>
+      <text x="44" y="234" class="term-text">Booting Control Plane Dashboard BFF...</text>
+      <text x="44" y="254" class="term-green">✓ HTTP Server listening at <tspan fill="#38bdf8" text-decoration="underline">http://localhost:3001</tspan></text>
+      <text x="44" y="274" class="term-yellow">✓ Browser opened automatically: http://localhost:3001</text>
+
+      <!-- Ready State Banner -->
+      <rect x="0" y="306" width="482" height="66" rx="8" fill="#1e293b" fill-opacity="0.8" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1" />
+      <text x="16" y="332" class="term-green">✨ ZERO-TO-CONTROL-PLANE READY IN 1.8 SECONDS</text>
+      <text x="16" y="354" class="term-muted">Ready for Claude Desktop, Cursor, and custom agent tool calls</text>
+    </g>
+  </g>
+
+  <!-- RIGHT: Control Plane Dashboard Mini-Card Preview -->
+  <g transform="translate(586, 28)" filter="url(#demoShadow)">
+    <!-- Browser Card Outer -->
+    <rect width="342" height="464" rx="10" fill="url(#browserCardGrad)" stroke="#334155" stroke-width="1" />
+    
+    <!-- Browser Header -->
+    <path d="M 0 10 C 0 4.477 4.477 0 10 0 L 332 0 C 337.523 0 342 4.477 342 10 L 342 36 L 0 36 Z" fill="#0f172a" />
+    <line x1="0" y1="36" x2="342" y2="36" stroke="#334155" stroke-width="1" />
+    <circle cx="18" cy="18" r="4" fill="#64748b" />
+    <circle cx="30" cy="18" r="4" fill="#64748b" />
+    <circle cx="42" cy="18" r="4" fill="#64748b" />
+
+    <!-- Address Bar -->
+    <rect x="60" y="8" width="222" height="20" rx="5" fill="#1e293b" stroke="#334155" stroke-width="0.8" />
+    <text x="171" y="22" font-family="-apple-system, sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">http://localhost:3001/dashboard</text>
+
+    <!-- Dashboard Content Preview -->
+    <g transform="translate(18, 54)">
+      <!-- Top Title Bar in App -->
+      <text x="0" y="16" class="ui-title">Control Plane</text>
+      <text x="0" y="32" class="ui-subtitle">Domain: IT-Operations (Production Ready)</text>
+
+      <!-- Status Metric 1 -->
+      <rect x="0" y="46" width="306" height="58" rx="8" fill="#0b0f19" stroke="#1e293b" stroke-width="1" />
+      <circle cx="20" cy="75" r="5" fill="#10b981" />
+      <text x="34" y="70" font-family="-apple-system, sans-serif" font-size="12" font-weight="600" fill="#f8fafc">Zero-Trust Policy Engine</text>
+      <text x="34" y="86" font-family="-apple-system, sans-serif" font-size="10" fill="#34d399">ACTIVE • 55,869 ops/sec • Fail-Closed</text>
+
+      <!-- Status Metric 2 -->
+      <rect x="0" y="114" width="306" height="58" rx="8" fill="#0b0f19" stroke="#1e293b" stroke-width="1" />
+      <circle cx="20" cy="143" r="5" fill="#38bdf8" />
+      <text x="34" y="138" font-family="-apple-system, sans-serif" font-size="12" font-weight="600" fill="#f8fafc">HITL Two-Phase Commit</text>
+      <text x="34" y="154" font-family="-apple-system, sans-serif" font-size="10" fill="#38bdf8">ARMED • HMAC-SHA256 Signatures</text>
+
+      <!-- Status Metric 3 -->
+      <rect x="0" y="182" width="306" height="58" rx="8" fill="#0b0f19" stroke="#1e293b" stroke-width="1" />
+      <circle cx="20" cy="211" r="5" fill="#c084fc" />
+      <text x="34" y="206" font-family="-apple-system, sans-serif" font-size="12" font-weight="600" fill="#f8fafc">Cryptographic Audit Log</text>
+      <text x="34" y="222" font-family="-apple-system, sans-serif" font-size="10" fill="#c084fc">STREAMING • JSON-Lines (Tamper-evident)</text>
+
+      <!-- Pending Approval Request Preview Widget -->
+      <rect x="0" y="250" width="306" height="136" rx="8" fill="#0b0f19" stroke="#f59e0b" stroke-opacity="0.5" stroke-width="1" />
+      <g transform="translate(14, 268)">
+        <rect x="0" y="0" width="138" height="18" rx="4" fill="#f59e0b" fill-opacity="0.15" />
+        <text x="6" y="13" class="badge-text" fill="#f59e0b">PENDING APPROVAL</text>
+        <text x="0" y="34" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" fill="#f8fafc">Tool: execute_remediation</text>
+        <text x="0" y="48" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#94a3b8">Target: k8s-cluster-prod / pod-restart</text>
+        
+        <!-- Action Buttons in Preview -->
+        <rect x="0" y="66" width="130" height="26" rx="5" fill="#10b981" />
+        <text x="65" y="83" font-family="-apple-system, sans-serif" font-size="10" font-weight="700" fill="#020617" text-anchor="middle">APPROVE &amp; SIGN</text>
+
+        <rect x="140" y="66" width="130" height="26" rx="5" fill="#334155" />
+        <text x="205" y="83" font-family="-apple-system, sans-serif" font-size="10" font-weight="600" fill="#f8fafc" text-anchor="middle">REJECT</text>
+      </g>
+    </g>
+  </g>
+</svg>

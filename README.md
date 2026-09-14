@@ -17,6 +17,10 @@ Get a running knowledge bundle and interactive control plane with a single comma
 npx akcp quickstart ./my-agent-knowledge --open
 ```
 
+<p align="center">
+  <img src="docs/public/akcp-quickstart-demo.svg" alt="AKCP Single-Command Quickstart and Control Plane Launch" width="100%" />
+</p>
+
 ## Why AKCP
 
 AI agents today suffer from structural hallucination: they lack deterministic grounding and fail-closed runtime safety.

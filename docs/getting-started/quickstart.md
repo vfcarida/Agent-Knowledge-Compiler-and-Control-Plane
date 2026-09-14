@@ -16,6 +16,10 @@ The fastest way to experience AKCP from zero to interactive control plane:
 npx akcp quickstart ./my-agent-knowledge --open
 ```
 
+<p align="center">
+  <img src="/akcp-quickstart-demo.svg" alt="AKCP Single-Command Quickstart and Control Plane Launch" width="100%" />
+</p>
+
 This bootstraps a knowledge bundle from the `it-operations` domain template, runs the compiler pipeline emitting all target manifests, and boots the local Control Plane dashboard at `http://localhost:3001`.
 
 ## Granular CLI Workflow
