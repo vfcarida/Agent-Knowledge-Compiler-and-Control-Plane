@@ -94,4 +94,70 @@ describe("akcp quickstart", () => {
       fs.existsSync(path.join(targetDir, "dist", "agent-knowledge-ir.json")),
     ).toBe(true);
   });
+
+  it("should support --template customer-support", () => {
+    const targetDir = path.join(tmpDir, "quickstart-support");
+    const output = execSync(
+      `node "${cliEntry}" quickstart "${targetDir}" --template customer-support --no-serve`,
+      {
+        cwd: tmpDir,
+        encoding: "utf-8",
+      },
+    );
+
+    expect(output).toContain(
+      "Quickstart setup completed (--no-serve specified)",
+    );
+    expect(fs.existsSync(path.join(targetDir, "akcp.yaml"))).toBe(true);
+    expect(
+      fs.existsSync(path.join(targetDir, "dist", "agent-knowledge-ir.json")),
+    ).toBe(true);
+  });
+
+  it("should fail gracefully when an invalid template is requested", () => {
+    const targetDir = path.join(tmpDir, "quickstart-invalid");
+    let failed = false;
+    let stderrOutput = "";
+    try {
+      execSync(
+        `node "${cliEntry}" quickstart "${targetDir}" --template non-existent-template-xyz --no-serve`,
+        {
+          cwd: tmpDir,
+          encoding: "utf-8",
+          stdio: "pipe",
+        },
+      );
+    } catch (err: any) {
+      failed = true;
+      stderrOutput = err.stderr || err.stdout || "";
+    }
+
+    expect(failed).toBe(true);
+    expect(stderrOutput).toContain(
+      "Template 'non-existent-template-xyz' not found",
+    );
+  });
+
+  it("should reuse and recompile an existing bundle if akcp.yaml is already present", () => {
+    const targetDir = path.join(tmpDir, "quickstart-existing");
+    // Run once to initialize
+    execSync(`node "${cliEntry}" quickstart "${targetDir}" --no-serve`, {
+      cwd: tmpDir,
+      encoding: "utf-8",
+    });
+
+    // Run again on the same directory
+    const output = execSync(
+      `node "${cliEntry}" quickstart "${targetDir}" --no-serve`,
+      {
+        cwd: tmpDir,
+        encoding: "utf-8",
+      },
+    );
+
+    expect(output).toContain("Using existing bundle found at");
+    expect(output).toContain(
+      "Quickstart setup completed (--no-serve specified)",
+    );
+  });
 });
