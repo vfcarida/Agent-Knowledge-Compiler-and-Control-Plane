@@ -19,6 +19,9 @@ These features are implemented, tested, and considered stable as of the current 
 - **Agent Knowledge Readiness Scorecard** — Quantified bundle quality scoring (0-100).
 - **Plugin Architecture** — Declarative `akcp-plugin.json` manifest for build-time connectors.
 - **Semantic Diff (`akcp diff`)** — Human- and machine-readable diffing of AK-IR snapshots for change review and CI/CD gating.
+- **Single-Command Quickstart (`akcp quickstart`)** — Zero-setup bootstrapping, compiling, and auto-launching Control Plane dashboard.
+- **Control Plane CLI & Dashboard BFF (`akcp control-plane`, `akcp serve dashboard`)** — Precompiled Node.js Express BFF, native React 19 SPA bundling, and runtime inspection commands (`inspect`, `policies`, `approvals`, `audit`).
+- **Customer Support Enterprise Flagship (Beta)** — Enterprise domain with ticket resolution runbooks, macro suggestions, PII redaction, customer history retrieval, and HITL approval gates with golden compiler test verification.
 
 ---
 
@@ -27,10 +30,8 @@ These features are implemented, tested, and considered stable as of the current 
 These features are being actively developed and may change.
 
 - **OpenWiki Sync Connector** — Pull fresh docs from OpenWiki/LangChain into OKF bundles.
-- **Dashboard UI / HITL Panel** — Real-time React UI for approving/denying pending agent actions.
-- **Eval Pipeline** — Automated evaluation of agent grounding against OKF ground truth.
+- **Continuous Eval Pipeline & Drift Detection** — Automated continuous evaluation of agent grounding against OKF ground truth.
 - **Enterprise Governance Bundles** — Pre-built policy packs for GDPR, HIPAA, SOC2.
-- **Customer Support Flagship** — Third enterprise domain with AI-assisted ticket resolution, macro suggestions, PII redaction, customer history retrieval, and HITL approval for high-risk actions. Design doc exists; initial domain structure and conformance tests are in place. Status: `Experimental`.
 
 ---
 

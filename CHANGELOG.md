@@ -12,6 +12,13 @@ For detailed information on our deprecation and backwards compatibility policies
 
 ### Added
 
+- **Single-Command Quickstart Experience**: Added `akcp quickstart [directory]` command to bootstrap a knowledge bundle from domain templates (`it-operations`, `career`, `customer-support`), compile IR, emit runtime targets (`AGENTS.md`, `mcp-resources.json`, `policy-bundle.json`, `dashboard-metadata.json`), and boot the Control Plane dashboard with `--open`.
+- **Semantic Diff Engine (`akcp diff`)**: Implemented full AST-level semantic diffing between knowledge bundles with breaking change severity classification, JSON, Markdown, and text output formats.
+- **Control Plane CLI Suite**: Fully implemented `akcp control-plane inspect`, `policies`, `approvals`, and `audit` commands with JSON output options.
+- **Pre-Compiled Dashboard Server**: Standalone Node.js Express BFF server compiled to `dist/server/index.js` with native node runtime spawning and static SPA asset serving via `akcp serve dashboard`.
+- **Modernized LLM Evals**: Upgraded `@akcp/evals` default provider to `gpt-4o-mini`, added local zero-cost `OllamaProvider` with `llama3.2` fallback, and dynamic provider factory `createLLMProvider()`.
+- **Visual Architecture & Workflow Assets**: Added vector SVG hero diagram (`akcp-workflow.svg`) visualizing knowledge authoring, compiler stages, and runtime control plane.
+- **VitePress Documentation Portal**: Complete documentation site with category navigation, API specs, and automated GitHub Pages deployment.
 - **PolicyCard Condition Enforcement**: Activated runtime evaluation of `PolicyCard.rules[].condition` in both the policy engine (`policies/adapter.ts`) and standalone evaluator (`policy/evaluate.ts`), supporting `time_window`, `environment`, `approval_exists`, `custom`, and compound conditions. Unknown condition types safely fail closed (deny).
 - **Policy Engine Evolution**: Advanced composition, rule conditions, and policy explanation logic (`explainPolicy`).
 - **Streamable HTTP Transport**: Added support for chunked HTTP data transfer to overcome SSE limitations.
@@ -22,12 +29,13 @@ For detailed information on our deprecation and backwards compatibility policies
 
 ### Changed
 
+- **CLI Commands Fully Activated**: Previously planned commands (`diff`, `serve dashboard`, `control-plane`) and the new `quickstart` command are now fully implemented, functional, and covered by automated test suites.
+- **Customer Support Domain Promoted to Beta**: Complete schema conformance, golden compiler snapshots, and runbooks established.
 - **[BREAKING] Remote Transport Authentication**: `mcp-profile-server` and `mcp-automation-server` now strictly require authentication when running in remote modes (HTTP/SSE). Anonymous access over remote transports is now blocked by default to prevent unintentional unauthenticated exposure. For local development or testing without auth, you must pass the explicit `--insecure-no-auth` flag. `stdio` transport remains implicitly trusted.
 - **Dashboard BFF Security Hardening**: Added strict authentication gates.
 - **CLI Modularization**: Restructured internal architecture for independent command loading.
 - **Test Quality Improvements**: Elevated total coverage logic, added probatory tests and expanded scenario coverage.
 - **Maturity Standardization**: Formalized project maturity model (Stable, Beta, Experimental, Planned, Deprecated).
-- **Placeholder Commands**: CLI commands that are not fully implemented (`diff`, `serve dashboard`, `control-plane`) now throw explicit `NOT_IMPLEMENTED` errors instead of returning misleading success statuses.
 - **Supply Chain**: SBOM generation (`anchore/sbom-action@v0.24.0`), build provenance attestation (`actions/attest-build-provenance@v4.1.1`), SBOM attestation, and npm `--provenance` publish now implemented in the release workflow.
 - **Action Pins**: All GitHub Actions in `release.yml` and `ci.yml` are now pinned to exact commit SHAs.
 - **Documentation**: Added `docs/release/release-process.md` with full pre/post-release checklist and `gh attestation verify` instructions. Updated policy engine guide with detailed conflict resolution strategy. Updated CLI reference to reflect `conformance run` Beta status.
