@@ -12,6 +12,10 @@ For detailed information on our deprecation and backwards compatibility policies
 
 ### Added
 
+- **Production Multi-Stage Container Blueprint**: Added Dockerfile (`Dockerfile`) and Docker Compose configuration (`docker-compose.yml`) supporting `@akcp/cli`, `@akcp/dashboard`, and `@akcp/mcp-*` servers with Redis-backed rate limiting, non-root `node` security execution, and OpenTelemetry observability profiles. Added comprehensive deployment documentation (`docs/getting-started/deployment.md`).
+- **OWASP Top 10 for Agentic Applications (2026) Defenses**: Added end-to-end framework mapping in `docs/security/threat-model.md` and `README.md` detailing concrete architectural mitigations for ASI01 through ASI10 (Goal Hijacking, Tool Misuse, Identity Abuse, Supply Chain, Context Poisoning, and Cascading Failures).
+- **Interactive Quickstart Terminal Demo**: Created standalone SVG visual walkthrough (`docs/public/akcp-quickstart-demo.svg`) demonstrating zero-to-control-plane boot in 1.8 seconds and embedded across `README.md` and docs.
+- **OPA HTTP Integration Test Suite**: Added in-process HTTP test harness (`packages/core/src/__tests__/policies/opa-integration.test.ts`) validating wire-level REST protocol communication, Rego policy decisions, 500 fault handling, and timeout behavior against Open Policy Agent specs.
 - **Single-Command Quickstart Experience**: Added `akcp quickstart [directory]` command to bootstrap a knowledge bundle from domain templates (`it-operations`, `career`, `customer-support`), compile IR, emit runtime targets (`AGENTS.md`, `mcp-resources.json`, `policy-bundle.json`, `dashboard-metadata.json`), and boot the Control Plane dashboard with `--open`.
 - **Semantic Diff Engine (`akcp diff`)**: Implemented full AST-level semantic diffing between knowledge bundles with breaking change severity classification, JSON, Markdown, and text output formats.
 - **Control Plane CLI Suite**: Fully implemented `akcp control-plane inspect`, `policies`, `approvals`, and `audit` commands with JSON output options.
