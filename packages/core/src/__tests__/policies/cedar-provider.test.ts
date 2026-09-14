@@ -104,4 +104,57 @@ describe("CedarPolicyProvider", () => {
       }),
     );
   });
+
+  it("should report unhealthy when health endpoint fails", async () => {
+    fetchMock.mockRejectedValueOnce(new Error("Timeout"));
+
+    const isHealthy = await provider.healthy();
+
+    expect(isHealthy).toBe(false);
+  });
+
+  it("should fail-closed when Cedar returns an empty or invalid result", async () => {
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ decision: null }),
+    });
+
+    const decision = await provider.evaluate(dummyRequest);
+
+    expect(decision.effect).toBe("deny");
+    expect(decision.reason).toContain(
+      "Cedar returned an empty or invalid result",
+    );
+  });
+
+  it("should fallback to default reasons when diagnostics omit reasons", async () => {
+    // Case A: Allow without diagnostics.reason
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ decision: "Allow" }),
+    });
+
+    const allowDecision = await provider.evaluate(dummyRequest);
+    expect(allowDecision.effect).toBe("allow");
+    expect(allowDecision.reason).toBe("Allowed by Cedar");
+
+    // Case B: Deny without diagnostics.reason
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ decision: "Deny" }),
+    });
+
+    const denyDecision = await provider.evaluate(dummyRequest);
+    expect(denyDecision.effect).toBe("deny");
+    expect(denyDecision.reason).toBe("Denied by Cedar");
+  });
+
+  it("should support explain and reload lifecycles safely", async () => {
+    const trace = await provider.explain(dummyRequest);
+    expect(trace).toBeNull();
+
+    await expect(
+      provider.reload({ type: "bundle", path: "/tmp/cedar" }),
+    ).resolves.toBeUndefined();
+  });
 });

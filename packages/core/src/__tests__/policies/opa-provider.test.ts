@@ -110,4 +110,49 @@ describe("OPAPolicyProvider", () => {
 
     expect(isHealthy).toBe(false);
   });
+
+  it("should fail-closed when OPA returns an empty or invalid result", async () => {
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ result: null }),
+    });
+
+    const decision = await provider.evaluate(dummyRequest);
+
+    expect(decision.effect).toBe("deny");
+    expect(decision.reason).toContain(
+      "OPA returned an empty or invalid result",
+    );
+  });
+
+  it("should provide fallback reasons when OPA omits reason field", async () => {
+    // Case A: allow without explicit reason
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ result: { allow: true } }),
+    });
+
+    const allowDecision = await provider.evaluate(dummyRequest);
+    expect(allowDecision.effect).toBe("allow");
+    expect(allowDecision.reason).toBe("Allowed by OPA");
+
+    // Case B: deny without explicit reason
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ result: { allow: false } }),
+    });
+
+    const denyDecision = await provider.evaluate(dummyRequest);
+    expect(denyDecision.effect).toBe("deny");
+    expect(denyDecision.reason).toBe("Denied by OPA");
+  });
+
+  it("should support explain and reload lifecycles safely", async () => {
+    const trace = await provider.explain(dummyRequest);
+    expect(trace).toBeNull();
+
+    await expect(
+      provider.reload({ type: "bundle", path: "/tmp/opa" }),
+    ).resolves.toBeUndefined();
+  });
 });
