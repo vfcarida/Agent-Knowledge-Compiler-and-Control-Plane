@@ -44,13 +44,44 @@ See [Policy Cards Specification](../specs/policy-cards.md).
 
 ### 3. Approval Store (HITL)
 
-The Approval Store provides Human-in-the-Loop (HITL) gating. When a capability is marked `requiresApproval: true`, the MCP automation server issues an approval request and pauses execution until a human operator grants a time-limited token.
+The Approval Store provides Human-in-the-Loop (HITL) gating. When a capability is marked `requiresApproval: true` or classified with `destructive` side-effects, the Zero-Trust MCP Gateway pauses execution, registers a pending request, and awaits human authorization.
 
-- Approvals are stored in a SQLite-backed store (`better-sqlite3`)
-- Tokens are time-limited (TTL) and single-use
-- All approval events are recorded in the Evidence Store
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Agent as 🤖 AI Agent
+    participant Gateway as 🛡️ Zero-Trust MCP Gateway
+    participant Store as 💾 Approval Store (SQLite)
+    actor Human as 👤 Human Operator (Dashboard)
+    participant Exec as ⚙️ Capability Executor
+    participant Audit as 📜 Cryptographic Audit Log
 
-See [HITL Documentation](../security/hitl.md).
+    Agent->>Gateway: invoke_tool(action, payload)
+    Gateway->>Gateway: Evaluate PolicyCard (requiresApproval: true)
+    Gateway->>Store: createApprovalRequest(action, payload, riskLevel)
+    Store-->>Gateway: approvalRequestId
+    Gateway-->>Agent: ToolFailure(APPROVAL_REQUIRED, approvalRequestId)
+
+    Note over Human,Store: Operator reviews pending action in Control Plane UI
+    Human->>Store: authorize(approvalRequestId)
+    Store->>Store: Generate HMAC-signed token (TTL: 15m, single-use)
+    Store-->>Human: token granted
+
+    Agent->>Gateway: invoke_tool(action, payload, approvalToken)
+    Gateway->>Store: validateAndConsumeToken(token)
+    Store-->>Gateway: token valid & consumed
+    Gateway->>Exec: execute(action, payload)
+    Exec-->>Gateway: result
+    Gateway->>Audit: recordEvent(action, payload, token, SHA-256)
+    Gateway-->>Agent: ToolSuccess(result)
+```
+
+- **Storage Engine**: SQLite-backed store (`better-sqlite3`) with transactional integrity.
+- **Cryptographic Signatures**: Tokens are generated using HMAC-SHA256 with single-use nonce validation.
+- **Time-Limited TTL**: Configurable expiration window (default: 15 minutes) ensuring agents cannot execute stale decisions.
+- **Audit Immutability**: All approval events, human identities, and execution results are logged to the Evidence Store.
+
+See [HITL Security Architecture](../security/hitl.md).
 
 ### 4. Evidence Store (Audit Log)
 
