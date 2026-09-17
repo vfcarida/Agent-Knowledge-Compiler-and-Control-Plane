@@ -13,8 +13,9 @@ This document maps the currently implemented commands in `packages/cli/src/index
 | `akcp verify`           |                 No                 |          No          | Beta         | Verifies manifest provenance/integrity.                        |
 | `akcp diff`             |                Yes                 |          No          | Planned      | [Stub] Skeleton exists but just outputs hardcoded text.        |
 | `akcp import`           |                 No                 |          No          | Alpha        | [Experimental] Imports from external sources (e.g., OpenWiki). |
-| `akcp serve mcp`        |                Yes                 |         Yes          | Experimental | [Experimental] Boots MCP Profile Server.                       |
-| `akcp serve dashboard`  |                 No                 |          No          | Experimental | [Experimental] Launch the Dashboard locally.                   |
+| `akcp serve mcp`        |                Yes                 |         Yes          | Beta         | Boots MCP Profile Server or Automation Server.                 |
+| `akcp serve automation` |                Yes                 |         Yes          | Beta         | Boots MCP Automation Server directly with HITL gates.          |
+| `akcp serve dashboard`  |                Yes                 |         Yes          | Beta         | Launch the AKCP Control Plane Dashboard locally.               |
 | `akcp control-plane`    |                 No                 |          No          | Experimental | [Experimental] Manage runtime governance/HITL.                 |
 | `akcp evals`            |                 No                 |          No          | Beta         | Manage evaluation datasets and runs.                           |
 | `akcp docs`             |                 No                 |          No          | Beta         | Manage and diagnose repository documentation.                  |
@@ -73,11 +74,10 @@ akcp init [options] [directory]
 **Options:**
 
 ```
--t, --template <profile>  Context profile template (e.g., career, it-ops)
-(default: "career")
+-t, --template <profile>  Context profile template (e.g., career, it-ops, customer-support) (default: "career")
 -p, --profile <profile>   Context profile (deprecated, use --template)
--o, --output <dir>        Output directory for the bundle (overrides
-positional directory)
+-o, --output <dir>        Output directory for the bundle (overrides positional directory)
+-i, --interactive         Run interactive setup wizard to configure template, destination, and autonomy (default: false)
 -h, --help                display help for command
 ```
 
@@ -230,15 +230,13 @@ akcp config validate [options]
 -h, --help         display help for command
 ```
 
-## Server Commands (Experimental)
+## Server Commands (Beta)
 
 ### `akcp serve mcp`
 
-**Status**: Experimental
+**Status**: Beta
 
-> This command is experimental. API may change without notice.
-
-[Experimental] Locally boot the MCP Profile Server for this context
+Locally boot the MCP Profile Server or Automation Server for this context.
 
 ```bash
 akcp serve mcp [options]
@@ -247,19 +245,39 @@ akcp serve mcp [options]
 **Options:**
 
 ```
--p, --profile <profile>  Profile context to serve (default: "career")
---ir <path>              Path to compiled Knowledge IR json (default:
-"dist/knowledge-ir.json")
--h, --help               display help for command
+-s, --server <server>     MCP server type to boot: profile | automation (default: "profile")
+-p, --profile <profile>   Profile context to serve (default: "career")
+--ir <path>               Path to compiled Knowledge IR json (default: "dist/agent-knowledge-ir.json")
+--transport <type>        Transport: stdio | streamable-http | sse (deprecated) (default: "stdio")
+--insecure-no-auth        Allow remote transport without authentication (dev only)
+-h, --help                display help for command
+```
+
+### `akcp serve automation`
+
+**Status**: Beta
+
+Locally boot the MCP Automation Server with stateful Human-In-The-Loop (HITL) approval gates and dynamic capability dispatch.
+
+```bash
+akcp serve automation [options]
+```
+
+**Options:**
+
+```
+-p, --profile <profile>   Profile context to serve (default: "career")
+--ir <path>               Path to compiled Knowledge IR json (default: "dist/agent-knowledge-ir.json")
+--transport <type>        Transport: stdio | streamable-http | sse (deprecated) (default: "stdio")
+--insecure-no-auth        Allow remote transport without authentication (dev only)
+-h, --help                display help for command
 ```
 
 ### `akcp serve dashboard`
 
-**Status**: Experimental
+**Status**: Beta
 
-> This command is experimental. API may change without notice.
-
-[Planned] Launch the Dashboard locally
+Launch the AKCP Control Plane Dashboard locally, providing a web UI to view compiled knowledge graphs, inspect MCP capabilities, review audit trails, and manage pending HITL approvals.
 
 ```bash
 akcp serve dashboard [options]
@@ -268,7 +286,15 @@ akcp serve dashboard [options]
 **Options:**
 
 ```
--h, --help  display help for command
+-p, --port <number>       Port to bind the dashboard server to (default: "3001")
+--host <host>             Host address to bind (default: "localhost")
+--ir <path>               Path to compiled Knowledge IR json (default: "dist/agent-knowledge-ir.json")
+--bundle <path>           Path to OKF knowledge bundle directory
+--demo                    Enable demo mode with mock data (default)
+--no-demo                 Disable demo mode, require live control plane
+-o, --open                Automatically open dashboard in default browser (default: true)
+--no-open                 Do not automatically open browser
+-h, --help                display help for command
 ```
 
 ### `akcp control-plane`

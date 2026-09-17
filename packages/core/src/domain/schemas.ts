@@ -10,12 +10,34 @@ import { SoftwareProjectFrontmatterSchema } from "./profiles/software-project.js
 import { CustomerSupportDomainSchema } from "./profiles/customer-support.js";
 import { ITOperationsDomainSchema } from "./profiles/it-operations.js";
 
+const customProfiles = new Map<string, z.ZodTypeAny>();
+
 /**
  * Profile Registry to dynamically resolve Zod schemas based on the target profile.
+ * Supports runtime registration of domain-specific profiles.
  */
 export const ProfileRegistry = {
+  /**
+   * Register a custom profile schema at runtime.
+   */
+  registerProfileSchema(profileName: string, schema: z.ZodTypeAny): void {
+    customProfiles.set(profileName.toLowerCase(), schema);
+  },
+
+  /**
+   * Clear all dynamically registered custom profiles (useful for testing).
+   */
+  clearCustomProfiles(): void {
+    customProfiles.clear();
+  },
+
   getProfileSchema(profileName: string): z.ZodTypeAny {
-    switch (profileName.toLowerCase()) {
+    const key = profileName.toLowerCase();
+    if (customProfiles.has(key)) {
+      return customProfiles.get(key)!;
+    }
+
+    switch (key) {
       case "career":
         return CareerFrontmatterSchema;
       case "software-project":

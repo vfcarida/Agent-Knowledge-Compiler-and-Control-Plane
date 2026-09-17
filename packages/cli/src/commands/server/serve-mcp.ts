@@ -1,6 +1,95 @@
 import { Command } from "commander";
 import type { CLIContext } from "../../types.js";
 
+interface ServeMcpOptions {
+  server?: "profile" | "automation";
+  profile: string;
+  ir: string;
+  transport: string;
+  insecureNoAuth?: boolean;
+}
+
+async function launchMcpServer(
+  serverType: "profile" | "automation",
+  options: ServeMcpOptions,
+): Promise<void> {
+  const path = await import("path");
+  const { spawn } = await import("child_process");
+  const { fileURLToPath } = await import("url");
+
+  const targetDir = process.cwd(); // Assume we are in the bundle directory
+  const irPath = path.resolve(process.cwd(), options.ir);
+
+  if (options.transport !== "stdio" && !options.insecureNoAuth) {
+    if (!process.env["AKCP_JWT_SECRET"] && !process.env["AKCP_JWKS_URI"]) {
+      console.error(
+        "[ERROR] Remote transport requires auth config (AKCP_JWT_SECRET or AKCP_JWKS_URI).\n" +
+          "Use --insecure-no-auth for local development.",
+      );
+      process.exit(1);
+    }
+  }
+
+  if (options.transport === "sse") {
+    console.warn(
+      "[WARNING] The 'sse' transport is deprecated. Please use 'streamable-http' instead.",
+    );
+  }
+
+  console.error(
+    `[INFO] Booting MCP Server (${serverType.toUpperCase()}, Profile: ${options.profile}) for bundle at ${targetDir}`,
+  );
+
+  try {
+    let serverPath: string;
+
+    if (serverType === "automation") {
+      const resolvedUrl = await import.meta
+        .resolve("@akcp/mcp-automation-server");
+      serverPath = fileURLToPath(resolvedUrl);
+    } else {
+      if (
+        options.transport === "http-sse" ||
+        options.transport === "sse" ||
+        options.transport === "streamable-http"
+      ) {
+        // Both sse and streamable-http use the new unified http-server
+        const resolvedUrl = await import.meta
+          .resolve("@akcp/mcp-profile-server/dist/http-server.js");
+        serverPath = fileURLToPath(resolvedUrl);
+      } else {
+        const resolvedUrl = await import.meta
+          .resolve("@akcp/mcp-profile-server");
+        serverPath = fileURLToPath(resolvedUrl);
+      }
+    }
+
+    const envVars: Record<string, string | undefined> = {
+      ...process.env,
+      AKCP_BUNDLE_PATH: targetDir,
+      AKCP_IR_PATH: irPath,
+      AKCP_TRANSPORT:
+        options.transport === "http-sse" ? "sse" : options.transport,
+    };
+
+    if (options.insecureNoAuth) {
+      envVars["AKCP_INSECURE_NO_AUTH"] = "true";
+    }
+
+    const child = spawn("node", [serverPath], {
+      stdio: "inherit",
+      env: envVars,
+    });
+
+    child.on("close", (code) => {
+      process.exit(code ?? 0);
+    });
+  } catch (err: any) {
+    console.error(`[ERROR] Failed to launch MCP server: ${err.message}`);
+    process.exit(1);
+  }
+}
+
 export function registerServeMcpCommand(
   program: Command,
   _ctx: CLIContext,
@@ -15,7 +104,12 @@ export function registerServeMcpCommand(
   serveCmd
     .command("mcp")
     .description(
-      "[Experimental] Locally boot the MCP Profile Server for this context",
+      "[Experimental] Locally boot the MCP Profile or Automation Server for this context",
+    )
+    .option(
+      "-s, --server <server>",
+      "MCP server type to boot: profile | automation",
+      "profile",
     )
     .option("-p, --profile <profile>", "Profile context to serve", "career")
     .option(
@@ -33,73 +127,34 @@ export function registerServeMcpCommand(
       "Allow remote transport without authentication (dev only)",
     )
     .action(async (options) => {
-      const path = await import("path");
-      const { spawn } = await import("child_process");
-      const { fileURLToPath } = await import("url");
+      const serverType =
+        options.server?.toLowerCase() === "automation"
+          ? "automation"
+          : "profile";
+      await launchMcpServer(serverType, options);
+    });
 
-      const targetDir = process.cwd(); // Assume we are in the bundle directory
-      const irPath = path.resolve(process.cwd(), options.ir);
-
-      if (options.transport !== "stdio" && !options.insecureNoAuth) {
-        if (!process.env["AKCP_JWT_SECRET"] && !process.env["AKCP_JWKS_URI"]) {
-          console.error(
-            "[ERROR] Remote transport requires auth config (AKCP_JWT_SECRET or AKCP_JWKS_URI).\n" +
-              "Use --insecure-no-auth for local development.",
-          );
-          process.exit(1);
-        }
-      }
-
-      if (options.transport === "sse") {
-        console.warn(
-          "[WARNING] The 'sse' transport is deprecated. Please use 'streamable-http' instead.",
-        );
-      }
-
-      console.error(
-        `[INFO] Booting MCP Server (Profile: ${options.profile}) for bundle at ${targetDir}`,
-      );
-
-      try {
-        let serverPath: string;
-        if (
-          options.transport === "http-sse" ||
-          options.transport === "sse" ||
-          options.transport === "streamable-http"
-        ) {
-          // Both sse and streamable-http use the new unified http-server
-          const resolvedUrl = await import.meta
-            .resolve("@akcp/mcp-profile-server/dist/http-server.js");
-          serverPath = fileURLToPath(resolvedUrl);
-        } else {
-          const resolvedUrl = await import.meta
-            .resolve("@akcp/mcp-profile-server");
-          serverPath = fileURLToPath(resolvedUrl);
-        }
-
-        const envVars: Record<string, string | undefined> = {
-          ...process.env,
-          AKCP_BUNDLE_PATH: targetDir,
-          AKCP_IR_PATH: irPath,
-          AKCP_TRANSPORT:
-            options.transport === "http-sse" ? "sse" : options.transport,
-        };
-
-        if (options.insecureNoAuth) {
-          envVars["AKCP_INSECURE_NO_AUTH"] = "true";
-        }
-
-        const child = spawn("node", [serverPath], {
-          stdio: "inherit",
-          env: envVars,
-        });
-
-        child.on("close", (code) => {
-          process.exit(code ?? 0);
-        });
-      } catch (err: any) {
-        console.error(`[ERROR] Failed to launch MCP server: ${err.message}`);
-        process.exit(1);
-      }
+  serveCmd
+    .command("automation")
+    .description(
+      "[Experimental] Locally boot the MCP Automation Server for this context",
+    )
+    .option("-p, --profile <profile>", "Profile context to serve", "career")
+    .option(
+      "--ir <path>",
+      "Path to compiled Knowledge IR json",
+      "dist/agent-knowledge-ir.json",
+    )
+    .option(
+      "--transport <type>",
+      "Transport: stdio | streamable-http | sse (deprecated)",
+      "stdio",
+    )
+    .option(
+      "--insecure-no-auth",
+      "Allow remote transport without authentication (dev only)",
+    )
+    .action(async (options) => {
+      await launchMcpServer("automation", options);
     });
 }

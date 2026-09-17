@@ -20,6 +20,7 @@ import {
   withToolTracing,
   MCPGateway,
   type GatewayConfig,
+  type AgentKnowledgeIR,
 } from "@akcp/core";
 import { BrowserOrchestrator } from "./automation/browser-orchestrator.js";
 import { ApprovalStore } from "./approval/approval-store.js";
@@ -27,6 +28,7 @@ import { RedisApprovalStore } from "./approval/redis-store.js";
 import { auditLogger } from "./audit/audit-log.js";
 import { automationServerCapabilities } from "./capabilities.js";
 import type { IApprovalStore } from "./approval/types.js";
+import { ActionRegistry, type ActionDefinition } from "./action-registry.js";
 
 /**
  * Looks up a registered capability's declared risk level for a tool name, so
@@ -50,14 +52,35 @@ export class AKCPAutomationServer {
   private readonly docService: OKFDocumentService;
   private readonly orchestrator: BrowserOrchestrator;
   private readonly gateway: MCPGateway;
+  private readonly actionRegistry: ActionRegistry;
+  private readonly registeredToolNames = new Set<string>([
+    "preview_application",
+    "prepare_application",
+    "confirm_application_submission",
+    "list_pending_approvals",
+    "revoke_approval",
+    "approve_pending_token",
+    "list_audit_logs",
+    "capture_job_posting",
+    "extract_platform_metadata",
+    "classify_support_intent",
+    "retrieve_support_context",
+    "draft_support_reply",
+    "validate_support_reply",
+    "redact_support_pii",
+    "preview_support_action",
+    "detect_support_knowledge_gap",
+  ]);
 
   constructor(
     docService: OKFDocumentService,
     gatewayConfig: GatewayConfig = { policies: {} },
+    ir?: AgentKnowledgeIR,
   ) {
     this.docService = docService;
     this.orchestrator = new BrowserOrchestrator();
     this.gateway = new MCPGateway({ ...gatewayConfig, approvalStore });
+    this.actionRegistry = new ActionRegistry();
 
     // Create the MCP server instance
     this.server = new McpServer({
@@ -66,10 +89,171 @@ export class AKCPAutomationServer {
     });
 
     this.registerTools();
+
+    if (ir) {
+      this.registerDynamicTools(ir);
+    }
   }
 
   getServerInstance(): McpServer {
     return this.server;
+  }
+
+  getActionRegistry(): ActionRegistry {
+    return this.actionRegistry;
+  }
+
+  /**
+   * Registers dynamic tools from a compiled AgentKnowledgeIR.
+   */
+  registerDynamicTools(ir: AgentKnowledgeIR): void {
+    this.actionRegistry.registerFromIR(ir);
+    for (const action of this.actionRegistry.list()) {
+      this.registerActionTool(action);
+    }
+  }
+
+  /**
+   * Registers an action definition directly and exposes it as an MCP tool.
+   */
+  registerAction(action: ActionDefinition): void {
+    this.actionRegistry.register(action);
+    this.registerActionTool(action);
+  }
+
+  private registerActionTool(action: ActionDefinition): void {
+    if (this.registeredToolNames.has(action.id)) {
+      return;
+    }
+    this.registeredToolNames.add(action.id);
+
+    this.server.tool(
+      action.id,
+      action.description || `Dynamic tool ${action.id}`,
+      {
+        params: z
+          .record(z.unknown())
+          .optional()
+          .describe("Tool input parameters"),
+        _agentId: z.string().optional().describe("Agent Identity"),
+        _approvalToken: z
+          .string()
+          .optional()
+          .describe("Approval token for human-in-the-loop"),
+      },
+      async ({
+        params,
+        _agentId,
+        _approvalToken,
+      }: {
+        params?: Record<string, unknown>;
+        _agentId?: string;
+        _approvalToken?: string;
+      }) => {
+        const reqId = crypto.randomUUID();
+        const toolName = action.id;
+        const toolVersion = "0.1.0";
+        mcpToolCallsCounter.add(1);
+
+        try {
+          const effectiveParams = params || {};
+          const executionResult = await this.gateway.execute(
+            {
+              requestId: reqId,
+              toolName,
+              riskLevel: action.riskLevel || "medium",
+              sideEffect:
+                action.riskLevel === "critical" || action.riskLevel === "high"
+                  ? "write"
+                  : "read",
+              agentId: _agentId,
+              payload: { ...effectiveParams, _approvalToken },
+            },
+            async () => {
+              return await withToolTracing(
+                toolName,
+                toolVersion,
+                reqId,
+                async () => {
+                  const ctx = {
+                    domain: action.domain,
+                    agentId: _agentId,
+                    approvalToken: _approvalToken,
+                  };
+                  if (action.handler) {
+                    return await action.handler(effectiveParams, ctx);
+                  }
+                  return {
+                    success: true,
+                    data: {
+                      message: `[Simulated] Generic execution for ${action.id}`,
+                      params: effectiveParams,
+                    },
+                  };
+                },
+              );
+            },
+          );
+
+          const unwrapped =
+            executionResult &&
+            typeof executionResult === "object" &&
+            "data" in executionResult
+              ? (executionResult as any).data
+              : executionResult;
+          const responseData =
+            unwrapped && typeof unwrapped === "object" && "data" in unwrapped
+              ? (unwrapped as any).data
+              : unwrapped;
+          const durationMs =
+            executionResult &&
+            typeof executionResult === "object" &&
+            "durationMs" in executionResult
+              ? (executionResult as any).durationMs
+              : 0;
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolSuccess(responseData, {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        } catch (err: any) {
+          mcpToolFailuresCounter.add(1);
+          const errorCode =
+            err.name === "MCPGatewayError" ? err.code : "DYNAMIC_TOOL_ERROR";
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolFailure(err.message, errorCode, {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs: 0,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        }
+      },
+    );
   }
 
   private registerTools(): void {

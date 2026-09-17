@@ -44,10 +44,29 @@ describe("CLI serve dashboard Command", () => {
       );
     });
 
-    it("should be listed as a valid subcommand under akcp serve --help", async () => {
+    it("should be listed as valid subcommands under akcp serve --help", async () => {
       const output = await runCli("serve --help");
       expect(output).toContain("dashboard");
+      expect(output).toContain("mcp");
+      expect(output).toContain("automation");
       expect(output).toContain("Launch the AKCP Control Plane Dashboard");
+    });
+
+    it("should show serve mcp help with expected options including --server", async () => {
+      const output = await runCli("serve mcp --help");
+      expect(output).toContain(
+        "Locally boot the MCP Profile or Automation Server",
+      );
+      expect(output).toContain("-s, --server <server>");
+      expect(output).toContain("-p, --profile <profile>");
+      expect(output).toContain("--ir <path>");
+    });
+
+    it("should show serve automation help with expected options", async () => {
+      const output = await runCli("serve automation --help");
+      expect(output).toContain("Locally boot the MCP Automation Server");
+      expect(output).toContain("-p, --profile <profile>");
+      expect(output).toContain("--ir <path>");
     });
   });
 

@@ -16,9 +16,22 @@ export const CapabilityManifestSchema = z.object({
     "external-write",
     "external-submit",
   ]),
-  requiredApproval: z.boolean(),
+  sideEffects: z
+    .enum([
+      "none",
+      "local-read",
+      "local-write",
+      "external-read",
+      "external-write",
+      "external-submit",
+    ])
+    .optional(),
+  requiredApproval: z.boolean().optional().default(false),
+  requiresApproval: z.boolean().optional(),
   inputSchema: z.unknown().optional(),
+  inputsSchema: z.unknown().optional(),
   outputSchema: z.unknown().optional(),
+  outputsSchema: z.unknown().optional(),
   reads: z.array(z.string()).optional(),
   writes: z.array(z.string()).optional(),
   contextBudget: z

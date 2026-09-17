@@ -18,7 +18,8 @@ COPY packages/mcp-profile-server/package.json packages/mcp-profile-server/
 COPY packages/mcp-automation-server/package.json packages/mcp-automation-server/
 COPY packages/dashboard/package.json packages/dashboard/
 COPY packages/evals/package.json packages/evals/
-COPY packages/vscode/package.json packages/vscode/
+COPY packages/vscode-akcp/package.json packages/vscode-akcp/
+COPY packages/test-fixtures/package.json packages/test-fixtures/
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile

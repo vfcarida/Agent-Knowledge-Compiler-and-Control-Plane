@@ -10,6 +10,7 @@ import { McpResourcesManifestTarget } from "../targets/mcp-resources-manifest.js
 import { PolicyBundleTarget } from "../targets/policy-bundle.js";
 import { EvalDatasetTarget } from "../targets/eval-dataset.js";
 import { GraphJsonTarget } from "../targets/graph-json.js";
+import { DashboardMetadataTarget } from "../targets/dashboard-metadata.js";
 import { ProvenanceManifestBuilder } from "../provenance/build-manifest.js";
 
 export interface ReconcileOptions {
@@ -51,7 +52,7 @@ export async function reconcile(
   }
 
   // 2. Check target output
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const missingTargets: any[] = [];
   if (config.compile?.targets) {
     // eslint-disable-next-line no-unsafe-optional-chaining
@@ -105,7 +106,6 @@ export async function reconcile(
     });
     const manifestBuilder = new ProvenanceManifestBuilder();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const targetInstances: Record<string, any> = {
       "ir-json": new IrJsonTarget(),
       "okf-bundle": new OkfBundleTarget(),
@@ -115,6 +115,7 @@ export async function reconcile(
       "policy-bundle": new PolicyBundleTarget(),
       "eval-dataset": new EvalDatasetTarget(),
       "graph-json": new GraphJsonTarget(),
+      "dashboard-metadata": new DashboardMetadataTarget(),
     };
 
     for (const targetConf of missingTargets) {

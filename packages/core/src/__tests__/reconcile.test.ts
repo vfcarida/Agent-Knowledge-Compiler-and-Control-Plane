@@ -81,4 +81,23 @@ describe("Reconcile", () => {
     expect(result.status).toBe("in-sync");
     expect(mockMkdirSync).toHaveBeenCalled();
   });
+
+  it("should detect missing dashboard-metadata target in dryRun", async () => {
+    const configWithDashboard: AkcpConfig = {
+      version: "1.0",
+      compile: {
+        sources: [{ type: "markdown-directory", path: "./test-source" }],
+        targets: [
+          { type: "dashboard-metadata", out: "./dist/dashboard-meta.json" },
+        ],
+      },
+    };
+    mockExistsSync.mockImplementation((path) => {
+      if (path.toString().includes("dashboard-meta.json")) return false;
+      return true;
+    });
+    const result = await reconcile(configWithDashboard, { dryRun: true });
+    expect(result.status).toBe("out-of-sync");
+    expect(result.differences[0]).toContain("dashboard-meta.json");
+  });
 });

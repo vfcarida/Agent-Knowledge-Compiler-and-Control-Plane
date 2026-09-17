@@ -59,6 +59,7 @@ export const CapabilitySchema = z.object({
   riskLevel: z.enum(["low", "medium", "high", "critical"]),
   sideEffects: z.enum([
     "none",
+    "local-read",
     "local-write",
     "external-read",
     "external-write",

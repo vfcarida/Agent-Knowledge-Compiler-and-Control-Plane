@@ -16,6 +16,7 @@ import { Documents } from "./components/documents/Documents.js";
 import { ContextPacks } from "./components/packs/ContextPacks.js";
 import { GraphReport } from "./components/packs/GraphReport.js";
 import { MCPCapabilities } from "./components/mcp/MCPCapabilities.js";
+import { GovernancePolicies } from "./components/governance/GovernancePolicies.js";
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<string>("health");
@@ -60,9 +61,7 @@ export default function App() {
       case "evals":
         return <EvalsSummary />;
       case "governance":
-        return (
-          <div className="text-zinc-400">Governance Policies Placeholder</div>
-        );
+        return <GovernancePolicies />;
       case "settings":
         return <div className="text-zinc-400">Settings Placeholder</div>;
       default:

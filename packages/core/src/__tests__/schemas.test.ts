@@ -39,4 +39,18 @@ describe("ProfileRegistry", () => {
     expect(ProfileRegistry.getProfileSchema("none")).toBeDefined();
     expect(ProfileRegistry.getProfileSchema("unknown-profile")).toBeDefined();
   });
+
+  it("supports registering and clearing custom profile schemas", () => {
+    const customSchema = EducationFrontmatterSchema;
+    ProfileRegistry.registerProfileSchema("healthcare", customSchema);
+
+    expect(ProfileRegistry.getProfileSchema("healthcare")).toBe(customSchema);
+    expect(ProfileRegistry.getProfileSchema("HEALTHCARE")).toBe(customSchema);
+
+    ProfileRegistry.clearCustomProfiles();
+    // After clearing, custom profile falls back to base schema
+    expect(ProfileRegistry.getProfileSchema("healthcare")).not.toBe(
+      customSchema,
+    );
+  });
 });

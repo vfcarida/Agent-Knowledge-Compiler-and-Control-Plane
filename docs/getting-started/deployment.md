@@ -88,15 +88,33 @@ docker run -d \
 
 ## 4. Serving Remote MCP Over HTTP / SSE
 
-To serve knowledge bundles to remote agents (such as web-based agent frameworks or remote orchestrators) over Streamable HTTP:
+AKCP provides two complementary MCP servers depending on agent requirements:
+
+1. **MCP Profile Server**: Serves compiled knowledge concepts, resources, and paginated document retrieval with untrusted boundary markers and WAF scanning.
+2. **MCP Automation Server**: Executes policy-governed tools, human-in-the-loop (HITL) approval gates, and dynamic action registry tools compiled from the knowledge IR.
+
+### Serving the Profile Server (Streamable HTTP)
 
 ```bash
-# Inside the container or host:
-node packages/cli/dist/index.js serve mcp \
+# Inside container or host:
+akcp serve mcp \
+  --server profile \
   --profile it-operations \
   --ir dist/agent-knowledge-ir.json \
   --transport streamable-http
 ```
+
+### Serving the Automation Server (HITL & Policy Enforcement)
+
+```bash
+# Inside container or host:
+akcp serve automation \
+  --profile it-operations \
+  --ir dist/agent-knowledge-ir.json \
+  --transport stdio
+```
+
+Or via `akcp serve mcp --server automation`.
 
 > [!IMPORTANT]
 > When serving MCP over remote transports without `stdio`, AKCP requires authentication via `AKCP_JWT_SECRET` or `AKCP_JWKS_URI`. Bypassing this with `--insecure-no-auth` should **only** be used for isolated local development.

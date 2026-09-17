@@ -103,6 +103,9 @@ importers:
       "@akcp/evals":
         specifier: workspace:*
         version: link:../evals
+      "@akcp/mcp-automation-server":
+        specifier: workspace:*
+        version: link:../mcp-automation-server
       "@akcp/mcp-profile-server":
         specifier: workspace:*
         version: link:../mcp-profile-server

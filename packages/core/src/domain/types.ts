@@ -32,13 +32,14 @@
  * interoperable with any LLM or agent that can read Markdown + YAML.
  */
 
-// Constants and Schemas are imported and re-exported from schemas.js
+// Base OKF schemas
+export { OKFDocumentType, OKFFrontmatterSchema } from "./schemas.js";
 
+// Domain-specific profile schemas (re-exported for backward compatibility)
+/** @deprecated Import from `@akcp/core` domain profiles instead. */
 export {
-  OKFDocumentType,
   ApplicationStatus,
   SkillLevel,
-  OKFFrontmatterSchema,
   ApplicationFrontmatterSchema,
   SkillFrontmatterSchema,
   ExperienceFrontmatterSchema,

@@ -324,6 +324,42 @@ app.get("/api/mcp/tools", (req, res) => {
   }
 });
 
+app.get("/api/governance/policies", (req, res) => {
+  try {
+    const irPath = path.resolve(
+      __dirname,
+      "../../../examples/domains/it-operations/dist/agent-knowledge-ir.json",
+    );
+    const fallbackPath = path.resolve(
+      __dirname,
+      "../../../examples/domains/career/dist/agent-knowledge-ir.json",
+    );
+    const bundleIrPath = path.resolve(
+      process.cwd(),
+      "dist/agent-knowledge-ir.json",
+    );
+
+    const targetPath = fs.existsSync(bundleIrPath)
+      ? bundleIrPath
+      : fs.existsSync(irPath)
+        ? irPath
+        : fallbackPath;
+
+    if (fs.existsSync(targetPath)) {
+      const data = JSON.parse(fs.readFileSync(targetPath, "utf-8"));
+      res.json({
+        policies: data.policies || [],
+        profile: data.profile || "okf",
+        manifest: data.manifest,
+      });
+    } else {
+      res.json({ policies: [], profile: "okf" });
+    }
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Serve static frontend assets if built
 const candidateDistPaths = [
   process.env.DASHBOARD_STATIC_PATH,
