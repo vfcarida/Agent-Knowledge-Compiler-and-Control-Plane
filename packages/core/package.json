@@ -22,13 +22,13 @@
   },
   "dependencies": {
     "@opentelemetry/api": "^1.9.1",
-    "@opentelemetry/auto-instrumentations-node": "^0.78.0",
-    "@opentelemetry/exporter-metrics-otlp-grpc": "^0.220.0",
-    "@opentelemetry/exporter-trace-otlp-grpc": "^0.220.0",
-    "@opentelemetry/sdk-node": "^0.220.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.80.0",
+    "@opentelemetry/exporter-metrics-otlp-grpc": "^0.222.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.222.0",
+    "@opentelemetry/sdk-node": "^0.222.0",
     "gray-matter": "^4.0.3",
     "ioredis": "^5.11.1",
-    "yaml": "^2.9.0",
+    "yaml": "^2.9.1",
     "zod": "catalog:"
   },
   "devDependencies": {
