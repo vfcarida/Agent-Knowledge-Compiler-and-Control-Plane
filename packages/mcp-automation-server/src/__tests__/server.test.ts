@@ -47,7 +47,6 @@ vi.mock("@modelcontextprotocol/sdk/server/mcp.js", () => {
 vi.mock("@akcp/core", async (importOriginal) => {
   const actual = await importOriginal();
   return {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...(actual as any),
     MCPGateway: vi.fn().mockImplementation(() => ({
       execute: vi.fn().mockImplementation(async (_ctx, fn) => {
@@ -73,7 +72,7 @@ const mockDocService = {
 
 describe("AKCPAutomationServer", () => {
   let server: AKCPAutomationServer;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   let mcpServerMock: any;
 
   beforeEach(() => {

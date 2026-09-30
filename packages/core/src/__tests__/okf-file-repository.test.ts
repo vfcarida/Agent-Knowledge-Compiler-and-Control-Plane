@@ -77,7 +77,7 @@ const APPLICATION_CONTENT = [
 ].join("\n");
 
 /** Content with invalid/missing type field. */
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+
 const INVALID_CONTENT = [
   "---",
   "title: Missing Type",
@@ -100,24 +100,22 @@ const MALFORMED_CONTENT = [
 
 function createMockFileSystemAdapter(): IFileSystemAdapter {
   return {
-    // eslint-disable-next-line no-unused-vars
     readFile: vi.fn<(filePath: string) => Promise<string>>(),
     writeFile: vi
-      // eslint-disable-next-line no-unused-vars
+
       .fn<(filePath: string, content: string) => Promise<void>>()
       .mockResolvedValue(undefined),
-    // eslint-disable-next-line no-unused-vars
+
     exists: vi.fn<(filePath: string) => Promise<boolean>>(),
     mkdir: vi
-      // eslint-disable-next-line no-unused-vars
+
       .fn<(dirPath: string) => Promise<void>>()
       .mockResolvedValue(undefined),
     deleteFile: vi
-      // eslint-disable-next-line no-unused-vars
+
       .fn<(filePath: string) => Promise<void>>()
       .mockResolvedValue(undefined),
     listFiles:
-      // eslint-disable-next-line no-unused-vars
       vi.fn<(dirPath: string, pattern?: string) => Promise<string[]>>(),
   };
 }

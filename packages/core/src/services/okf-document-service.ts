@@ -283,7 +283,7 @@ export class OKFDocumentService {
   /**
    * Type guard to check if an object implements {@link OKFDocument}.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   private isOKFDocument(obj: any): obj is OKFDocument {
     return (
       obj &&

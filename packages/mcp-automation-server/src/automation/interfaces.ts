@@ -35,7 +35,7 @@ export interface IApplicationStrategy {
    * @param url - The job application URL
    * @returns true if the strategy can process this URL, false otherwise
    */
-  // eslint-disable-next-line no-unused-vars
+
   supports(url: string): boolean;
 
   /**
@@ -52,13 +52,12 @@ export interface IApplicationStrategy {
    * @throws {AutomationError} If any locator or step fails
    */
   apply(
-    // eslint-disable-next-line no-unused-vars
     page: Page,
-    // eslint-disable-next-line no-unused-vars
+
     careerContext: CareerContext,
-    // eslint-disable-next-line no-unused-vars
+
     url: string,
-    // eslint-disable-next-line no-unused-vars
+
     dryRun?: boolean,
   ): Promise<ApplicationResult>;
 }

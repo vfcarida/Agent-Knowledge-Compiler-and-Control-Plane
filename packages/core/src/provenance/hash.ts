@@ -19,7 +19,7 @@ export async function hashFile(filePath: string): Promise<string> {
 /**
  * Generates a stable SHA-256 hash for a config object, redacting specific keys (e.g. secrets)
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export function hashConfig(config: any): string {
   const redactedConfig = redactSecrets(config);
   // Stable stringify: sort keys so ordering doesn't break hash
@@ -27,7 +27,6 @@ export function hashConfig(config: any): string {
   return hashString(stableString);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function redactSecrets(obj: any): any {
   if (obj === null || typeof obj !== "object") {
     return obj;
@@ -37,7 +36,6 @@ function redactSecrets(obj: any): any {
     return obj.map(redactSecrets);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result: any = {};
   for (const key of Object.keys(obj)) {
     const lowerKey = key.toLowerCase();
@@ -55,7 +53,6 @@ function redactSecrets(obj: any): any {
   return result;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function stableStringify(obj: any): string {
   if (obj === null || typeof obj !== "object") {
     return JSON.stringify(obj);

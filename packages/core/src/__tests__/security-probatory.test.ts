@@ -450,7 +450,6 @@ describe("Security [HITL]: Human-in-the-Loop Approval", () => {
       approvalStore: store,
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let caught: any;
     try {
       await gateway.execute(

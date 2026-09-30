@@ -59,7 +59,6 @@ describe("Compile Targets Determinism", () => {
     tmpDir2 = await fs.mkdtemp(path.join(os.tmpdir(), "target-det2-"));
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const testTargetDeterminism = async (TargetClass: any, outName: string) => {
     const target1 = new TargetClass();
     const target2 = new TargetClass();

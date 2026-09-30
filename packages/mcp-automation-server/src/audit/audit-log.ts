@@ -23,7 +23,7 @@ export class AuditLogger {
 
     // In a real enterprise system, this should write to a secure append-only log.
     // For this reference architecture, we output to stdout with structured JSON.
-    // eslint-disable-next-line no-console
+
     console.log(JSON.stringify(fullEvent));
   }
 }

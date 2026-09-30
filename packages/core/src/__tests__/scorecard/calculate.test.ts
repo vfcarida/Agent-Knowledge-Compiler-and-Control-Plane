@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { calculateScorecard } from "../../scorecard/calculate.js";
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+
 import { ScorecardDimension } from "../../scorecard/types.js";
 import type { AgentKnowledgeIR } from "../../ir/types.js";
 

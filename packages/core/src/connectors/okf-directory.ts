@@ -10,7 +10,6 @@ import type {
 export class OKFDirectoryConnector implements KnowledgeSourceConnector {
   public readonly connectorType = "okf-directory";
 
-  // eslint-disable-next-line no-unused-vars
   constructor(private readonly fsAdapter: IFileSystemAdapter) {}
 
   async ingest(config: ConnectorConfig): Promise<RawKnowledgeItem[]> {

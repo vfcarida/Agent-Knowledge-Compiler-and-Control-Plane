@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { hashString, hashConfig } from "../../provenance/hash.js";
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+
 import path from "path";
 
 describe("Provenance Hashing", () => {

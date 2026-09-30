@@ -277,7 +277,6 @@ export class InMemoryApprovalStore implements IApprovalStore {
     return this.approvals.filter((a) => a.status === "PENDING");
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getAuditLogs(): Promise<any[]> {
     return [];
   }

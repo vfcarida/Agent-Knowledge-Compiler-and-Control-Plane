@@ -68,7 +68,7 @@ export async function runPromptInjectionEval(config?: {
 }
 
 // Keep the old harness compatibility if it was used somewhere
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export async function runPromptInjectionScenarios(harness: any) {
   const evalResult = await runPromptInjectionEval();
 

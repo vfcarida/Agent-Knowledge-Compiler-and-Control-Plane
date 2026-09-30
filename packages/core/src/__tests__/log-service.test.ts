@@ -6,7 +6,6 @@ import { LogService } from "../services/log-service.js";
 
 describe("LogService", () => {
   let mockFs: {
-    // eslint-disable-next-line no-unused-vars
     [K in keyof IFileSystemAdapter]: ReturnType<typeof vi.fn>;
   };
   let service: LogService;

@@ -9,11 +9,9 @@ import { IndexService } from "../services/index-service.js";
 
 describe("IndexService", () => {
   let mockFs: {
-    // eslint-disable-next-line no-unused-vars
     [K in keyof IFileSystemAdapter]: ReturnType<typeof vi.fn>;
   };
   let mockParser: {
-    // eslint-disable-next-line no-unused-vars
     [K in keyof IFrontmatterParser]: ReturnType<typeof vi.fn>;
   };
   let service: IndexService;
@@ -70,7 +68,6 @@ describe("IndexService", () => {
     );
     mockParser.parse.mockReturnValue(makeDocument());
 
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     const result = await service.generate("/bundle/skills");
 
     // parse should only be called once (for typescript.md), not for index.md or log.md

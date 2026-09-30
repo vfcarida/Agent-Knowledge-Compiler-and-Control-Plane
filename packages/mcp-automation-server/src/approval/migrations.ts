@@ -18,7 +18,6 @@ export function runMigrations(db: Database.Database) {
   // Run migrations in a transaction
   const runTransaction = db.transaction(() => {
     for (const migration of pendingMigrations) {
-      // eslint-disable-next-line no-console
       console.log(`[Database] Applying migration v${migration.version}...`);
       migration.up(db);
       db.prepare(`PRAGMA user_version = ${migration.version}`).run();

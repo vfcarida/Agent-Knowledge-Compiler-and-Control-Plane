@@ -10,7 +10,6 @@ import type {
 export class OpenWikiConnector implements KnowledgeSourceConnector {
   public readonly connectorType = "openwiki";
 
-  // eslint-disable-next-line no-unused-vars
   constructor(private readonly fsAdapter: IFileSystemAdapter) {}
 
   async ingest(config: ConnectorConfig): Promise<RawKnowledgeItem[]> {

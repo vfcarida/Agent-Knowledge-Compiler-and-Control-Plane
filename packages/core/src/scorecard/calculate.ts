@@ -68,7 +68,6 @@ export function calculateScorecard(
   // 4. MCP Readiness (10 pts)
   let mcpScore = 0;
   const hasMcpTarget = ir.targets?.some(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (t: any) =>
       t === "mcp-profile-server" ||
       t === "mcp-automation-server" ||
@@ -139,7 +138,6 @@ export function calculateScorecard(
   // 8. Evals (10 pts)
   let evalsScore = 0;
   const hasEvalTargets = ir.targets?.some(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (t: any) => t === "eval-dataset" || t?.type === "eval-dataset",
   );
   const hasTestFiles = rawFiles.some(

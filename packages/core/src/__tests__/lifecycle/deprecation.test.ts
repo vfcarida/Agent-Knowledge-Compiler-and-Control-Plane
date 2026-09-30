@@ -5,7 +5,7 @@ import type { OKFDocument } from "../../domain/types.js";
 describe("Lifecycle Deprecation", () => {
   const createMockDoc = (
     id: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     status?: any,
     successor?: string,
   ): OKFDocument => ({

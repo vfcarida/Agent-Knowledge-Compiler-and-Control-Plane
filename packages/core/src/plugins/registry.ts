@@ -32,7 +32,6 @@ export class PluginRegistry {
             dirPath: pluginDir,
             manifest,
           });
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
           // Record broken plugins so the CLI can report them instead of silently ignoring
           discovered.push({

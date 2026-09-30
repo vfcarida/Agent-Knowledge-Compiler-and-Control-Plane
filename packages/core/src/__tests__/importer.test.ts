@@ -1,8 +1,7 @@
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 import { describe, it, expect, vi } from "vitest";
 import path from "node:path";
 import { importSource } from "../integrations/importer.js";
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+
 import fs from "node:fs";
 
 import { dirname } from "node:path";

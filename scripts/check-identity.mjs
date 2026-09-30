@@ -23,7 +23,7 @@ if (fs.existsSync(allowlistPath)) {
 }
 
 // Check if a file/line combination is in the allowlist
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+ 
 function shouldCheckFile(filePath) {
   if (
     filePath.includes("node_modules") ||
@@ -43,7 +43,7 @@ function shouldCheckFile(filePath) {
   return /\.(md|ts|js|json|yml|yaml|txt)$/.test(filePath);
 }
 
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+ 
 function isAllowlisted(filePath, lineContent) {
   // Simple check: if the file path is explicitly allowed
   if (allowlist.includes(filePath)) return true;

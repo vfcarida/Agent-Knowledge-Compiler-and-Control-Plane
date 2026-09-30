@@ -105,12 +105,10 @@ async function main() {
           message: validation.error.message,
         });
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       // If a file has no OKF frontmatter (e.g., a policy redirect or scenario file),
       // treat it as a skipped warning rather than a validation failure.
       if (err instanceof OKFValidationError) {
-        // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
         skippedCount++;
         console.warn(
           `[AKCP Validator] Skipping "${path.basename(relPath)}": ${err.message}`,
@@ -142,39 +140,34 @@ async function main() {
   };
 
   if (format === "json") {
-    // eslint-disable-next-line no-console
     console.log(JSON.stringify(report, null, 2));
   } else if (format === "markdown") {
-    // eslint-disable-next-line no-console
     console.log(`# Bundle Validation Report\n`);
-    // eslint-disable-next-line no-console
+
     console.log(`- **Checked At:** ${report.checkedAt}`);
-    // eslint-disable-next-line no-console
+
     console.log(`- **Bundle Path:** ${report.bundlePath}`);
-    // eslint-disable-next-line no-console
+
     console.log(`- **Profile:** ${report.profile}`);
-    // eslint-disable-next-line no-console
+
     console.log(`- **Status:** ${report.ok ? "✅ Valid" : "❌ Invalid"}`);
-    // eslint-disable-next-line no-console
+
     console.log(`\n## Summary\n`);
-    // eslint-disable-next-line no-console
+
     console.log(`- Files Checked: ${report.summary.filesChecked}`);
-    // eslint-disable-next-line no-console
+
     console.log(`- Valid Documents: ${report.summary.validDocuments}`);
-    // eslint-disable-next-line no-console
+
     console.log(`- Invalid Documents: ${report.summary.invalidDocuments}`);
     if (diagnostics.length > 0) {
-      // eslint-disable-next-line no-console
       console.log(`\n## Diagnostics\n`);
       for (const d of diagnostics) {
-        // eslint-disable-next-line no-console
         console.log(
           `- **[${d.severity.toUpperCase()}]** \`${d.file}\`: ${d.message}`,
         );
       }
     }
   } else {
-    // eslint-disable-next-line no-console
     console.log(
       `[AKCP Validator] Scanning bundle at: ${bundlePath} (Profile: ${profileName})`,
     );
@@ -182,14 +175,13 @@ async function main() {
       console.error(`  ✗ [Invalid] ${d.file}:`);
       console.error(`    Reason: ${d.message}`);
     }
-    // eslint-disable-next-line no-console
+
     console.log(`\n[AKCP Validator] Validation summary:`);
-    // eslint-disable-next-line no-console
+
     console.log(`  Valid concepts: ${validCount}`);
-    // eslint-disable-next-line no-console
+
     console.log(`  Invalid concepts: ${invalidCount}`);
     if (report.ok) {
-      // eslint-disable-next-line no-console
       console.log(
         `[AKCP Validator] All checked records are strictly schema compliant!`,
       );
