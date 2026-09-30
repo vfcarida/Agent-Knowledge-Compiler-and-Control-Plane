@@ -67,11 +67,20 @@ async function main() {
   }
 
   const relativeFiles = await fsAdapter.listFiles(bundlePath);
+  // Well-known non-OKF meta files that exist in bundle directories but do not
+  // require OKF frontmatter. Silently skip them without producing a warning.
   const RESERVED_FILENAMES = new Set([
     "index.md",
     "log.md",
     "README.md",
     "WALKTHROUGH.md",
+    "walkthrough.md",
+    "AGENTS.md",
+    "CONTRIBUTING.md",
+    "CHANGELOG.md",
+    "CODE_OF_CONDUCT.md",
+    "SECURITY.md",
+    "GOVERNANCE.md",
   ]);
 
   let validCount = 0;
