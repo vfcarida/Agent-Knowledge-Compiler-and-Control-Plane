@@ -17,6 +17,10 @@
     "./dist/prompt-injection-scenario.js": {
       "types": "./dist/prompt-injection-scenario.d.ts",
       "import": "./dist/prompt-injection-scenario.js"
+    },
+    "./dist/retrieval-grounding.js": {
+      "types": "./dist/retrieval-grounding.d.ts",
+      "import": "./dist/retrieval-grounding.js"
     }
   },
   "scripts": {

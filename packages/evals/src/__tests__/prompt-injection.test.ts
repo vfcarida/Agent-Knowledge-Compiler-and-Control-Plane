@@ -12,7 +12,7 @@ describe("Prompt Injection Scenario Eval", () => {
     const result = await runPromptInjectionEval({ waf });
 
     expect(result.scenario).toBe("prompt-injection");
-    expect(result.totalCases).toBeGreaterThan(0);
+    expect(result.totalCases).toBeGreaterThanOrEqual(50);
     expect(result.details.length).toBe(result.totalCases);
 
     // Detection rate should be at least 40% for fallback mode (baseline)
