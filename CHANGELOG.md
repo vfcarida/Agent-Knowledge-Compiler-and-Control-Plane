@@ -30,6 +30,18 @@ For detailed information on our deprecation and backwards compatibility policies
 - **Conformance Types**: Added `CheckResult` interface to `@akcp/conformance` resolving TS build errors in check modules.
 - **Policy Engine Conflict Resolution**: Strict `UnresolvablePolicyConflictError` thrown on priority-tie conflicts for safe, deterministic halting.
 - **Cross-platform Release Script**: Ported `pre-release-check.sh` to a cross-platform Node.js script (`scripts/pre-release-check.js`).
+- **Policy Linter**: Added `lintPolicyRules` and `lintPolicyCard` functions detecting `SHADOWED_RULE` (a higher-priority rule makes a lower rule unreachable), `CONTRADICTORY_RULE` (same-priority rules with opposing effects for identical matchers), and `REDUNDANT_RULE` issues with severity classification.
+- **MCP Resource Content Boundaries (OWASP T4 mitigation)**: `AKCPProfileServer` now wraps all resource content with `[BEGIN UNTRUSTED DOCUMENT CONTENT]` / `[END UNTRUSTED DOCUMENT CONTENT]` boundary markers by default, plus `_meta.contentType: "untrusted-document"` and `_meta.trustLevel: "untrusted"` metadata. Configurable via `enableContentBoundaries` option or `AKCP_ENABLE_CONTENT_BOUNDARIES` env var.
+- **Opt-in WAF Scanning on MCP Resources**: `AKCPProfileServer` supports opt-in `enableWafScan: true` or `AKCP_ENABLE_RESOURCE_WAF=true` to scan resource content for prompt injection patterns before serving. Flagged resources are surfaced in `_meta.wafScan` without blocking content delivery (read-only flag).
+- **Expanded CapabilityValidator Injection Defense**: Extended `CapabilityValidator` from 6 to 18 prompt injection detection patterns, adding DAN-style jailbreaks, role-play exploits, system prompt extraction, authority escalation, and capability override patterns aligned with OWASP LLM01:2025. Validated with false-positive canary tests.
+- **Token Bucket Rate Limiter Isolation & Burst Tests**: Added unit test suite for `TokenBucketRateLimiter` verifying per-key agent isolation, high-frequency burst rejection exceeding capacity, time-based refill invariants, and global reset/clear semantics.
+- **Scorecard Recommendations Unit Tests**: Added comprehensive unit test coverage for `generateRecommendations` validating threshold-based rule triggers across concept depth, policy coverage, documentation freshness, and boundary cases.
+
+### Fixed
+
+- **OKF Validator Noise Suppression**: Silenced non-OKF file warnings during bundle scans for well-known metadata files (`AGENTS.md`, `walkthrough.md`, `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, `CHANGELOG.md`, `LICENSE.md`).
+- **Capability Schema Test Typing**: Corrected `sideEffects` property type from array to schema-compliant string literal in capability-rules test fixtures.
+- **Lint Directives Cleanup**: Cleaned up 105 stale and unused `eslint-disable` annotations across servers, test fixtures, and verification scripts.
 
 ### Changed
 
