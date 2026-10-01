@@ -2,7 +2,7 @@
 # ========================================================
 # Stage 1: Build & Package
 # ========================================================
-FROM node:22-alpine AS builder
+FROM node:26-alpine AS builder
 
 WORKDIR /app
 
@@ -40,7 +40,7 @@ RUN node packages/cli/dist/index.js compile --config examples/domains/it-operati
 # ========================================================
 # Stage 2: Production Runtime
 # ========================================================
-FROM node:22-alpine AS runner
+FROM node:26-alpine AS runner
 
 WORKDIR /app
 
