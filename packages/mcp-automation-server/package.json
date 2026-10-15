@@ -64,5 +64,6 @@
     "mcp",
     "governance",
     "compilation"
-  ]
+  ],
+  "author": "Vinicius Caridá <vfcarida@gmail.com> (https://github.com/vfcarida)"
 }

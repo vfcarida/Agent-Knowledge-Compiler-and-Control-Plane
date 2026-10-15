@@ -23,7 +23,7 @@ export class AgentsMdTarget implements CompileTarget {
 > Do not edit this block manually. Place custom instructions outside these markers.
 
 ## 1. Project Purpose
-Compiled from Context Ops Bundle: ${ir.bundleId}
+Compiled from Agent Knowledge Bundle: ${ir.bundleId}
 
 ## 2. Context Sources
 This bundle contains ${ir.concepts.length} concepts and ${(ir.links || []).length} relationships.

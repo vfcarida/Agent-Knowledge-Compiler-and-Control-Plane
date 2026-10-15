@@ -120,7 +120,7 @@ OWASP LLM Top 10: LLM08: Excessive Agency
 > `packages/cli/templates/*/policies/` copies `akcp init` hands out) is a real `PolicyCard`
 > against this exact schema — `policy validate`/`policy explain` produce meaningful output for
 > all of them. This used to be a real architectural gap (5 mutually-incompatible ad hoc shapes,
-> documented in [docs/project/deep-analysis-round2.md](docs/project/deep-analysis-round2.md));
+> documented in [docs/project/technical-analysis.md](docs/project/technical-analysis.md));
 > migrating them surfaced and fixed a deeper one along the way — `MCPGateway` was hardcoding
 > every request's risk level to `"medium"`, which made any policy rule scoped by risk level
 > silently unenforceable regardless of file format (see `appliesTo.riskLevels` in
@@ -228,6 +228,10 @@ For formal definitions, see the [Maturity and Status Guide](docs/status.md).
 We actively welcome community contributions. To get started, read [CONTRIBUTING.md](CONTRIBUTING.md) and review our [Governance Process](docs/governance/spec-governance.md).
 
 - [GitHub Discussions](https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane/discussions) — Questions, ideas, and community conversations
+
+## Authorship & Acknowledgments
+
+_Designed and architected by [Vinicius Caridá](https://github.com/vfcarida). Implementation and test-suite verification accelerated with AI-assisted engineering workflows._
 
 ---
 

@@ -42,7 +42,12 @@ const DEFAULT_POLICIES: PolicyRule[] = [
     effect: "deny",
     scope: "*",
     requiresApproval: false,
-    obligations: [{ type: "audit_log", details: "All rejections logged with cryptographic hash" }],
+    obligations: [
+      {
+        type: "audit_log",
+        details: "All rejections logged with cryptographic hash",
+      },
+    ],
   },
   {
     id: "akcp.policy.hitl-external-submit",
@@ -67,7 +72,12 @@ const DEFAULT_POLICIES: PolicyRule[] = [
     effect: "allow",
     scope: "content:boundary",
     requiresApproval: false,
-    obligations: [{ type: "pii_redact", details: "Scrub regex patterns before prompt delivery" }],
+    obligations: [
+      {
+        type: "pii_redact",
+        details: "Scrub regex patterns before prompt delivery",
+      },
+    ],
   },
   {
     id: "akcp.policy.context-pagination",
@@ -78,7 +88,12 @@ const DEFAULT_POLICIES: PolicyRule[] = [
     effect: "allow",
     scope: "mcp:resources",
     requiresApproval: false,
-    obligations: [{ type: "chunk_limit", details: "Max 4,000 characters per read operation" }],
+    obligations: [
+      {
+        type: "chunk_limit",
+        details: "Max 4,000 characters per read operation",
+      },
+    ],
   },
 ];
 
@@ -103,7 +118,10 @@ export function GovernancePolicies() {
           }
         }
       } catch (err) {
-        console.warn("[GovernancePolicies] Backend fetch skipped, using default policies:", err);
+        console.warn(
+          "[GovernancePolicies] Backend fetch skipped, using default policies:",
+          err,
+        );
       } finally {
         setLoading(false);
       }
@@ -118,7 +136,8 @@ export function GovernancePolicies() {
         p.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesRisk =
-        selectedRisk === "all" || p.riskLevel.toLowerCase() === selectedRisk.toLowerCase();
+        selectedRisk === "all" ||
+        p.riskLevel.toLowerCase() === selectedRisk.toLowerCase();
       return matchesSearch && matchesRisk;
     });
   }, [policies, searchQuery, selectedRisk]);
@@ -126,7 +145,9 @@ export function GovernancePolicies() {
   const stats = useMemo(() => {
     const total = policies.length;
     const critical = policies.filter((p) => p.riskLevel === "critical").length;
-    const hitl = policies.filter((p) => p.requiresApproval || p.effect === "require_approval").length;
+    const hitl = policies.filter(
+      (p) => p.requiresApproval || p.effect === "require_approval",
+    ).length;
     const high = policies.filter((p) => p.riskLevel === "high").length;
     return { total, critical, hitl, high };
   }, [policies]);
@@ -158,14 +179,18 @@ export function GovernancePolicies() {
                 Zero-Trust Governance & Policies
               </h2>
               <p className="text-sm text-zinc-400 mt-0.5">
-                Runtime guardrails, HITL gates, and autonomy boundaries enforced across agent executions.
+                Runtime guardrails, HITL gates, and autonomy boundaries enforced
+                across agent executions.
               </p>
             </div>
           </div>
         </div>
         <div className="flex items-center gap-2 text-xs text-zinc-400 bg-zinc-900/80 border border-zinc-800 px-3.5 py-1.5 rounded-full self-start md:self-auto">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>Profile: <strong className="text-zinc-200 capitalize">{profile}</strong></span>
+          <span>
+            Profile:{" "}
+            <strong className="text-zinc-200 capitalize">{profile}</strong>
+          </span>
         </div>
       </div>
 
@@ -176,8 +201,12 @@ export function GovernancePolicies() {
             <Scale className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-2xl font-bold text-zinc-100">{stats.total}</div>
-            <div className="text-xs text-zinc-400 font-medium">Active Policies</div>
+            <div className="text-2xl font-bold text-zinc-100">
+              {stats.total}
+            </div>
+            <div className="text-xs text-zinc-400 font-medium">
+              Active Policies
+            </div>
           </div>
         </div>
 
@@ -186,8 +215,12 @@ export function GovernancePolicies() {
             <ShieldAlert className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-2xl font-bold text-rose-400">{stats.critical}</div>
-            <div className="text-xs text-zinc-400 font-medium">Critical Risk Guardrails</div>
+            <div className="text-2xl font-bold text-rose-400">
+              {stats.critical}
+            </div>
+            <div className="text-xs text-zinc-400 font-medium">
+              Critical Risk Guardrails
+            </div>
           </div>
         </div>
 
@@ -196,8 +229,12 @@ export function GovernancePolicies() {
             <UserCheck className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-2xl font-bold text-amber-400">{stats.hitl}</div>
-            <div className="text-xs text-zinc-400 font-medium">HITL Gated Actions</div>
+            <div className="text-2xl font-bold text-amber-400">
+              {stats.hitl}
+            </div>
+            <div className="text-xs text-zinc-400 font-medium">
+              HITL Gated Actions
+            </div>
           </div>
         </div>
 
@@ -207,7 +244,9 @@ export function GovernancePolicies() {
           </div>
           <div>
             <div className="text-2xl font-bold text-emerald-400">100%</div>
-            <div className="text-xs text-zinc-400 font-medium">Enforcement SLA</div>
+            <div className="text-xs text-zinc-400 font-medium">
+              Enforcement SLA
+            </div>
           </div>
         </div>
       </div>
@@ -274,14 +313,17 @@ export function GovernancePolicies() {
                     >
                       {policy.riskLevel}
                     </span>
-                    {policy.requiresApproval || policy.effect === "require_approval" ? (
+                    {policy.requiresApproval ||
+                    policy.effect === "require_approval" ? (
                       <span className="inline-flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-full font-medium bg-amber-500/10 text-amber-400 border border-amber-500/30">
                         <Lock className="w-3 h-3" />
                         HITL Gated
                       </span>
                     ) : null}
                   </div>
-                  <div className="text-xs font-mono text-zinc-500">{policy.id}</div>
+                  <div className="text-xs font-mono text-zinc-500">
+                    {policy.id}
+                  </div>
                 </div>
 
                 <div className="text-xs self-start sm:self-auto bg-zinc-900 border border-zinc-800 px-3 py-1 rounded-lg text-zinc-300 font-mono">
@@ -317,7 +359,9 @@ export function GovernancePolicies() {
                         className="text-xs px-2.5 py-1 rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-300 flex items-center gap-1.5"
                       >
                         <span className="w-1.5 h-1.5 rounded-full bg-neon-blue" />
-                        <span className="font-mono text-[11px] text-zinc-400">{obl.type}:</span>
+                        <span className="font-mono text-[11px] text-zinc-400">
+                          {obl.type}:
+                        </span>
                         <span>{obl.details || obl.type}</span>
                       </span>
                     ))}

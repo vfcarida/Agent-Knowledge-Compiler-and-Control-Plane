@@ -23,7 +23,7 @@ if (fs.existsSync(allowlistPath)) {
 }
 
 // Check if a file/line combination is in the allowlist
- 
+
 function shouldCheckFile(filePath) {
   if (
     filePath.includes("node_modules") ||
@@ -43,7 +43,6 @@ function shouldCheckFile(filePath) {
   return /\.(md|ts|js|json|yml|yaml|txt)$/.test(filePath);
 }
 
- 
 function isAllowlisted(filePath, lineContent) {
   // Simple check: if the file path is explicitly allowed
   if (allowlist.includes(filePath)) return true;

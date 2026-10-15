@@ -29,7 +29,7 @@ for (const file of mdFiles) {
 
   const content = fs.readFileSync(filePath, "utf-8");
   let match;
-   
+
   const lineNumber = 1;
   const lines = content.split("\n");
 

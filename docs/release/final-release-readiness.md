@@ -16,13 +16,13 @@ The `pnpm release:check` command acts as a strict aggregator of all our quality,
 
 ## Release Blockers
 
-If any of the above automated checks fail, the release is blocked. You must fix the underlying code, tests, or documentation, and ensure `pnpm release:check` passes completely before proceeding.
+If any of the above automated checks fail, the release is blocked. Release engineers and contributors must resolve the underlying code, test, or documentation issues and ensure `pnpm release:check` passes completely before proceeding.
 
 ### Interpreting Failures
 
-- **Metadata/Identity Failures**: If `check:metadata` or `check:identity` fail, it means you've introduced legacy names or invalid properties. Fix them by updating the affected `package.json` or source files.
-- **Example Failures**: If `examples:validate` fails, a change in the compiler or core schema broke one of our flagship domain examples. You must update the example OKF YAML/JSON files to conform to the new schema before releasing.
-- **Tests**: If `quality:gate` fails, a unit or security test is failing. Fix the logic or update the test contract.
+- **Metadata/Identity Failures**: If `check:metadata` or `check:identity` fail, legacy names or invalid package properties have been detected. Resolve them by updating the affected `package.json` or source files.
+- **Example Failures**: If `examples:validate` fails, a change in the compiler or core schema broke one of the flagship domain examples. The example OKF YAML/JSON files must be updated to conform to the new schema before releasing.
+- **Tests**: If `quality:gate` fails, a unit or security test is failing. Fix the underlying logic or update the test contract.
 
 ## Manual Metadata Checklist
 

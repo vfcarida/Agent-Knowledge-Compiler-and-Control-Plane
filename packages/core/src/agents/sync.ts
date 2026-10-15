@@ -15,7 +15,7 @@ const END_MARKER = "<!-- akcp:end -->";
 
 const DEFAULT_OPTIONS: SyncAgentInstructionsOptions = {
   projectPurpose:
-    "AKCP Orchestrator - Managing AI Agent Knowledge via Agent Knowledge Compiler and Control Plane (AKCP) (OKF) and Context Packs.",
+    "AKCP Orchestrator - Managing AI Agent Knowledge via Agent Knowledge Compiler and Control Plane (OKF) and Context Packs.",
   architectureBoundaries:
     "Use TypeScript, ESM, Node.js. Avoid external dependencies unless justified.",
   contextSources:

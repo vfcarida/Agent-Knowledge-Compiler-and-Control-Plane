@@ -12,9 +12,9 @@ The AKCP project aims to be an open, transparent, and enterprise-grade standard 
 
 ## 2. Roles and Responsibilities
 
-### 2.1. BDFL (Benevolent Dictator For Life)
+### 2.1. BDFL & Principal Architect
 
-The project is currently led by the BDFL (the original creator), who holds the final say on architectural decisions, standard changes, and major trajectory shifts. The BDFL commits to listening to the community and steering the project towards enterprise maturity.
+The project is created and led by **Vinicius Caridá** ([`vfcarida`](https://github.com/vfcarida)) as BDFL and Principal Architect, holding final architectural authority over normative specifications (OKF schemas, AK-IR intermediate representation, Policy Cards) and reference engine implementations. The project leadership commits to listening to the community and steering the project towards enterprise maturity.
 
 ### 2.2. Core Maintainers
 
@@ -23,7 +23,7 @@ Core Maintainers have push access to the repository and are responsible for:
 - Reviewing and merging pull requests.
 - Triaging issues and prioritizing the roadmap.
 - Enforcing the Code of Conduct.
-- Ensuring that no changes compromise the strict threshold and security rules (as per `.agents/AGENTS.md`).
+- Ensuring that no changes compromise the strict quality thresholds and security standards defined in the project architecture.
 
 ### 2.3. Approvers
 

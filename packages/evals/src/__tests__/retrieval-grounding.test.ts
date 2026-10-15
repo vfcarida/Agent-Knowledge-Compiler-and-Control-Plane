@@ -14,7 +14,7 @@ describe("Retrieval Grounding Eval", () => {
     expect(result.totalQueries).toBeGreaterThanOrEqual(10);
     expect(result.details.length).toBe(result.totalQueries);
 
-    // Acceptance criteria: retrieval eval reports precision@k >= 0.8
+    // Contract: retrieval evaluation verifies precision@k >= 0.8 against reference context
     expect(result.meanPrecisionAtK).toBeGreaterThanOrEqual(0.8);
 
     // Hit rate should be high (all queries should hit relevant knowledge)

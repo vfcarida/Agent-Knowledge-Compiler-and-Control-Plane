@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Agent Knowledge Compiler and Control Plane (AKCP). Compiles organizational knowledge into versioned, agent-consumable artifacts and controls how agents discover and act on them.",
-  "author": "Vinicius Carida",
+  "author": "Vinicius Caridá <vfcarida@gmail.com> (https://github.com/vfcarida)",
   "license": "MIT",
   "type": "module",
   "engines": {

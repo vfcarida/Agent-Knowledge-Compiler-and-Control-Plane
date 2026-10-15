@@ -2,17 +2,17 @@
 
 ## Tailoring a Resume via Profile Server
 
-Connect Claude Desktop to the Profile Server and prompt:
+Connect an MCP client (such as Claude Desktop, Cursor, or a custom agent) to the Profile Server and query:
 
 > "Please use tailor_resume_from_job against my OKF bundle using the job description at https://linkedin.com/mock-job. Emphasize my TypeScript skills."
 
 ## Requesting an Automation Token
 
-Connect to the Automation Server and prompt:
+Connect to the Automation Server and query:
 
 > "Prepare an application for https://linkedin.com/mock-job."
 
-The LLM will return a token. You must then say:
+The server issues an approval token for gated side-effects. The operator then approves:
 
 > "I approve. Confirm application submission using token X."
 

@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software in research or engineering projects, please cite it as below."
+title: "Agent Knowledge Compiler and Control Plane (AKCP)"
+abstract: "A compiler and control plane for organizational knowledge, turning Open Knowledge Format (OKF) bundles into versioned, deterministic Intermediate Representations and enforcing runtime Zero-Trust policies across Model Context Protocol (MCP) agents."
+version: 0.1.0
+date-released: "2026-07-15"
+authors:
+  - family-names: "Caridá"
+    given-names: "Vinicius"
+    email: "vfcarida@gmail.com"
+    alias: "vfcarida"
+license: MIT
+repository-code: "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane"
+url: "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane#readme"
+keywords:
+  - "agent-knowledge"
+  - "compiler"
+  - "control-plane"
+  - "model-context-protocol"
+  - "mcp"
+  - "open-knowledge-format"
+  - "policy-cards"
+  - "zero-trust"

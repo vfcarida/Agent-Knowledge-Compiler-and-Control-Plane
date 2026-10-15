@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Remember: All new tools must conform to our strict capability registry rubric.
+        All proposed capabilities must conform to the project's [Capability Registry Specification](docs/security/capability-registry.md).
   - type: input
     id: tool-name
     attributes:

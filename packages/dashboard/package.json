@@ -49,5 +49,6 @@
   "homepage": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane#readme",
   "bugs": {
     "url": "https://github.com/vfcarida/Agent-Knowledge-Compiler-and-Control-Plane/issues"
-  }
+  },
+  "author": "Vinicius Caridá <vfcarida@gmail.com> (https://github.com/vfcarida)"
 }
