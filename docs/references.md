@@ -17,9 +17,18 @@ This document catalogs the peer-reviewed literature, industry standards, and ent
 3. **Reasoning, Tool Use & Agentic Control Loops**
    - Yao, S., Zhao, J., Yu, D., Du, N., Shafran, I., Narasimhan, K., & Cao, Y. (2023). _ReAct: Synergizing Reasoning and Acting in Language Models_. International Conference on Learning Representations (ICLR 2023).
 
-4. **Indirect Prompt Injection & Adversarial Defense**
+4. **Indirect Prompt Injection, Selective Abstention & Epistemic Calibration**
    - Greshake, K., Abdelnabi, S., Mishra, S., Endres, C., Holz, T., & Fritz, M. (2023). _Not What You've Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection_. ACM Workshop on Artificial Intelligence and Security (AISec 2023).
    - Wallace, E., Xiao, K., Leike, R., Weng, L., Heidecke, J., & Beutel, A. (2024). _The Instruction Hierarchy: Training LLMs to Prioritize Privileged Instructions_. OpenAI.
+   - Kamath, A., Jia, R., & Liang, P. (2020). _Selective Question Answering under Domain Shift_. Annual Meeting of the Association for Computational Linguistics (ACL 2020).
+   - Kadavath, S., Conerly, T., Askell, A., Henighan, T., Drain, D., Perez, E., Schiefer, N., Hatfield-Dodds, Z., DasSarma, N., Tran-Johnson, E., Johnston, S., El-Showk, S., Jones, A., Elhage, N., Hume, T., Chen, A., Bai, Y., Bowman, S., Fort, S., Ganguli, D., Hernandez, D., Jacobson, J., Kernion, J., Kravec, S., Lovitt, L., Ndousse, K., Olsson, C., Ringer, S., Amodei, D., Brown, T., Clark, J., Joseph, N., Mann, B., McCandlish, S., Olah, C., & Kaplan, J. (2022). _Language Models (Mostly) Know What They Know_. Anthropic.
+
+5. **Hybrid Information Retrieval, Graph Ranking & Distributed State**
+   - Robertson, S., & Zaragoza, H. (2009). _The Probabilistic Relevance Framework: BM25 and Beyond_. Foundations and Trends in Information Retrieval, 3(4), 333–389.
+   - Cormack, G. V., Clarke, C. L. A., & Buettcher, S. (2009). _Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods_. ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR 2009).
+   - Haveliwala, T. H. (2002). _Topic-Sensitive PageRank_. International Conference on World Wide Web (WWW 2002).
+   - Birgisson, A., Politz, J. G., Erlingsson, Ú., Taly, A., Vrable, M., & Lentczner, M. (2014). _Macaroons: Cookies with Contextual Caveats for Decentralized Authorization in the Cloud_. Network and Distributed System Security Symposium (NDSS 2014), Google Research.
+   - Shapiro, M., Preguiça, N., Baquero, C., & Zawirski, M. (2011). _Conflict-Free Replicated Data Types_. International Symposium on Stabilization, Safety, and Security of Distributed Systems (SSS 2011).
 
 ---
 
@@ -31,11 +40,12 @@ This document catalogs the peer-reviewed literature, industry standards, and ent
 2. **NIST AI Risk Management Framework (AI RMF 1.0)**
    - National Institute of Standards and Technology (2023). _Artificial Intelligence Risk Management Framework (AI RMF 1.0)_, NIST AI 100-1, and _NIST AI 600-1 Generative AI Profile_ (2024). Defines the `GOVERN`, `MAP`, `MEASURE`, and `MANAGE` functions mapped directly into AKCP `PolicyCard` specifications.
 
-3. **OWASP Top 10 for Large Language Model Applications**
-   - OWASP Foundation (2025). _OWASP Top 10 for Large Language Model Applications (v2025)_. Specifically informs AKCP controls for `LLM01: Prompt Injection`, `LLM02: Sensitive Information Disclosure`, `LLM05: Improper Output Handling`, and `LLM06: Excessive Agency`.
+3. **OWASP Top 10 for Large Language Model Applications & Agentic Security**
+   - OWASP Foundation (2025–2026). _OWASP Top 10 for Large Language Model Applications_ and _OWASP Agentic AI Top 10_. Specifically informs AKCP controls for `LLM01: Prompt Injection`, `LLM02: Sensitive Information Disclosure`, `LLM05: Improper Output Handling`, and `LLM06 / LLM08: Excessive Agency`.
 
-4. **Supply-Chain Provenance & Software Bill of Materials (SBOM)**
-   - SLSA (Supply-chain Levels for Software Artifacts) Specification v1.0 & SPDX (Software Package Data Exchange) ISO/IEC 5962:2021. Inform AKCP's deterministic SHA-256 compilation manifests (`akcp-manifest.json`) and CI SBOM generation.
+4. **Supply-Chain Provenance (in-toto / SLSA) & Knowledge Bill of Materials (CycloneDX v1.5)**
+   - Torres-Arias, S., Afzali, H., Kuppusamy, T. K., Curtmola, R., & Cappos, J. (2019). _in-toto: Providing Farm-to-Table Guarantees for Bits and Bytes_. USENIX Security Symposium (USENIX Security 2019).
+   - OWASP CycloneDX Standard v1.5 & SLSA (Supply-chain Levels for Software Artifacts) Specification v1.0. Inform AKCP's deterministic SHA-256 compilation manifests (`akcp-manifest.json`), Ed25519 in-toto ITE-6 attestations, and `sbom-cyclonedx` (`sbom.cdx.json`) target emission.
 
 5. **OpenTelemetry GenAI Semantic Conventions**
    - Cloud Native Computing Foundation (CNCF) OpenTelemetry Project (2024–2025). _Semantic Conventions for Generative AI Systems_. Informs `@akcp/core` tracing spans and metrics counters for compilation stages and MCP tool execution.

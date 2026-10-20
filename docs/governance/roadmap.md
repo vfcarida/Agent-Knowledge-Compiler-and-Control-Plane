@@ -22,8 +22,13 @@ These features are implemented, tested, and considered stable as of the current 
 - **Policy Linter & Enterprise Compliance Bundles (`akcp policy lint`)** — Static detection of shadowed, contradictory, and redundant policy rules, paired with turnkey GDPR, HIPAA, and SOC 2 policy templates (`docs/specs/examples/compliance/`).
 - **Grounding & Prompt-Injection Evaluation (`akcp evals`)** — Reproducible evaluation harnesses for retrieval grounding (Precision@k, Recall@k, Hit Rate) and OWASP LLM01 prompt-injection defense.
 - **Single-Command Quickstart (`akcp quickstart`)** — Zero-setup bootstrapping, compiling, and auto-launching Control Plane dashboard.
-- **Control Plane CLI & Dashboard BFF (`akcp control-plane`, `akcp serve dashboard`)** — Precompiled Node.js Express BFF, native React 19 SPA bundling, and runtime inspection commands (`inspect`, `policies`, `approvals`, `audit`).
-- **Customer Support Enterprise Domain (Stable)** — Enterprise domain with ticket resolution runbooks, macro suggestions, PII redaction, customer history retrieval, governed MCP tools, and HITL approval gates with golden compiler test verification.
+- **Control Plane CLI & Dashboard BFF (`akcp control-plane`, `akcp serve dashboard`)** — Precompiled Node.js Express BFF, native React 19 SPA bundling, Interactive SVG Blast Radius Graph, Policy/WAF Playground, and runtime inspection commands (`inspect`, `policies`, `approvals`, `audit`, `audit-verify`, `replay`).
+- **Hybrid Retrieval & Epistemic Abstention Guard (`akcp context plan --strategy hybrid --enforce-abstention`)** — BM25 + L2 dense embeddings + Personalized PageRank fused via Reciprocal Rank Fusion (RRF), with calibrated grounding confidence and contradiction-aware abstention.
+- **Cryptographic Provenance, KMS Envelope Keyring & CycloneDX v1.5 KBOM (`akcp sign`, `akcp verify`, `akcp keys`, `sbom-cyclonedx`)** — Ed25519 in-toto ITE-6 attestations, `AES-256-GCM` scrypt-wrapped key rotation/revocation, and CycloneDX v1.5 Knowledge & AI Bill of Materials generation.
+- **Formal Policy Verifier, Selective-Disclosure Proofs & Red-Team Fuzzer (`akcp policy verify`, `akcp policy prove`, `akcp evals --scenario red-team`)** — Exhaustive finite-domain safety invariant verification, 256-bit Merkle witness selective disclosure, and adversarial policy/WAF fuzzing.
+- **Reversible PII Token Vault, Macaroon Delegation & OCap Plugin Sandbox (`PiiTokenVault`, `DelegationMacaroonService`, `VmPluginSandbox`)** — Format-preserving `HMAC-SHA256` / `AES-256-GCM` PII tokenization, chained-HMAC attenuated sub-agent macaroons, and isolated `node:vm` plugin execution.
+- **Bidirectional OpenWiki Sync, Autonomous OKF Synthesis, Federated Registries & Cloud Adapters (`akcp sync`, `akcp synthesize`, `akcp registry`)** — 3-way conflict-aware OpenWiki sync, automated OKF frontmatter synthesis, federated knowledge mesh composition, and governed Kubernetes/Signed-Webhook adapters.
+- **Customer Support, IT Operations & Career Enterprise Domains (Stable)** — Reference domains with policies, capabilities, governed MCP tools, and golden compiler test verification.
 
 ---
 
@@ -31,8 +36,7 @@ These features are implemented, tested, and considered stable as of the current 
 
 These features are being actively developed and may change.
 
-- **OpenWiki Bidirectional Sync Connector** — Pull fresh docs from OpenWiki/LangChain into OKF bundles.
-- **Live Cloud Infrastructure Adapters** — Native Kubernetes and CRM webhook execution adapters for the MCP Automation Server.
+- **External PKCS#11 Hardware Tokens & Cloud KMS RPC Transports** — Direct hardware HSM slot bindings and remote AWS KMS / GCP Cloud KMS RPC key-wrapping adapters.
 
 ---
 
@@ -40,9 +44,7 @@ These features are being actively developed and may change.
 
 These are speculative research directions. No implementation is planned yet.
 
-- **Remote MCP Authentication** — Standardized OAuth 2.0 flows for externally-hosted MCP servers.
-- **Federated Knowledge Registries** — Cross-organization knowledge sharing with provenance verification.
-- **LLM-Assisted OKF Authoring** — Using agents to suggest OKF frontmatter for new documents.
+- **Succinct Non-Interactive Arguments of Knowledge (zk-SNARKs / Groth16 / PlonK)** — Arithmetic circuit compilation for complex policy expressions.
 
 ---
 

@@ -352,7 +352,7 @@ describe("CLI Smoke Tests", () => {
 
     it("should execute synthesize, sync, and registry commands via CLI", async () => {
       const os = await import("os");
-      const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "akcp-cli-round2-"));
+      const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "akcp-cli-sync-"));
       try {
         const rawDir = path.join(tmpDir, "raw");
         const wikiDir = path.join(tmpDir, "wiki");

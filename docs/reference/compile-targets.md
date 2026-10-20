@@ -58,6 +58,26 @@ Generates synthetic and extracted QA pairs (question/document grounding datasets
 
 Extracts aggregate metrics, entity relationships, dependency graphs, and summary statistics consumed by the AKCP Dashboard BFF.
 
+### `mcp-tools`
+
+Produces a Model Context Protocol tool manifest declaring the governed tool descriptors, input/output JSON Schemas, side-effect classifications, and risk levels exposed to MCP clients.
+
+### `mcp-prompts`
+
+Emits a Model Context Protocol prompt template manifest compiled from governed OKF prompt concepts and workflow instructions.
+
+### `graph-json`
+
+Serializes the Semantic Knowledge Graph (`nodes`, `edges`, `summary`) alongside the precomputed transitive `impactMap` used for blast-radius analysis and reactive `--watch` compilation.
+
+### `hybrid-index`
+
+Emits precomputed BM25 term statistics, L2-normalized deterministic dense embeddings, and Personalized PageRank priors for sub-millisecond `HybridRetriever` ranking.
+
+### `sbom-cyclonedx`
+
+Generates a standardized **CycloneDX v1.5 (`application/vnd.cyclonedx+json`) Knowledge & AI Bill of Materials (KBOM/SBOM)** (`sbom.cdx.json`) inventorying every compiled OKF concept, MCP capability, cryptographic SHA-256 hash, sensitivity classification, and semantic dependency edge.
+
 ## Compilation Manifest
 
 Whenever compilation is executed, a root build manifest named `akcp-manifest.json` is generated in the target directory. It contains the build identity, tool version, source configuration hashes, and cryptographic hashes (SHA-256) of every emitted target artifact for provenance verification.

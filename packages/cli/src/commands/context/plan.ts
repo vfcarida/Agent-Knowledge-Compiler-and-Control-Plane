@@ -39,6 +39,16 @@ export function registerContextPlanCommand(
     )
     .option("--bundle <directory>", "Directory containing akcp.yaml", ".")
     .option("-f, --format <format>", "Output format (text, json)", "text")
+    .option(
+      "--enforce-abstention",
+      "Enforce Honest-by-Construction epistemic abstention on insufficient grounding or polarity conflicts",
+      false,
+    )
+    .option(
+      "--min-confidence <threshold>",
+      "Minimum calibrated grounding confidence in [0, 1] when --enforce-abstention is active",
+      "0.25",
+    )
     .action(async (options) => {
       const fs = await import("fs");
       const path = await import("path");
@@ -48,6 +58,7 @@ export function registerContextPlanCommand(
         FrontmatterParser,
         OKFFileRepository,
         ContextPlanner,
+        evaluateEpistemicAbstention,
       } = await import("@akcp/core");
 
       try {
@@ -94,6 +105,15 @@ export function registerContextPlanCommand(
           process.exit(1);
         }
 
+        const minConf = parseFloat(options.minConfidence);
+        const abstentionDecision = evaluateEpistemicAbstention(
+          options.task,
+          docs,
+          {
+            minConfidence: isNaN(minConf) ? 0.25 : minConf,
+          },
+        );
+
         const manifest = ContextPlanner.plan(docs, {
           task: options.task,
           profile: options.profile,
@@ -102,8 +122,15 @@ export function registerContextPlanCommand(
           strategy: options.strategy === "hybrid" ? "hybrid" : "lexical",
         });
 
+        const payload = options.enforceAbstention
+          ? { ...manifest, epistemicAbstention: abstentionDecision }
+          : manifest;
+
         if (options.format === "json") {
-          console.log(JSON.stringify(manifest, null, 2));
+          console.log(JSON.stringify(payload, null, 2));
+          if (options.enforceAbstention && abstentionDecision.abstained) {
+            process.exit(1);
+          }
           return;
         }
 
@@ -115,6 +142,12 @@ export function registerContextPlanCommand(
         console.log(`Estimated Tokens: ${manifest.totalEstimatedTokens}`);
         console.log(`Included Docs:    ${manifest.documentsIncluded.length}`);
         console.log(`Excluded Docs:    ${manifest.documentsExcluded.length}`);
+        if (options.enforceAbstention) {
+          console.log(
+            `Abstention Gate:  ${abstentionDecision.action} (Confidence: ${abstentionDecision.confidenceScore})`,
+          );
+          console.log(`Rationale:        ${abstentionDecision.rationale}`);
+        }
         console.log("\n[INCLUDED]");
 
         manifest.documentsIncluded.forEach((doc: any) => {
@@ -134,6 +167,10 @@ export function registerContextPlanCommand(
           console.log(`    Reason: ${doc.reason}`);
         });
         console.log("=============================================\n");
+
+        if (options.enforceAbstention && abstentionDecision.abstained) {
+          process.exit(1);
+        }
       } catch (e: any) {
         console.error(`[ERROR] Context plan failed: ${e.message}`);
         process.exit(1);

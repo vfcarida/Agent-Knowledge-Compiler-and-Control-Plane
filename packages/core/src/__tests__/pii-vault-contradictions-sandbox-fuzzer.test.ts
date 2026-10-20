@@ -12,11 +12,11 @@ import {
   type PluginManifest,
 } from "../index.js";
 
-describe("Round 5 Convergence — Reversible PII Token Vault, Epistemic Contradiction Detector, OCap VM Plugin Sandbox & Red-Team Fuzzer", () => {
+describe("Reversible PII Token Vault, Epistemic Contradiction Detector, OCap VM Plugin Sandbox & Red-Team Fuzzer", () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "akcp-round5-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "akcp-vault-sandbox-"));
   });
 
   afterEach(() => {
@@ -25,7 +25,7 @@ describe("Round 5 Convergence — Reversible PII Token Vault, Epistemic Contradi
 
   describe("Front 1: Reversible Format-Preserving PII Token Vault", () => {
     it("deterministically tokenizes PII into format-preserving tokens and decrypts back on authorized detokenization", () => {
-      const vault = new PiiTokenVault("master-vault-secret-round5");
+      const vault = new PiiTokenVault("master-vault-secret-enterprise");
       const rawPayload = {
         customerEmail: "alice@example.com",
         secondaryContact: "alice@example.com",

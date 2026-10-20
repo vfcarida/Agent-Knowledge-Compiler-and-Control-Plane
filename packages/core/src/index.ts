@@ -21,6 +21,7 @@ export * from "./context/context-pack-manifest.js";
 export * from "./context/context-plan.js";
 export * from "./context/hybrid-retrieval.js";
 export * from "./context/adaptive-compressor.js";
+export * from "./context/abstention-guard.js";
 
 // Lifecycle
 export * from "./lifecycle/types.js";

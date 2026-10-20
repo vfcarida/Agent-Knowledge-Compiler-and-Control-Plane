@@ -153,14 +153,14 @@ flowchart LR
 
 ## Key Features
 
-- **Compiler Pipeline**: Ingests raw organizational knowledge (OKF, wikis, APIs) and normalizes it into AST-level Agent Knowledge IR (AK-IR) with concurrent source ingestion.
-- **Semantic Diffing (`akcp diff`)**: Compares knowledge graphs and governance policies with text, JSON, and Markdown outputs plus `--strict` breaking-change CI gating.
-- **Graph & Policy Linter**: Validates link target references, detects circular prerequisite chains (DFS), and flags shadowed rules or contradictory constraints.
-- **Compile Targets**: Generates optimized outputs like Context Packs, MCP Resources, OpenWiki Docs, and Eval datasets.
-- **Runtime Control Plane**: Governs agent interactions at runtime with capability mapping, audit telemetry, and CLI `inspect`, `policies`, `approvals`, and `audit` commands.
-- **Policy Cards**: Define machine-readable constraints on autonomy levels, allowed tools, side-effects, and PII handling.
-- **Human-In-The-Loop**: Two-phase commits to pause agent execution for critical real-world side-effects.
-- **MCP Compatibility**: Natively supports the Model Context Protocol for tools, resources, and prompts over stdio, SSE, and Streamable HTTP.
+- **Compiler Pipeline**: Ingests raw organizational knowledge (OKF, wikis, APIs) and normalizes it into AST-level Agent Knowledge IR (AK-IR) with concurrent source ingestion and incremental `--watch` recompilation.
+- **13 Deterministic Compile Targets**: Emits Context Packs (`ir-json`), MCP Resources/Tools/Prompts, OpenWiki Docs, Agent Instructions (`AGENTS.md`), Policy Bundles, Eval Datasets, Graph JSON, Hybrid Retrieval Indexes, OKF Bundles, Dashboard Metadata, and **CycloneDX v1.5 Knowledge & AI Bill of Materials (`sbom-cyclonedx`)**.
+- **Hybrid Retrieval & Epistemic Abstention Guard**: Combines Okapi BM25, L2-normalized dense embeddings, and Personalized PageRank via Reciprocal Rank Fusion (RRF), paired with calibrated epistemic confidence and contradiction-aware abstention (`evaluateEpistemicAbstention`).
+- **Semantic Diffing & Epistemic Contradiction Detection**: Compares knowledge graphs and Git revisions (`akcp diff --from-git`) and detects opposing normative rules (`MUST` vs `NEVER`) and SLA conflicts (`akcp graph contradictions`).
+- **Formal Policy Verifier & Selective-Disclosure Proofs**: Exhaustive finite-domain verification of zero-trust safety invariants (`akcp policy verify`) and privacy-preserving 256-bit Merkle witness policy proofs (`akcp policy prove`).
+- **Runtime Control Plane & Flight Recorder Replay**: Governs agent interactions via `MCPGateway` with pre-flight WAF prompt firewalling, reversible format-preserving `PiiTokenVault`, FinOps hard budget circuit-breakers, Chained-HMAC Macaroon sub-agent delegation, and Time-Travel Policy Replay (`akcp control-plane replay`).
+- **Cryptographic Provenance & KMS Envelope Keyring**: Ed25519 in-toto ITE-6 provenance signing (`akcp sign`/`verify`), `AES-256-GCM` scrypt-wrapped KMS keyring with rotation/revocation (`akcp keys`), and SHA-256 Merkle audit ledger verification (`akcp control-plane audit-verify`).
+- **Multi-Party Quorum HITL & OCap Plugin Sandbox**: $M$-of-$N$ supervisor quorum gating with CRDT multi-cluster replication (`QuorumApprovalStore`) and isolated `node:vm` Object-Capability plugin sandboxing (`VmPluginSandbox`).
 
 ## Quickstart
 
@@ -204,22 +204,22 @@ Measured on local hardware using `pnpm run bench` (`vitest bench`):
 
 ## Current Maturity Status
 
-| Area                     | Status  | Evidence                                                                     | Next milestone             |
-| ------------------------ | ------- | ---------------------------------------------------------------------------- | -------------------------- |
-| AKCP CLI                 | Stable  | 30+ commands, integration tests, policy lint, git diff, graph & lifecycle    | npm registry publication   |
-| AK-IR Compiler           | Stable  | 11 deterministic compile targets, SHA-256 provenance, concurrent ingestion   | incremental watch mode     |
-| MCP Profile Server       | Stable  | contract tests, untrusted boundaries, opt-in WAF, stdio & HTTP transports    | federated OAuth            |
-| MCP Automation Server    | Beta    | HITL approval store, SHA-256 replay protection, governed domain tools        | cloud provider connectors  |
-| Control Plane (Gateway)  | Stable  | auth, token-bucket rate limit, HITL, PII redaction, WAF, OPA integration     | multi-region state sync    |
-| Control Plane CLI        | Stable  | inspect, policies, approvals, audit commands & CLI tests                     | remote control API         |
-| Dashboard UI & Serve     | Stable  | React 19 SPA, Overview & Settings panels, Playwright e2e tests, Express BFF  | live WebSocket streaming   |
-| IT Operations (flagship) | Stable  | policies, evals, expected-output, golden compiler verification               | live Kubernetes adapter    |
-| Career (starter)         | Stable  | full walkthrough, golden outputs                                             | —                          |
-| Customer Support         | Stable  | sources, 8 policies, capabilities, governed MCP tools, golden outputs        | external CRM webhook sync  |
-| Semantic Diff Engine     | Stable  | AST diff, `--from-git` / `--to-git` revision comparison, CI gating           | PR comment action          |
-| Graph & Policy Linter    | Stable  | link target validation, cycle detection, `akcp policy lint`, GDPR/HIPAA/SOC2 | IDE quick-fix code actions |
-| VSCode Extension         | Beta    | syntax highlighting, OKF frontmatter diagnostics, autocomplete, commands     | VSCode Marketplace publish |
-| Legacy CLI               | Removed | legacy binaries deleted in v0.1.0                                            | —                          |
+| Area                     | Status  | Evidence                                                                                   | Next milestone             |
+| ------------------------ | ------- | ------------------------------------------------------------------------------------------ | -------------------------- |
+| AKCP CLI                 | Stable  | 35+ commands, policy verify/prove, keys, registry, replay, contradictions & red-team evals | npm registry publication   |
+| AK-IR Compiler           | Stable  | 13 deterministic compile targets (incl. `hybrid-index` & `sbom-cyclonedx`), `--watch` mode | distributed remote cache   |
+| MCP Profile Server       | Stable  | contract tests, untrusted boundaries, JWT/OIDC auth, stdio & Streamable HTTP (`POST /mcp`) | hardware PKCS#11 mTLS      |
+| MCP Automation Server    | Stable  | Multi-Party Quorum CRDT HITL, Kubernetes & Signed Webhook cloud adapters, replay defense   | Terraform state connector  |
+| Control Plane (Gateway)  | Stable  | JWT/Macaroon delegation, WAF pre-flight, PII Token Vault, FinOps breaker, Flight Recorder  | hardware HSM RPC transport |
+| Control Plane CLI        | Stable  | `inspect`, `policies`, `approvals`, `audit`, `audit-verify`, and `replay` commands         | gRPC streaming control API |
+| Dashboard UI & Serve     | Stable  | React 19 SPA, Interactive SVG Blast Radius Graph, Policy/WAF Playground, Express BFF       | multi-tenant RBAC views    |
+| IT Operations (flagship) | Stable  | policies, evals, Kubernetes remediation adapter, golden compiler verification              | PagerDuty incident bridge  |
+| Career (starter)         | Stable  | full walkthrough, golden outputs                                                           | —                          |
+| Customer Support         | Stable  | sources, 8 policies, capabilities, Signed Webhook CRM adapter, golden outputs              | —                          |
+| Semantic Diff Engine     | Stable  | AST diff, `--from-git` / `--to-git` revision comparison, CI gating                         | GitHub PR comment action   |
+| Graph & Policy Verifier  | Stable  | cycle detection, `akcp graph contradictions`, `akcp policy verify`, GDPR/HIPAA/SOC2        | SMT solver backend plugin  |
+| VSCode Extension         | Stable  | OKF diagnostics, `[[WikiLink]]` completions, Blast Radius hovers, Context Budget CodeLens  | VSCode Marketplace publish |
+| Legacy CLI               | Removed | legacy binaries deleted in v0.1.0                                                          | —                          |
 
 For formal definitions, see the [Maturity and Status Guide](docs/status.md).
 

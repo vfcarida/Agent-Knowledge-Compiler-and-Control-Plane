@@ -15,11 +15,11 @@ import {
   type PolicyRule,
 } from "../index.js";
 
-describe("Round 3 Convergence — Cryptographic Audit Ledger, Formal Policy Verifier & JSON-Schema-to-Zod Compiler", () => {
+describe("Cryptographic Audit Ledger, Formal Policy Verifier & JSON-Schema-to-Zod Compiler", () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "akcp-round3-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "akcp-merkle-formal-"));
   });
 
   afterEach(() => {

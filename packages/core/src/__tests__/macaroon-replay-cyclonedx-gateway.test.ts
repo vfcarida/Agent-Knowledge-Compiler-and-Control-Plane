@@ -13,11 +13,11 @@ import {
   type PolicyCard,
 } from "../index.js";
 
-describe("Round 6 Convergence — Gateway Boundary WAF/Vault/FinOps, Macaroon Delegation, Flight Recorder Replay & CycloneDX v1.5 KBOM", () => {
+describe("Gateway Boundary WAF/Vault/FinOps, Macaroon Delegation, Flight Recorder Replay & CycloneDX v1.5 KBOM", () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "akcp-round6-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "akcp-macaroon-kbom-"));
   });
 
   afterEach(() => {
@@ -25,9 +25,9 @@ describe("Round 6 Convergence — Gateway Boundary WAF/Vault/FinOps, Macaroon De
   });
 
   const baselinePolicy: PolicyCard = {
-    id: "policy-round6-baseline",
+    id: "policy-enterprise-baseline",
     metadata: {
-      name: "Round 6 Baseline Policy",
+      name: "Enterprise Baseline Policy",
       version: "1.0.0",
     },
     spec: {
@@ -44,7 +44,7 @@ describe("Round 6 Convergence — Gateway Boundary WAF/Vault/FinOps, Macaroon De
 
   describe("Front 1: Runtime Convergence in MCPGateway (WAF Pre-Flight, PII Token Vault Boundary & FinOps Hard Circuit Breaker)", () => {
     it("detokenizes incoming vault tokens for downstream tool execution, tokenizes outgoing PII, blocks prompt injections via WAF, and trips FinOps hard budget limits", async () => {
-      const vault = new PiiTokenVault("round6-vault-secret");
+      const vault = new PiiTokenVault("enterprise-vault-secret");
       const { tokenizedText: emailToken } =
         vault.tokenizeText("vip@example.com");
 
@@ -272,7 +272,7 @@ describe("Round 6 Convergence — Gateway Boundary WAF/Vault/FinOps, Macaroon De
         irVersion: "1.0.0",
         okfVersion: "0.2.0",
         bundleId: "enterprise-ops-bundle",
-        buildId: "bld_round6",
+        buildId: "bld_cyclone_01",
         timestamp: "2026-10-20T18:00:00.000Z",
         concepts: [
           {

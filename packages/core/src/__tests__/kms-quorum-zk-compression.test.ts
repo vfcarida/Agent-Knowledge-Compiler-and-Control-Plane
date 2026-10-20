@@ -15,11 +15,11 @@ import {
   type PolicyRule,
 } from "../index.js";
 
-describe("Round 4 Convergence — KMS Envelope Keyring, Multi-Party Quorum CRDT, ZK Policy Proofs & Adaptive Context Compressor", () => {
+describe("KMS Envelope Keyring, Multi-Party Quorum CRDT, ZK Policy Proofs & Adaptive Context Compressor", () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "akcp-round4-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "akcp-kms-quorum-"));
   });
 
   afterEach(() => {
