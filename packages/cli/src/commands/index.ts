@@ -10,6 +10,7 @@ import { registerScanCommand } from "./core/scan.js";
 import { registerInspectCommand } from "./core/inspect.js";
 import { registerVerifyCommand } from "./core/verify.js";
 import { registerSignCommand } from "./core/sign.js";
+import { registerSynthesizeCommand } from "./core/synthesize.js";
 import { registerDoctorCommand } from "./core/doctor.js";
 
 // Governance
@@ -17,6 +18,7 @@ import { registerPolicyValidateCommand } from "./governance/policy-validate.js";
 import { registerPolicyExplainCommand } from "./governance/policy-explain.js";
 import { registerPolicyLintCommand } from "./governance/policy-lint.js";
 import { registerConformanceRunCommand } from "./governance/conformance-run.js";
+import { registerRegistryCommand } from "./governance/registry.js";
 
 // Graph
 import { registerGraphBuildCommand } from "./graph/build.js";
@@ -40,6 +42,7 @@ import { registerPluginCommand } from "./utility/plugin.js";
 import { registerPrivacyCommand } from "./utility/privacy.js";
 import { registerCompletionCommand } from "./utility/completion.js";
 import { registerImportCommand } from "./utility/import.js";
+import { registerSyncCommand } from "./utility/sync.js";
 import { registerEvalsCommand } from "./utility/evals.js";
 import { registerPlanCommand } from "./utility/plan.js";
 import { registerReconcileCommand } from "./utility/reconcile.js";
@@ -56,6 +59,7 @@ export function registerAllCommands(program: Command, ctx: CLIContext): void {
   registerInspectCommand(program, ctx);
   registerVerifyCommand(program, ctx);
   registerSignCommand(program, ctx);
+  registerSynthesizeCommand(program, ctx);
   registerDoctorCommand(program, ctx);
 
   // Governance
@@ -63,6 +67,7 @@ export function registerAllCommands(program: Command, ctx: CLIContext): void {
   registerPolicyExplainCommand(program, ctx);
   registerPolicyLintCommand(program, ctx);
   registerConformanceRunCommand(program, ctx);
+  registerRegistryCommand(program, ctx);
 
   // Graph
   registerGraphBuildCommand(program, ctx);
@@ -86,6 +91,7 @@ export function registerAllCommands(program: Command, ctx: CLIContext): void {
   registerPrivacyCommand(program, ctx);
   registerCompletionCommand(program, ctx);
   registerImportCommand(program, ctx);
+  registerSyncCommand(program, ctx);
   registerEvalsCommand(program, ctx);
   registerPlanCommand(program, ctx);
   registerReconcileCommand(program, ctx);

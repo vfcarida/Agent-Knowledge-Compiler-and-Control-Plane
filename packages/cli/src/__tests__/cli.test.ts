@@ -349,5 +349,89 @@ describe("CLI Smoke Tests", () => {
         fs.rmSync(tmpKeyDir, { recursive: true, force: true });
       }
     });
+
+    it("should execute synthesize, sync, and registry commands via CLI", async () => {
+      const os = await import("os");
+      const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "akcp-cli-round2-"));
+      try {
+        const rawDir = path.join(tmpDir, "raw");
+        const wikiDir = path.join(tmpDir, "wiki");
+        const regDir = path.join(tmpDir, "registry");
+        fs.mkdirSync(rawDir, { recursive: true });
+        fs.mkdirSync(wikiDir, { recursive: true });
+
+        fs.writeFileSync(
+          path.join(rawDir, "db-runbook.md"),
+          "# Database Runbook\n\nStep 1: Verify cluster health. Contact ops@example.com.\n",
+          "utf-8",
+        );
+
+        const synthOut = await runCli(`synthesize "${rawDir}" --format json`);
+        const parsedSynth = JSON.parse(synthOut);
+        expect(parsedSynth.ok).toBe(true);
+        expect(parsedSynth.documentsProcessed).toBe(1);
+        expect(parsedSynth.sensitivityElevations).toBe(1);
+
+        const syncOut = await runCli(
+          `sync --okf-dir "${rawDir}" --wiki-dir "${wikiDir}" --format json`,
+        );
+        const parsedSync = JSON.parse(syncOut);
+        expect(parsedSync.ok).toBe(true);
+        expect(parsedSync.summary.exportedToWiki).toBe(1);
+
+        // Publish a dummy IR and Manifest to the Federated Registry
+        const irFile = path.join(tmpDir, "ir.json");
+        const manifestFile = path.join(tmpDir, "akcp-manifest.json");
+        fs.writeFileSync(
+          irFile,
+          JSON.stringify({
+            version: "1.0.0",
+            akcpVersion: "0.1.0",
+            generatedAt: new Date(0).toISOString(),
+            concepts: [
+              {
+                conceptId: "db-runbook",
+                type: "Runbook",
+                frontmatter: { id: "db-runbook", title: "Database Runbook" },
+                body: "Step 1",
+                budget: { byteSize: 6, estimatedTokens: 2 },
+                source: { format: "okf/markdown", filePath: "db-runbook.md" },
+              },
+            ],
+            policies: [],
+            capabilities: [],
+          }),
+          "utf-8",
+        );
+        fs.writeFileSync(
+          manifestFile,
+          JSON.stringify({
+            schemaVersion: "1.0.0",
+            buildId: "b1",
+            createdAt: new Date(0).toISOString(),
+            source: { root: ".", config: "akcp.yaml", hash: "abc" },
+            compiler: { name: "akcp", version: "0.1.0" },
+            targets: [],
+            diagnostics: [],
+            conformance: { level: "L3", checks: [] },
+          }),
+          "utf-8",
+        );
+
+        const pubOut = await runCli(
+          `registry publish -r "${regDir}" -d it-ops -v 1.0.0 --ir "${irFile}" --manifest "${manifestFile}" --format json`,
+        );
+        const parsedPub = JSON.parse(pubOut);
+        expect(parsedPub.domain).toBe("it-ops");
+
+        const verOut = await runCli(
+          `registry verify -r "${regDir}" -d it-ops -v 1.0.0 --format json`,
+        );
+        const parsedVer = JSON.parse(verOut);
+        expect(parsedVer.valid).toBe(true);
+      } finally {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    });
   });
 });

@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import fsSync from "node:fs";
 import fs from "node:fs/promises";
 
 /**
@@ -6,6 +7,14 @@ import fs from "node:fs/promises";
  */
 export function hashString(data: string): string {
   return crypto.createHash("sha256").update(data).digest("hex");
+}
+
+/**
+ * Generates a synchronous SHA-256 hash for a file.
+ */
+export function computeFileSha256(filePath: string): string {
+  const content = fsSync.readFileSync(filePath);
+  return crypto.createHash("sha256").update(content).digest("hex");
 }
 
 /**

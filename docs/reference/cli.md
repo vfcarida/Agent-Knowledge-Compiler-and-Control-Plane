@@ -695,3 +695,58 @@ akcp scorecard [options]
 -f, --format <format>     Output format (json or markdown) (default: "markdown")
 -h, --help                display help for command
 ```
+
+### `akcp synthesize <inputDir>`
+
+**Status**: Beta
+
+Autonomously synthesize governed OKF frontmatter, sensitivity classification, and semantic links from unstructured documents.
+
+```bash
+akcp synthesize <inputDir> [options]
+```
+
+**Options:**
+
+```
+-o, --out <dir>      Output directory for synthesized OKF documents
+--no-auto-link       Disable automatic semantic WikiLink discovery
+--dry-run            Simulate synthesis without writing files
+-f, --format <fmt>   Output format: text or json (default: "text")
+-h, --help           display help for command
+```
+
+### `akcp sync`
+
+**Status**: Beta
+
+Bidirectionally synchronize an OKF bundle directory with an OpenWiki Markdown directory while preserving governed OKF frontmatter.
+
+```bash
+akcp sync [options]
+```
+
+**Options:**
+
+```
+-o, --okf-dir <dir>                  Path to governed OKF sources dir
+-w, --wiki-dir <dir>                 Path to OpenWiki Markdown dir
+-d, --direction <dir>                Sync direction: pull, push, or bidirectional (default: "bidirectional")
+-c, --conflict-strategy <strategy>   3-way conflict resolution strategy: prefer-okf, prefer-wiki, or fail (default: "prefer-okf")
+--dry-run                            Simulate synchronization without modifying files
+-f, --format <fmt>                   Output format: text or json (default: "text")
+-h, --help                           display help for command
+```
+
+### `akcp registry`
+
+**Status**: Beta
+
+Manage Federated Knowledge Registries and compose cross-domain Knowledge Meshes (`publish`, `list`, `verify`, `compose`).
+
+```bash
+akcp registry publish -r <registryDir> -d <domain> [-v <version>] [--ir <path>] [--manifest <path>] [--attestation <path>]
+akcp registry list -r <registryDir>
+akcp registry verify -r <registryDir> -d <domain> [-p <publicKeyPath>] [--require-signed]
+akcp registry compose -r <registryDir> -d <domainsCsv> [-o <outDir>] [-p <publicKeyPath>] [--require-signed]
+```

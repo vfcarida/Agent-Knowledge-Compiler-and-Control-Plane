@@ -272,3 +272,8 @@ export {
   normalizeLinkId,
   extractMarkdownLinks,
 } from "./graph/extract-links.js";
+
+// Bidirectional OpenWiki Sync, Autonomous OKF Synthesis, and Federated Registries
+export * from "./connectors/bidirectional-sync.js";
+export * from "./synthesis/okf-synthesizer.js";
+export * from "./federation/federated-registry.js";

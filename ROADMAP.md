@@ -21,7 +21,11 @@ Production-ready and CI-validated capabilities shipping in current releases:
 - **Enterprise Compliance Bundles**: Turnkey, CI-linted policy templates mapped to GDPR, HIPAA, and SOC 2 requirements (`docs/specs/examples/compliance/`).
 - **Semantic & Git Revision Diff Engine (`akcp diff`)**: AST-level diffing between knowledge bundles or Git revisions (`--from-git`, `--to-git`) with breaking-change severity classification.
 - **Grounding & Adversarial Evaluation (`akcp evals`)**: Automated evaluation suites for prompt-injection defense (`--scenario prompt-injection`) and retrieval grounding Precision@k / Recall@k (`--scenario retrieval-grounding`).
-- **Interactive Control Plane Dashboard & VSCode Extension**: Interactive SVG Semantic Graph & Blast Radius Explorer, Policy & Prompt Firewall Playground, and VSCode extension with OKF frontmatter diagnostics and completions.
+- **Interactive Control Plane Dashboard & VSCode Extension**: Interactive SVG Semantic Graph & Blast Radius Explorer, Policy & Prompt Firewall Playground, and VSCode extension with OKF frontmatter diagnostics, `[[WikiLink]]` completions, Blast Radius hovers, and Context Budget CodeLenses.
+- **Cryptographic State Reconciler & 3-Way Bidirectional OpenWiki Sync (`akcp reconcile --verify-hashes` & `akcp sync`)**: SHA-256 artifact drift detection and 3-way conflict-aware synchronization between governed OKF bundles and OpenWiki repositories.
+- **Autonomous Governed OKF Synthesis (`akcp synthesize`)**: Automated frontmatter synthesis, PII/secret-driven sensitivity elevation, and semantic `[[WikiLink]]` auto-discovery.
+- **Governed Cloud Infrastructure & Webhook Adapters**: Kubernetes remediation adapter (`rollout restart`, `scale`, `rollback`, `logs`) with namespace allowlists and change-window gates, plus HMAC-SHA256 Signed Webhook adapter with SSRF protection and W3C TraceContext propagation.
+- **Federated Knowledge Registries (`akcp registry`)**: Cross-domain bundle publication, Ed25519 signature verification, collision detection, and Federated Knowledge Mesh composition.
 - **Production Reference Domains**: Golden compiler snapshots and verification for `career`, `it-operations`, and `customer-support`.
 
 ---
@@ -30,8 +34,8 @@ Production-ready and CI-validated capabilities shipping in current releases:
 
 Features undergoing active engineering and API stabilization:
 
-- **OpenWiki Bidirectional Sync Connector**: Continuous incremental synchronization of documents from external wikis into governed OKF bundles.
-- **Live Cloud Infrastructure Adapters**: Native Kubernetes and CRM webhook execution adapters for the MCP Automation Server.
+- **Hardware Security Module (HSM) & Cloud KMS Signers**: PKCS#11 and cloud KMS key-wrapping backends for `akcp sign`.
+- **Distributed Multi-Cluster MCP Federation**: Cross-region state replication for HITL approval stores.
 
 ---
 
@@ -39,9 +43,8 @@ Features undergoing active engineering and API stabilization:
 
 Architectural investigations scoped for future major initiatives:
 
-- **Remote MCP Authentication**: Standardized OAuth 2.0 / OIDC identity flows for distributed MCP profile servers.
-- **Federated Knowledge Registries**: Cross-organizational knowledge mesh with cryptographic provenance verification.
-- **Autonomous OKF Synthesis**: Governed agent tooling for drafting and maintaining OKF frontmatter from unstructured sources.
+- **Zero-Knowledge Policy Proofs**: Cryptographic proofs of policy evaluation without revealing sensitive context attributes.
+- **Formal Verification of Policy Cards**: SMT-solver backed equivalence and reachability proofs across policy sets.
 
 ---
 

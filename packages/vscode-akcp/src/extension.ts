@@ -6,6 +6,13 @@ import {
 } from "./utils/config.js";
 import { analyzeOkfFrontmatter } from "./utils/diagnostics.js";
 import { getOkfFrontmatterCompletions } from "./utils/completion.js";
+import {
+  buildWorkspaceConceptIndex,
+  getWikiLinkCompletions,
+  getConceptHoverMarkdown,
+  getDocumentCodeLensSummary,
+  type WorkspaceConceptIndex,
+} from "./utils/workspace-index.js";
 
 export function activate(context: vscode.ExtensionContext) {
   console.log("AKCP extension is now active!");
@@ -55,6 +62,19 @@ export function activate(context: vscode.ExtensionContext) {
   const diagnosticCollection =
     vscode.languages.createDiagnosticCollection("okf");
 
+  const getCurrentOpenDocumentsIndex = (): WorkspaceConceptIndex => {
+    const docs = vscode.workspace.textDocuments
+      .filter(
+        (d) =>
+          d.languageId === "okf" ||
+          d.languageId === "markdown" ||
+          d.fileName.endsWith(".md") ||
+          d.fileName.endsWith(".okf"),
+      )
+      .map((d) => ({ filePath: d.fileName, content: d.getText() }));
+    return buildWorkspaceConceptIndex(docs);
+  };
+
   const updateDiagnostics = (doc: vscode.TextDocument) => {
     if (doc.languageId !== "okf" && !doc.fileName.includes(".okf")) {
       return;
@@ -81,6 +101,20 @@ export function activate(context: vscode.ExtensionContext) {
         const linePrefix = document
           .lineAt(position)
           .text.slice(0, position.character);
+
+        if (linePrefix.includes("[[")) {
+          const index = getCurrentOpenDocumentsIndex();
+          return getWikiLinkCompletions(linePrefix, index).map((item) => {
+            const completion = new vscode.CompletionItem(
+              item.label,
+              vscode.CompletionItemKind.Reference,
+            );
+            completion.detail = item.detail;
+            completion.insertText = item.insertText;
+            return completion;
+          });
+        }
+
         return getOkfFrontmatterCompletions(linePrefix).map((item) => {
           const completion = new vscode.CompletionItem(
             item.label,
@@ -94,6 +128,48 @@ export function activate(context: vscode.ExtensionContext) {
     },
     ":",
     " ",
+    "[",
+  );
+
+  const hoverDisposable = vscode.languages.registerHoverProvider(
+    ["okf", "markdown"],
+    {
+      provideHover(document, position) {
+        const range = document.getWordRangeAtPosition(
+          position,
+          /\[\[[^\]|]+(?:\|[^\]]+)?\]\]|[a-zA-Z0-9_-]+/,
+        );
+        if (!range) return null;
+        const word = document.getText(range);
+        const index = getCurrentOpenDocumentsIndex();
+        const markdown = getConceptHoverMarkdown(word, index);
+        if (!markdown) return null;
+        return new vscode.Hover(new vscode.MarkdownString(markdown), range);
+      },
+    },
+  );
+
+  const codeLensDisposable = vscode.languages.registerCodeLensProvider(
+    ["okf", "markdown"],
+    {
+      provideCodeLenses(document) {
+        const text = document.getText();
+        if (!text.startsWith("---")) return [];
+        const index = getCurrentOpenDocumentsIndex();
+        const summary = getDocumentCodeLensSummary(
+          text,
+          document.fileName,
+          index,
+        );
+        const topRange = new vscode.Range(0, 0, 0, 0);
+        return [
+          new vscode.CodeLens(topRange, {
+            title: summary,
+            command: "akcp.validate",
+          }),
+        ];
+      },
+    },
   );
 
   context.subscriptions.push(
@@ -101,6 +177,8 @@ export function activate(context: vscode.ExtensionContext) {
     compileDisposable,
     diagnosticCollection,
     completionDisposable,
+    hoverDisposable,
+    codeLensDisposable,
     vscode.workspace.onDidOpenTextDocument(updateDiagnostics),
     vscode.workspace.onDidSaveTextDocument(updateDiagnostics),
   );
