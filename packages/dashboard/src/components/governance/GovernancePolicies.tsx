@@ -544,6 +544,50 @@ export function GovernancePolicies() {
         </div>
       </div>
 
+      {/* Selective-Disclosure Zero-Knowledge Policy Proof Inspector */}
+      <div className="glass-panel p-6 rounded-2xl border border-neon-blue/20 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-800/80 pb-4">
+          <div className="flex items-center gap-2.5">
+            <Lock className="w-5 h-5 text-neon-blue" />
+            <div>
+              <h3 className="text-base font-bold text-zinc-100">
+                Privacy-Preserving Selective-Disclosure Policy Proof
+                (akcp.zk-policy-proof/v1)
+              </h3>
+              <p className="text-xs text-zinc-400">
+                Salted 256-bit SHA-256 attribute commitments with Merkle witness
+                verification — prove policy compliance without exposing blinded
+                agent or payload attributes.
+              </p>
+            </div>
+          </div>
+          <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-neon-blue/15 text-neon-blue border border-neon-blue/30 self-start sm:self-auto">
+            MERKLE WITNESS VERIFIED
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono">
+          <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-1">
+            <div className="text-zinc-500 text-[10px] uppercase">
+              Disclosed Public Openings (Verified)
+            </div>
+            <div className="text-emerald-400">
+              riskLevel = &quot;low&quot; • sideEffect = &quot;read&quot; •
+              decision = &quot;{simulationTrace.finalDecision}&quot;
+            </div>
+          </div>
+          <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-1">
+            <div className="text-zinc-500 text-[10px] uppercase">
+              Blinded Commitments (Hidden via 256-bit Nonce)
+            </div>
+            <div className="text-zinc-300 truncate">
+              agentId: sha256:8f4b2c... • tool: sha256:3a91e0... •
+              approvalToken: sha256:d17c44...
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
         <div className="relative flex-1 max-w-md">

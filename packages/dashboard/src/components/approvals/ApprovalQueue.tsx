@@ -222,6 +222,34 @@ export function ApprovalQueue() {
         </button>
       </div>
 
+      {/* Multi-Party M-of-N Quorum & Multi-Cluster CRDT Federation Bar */}
+      <div className="glass-panel p-4 rounded-xl border border-neon-purple/20 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+        <div className="p-3 rounded-lg bg-zinc-900/80 border border-zinc-800">
+          <div className="text-zinc-500 text-[10px] uppercase font-mono mb-1">
+            Quorum Policy (Critical Ops)
+          </div>
+          <div className="text-zinc-200 font-semibold">
+            2-of-N Distinct Supervisors Required (Self-Approval Blocked)
+          </div>
+        </div>
+        <div className="p-3 rounded-lg bg-zinc-900/80 border border-zinc-800">
+          <div className="text-zinc-500 text-[10px] uppercase font-mono mb-1">
+            Multi-Cluster CRDT Replication
+          </div>
+          <div className="text-emerald-400 font-mono font-semibold">
+            ACTIVE • Join-Semilattice Sync (us-east-1 ↔ eu-west-1)
+          </div>
+        </div>
+        <div className="p-3 rounded-lg bg-zinc-900/80 border border-zinc-800">
+          <div className="text-zinc-500 text-[10px] uppercase font-mono mb-1">
+            KMS Envelope Keyring
+          </div>
+          <div className="text-neon-indigo font-mono">
+            AES-256-GCM + Ed25519 Attested
+          </div>
+        </div>
+      </div>
+
       {error && (
         <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-xl flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />

@@ -30,6 +30,10 @@ Production-ready and CI-validated capabilities shipping in current releases:
 - **Formal Policy Verifier & Equivalence Prover (`akcp policy verify`)**: Exhaustive finite-domain verification of zero-trust safety invariants and semantic equivalence proofs across Policy Cards.
 - **Deterministic JSON-Schema-to-Zod Compiler (`compileJsonSchemaToZod`)**: Runtime input/output contract compilation and validation for MCP capability handlers.
 - **Zero-Trust Conformance Certification (`AKCP-zero-trust-attested`)**: Level 5 conformance certification (`akcp conformance run --zero-trust`) verifying formal policy invariants and Ed25519 provenance attestations.
+- **KMS Envelope Signer & Multi-Key Keyring (`KmsEnvelopeKeyring` & `akcp keys`)**: `AES-256-GCM` scrypt-derived key wrapping for Ed25519 signing keys with key rotation (`active` -> `retired`) and instant revocation.
+- **Multi-Party Quorum HITL & CRDT Multi-Cluster Replication (`QuorumApprovalStore`)**: $M$-of-$N$ distinct supervisor quorum gating with self-approval blocking and state-based join-semilattice CRDT synchronization across clusters.
+- **Privacy-Preserving Selective-Disclosure Policy Proofs (`akcp policy prove`)**: Salted 256-bit SHA-256 attribute commitments and Merkle witness verification proving policy compliance without exposing blinded attributes.
+- **Semantic-Preserving Adaptive Context Compressor (`compressDocumentSemantically` & `packWithAdaptiveBudget`)**: Preserves Markdown headings, normative invariants (`MUST`/`NEVER`), and `[[WikiLinks]]` under tight FinOps `CostTracker` token budgets.
 - **Production Reference Domains**: Golden compiler snapshots and verification for `career`, `it-operations`, and `customer-support`.
 
 ---
@@ -38,8 +42,7 @@ Production-ready and CI-validated capabilities shipping in current releases:
 
 Features undergoing active engineering and API stabilization:
 
-- **Hardware Security Module (HSM) & Cloud KMS Signers**: PKCS#11 and cloud KMS key-wrapping backends for `akcp sign`.
-- **Distributed Multi-Cluster MCP Federation**: Cross-region state replication for HITL approval stores.
+- **External PKCS#11 Hardware Tokens & Cloud KMS RPC Transports**: Direct hardware HSM slot bindings and remote AWS KMS / GCP Cloud KMS RPC key-wrapping adapters.
 
 ---
 
@@ -47,7 +50,7 @@ Features undergoing active engineering and API stabilization:
 
 Architectural investigations scoped for future major initiatives:
 
-- **Zero-Knowledge Policy Proofs**: Cryptographic proofs of policy evaluation without revealing sensitive context attributes.
+- **Succinct Non-Interactive Arguments of Knowledge (zk-SNARKs / Groth16 / PlonK)**: Arithmetic circuit compilation for complex policy expressions.
 
 ---
 

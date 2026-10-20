@@ -10,6 +10,7 @@ import { registerScanCommand } from "./core/scan.js";
 import { registerInspectCommand } from "./core/inspect.js";
 import { registerVerifyCommand } from "./core/verify.js";
 import { registerSignCommand } from "./core/sign.js";
+import { registerKeysCommand } from "./core/keys.js";
 import { registerSynthesizeCommand } from "./core/synthesize.js";
 import { registerDoctorCommand } from "./core/doctor.js";
 
@@ -60,6 +61,7 @@ export function registerAllCommands(program: Command, ctx: CLIContext): void {
   registerInspectCommand(program, ctx);
   registerVerifyCommand(program, ctx);
   registerSignCommand(program, ctx);
+  registerKeysCommand(program, ctx);
   registerSynthesizeCommand(program, ctx);
   registerDoctorCommand(program, ctx);
 

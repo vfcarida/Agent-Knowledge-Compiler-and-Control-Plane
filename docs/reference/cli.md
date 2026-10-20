@@ -770,3 +770,26 @@ Cryptographically verify SHA-256 hash-chaining (`prevHash` to `entryHash`) and M
 ```bash
 akcp control-plane audit-verify [-f <filePath>] [--json]
 ```
+
+### `akcp keys`
+
+**Status**: Beta
+
+Manage KMS envelope-encrypted (`AES-256-GCM`) Ed25519 signing keys, rotation, and revocation (`init`, `rotate`, `revoke`, `inspect`).
+
+```bash
+akcp keys init --kek <passphrase> [-k <keyringPath>] [--json]
+akcp keys rotate --kek <passphrase> [-k <keyringPath>] [--json]
+akcp keys revoke --key-id <id> [-k <keyringPath>] [--json]
+akcp keys inspect [-k <keyringPath>] [--json]
+```
+
+### `akcp policy prove`
+
+**Status**: Beta
+
+Generate and verify a privacy-preserving selective-disclosure policy execution proof (`akcp.zk-policy-proof/v1`).
+
+```bash
+akcp policy prove [target] [-t <tool>] [-a <agent>] [-r <risk>] [-s <sideEffect>] [-e <env>] [-d <discloseFields>] [-f <format>]
+```
