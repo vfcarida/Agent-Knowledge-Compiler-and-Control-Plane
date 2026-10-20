@@ -233,4 +233,69 @@ describe("CLI Smoke Tests", () => {
       expect(output).toContain("--lines <number>");
     });
   });
+
+  describe("Policy Lint, Git Diff, Graph, and Context Lifecycle Commands", () => {
+    it("should lint compliance policy bundles via akcp policy lint", async () => {
+      const output = await runCli(
+        "policy lint docs/specs/examples/compliance --format json",
+      );
+      const parsed = JSON.parse(output);
+      expect(parsed.valid).toBe(true);
+      expect(parsed.filesAnalyzed).toBe(3);
+      expect(parsed.issues).toHaveLength(0);
+    });
+
+    it("should execute diff --from-git HEAD on career domain bundle", async () => {
+      const output = await runCli(
+        "diff examples/domains/career --from-git HEAD --format json",
+      );
+      const jsonStart = output.indexOf("{");
+      const parsed = JSON.parse(output.slice(jsonStart));
+      expect(parsed.isBreaking).toBe(false);
+    });
+
+    it("should build, inspect, and compute impact on semantic graph for career domain", async () => {
+      const graphFile = path.resolve(
+        workspaceRoot,
+        "examples/domains/career/dist/knowledge-graph.json",
+      );
+      try {
+        const buildOut = await runCli(
+          "graph build --bundle examples/domains/career",
+        );
+        expect(buildOut).toContain("[OK] Graph generated at");
+
+        const inspectOut = await runCli(
+          "graph inspect --concept experience-acmecorp --bundle examples/domains/career",
+        );
+        expect(inspectOut).toContain("=== Concept: experience-acmecorp ===");
+
+        const impactOut = await runCli(
+          "graph impacted --concept experience-acmecorp --bundle examples/domains/career --format json",
+        );
+        const parsedImpact = JSON.parse(impactOut);
+        expect(parsedImpact.concept).toBe("experience-acmecorp");
+        expect(Array.isArray(parsedImpact.impacted)).toBe(true);
+      } finally {
+        if (fs.existsSync(graphFile)) {
+          fs.unlinkSync(graphFile);
+        }
+      }
+    });
+
+    it("should execute context plan and lifecycle report with --bundle option", async () => {
+      const planOut = await runCli(
+        "context plan --bundle examples/domains/career --budget 2000 --format json",
+      );
+      const parsedPlan = JSON.parse(planOut);
+      expect(parsedPlan.budgetTokens).toBe(2000);
+      expect(Array.isArray(parsedPlan.documentsIncluded)).toBe(true);
+
+      const lifecycleOut = await runCli(
+        "lifecycle report --bundle examples/domains/career --format json",
+      );
+      const parsedLifecycle = JSON.parse(lifecycleOut);
+      expect(parsedLifecycle.totalDocuments).toBeGreaterThan(0);
+    });
+  });
 });

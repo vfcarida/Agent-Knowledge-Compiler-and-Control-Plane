@@ -18,6 +18,12 @@ export function registerGraphImpactedCommand(
       "List all downstream concepts impacted by a change to this concept",
     )
     .requiredOption("-c, --concept <id>", "Concept ID to analyze")
+    .option(
+      "--bundle <directory>",
+      "Directory containing dist/knowledge-graph.json",
+      ".",
+    )
+    .option("-f, --format <format>", "Output format (text, json)", "text")
     .action(async (options) => {
       const fs = await import("fs");
       const path = await import("path");
@@ -25,6 +31,7 @@ export function registerGraphImpactedCommand(
       try {
         const graphPath = path.resolve(
           process.cwd(),
+          options.bundle,
           "dist/knowledge-graph.json",
         );
         if (!fs.existsSync(graphPath)) {
@@ -36,6 +43,13 @@ export function registerGraphImpactedCommand(
 
         const graphData = JSON.parse(fs.readFileSync(graphPath, "utf-8"));
         const impacted = graphData.impactMap[options.concept] || [];
+
+        if (options.format === "json") {
+          console.log(
+            JSON.stringify({ concept: options.concept, impacted }, null, 2),
+          );
+          return;
+        }
 
         console.log(`\n=== Impact Analysis: ${options.concept} ===`);
         if (impacted.length === 0) {

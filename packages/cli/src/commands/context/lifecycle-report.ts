@@ -17,7 +17,14 @@ export function registerLifecycleReportCommand(
   lifecycleCmd
     .command("report")
     .description("Generate a lifecycle report (active, stale, deprecated)")
-    .action(async () => {
+    .option(
+      "-c, --config <path>",
+      "Path to akcp.yaml or directory containing it",
+    )
+    .option("-b, --bundle <directory>", "Directory containing akcp.yaml", ".")
+    .option("-f, --format <format>", "Output format (text, json)", "text")
+    .action(async (options) => {
+      const fs = await import("fs");
       const path = await import("path");
       const {
         loadAkcpConfig,
@@ -28,7 +35,13 @@ export function registerLifecycleReportCommand(
       } = await import("@akcp/core");
 
       try {
-        const configPath = path.resolve(process.cwd(), "akcp.yaml");
+        const configInput = options.config || options.bundle || ".";
+        let targetDir = path.resolve(process.cwd(), configInput);
+        let configPath = path.join(targetDir, "akcp.yaml");
+        if (fs.existsSync(targetDir) && fs.statSync(targetDir).isFile()) {
+          configPath = targetDir;
+          targetDir = path.dirname(configPath);
+        }
         const config = loadAkcpConfig(configPath);
         const sources = config.compile?.sources || [];
         const dirSource = sources.find(
@@ -43,10 +56,11 @@ export function registerLifecycleReportCommand(
           process.exit(1);
         }
 
+        const resolvedSourcePath = path.resolve(targetDir, dirSource.path);
         const repo = new OKFFileRepository(
           new FileSystemAdapter(),
           new FrontmatterParser(),
-          dirSource.path,
+          resolvedSourcePath,
         );
         const docs = await repo.findAll();
 
@@ -71,6 +85,25 @@ export function registerLifecycleReportCommand(
           } else {
             active++;
           }
+        }
+
+        if (options.format === "json") {
+          console.log(
+            JSON.stringify(
+              {
+                totalDocuments: docs.length,
+                active,
+                stale,
+                deprecated,
+                archived,
+                staleDocs,
+                deprecatedDocs,
+              },
+              null,
+              2,
+            ),
+          );
+          return;
         }
 
         console.log("\n=============================================");

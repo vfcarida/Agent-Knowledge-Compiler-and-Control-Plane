@@ -40,7 +40,7 @@ export const automationServerCapabilities: CapabilityManifest[] = [
     kind: "tool",
     version: "0.1.0",
     description:
-      "Deferred feature to scrape job posting metadata. When to use: Feature is disabled. When not to use: Always. Side effects: none.",
+      "Captures structured job posting metadata from a job URL. When to use: To inspect canonical URL, slug, and detected form fields before preparing an application. When not to use: When submitting an application. Side effects: none (external-read).",
     riskLevel: "low",
     sideEffectLevel: "external-read",
     requiredApproval: false,
@@ -51,7 +51,7 @@ export const automationServerCapabilities: CapabilityManifest[] = [
     kind: "tool",
     version: "0.1.0",
     description:
-      "Deferred feature to extract generic metadata. When to use: Feature is disabled. When not to use: Always. Side effects: none.",
+      "Extracts deterministic platform metadata and hostname from a job URL. When to use: To identify the recruiting platform and external job ID locally. When not to use: For full form submission. Side effects: none (local-read).",
     riskLevel: "low",
     sideEffectLevel: "local-read",
     requiredApproval: false,

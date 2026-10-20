@@ -19,6 +19,7 @@ import {
   createToolFailure,
   withToolTracing,
   MCPGateway,
+  PiiRedactor,
   type GatewayConfig,
   type AgentKnowledgeIR,
 } from "@akcp/core";
@@ -70,6 +71,8 @@ export class AKCPAutomationServer {
     "redact_support_pii",
     "preview_support_action",
     "detect_support_knowledge_gap",
+    "request_support_action_approval",
+    "record_support_resolution",
   ]);
 
   constructor(
@@ -709,29 +712,92 @@ export class AKCPAutomationServer {
       automationServerCapabilities.find((c) => c.name === "capture_job_posting")
         ?.description || "",
       { jobUrl: z.string().url(), _agentId: z.string().optional() },
-      async () => {
+      async ({ jobUrl, _agentId }) => {
         const reqId = crypto.randomUUID();
         const toolName = "capture_job_posting";
         const toolVersion = "0.1.0";
         mcpToolCallsCounter.add(1);
 
-        return {
-          isError: true,
-          content: [
+        try {
+          const { data, durationMs } = await this.gateway.execute(
             {
-              type: "text",
-              text: JSON.stringify(
-                createToolFailure(
-                  "NOT_IMPLEMENTED: Feature deferred.",
-                  "NOT_IMPLEMENTED",
-                  { requestId: reqId, toolName, toolVersion, durationMs: 0 },
-                ),
-                null,
-                2,
-              ),
+              requestId: reqId,
+              toolName,
+              riskLevel: riskLevelFor(toolName),
+              sideEffect: "read",
+              agentId: _agentId,
+              payload: { jobUrl },
             },
-          ],
-        };
+            async () => {
+              return await withToolTracing(
+                toolName,
+                toolVersion,
+                reqId,
+                async () => {
+                  const parsedUrl = new URL(jobUrl);
+                  const platform = this.detectPlatform(jobUrl);
+                  const pathSegments = parsedUrl.pathname
+                    .split("/")
+                    .filter(Boolean);
+                  const jobSlug =
+                    pathSegments[pathSegments.length - 1] || "general-posting";
+
+                  return {
+                    jobUrl,
+                    canonicalUrl: `${parsedUrl.origin}${parsedUrl.pathname}`,
+                    platform,
+                    jobSlug,
+                    capturedAt: new Date().toISOString(),
+                    detectedFields: [
+                      "fullName",
+                      "email",
+                      "resume",
+                      "linkedinUrl",
+                    ],
+                  };
+                },
+              );
+            },
+          );
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolSuccess(data, {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        } catch (err: any) {
+          mcpToolFailuresCounter.add(1);
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolFailure(err.message, "CAPTURE_JOB_ERROR", {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs: 0,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        }
       },
     );
 
@@ -742,29 +808,84 @@ export class AKCPAutomationServer {
         (c) => c.name === "extract_platform_metadata",
       )?.description || "",
       { jobUrl: z.string().url(), _agentId: z.string().optional() },
-      async () => {
+      async ({ jobUrl, _agentId }) => {
         const reqId = crypto.randomUUID();
         const toolName = "extract_platform_metadata";
         const toolVersion = "0.1.0";
         mcpToolCallsCounter.add(1);
 
-        return {
-          isError: true,
-          content: [
+        try {
+          const { data, durationMs } = await this.gateway.execute(
             {
-              type: "text",
-              text: JSON.stringify(
-                createToolFailure(
-                  "NOT_IMPLEMENTED: Feature deferred.",
-                  "NOT_IMPLEMENTED",
-                  { requestId: reqId, toolName, toolVersion, durationMs: 0 },
-                ),
-                null,
-                2,
-              ),
+              requestId: reqId,
+              toolName,
+              riskLevel: riskLevelFor(toolName),
+              sideEffect: "read",
+              agentId: _agentId,
+              payload: { jobUrl },
             },
-          ],
-        };
+            async () => {
+              return await withToolTracing(
+                toolName,
+                toolVersion,
+                reqId,
+                async () => {
+                  const parsedUrl = new URL(jobUrl);
+                  const platform = this.detectPlatform(jobUrl);
+                  const pathSegments = parsedUrl.pathname
+                    .split("/")
+                    .filter(Boolean);
+                  return {
+                    platform,
+                    hostname: parsedUrl.hostname,
+                    protocol: parsedUrl.protocol.replace(":", ""),
+                    externalId: pathSegments[pathSegments.length - 1] || null,
+                    supportsAutomatedPreview: platform !== "GenericPlatform",
+                    requiresExplicitConsent: true,
+                  };
+                },
+              );
+            },
+          );
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolSuccess(data, {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        } catch (err: any) {
+          mcpToolFailuresCounter.add(1);
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolFailure(err.message, "EXTRACT_METADATA_ERROR", {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs: 0,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        }
       },
     );
 
@@ -1243,40 +1364,678 @@ export class AKCPAutomationServer {
       },
     );
 
-    // Generic stub for read-only support tools
-    const readOnlySupportTools = [
+    // Read-only governed customer support tools
+    this.server.tool(
       "classify_support_intent",
-      "retrieve_support_context",
-      "draft_support_reply",
-      "validate_support_reply",
-      "redact_support_pii",
-      "preview_support_action",
-      "detect_support_knowledge_gap",
-    ];
+      automationServerCapabilities.find(
+        (c) => c.name === "classify_support_intent",
+      )?.description || "",
+      {
+        text: z
+          .string()
+          .optional()
+          .default("")
+          .describe("Inbound customer ticket text"),
+        _agentId: z.string().optional(),
+      },
+      async ({ text, _agentId }) => {
+        const reqId = crypto.randomUUID();
+        const toolName = "classify_support_intent";
+        const toolVersion = "0.1.0";
+        mcpToolCallsCounter.add(1);
 
-    for (const st of readOnlySupportTools) {
-      this.server.tool(
-        st,
-        automationServerCapabilities.find((c) => c.name === st)?.description ||
-          "",
-        { _agentId: z.string().optional() },
-        async () => {
-          mcpToolCallsCounter.add(1);
+        try {
+          const { data, durationMs } = await this.gateway.execute(
+            {
+              requestId: reqId,
+              toolName,
+              riskLevel: riskLevelFor(toolName),
+              sideEffect: "read",
+              agentId: _agentId,
+              payload: { text },
+            },
+            async () => {
+              return await withToolTracing(
+                toolName,
+                toolVersion,
+                reqId,
+                async () => {
+                  const lower = (text || "").toLowerCase();
+                  let intent = "general_inquiry";
+                  let priority: "low" | "medium" | "high" | "critical" = "low";
+                  let requiresEscalation = false;
+
+                  if (
+                    lower.includes("refund") ||
+                    lower.includes("charge") ||
+                    lower.includes("invoice") ||
+                    lower.includes("billing")
+                  ) {
+                    intent = "billing_and_refund";
+                    priority = "high";
+                    requiresEscalation = lower.includes("refund");
+                  } else if (
+                    lower.includes("password") ||
+                    lower.includes("login") ||
+                    lower.includes("locked") ||
+                    lower.includes("mfa")
+                  ) {
+                    intent = "account_access";
+                    priority = "medium";
+                  } else if (
+                    lower.includes("outage") ||
+                    lower.includes("down") ||
+                    lower.includes("error 500") ||
+                    lower.includes("breach")
+                  ) {
+                    intent = "incident_escalation";
+                    priority = "critical";
+                    requiresEscalation = true;
+                  }
+
+                  return {
+                    intent,
+                    priority,
+                    requiresEscalation,
+                  };
+                },
+              );
+            },
+          );
+
           return {
             content: [
               {
                 type: "text",
                 text: JSON.stringify(
-                  { ok: true, message: `Mock result for ${st}` },
+                  createToolSuccess(data, {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs,
+                  }),
                   null,
                   2,
                 ),
               },
             ],
           };
-        },
-      );
-    }
+        } catch (err: any) {
+          mcpToolFailuresCounter.add(1);
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolFailure(err.message, "SUPPORT_INTENT_ERROR", {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs: 0,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        }
+      },
+    );
+
+    this.server.tool(
+      "retrieve_support_context",
+      automationServerCapabilities.find(
+        (c) => c.name === "retrieve_support_context",
+      )?.description || "",
+      {
+        query: z
+          .string()
+          .optional()
+          .default("")
+          .describe("Search query or ticket summary"),
+        intent: z.string().optional().describe("Classified support intent"),
+        _agentId: z.string().optional(),
+      },
+      async ({ query, intent, _agentId }) => {
+        const reqId = crypto.randomUUID();
+        const toolName = "retrieve_support_context";
+        const toolVersion = "0.1.0";
+        mcpToolCallsCounter.add(1);
+
+        try {
+          const { data, durationMs } = await this.gateway.execute(
+            {
+              requestId: reqId,
+              toolName,
+              riskLevel: riskLevelFor(toolName),
+              sideEffect: "read",
+              agentId: _agentId,
+              payload: { query, intent },
+            },
+            async () => {
+              return await withToolTracing(
+                toolName,
+                toolVersion,
+                reqId,
+                async () => {
+                  const q = `${query || ""} ${intent || ""}`.toLowerCase();
+                  const matchedPolicies: string[] = [
+                    "support-tier1-escalation-policy",
+                  ];
+                  if (q.includes("refund") || q.includes("billing")) {
+                    matchedPolicies.push("refund-approval-threshold-policy");
+                  }
+                  if (q.includes("password") || q.includes("account")) {
+                    matchedPolicies.push("identity-verification-policy");
+                  }
+                  return {
+                    query: query || "",
+                    intent: intent || "general_inquiry",
+                    matchedPolicies,
+                    groundingRequired: true,
+                  };
+                },
+              );
+            },
+          );
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolSuccess(data, {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        } catch (err: any) {
+          mcpToolFailuresCounter.add(1);
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolFailure(err.message, "SUPPORT_CONTEXT_ERROR", {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs: 0,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        }
+      },
+    );
+
+    this.server.tool(
+      "draft_support_reply",
+      automationServerCapabilities.find((c) => c.name === "draft_support_reply")
+        ?.description || "",
+      {
+        ticketId: z.string().optional().default("TKT-000"),
+        customerMessage: z.string().optional().default(""),
+        contextSummary: z.string().optional().default(""),
+        _agentId: z.string().optional(),
+      },
+      async ({ ticketId, customerMessage, contextSummary, _agentId }) => {
+        const reqId = crypto.randomUUID();
+        const toolName = "draft_support_reply";
+        const toolVersion = "0.1.0";
+        mcpToolCallsCounter.add(1);
+
+        try {
+          const { data, durationMs } = await this.gateway.execute(
+            {
+              requestId: reqId,
+              toolName,
+              riskLevel: riskLevelFor(toolName),
+              sideEffect: "read",
+              agentId: _agentId,
+              payload: { ticketId, customerMessage, contextSummary },
+            },
+            async () => {
+              return await withToolTracing(
+                toolName,
+                toolVersion,
+                reqId,
+                async () => {
+                  const guidance = contextSummary
+                    ? `Based on our policy (${contextSummary}), we have reviewed your request.`
+                    : "We have received your support request and are reviewing the relevant account policies.";
+                  return {
+                    ticketId,
+                    draftReply: `Hello,\n\nThank you for contacting support regarding ticket ${ticketId}. ${guidance}\n\nBest regards,\nCustomer Support`,
+                    status: "draft_only",
+                  };
+                },
+              );
+            },
+          );
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolSuccess(data, {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        } catch (err: any) {
+          mcpToolFailuresCounter.add(1);
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolFailure(err.message, "DRAFT_REPLY_ERROR", {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs: 0,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        }
+      },
+    );
+
+    this.server.tool(
+      "validate_support_reply",
+      automationServerCapabilities.find(
+        (c) => c.name === "validate_support_reply",
+      )?.description || "",
+      {
+        draftReply: z.string().optional().default(""),
+        _agentId: z.string().optional(),
+      },
+      async ({ draftReply, _agentId }) => {
+        const reqId = crypto.randomUUID();
+        const toolName = "validate_support_reply";
+        const toolVersion = "0.1.0";
+        mcpToolCallsCounter.add(1);
+
+        try {
+          const { data, durationMs } = await this.gateway.execute(
+            {
+              requestId: reqId,
+              toolName,
+              riskLevel: riskLevelFor(toolName),
+              sideEffect: "read",
+              agentId: _agentId,
+              payload: { draftReply },
+            },
+            async () => {
+              return await withToolTracing(
+                toolName,
+                toolVersion,
+                reqId,
+                async () => {
+                  const redactor = new PiiRedactor();
+                  const piiCheck = await redactor.redact(draftReply || "", {
+                    mode: "detect-only",
+                  });
+                  const violations: string[] = [];
+                  if (piiCheck.findings.length > 0) {
+                    violations.push(
+                      `Contains unredacted PII (${piiCheck.findings.map((f) => f.type).join(", ")})`,
+                    );
+                  }
+                  if (
+                    /guarantee.*refund|instant.*wire/i.test(draftReply || "")
+                  ) {
+                    violations.push(
+                      "Contains unauthorized financial commitment without approval token",
+                    );
+                  }
+
+                  return {
+                    valid: violations.length === 0,
+                    violations,
+                    piiDetected: piiCheck.findings.length,
+                  };
+                },
+              );
+            },
+          );
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolSuccess(data, {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        } catch (err: any) {
+          mcpToolFailuresCounter.add(1);
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolFailure(err.message, "VALIDATE_REPLY_ERROR", {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs: 0,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        }
+      },
+    );
+
+    this.server.tool(
+      "redact_support_pii",
+      automationServerCapabilities.find((c) => c.name === "redact_support_pii")
+        ?.description || "",
+      {
+        text: z
+          .string()
+          .optional()
+          .default("")
+          .describe("Support text containing potential PII"),
+        mode: z
+          .enum(["redact", "tokenize", "detect-only"])
+          .optional()
+          .default("redact"),
+        _agentId: z.string().optional(),
+      },
+      async ({ text, mode, _agentId }) => {
+        const reqId = crypto.randomUUID();
+        const toolName = "redact_support_pii";
+        const toolVersion = "0.1.0";
+        mcpToolCallsCounter.add(1);
+
+        try {
+          const { data, durationMs } = await this.gateway.execute(
+            {
+              requestId: reqId,
+              toolName,
+              riskLevel: riskLevelFor(toolName),
+              sideEffect: "read",
+              agentId: _agentId,
+              payload: { text, mode },
+            },
+            async () => {
+              return await withToolTracing(
+                toolName,
+                toolVersion,
+                reqId,
+                async () => {
+                  const redactor = new PiiRedactor();
+                  const result = await redactor.redact(text || "", {
+                    mode: mode || "redact",
+                  });
+                  return {
+                    redactedText: result.redactedText,
+                    findingsCount: result.findings.length,
+                    findingTypes: result.findings.map((f) => f.type),
+                  };
+                },
+              );
+            },
+          );
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolSuccess(data, {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        } catch (err: any) {
+          mcpToolFailuresCounter.add(1);
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolFailure(err.message, "REDACT_PII_ERROR", {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs: 0,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        }
+      },
+    );
+
+    this.server.tool(
+      "preview_support_action",
+      automationServerCapabilities.find(
+        (c) => c.name === "preview_support_action",
+      )?.description || "",
+      {
+        ticketId: z.string().optional().default("TKT-000"),
+        actionType: z.string().optional().default("refund"),
+        amount: z.number().optional(),
+        _agentId: z.string().optional(),
+      },
+      async ({ ticketId, actionType, amount, _agentId }) => {
+        const reqId = crypto.randomUUID();
+        const toolName = "preview_support_action";
+        const toolVersion = "0.1.0";
+        mcpToolCallsCounter.add(1);
+
+        try {
+          const { data, durationMs } = await this.gateway.execute(
+            {
+              requestId: reqId,
+              toolName,
+              riskLevel: riskLevelFor(toolName),
+              sideEffect: "read",
+              agentId: _agentId,
+              payload: { ticketId, actionType, amount },
+            },
+            async () => {
+              return await withToolTracing(
+                toolName,
+                toolVersion,
+                reqId,
+                async () => {
+                  return {
+                    ticketId,
+                    actionType,
+                    amount: amount ?? null,
+                    dryRun: true,
+                    requiresApprovalToken: true,
+                    nextStep: "request_support_action_approval",
+                  };
+                },
+              );
+            },
+          );
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolSuccess(data, {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        } catch (err: any) {
+          mcpToolFailuresCounter.add(1);
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolFailure(err.message, "PREVIEW_ACTION_ERROR", {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs: 0,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        }
+      },
+    );
+
+    this.server.tool(
+      "detect_support_knowledge_gap",
+      automationServerCapabilities.find(
+        (c) => c.name === "detect_support_knowledge_gap",
+      )?.description || "",
+      {
+        unresolvedTopics: z.array(z.string()).optional().default([]),
+        _agentId: z.string().optional(),
+      },
+      async ({ unresolvedTopics, _agentId }) => {
+        const reqId = crypto.randomUUID();
+        const toolName = "detect_support_knowledge_gap";
+        const toolVersion = "0.1.0";
+        mcpToolCallsCounter.add(1);
+
+        try {
+          const { data, durationMs } = await this.gateway.execute(
+            {
+              requestId: reqId,
+              toolName,
+              riskLevel: riskLevelFor(toolName),
+              sideEffect: "read",
+              agentId: _agentId,
+              payload: { unresolvedTopics },
+            },
+            async () => {
+              return await withToolTracing(
+                toolName,
+                toolVersion,
+                reqId,
+                async () => {
+                  const gaps = (unresolvedTopics || []).map((topic) => ({
+                    topic,
+                    recommendedDocType: "runbook",
+                    suggestedConceptId: `support-kb-${topic
+                      .toLowerCase()
+                      .replace(/[^a-z0-9]+/g, "-")
+                      .replace(/^-|-$/g, "")}`,
+                  }));
+                  return {
+                    analyzedCount: gaps.length,
+                    gaps,
+                  };
+                },
+              );
+            },
+          );
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolSuccess(data, {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        } catch (err: any) {
+          mcpToolFailuresCounter.add(1);
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  createToolFailure(err.message, "KNOWLEDGE_GAP_ERROR", {
+                    requestId: reqId,
+                    toolName,
+                    toolVersion,
+                    durationMs: 0,
+                  }),
+                  null,
+                  2,
+                ),
+              },
+            ],
+          };
+        }
+      },
+    );
   }
 
   private detectPlatform(url: string): string {

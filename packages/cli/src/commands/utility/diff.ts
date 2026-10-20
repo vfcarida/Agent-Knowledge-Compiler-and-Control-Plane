@@ -31,9 +31,19 @@ export function registerDiffCommand(program: Command, _ctx: CLIContext): void {
       "Exit with code 1 if any breaking changes are detected",
       false,
     )
+    .option(
+      "--from-git <rev>",
+      "Compare against a bundle snapshot from a specific Git revision (e.g. HEAD, main, HEAD~1)",
+    )
+    .option(
+      "--to-git <rev>",
+      "Compare target against a specific Git revision instead of working tree",
+    )
     .action(async (baseInput, targetInput, options) => {
       const fs = await import("fs");
+      const os = await import("os");
       const path = await import("path");
+      const { execFileSync } = await import("child_process");
       const {
         compile: compileToIR,
         diffKnowledgeIR,
@@ -90,11 +100,79 @@ export function registerDiffCommand(program: Command, _ctx: CLIContext): void {
         throw new Error(`Unsupported input format for path: ${resolved}`);
       };
 
+      const resolveGitRevisionToIR = async (
+        rev: string,
+        bundleDirInput: string,
+      ): Promise<AgentKnowledgeIR> => {
+        const resolvedBundleDir = path.resolve(process.cwd(), bundleDirInput);
+        const gitRoot = execFileSync("git", ["rev-parse", "--show-toplevel"], {
+          cwd: fs.existsSync(resolvedBundleDir)
+            ? resolvedBundleDir
+            : process.cwd(),
+          encoding: "utf-8",
+        }).trim();
+
+        const relBundlePath = path
+          .relative(gitRoot, resolvedBundleDir)
+          .replace(/\\/g, "/");
+        const treeArgs = ["ls-tree", "-r", "--name-only", rev];
+        if (relBundlePath && relBundlePath !== ".") {
+          treeArgs.push(relBundlePath);
+        }
+
+        const fileListRaw = execFileSync("git", treeArgs, {
+          cwd: gitRoot,
+          encoding: "utf-8",
+        }).trim();
+
+        if (!fileListRaw) {
+          throw new Error(
+            `No tracked files found in Git revision '${rev}' for path '${relBundlePath || "."}'`,
+          );
+        }
+
+        const tempRoot = fs.mkdtempSync(
+          path.join(os.tmpdir(), "akcp-git-diff-"),
+        );
+        try {
+          const files = fileListRaw.split(/\r?\n/).filter(Boolean);
+          for (const gitFile of files) {
+            const relInsideBundle =
+              relBundlePath && relBundlePath !== "."
+                ? gitFile.slice(relBundlePath.length).replace(/^\/+/, "")
+                : gitFile;
+            if (!relInsideBundle) continue;
+
+            const destPath = path.join(tempRoot, relInsideBundle);
+            fs.mkdirSync(path.dirname(destPath), { recursive: true });
+            const content = execFileSync("git", ["show", `${rev}:${gitFile}`], {
+              cwd: gitRoot,
+            });
+            fs.writeFileSync(destPath, content);
+          }
+
+          return await resolveToIR(tempRoot);
+        } finally {
+          fs.rmSync(tempRoot, { recursive: true, force: true });
+        }
+      };
+
       try {
         let baseIR: AgentKnowledgeIR;
         let targetIR: AgentKnowledgeIR;
 
-        if (baseInput && targetInput) {
+        if (options.fromGit) {
+          const bundleDir = baseInput || ".";
+          console.log(
+            `[INFO] Computing semantic diff from Git revision '${options.fromGit}' for bundle '${bundleDir}'`,
+          );
+          baseIR = await resolveGitRevisionToIR(options.fromGit, bundleDir);
+          if (options.toGit) {
+            targetIR = await resolveGitRevisionToIR(options.toGit, bundleDir);
+          } else {
+            targetIR = await resolveToIR(bundleDir);
+          }
+        } else if (baseInput && targetInput) {
           // Explicit diff between two sources
           console.log(
             `[INFO] Computing semantic diff: ${baseInput} -> ${targetInput}`,

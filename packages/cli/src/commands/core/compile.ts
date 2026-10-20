@@ -46,11 +46,15 @@ export function registerCompileCommand(
         compile: compileToIR,
         loadPolicy,
         IrJsonTarget,
+        OkfBundleTarget,
         OpenWikiDocsTarget,
         AgentsMdTarget,
         McpResourcesManifestTarget,
+        McpToolsManifestTarget,
+        McpPromptsManifestTarget,
         PolicyBundleTarget,
         EvalDatasetTarget,
+        GraphJsonTarget,
         DashboardMetadataTarget,
         ProvenanceManifestBuilder,
         hashConfig,
@@ -233,23 +237,17 @@ export function registerCompileCommand(
           openwiki: new OpenWikiDocsTarget(),
           "agent-instructions": new AgentsMdTarget(),
           "mcp-resources": new McpResourcesManifestTarget(),
+          "mcp-tools": new McpToolsManifestTarget(),
+          "mcp-prompts": new McpPromptsManifestTarget(),
           "policy-bundle": new PolicyBundleTarget(),
           "eval-dataset": new EvalDatasetTarget(),
           "dashboard-metadata": new DashboardMetadataTarget(),
+          "graph-json": new GraphJsonTarget(),
+          "okf-bundle": new OkfBundleTarget(),
         };
 
         if (!skipTargetGeneration) {
           for (const targetConf of targetsToRun) {
-            if (["mcp-tools", "mcp-prompts"].includes(targetConf.type)) {
-              manifestBuilder.addWarning(
-                `[WARN] Target type '${targetConf.type}' is experimental and currently unimplemented.`,
-              );
-              console.warn(
-                `[WARN] Target type '${targetConf.type}' is experimental and currently unimplemented.`,
-              );
-              continue;
-            }
-
             const targetImpl = targetInstances[targetConf.type];
             if (targetImpl) {
               const resolvedTargetConf = {

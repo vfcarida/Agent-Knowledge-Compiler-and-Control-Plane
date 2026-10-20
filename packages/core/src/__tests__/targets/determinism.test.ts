@@ -4,9 +4,12 @@ import { OkfBundleTarget } from "../../targets/okf-bundle.js";
 import { OpenWikiDocsTarget } from "../../targets/openwiki-docs.js";
 import { AgentsMdTarget } from "../../targets/agents-md.js";
 import { McpResourcesManifestTarget } from "../../targets/mcp-resources-manifest.js";
+import { McpToolsManifestTarget } from "../../targets/mcp-tools-manifest.js";
+import { McpPromptsManifestTarget } from "../../targets/mcp-prompts-manifest.js";
 import { PolicyBundleTarget } from "../../targets/policy-bundle.js";
 import { EvalDatasetTarget } from "../../targets/eval-dataset.js";
 import { GraphJsonTarget } from "../../targets/graph-json.js";
+import { DashboardMetadataTarget } from "../../targets/dashboard-metadata.js";
 import type { AgentKnowledgeIR } from "../../ir/types.js";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -92,10 +95,16 @@ describe("Compile Targets Determinism", () => {
     testTargetDeterminism(AgentsMdTarget, "agents-snippet.md"));
   it("McpResourcesManifestTarget should be deterministic", () =>
     testTargetDeterminism(McpResourcesManifestTarget, "manifest.json"));
+  it("McpToolsManifestTarget should be deterministic", () =>
+    testTargetDeterminism(McpToolsManifestTarget, "mcp-tools.json"));
+  it("McpPromptsManifestTarget should be deterministic", () =>
+    testTargetDeterminism(McpPromptsManifestTarget, "mcp-prompts.json"));
   it("PolicyBundleTarget should be deterministic", () =>
     testTargetDeterminism(PolicyBundleTarget, "policies.json"));
   it("EvalDatasetTarget should be deterministic", () =>
     testTargetDeterminism(EvalDatasetTarget, "eval.jsonl"));
   it("GraphJsonTarget should be deterministic", () =>
     testTargetDeterminism(GraphJsonTarget, "graph.json"));
+  it("DashboardMetadataTarget should be deterministic", () =>
+    testTargetDeterminism(DashboardMetadataTarget, "dashboard.json"));
 });

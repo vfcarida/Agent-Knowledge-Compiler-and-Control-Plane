@@ -1,0 +1,58 @@
+apiVersion: policy.akcp.dev/v1alpha1
+kind: PolicyCard
+id: compliance-gdpr-data-privacy
+metadata:
+  name: gdpr-data-privacy
+  version: 1.0.0
+  description: >
+    EU General Data Protection Regulation (GDPR) compliance policy enforcing
+    data minimization (Art. 5(1)(c)), security of processing (Art. 32), and
+    automated decision-making safeguards (Art. 22) for AI agent tool execution.
+appliesTo:
+  capabilities:
+    - export_personal_data
+    - delete_data_subject_record
+  riskLevels:
+    - high
+    - critical
+rules:
+  - effect: require_approval
+    condition: "approval_exists"
+evidence:
+  required:
+    - dpo-review-log
+    - data-subject-request-ticket
+spec:
+  allowedAgents:
+    - privacy-compliance-agent
+    - support-tier2-agent
+  allowedContextPacks:
+    - eu-customer-support-context
+    - gdpr-retention-schedule
+  allowedTools:
+    - classify_support_intent
+    - retrieve_support_context
+    - redact_support_pii
+    - validate_support_reply
+  forbiddenTools:
+    - bulk_export_unredacted_pii
+    - cross_border_raw_transfer
+  maxContextBudget: 8000
+  sideEffectRules:
+    read: allow
+    write: approval
+    submit: deny
+  approvalRequirements:
+    - erase_customer_account
+  evidenceRequirements:
+    - dpo-signoff
+    - pii-redaction-audit
+  piiHandling: redact
+  mappings:
+    nist_ai_rmf:
+      - GOVERN-1.2
+      - MAP-2.3
+      - MANAGE-2.4
+    owasp_llm:
+      - LLM02:SensitiveInformationDisclosure
+      - LLM06:ExcessiveAgency

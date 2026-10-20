@@ -14,3 +14,7 @@ export function parseExtensionConfig(rawConfig: unknown): AKCPExtensionConfig {
 export function buildValidateCommand(config: AKCPExtensionConfig): string {
   return `${config.akcpExecutable} validate`;
 }
+
+export function buildCompileCommand(config: AKCPExtensionConfig): string {
+  return `${config.akcpExecutable} compile`;
+}

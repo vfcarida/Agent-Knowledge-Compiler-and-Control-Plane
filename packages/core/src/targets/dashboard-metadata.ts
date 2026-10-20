@@ -19,16 +19,17 @@ export class DashboardMetadataTarget implements CompileTarget {
       fs.mkdirSync(outDir, { recursive: true });
     }
 
+    const stableTimestamp = ir.timestamp || new Date().toISOString();
     const metadata = {
       bundleId: ir.bundleId,
-      timestamp: new Date().toISOString(),
+      timestamp: stableTimestamp,
       conceptsCount: ir.concepts.length,
       capabilitiesCount: ir.capabilities?.length || 0,
       linksCount: ir.links?.length || 0,
       policiesCount: 0, // This is loaded externally typically, or could be extracted from IR if available
       health: {
         status: "healthy",
-        lastCompiled: new Date().toISOString(),
+        lastCompiled: stableTimestamp,
       },
       concepts: ir.concepts.map((c) => ({
         id: c.conceptId,

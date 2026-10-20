@@ -12,19 +12,18 @@ export function registerEvalsCommand(program: Command, _ctx: CLIContext): void {
   evalsCmd
     .option(
       "--scenario <name>",
-      "Specific scenario to run (e.g., prompt-injection)",
+      "Specific scenario to run (prompt-injection, retrieval-grounding)",
     )
     .option("--report", "Generate a report")
     .action(async (options) => {
-      const { runPromptInjectionEval } =
-        await import("@akcp/evals/dist/prompt-injection-scenario.js");
-
       if (options.scenario === "prompt-injection") {
+        const { runPromptInjectionEval } =
+          await import("@akcp/evals/dist/prompt-injection-scenario.js");
         console.log(`[INFO] Running evaluation scenario: prompt-injection`);
         try {
           const result = await runPromptInjectionEval();
           if (options.report) {
-            console.log("\\n=== EVALUATION REPORT ===");
+            console.log("\n=== EVALUATION REPORT ===");
             console.log(`Scenario: ${result.scenario}`);
             console.log(`Total Cases: ${result.totalCases}`);
             console.log(
@@ -33,8 +32,33 @@ export function registerEvalsCommand(program: Command, _ctx: CLIContext): void {
             console.log(
               `False Positive Rate: ${(result.falsePositiveRate * 100).toFixed(1)}%`,
             );
-            console.log(`Passed: ${result.passed ? "✅ YES" : "❌ NO"}`);
-            console.log("=========================\\n");
+            console.log(`Passed: ${result.passed ? "YES" : "NO"}`);
+            console.log("=========================\n");
+          }
+          process.exit(result.passed ? 0 : 1);
+        } catch (err: any) {
+          console.error(`[ERROR] Scenario failed: ${err.message}`);
+          process.exit(1);
+        }
+      } else if (options.scenario === "retrieval-grounding") {
+        const { runRetrievalGroundingEval } =
+          await import("@akcp/evals/dist/retrieval-grounding.js");
+        console.log(`[INFO] Running evaluation scenario: retrieval-grounding`);
+        try {
+          const result = await runRetrievalGroundingEval();
+          if (options.report) {
+            console.log("\n=== EVALUATION REPORT ===");
+            console.log(`Scenario: ${result.scenario}`);
+            console.log(`Total Queries: ${result.totalQueries}`);
+            console.log(
+              `Mean Precision@k: ${(result.meanPrecisionAtK * 100).toFixed(1)}%`,
+            );
+            console.log(
+              `Mean Recall@k: ${(result.meanRecallAtK * 100).toFixed(1)}%`,
+            );
+            console.log(`Hit Rate: ${(result.hitRate * 100).toFixed(1)}%`);
+            console.log(`Passed: ${result.passed ? "YES" : "NO"}`);
+            console.log("=========================\n");
           }
           process.exit(result.passed ? 0 : 1);
         } catch (err: any) {
@@ -43,7 +67,7 @@ export function registerEvalsCommand(program: Command, _ctx: CLIContext): void {
         }
       } else {
         console.error(
-          "[ERROR] Scenario not implemented or not specified. Use --scenario prompt-injection",
+          "[ERROR] Scenario not specified or unsupported. Use --scenario prompt-injection or --scenario retrieval-grounding",
         );
         process.exit(1);
       }

@@ -194,3 +194,12 @@ jobs:
 
       - name: Compile Google OKF Demo Bundle
         run: pnpm akcp compile --config examples/domains/google-okf-demo/akcp.yaml
+
+      - name: Validate Customer Support Bundle
+        run: pnpm akcp validate --bundle examples/domains/customer-support --profile customer-support
+
+      - name: Compile Customer Support Bundle
+        run: pnpm akcp compile --config examples/domains/customer-support/akcp.yaml
+
+      - name: Lint Enterprise Compliance Policies
+        run: pnpm akcp policy lint docs/specs/examples/compliance --strict

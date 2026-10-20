@@ -16,6 +16,11 @@ export function registerGraphInspectCommand(
     .command("inspect")
     .description("Inspect a concept in the knowledge graph")
     .requiredOption("-c, --concept <id>", "Concept ID to inspect")
+    .option(
+      "--bundle <directory>",
+      "Directory containing dist/knowledge-graph.json",
+      ".",
+    )
     .action(async (options) => {
       const fs = await import("fs");
       const path = await import("path");
@@ -23,6 +28,7 @@ export function registerGraphInspectCommand(
       try {
         const graphPath = path.resolve(
           process.cwd(),
+          options.bundle,
           "dist/knowledge-graph.json",
         );
         if (!fs.existsSync(graphPath)) {
@@ -35,10 +41,10 @@ export function registerGraphInspectCommand(
         const graphData = JSON.parse(fs.readFileSync(graphPath, "utf-8"));
 
         const incoming = graphData.edges.filter(
-          (e: any) => e.target === options.concept,
+          (e: any) => (e.targetConceptId ?? e.target) === options.concept,
         );
         const outgoing = graphData.edges.filter(
-          (e: any) => e.source === options.concept,
+          (e: any) => (e.sourceConceptId ?? e.source) === options.concept,
         );
 
         console.log(`\n=== Concept: ${options.concept} ===`);
@@ -46,14 +52,16 @@ export function registerGraphInspectCommand(
 
         outgoing.forEach((e: any) =>
           console.log(
-            `  -> ${e.target} [${e.relation}] ${e.isBroken ? "(BROKEN)" : ""}`,
+            `  -> ${e.targetConceptId ?? e.target} [${e.relationType ?? e.relation}] ${e.isBroken ? "(BROKEN)" : ""}`,
           ),
         );
 
         console.log(`\nIncoming Links (${incoming.length}):`);
 
         incoming.forEach((e: any) =>
-          console.log(`  <- ${e.source} [${e.relation}]`),
+          console.log(
+            `  <- ${e.sourceConceptId ?? e.source} [${e.relationType ?? e.relation}]`,
+          ),
         );
         console.log();
       } catch (err: any) {

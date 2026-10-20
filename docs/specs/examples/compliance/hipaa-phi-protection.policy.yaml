@@ -1,0 +1,57 @@
+apiVersion: policy.akcp.dev/v1alpha1
+kind: PolicyCard
+id: compliance-hipaa-phi-protection
+metadata:
+  name: hipaa-phi-protection
+  version: 1.0.0
+  description: >
+    HIPAA Privacy and Security Rule (45 CFR Part 160 and Part 164) compliance
+    policy enforcing Protected Health Information (PHI) redaction, minimum
+    necessary access, and strict prohibition of unapproved external transmissions.
+appliesTo:
+  capabilities:
+    - disclose_clinical_summary
+    - update_patient_record
+  riskLevels:
+    - high
+    - critical
+rules:
+  - effect: require_approval
+    condition: "approval_exists"
+evidence:
+  required:
+    - hipaa-authorization-token
+    - phi-access-audit-trail
+spec:
+  allowedAgents:
+    - clinical-documentation-assistant
+    - triage-intake-agent
+  allowedContextPacks:
+    - clinical-guidelines-pack
+    - hipaa-safe-harbor-rules
+  allowedTools:
+    - read_deidentified_chart
+    - redact_support_pii
+    - validate_support_reply
+  forbiddenTools:
+    - transmit_unencrypted_phi
+    - export_patient_cohort_raw
+  maxContextBudget: 6000
+  sideEffectRules:
+    read: audit
+    write: approval
+    submit: deny
+  approvalRequirements:
+    - release_medical_record
+  evidenceRequirements:
+    - baa-verification
+    - safe-harbor-deidentification-check
+  piiHandling: deny
+  mappings:
+    nist_ai_rmf:
+      - GOVERN-1.1
+      - PROTECT-2.1
+      - MEASURE-2.7
+    owasp_llm:
+      - LLM02:SensitiveInformationDisclosure
+      - LLM01:PromptInjection

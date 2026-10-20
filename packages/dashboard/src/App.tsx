@@ -7,6 +7,8 @@ import { useState } from "react";
 import { MainLayout } from "./components/layout/MainLayout.js";
 import { ApprovalQueue } from "./components/approvals/ApprovalQueue.js";
 import { SystemHealth } from "./components/system/SystemHealth.js";
+import { OverviewDashboard } from "./components/system/OverviewDashboard.js";
+import { SettingsPanel } from "./components/system/SettingsPanel.js";
 import { EvalsSummary } from "./components/evals/EvalsSummary.js";
 import { useOKFData } from "./hooks/use-okf-data.js";
 import { FolderOpen, ArrowRight, ShieldCheck, Cpu } from "lucide-react";
@@ -43,7 +45,7 @@ export default function App() {
     if (!data) return null;
     switch (currentTab) {
       case "overview":
-        return <div className="text-zinc-400">Overview Placeholder</div>;
+        return <OverviewDashboard data={data} />;
       case "health":
         return <SystemHealth />;
       case "documents":
@@ -63,9 +65,9 @@ export default function App() {
       case "governance":
         return <GovernancePolicies />;
       case "settings":
-        return <div className="text-zinc-400">Settings Placeholder</div>;
+        return <SettingsPanel />;
       default:
-        return <div className="text-zinc-400">Placeholder</div>;
+        return <OverviewDashboard data={data} />;
     }
   };
 

@@ -1,0 +1,57 @@
+apiVersion: policy.akcp.dev/v1alpha1
+kind: PolicyCard
+id: compliance-soc2-change-management
+metadata:
+  name: soc2-change-management
+  version: 1.0.0
+  description: >
+    AICPA SOC 2 Trust Services Criteria (CC6 Logical Access and CC8 Change
+    Management) policy governing autonomous infrastructure remediation,
+    production deployments, and human-in-the-loop change authorization.
+appliesTo:
+  capabilities:
+    - apply_production_migration
+    - rotate_production_secrets
+  riskLevels:
+    - critical
+rules:
+  - effect: require_approval
+    condition: "environment == 'production' && approval_exists"
+evidence:
+  required:
+    - change-advisory-board-ticket
+    - automated-rollback-plan
+spec:
+  allowedAgents:
+    - sre-incident-responder
+    - release-automation-agent
+  allowedContextPacks:
+    - production-runbooks-pack
+    - incident-response-playbooks
+  allowedTools:
+    - check_service_health
+    - query_metrics_snapshot
+    - inspect_deployment_diff
+  forbiddenTools:
+    - drop_production_database
+    - disable_audit_logging
+  maxContextBudget: 12000
+  sideEffectRules:
+    read: allow
+    write: approval
+    submit: approval
+  approvalRequirements:
+    - restart_production_cluster
+    - rollback_release
+  evidenceRequirements:
+    - peer-review-approval
+    - ci-verification-pass
+  piiHandling: redact
+  mappings:
+    nist_ai_rmf:
+      - GOVERN-4.1
+      - MANAGE-1.3
+      - MANAGE-4.1
+    owasp_llm:
+      - LLM06:ExcessiveAgency
+      - LLM05:ImproperOutputHandling

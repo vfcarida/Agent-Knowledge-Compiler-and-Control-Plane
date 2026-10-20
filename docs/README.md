@@ -130,6 +130,7 @@ Welcome to the **Agent Knowledge Compiler and Control Plane (AKCP)** documentati
 | [Knowledge Lifecycle](reference/knowledge-lifecycle.md) | From authoring to deprecation                  |
 | [Provenance](reference/provenance.md)                   | Artifact lineage and supply chain traceability |
 | [Risk Register](governance/risk-register.md)            | Known project risks and mitigations            |
+| [Scientific & Executive References](references.md)      | Peer-reviewed papers, standards, and AI TRiSM  |
 
 ---
 

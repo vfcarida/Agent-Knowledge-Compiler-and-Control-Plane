@@ -18,10 +18,12 @@ These features are implemented, tested, and considered stable as of the current 
 - **Conformance Suite** — Automated verification of AKCP conformance claims.
 - **Agent Knowledge Readiness Scorecard** — Quantified bundle quality scoring (0-100).
 - **Plugin Architecture** — Declarative `akcp-plugin.json` manifest for build-time connectors.
-- **Semantic Diff (`akcp diff`)** — Human- and machine-readable diffing of AK-IR snapshots for change review and CI/CD gating.
+- **Semantic & Git Revision Diff (`akcp diff`)** — Human- and machine-readable diffing of AK-IR snapshots and Git revisions (`--from-git`, `--to-git`) for change review and CI/CD gating.
+- **Policy Linter & Enterprise Compliance Bundles (`akcp policy lint`)** — Static detection of shadowed, contradictory, and redundant policy rules, paired with turnkey GDPR, HIPAA, and SOC 2 policy templates (`docs/specs/examples/compliance/`).
+- **Grounding & Prompt-Injection Evaluation (`akcp evals`)** — Reproducible evaluation harnesses for retrieval grounding (Precision@k, Recall@k, Hit Rate) and OWASP LLM01 prompt-injection defense.
 - **Single-Command Quickstart (`akcp quickstart`)** — Zero-setup bootstrapping, compiling, and auto-launching Control Plane dashboard.
 - **Control Plane CLI & Dashboard BFF (`akcp control-plane`, `akcp serve dashboard`)** — Precompiled Node.js Express BFF, native React 19 SPA bundling, and runtime inspection commands (`inspect`, `policies`, `approvals`, `audit`).
-- **Customer Support Enterprise Flagship (Beta)** — Enterprise domain with ticket resolution runbooks, macro suggestions, PII redaction, customer history retrieval, and HITL approval gates with golden compiler test verification.
+- **Customer Support Enterprise Domain (Stable)** — Enterprise domain with ticket resolution runbooks, macro suggestions, PII redaction, customer history retrieval, governed MCP tools, and HITL approval gates with golden compiler test verification.
 
 ---
 
@@ -29,9 +31,8 @@ These features are implemented, tested, and considered stable as of the current 
 
 These features are being actively developed and may change.
 
-- **OpenWiki Sync Connector** — Pull fresh docs from OpenWiki/LangChain into OKF bundles.
-- **Continuous Eval Pipeline & Drift Detection** — Automated continuous evaluation of agent grounding against OKF ground truth.
-- **Enterprise Governance Bundles** — Pre-built policy packs for GDPR, HIPAA, SOC2.
+- **OpenWiki Bidirectional Sync Connector** — Pull fresh docs from OpenWiki/LangChain into OKF bundles.
+- **Live Cloud Infrastructure Adapters** — Native Kubernetes and CRM webhook execution adapters for the MCP Automation Server.
 
 ---
 

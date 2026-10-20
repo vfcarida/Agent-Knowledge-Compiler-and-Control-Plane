@@ -28,7 +28,14 @@ export function registerContextPlanCommand(
       "10000",
     )
     .option("-p, --profile <profile>", "Profile schema to load", "career")
+    .option(
+      "-c, --config <path>",
+      "Path to akcp.yaml or directory containing it",
+    )
+    .option("--bundle <directory>", "Directory containing akcp.yaml", ".")
+    .option("-f, --format <format>", "Output format (text, json)", "text")
     .action(async (options) => {
+      const fs = await import("fs");
       const path = await import("path");
       const {
         loadAkcpConfig,
@@ -39,7 +46,13 @@ export function registerContextPlanCommand(
       } = await import("@akcp/core");
 
       try {
-        const configPath = path.resolve(process.cwd(), "akcp.yaml");
+        const configInput = options.config || options.bundle || ".";
+        let targetDir = path.resolve(process.cwd(), configInput);
+        let configPath = path.join(targetDir, "akcp.yaml");
+        if (fs.existsSync(targetDir) && fs.statSync(targetDir).isFile()) {
+          configPath = targetDir;
+          targetDir = path.dirname(configPath);
+        }
         const config = loadAkcpConfig(configPath);
         const sources = config.compile?.sources || [];
         const dirSource = sources.find(
@@ -54,13 +67,20 @@ export function registerContextPlanCommand(
           process.exit(1);
         }
 
-        console.log(
-          `[START] Analyzing context budget for task: "${options.task}"`,
-        );
+        if (options.format !== "json") {
+          console.log(
+            `[START] Analyzing context budget for task: "${options.task}"`,
+          );
+        }
 
         const fsAdapter = new FileSystemAdapter();
         const parser = new FrontmatterParser();
-        const repo = new OKFFileRepository(fsAdapter, parser, dirSource.path);
+        const resolvedSourcePath = path.resolve(targetDir, dirSource.path);
+        const repo = new OKFFileRepository(
+          fsAdapter,
+          parser,
+          resolvedSourcePath,
+        );
         const docs = await repo.findAll();
 
         const budgetTokens = parseInt(options.budget, 10);
@@ -75,6 +95,11 @@ export function registerContextPlanCommand(
           budget: { maxTokens: budgetTokens },
           mode: "balanced",
         });
+
+        if (options.format === "json") {
+          console.log(JSON.stringify(manifest, null, 2));
+          return;
+        }
 
         console.log("\n=============================================");
         console.log("         CONTEXT ECONOMICS REPORT");

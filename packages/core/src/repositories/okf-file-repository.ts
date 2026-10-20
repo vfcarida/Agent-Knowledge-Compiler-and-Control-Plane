@@ -28,7 +28,20 @@ import { OKFFrontmatterSchema } from "../domain/types.js";
  * Reserved filenames that are excluded from document listing and lookup.
  * These files serve structural / metadata purposes per OKF spec §3.1.
  */
-const RESERVED_FILENAMES: ReadonlySet<string> = new Set(["index.md", "log.md"]);
+const RESERVED_FILENAMES: ReadonlySet<string> = new Set([
+  "index.md",
+  "log.md",
+  "README.md",
+  "WALKTHROUGH.md",
+  "walkthrough.md",
+  "AGENTS.md",
+  "CONTRIBUTING.md",
+  "CHANGELOG.md",
+  "CODE_OF_CONDUCT.md",
+  "SECURITY.md",
+  "GOVERNANCE.md",
+  "SKILL.md",
+]);
 
 /**
  * File-system–backed implementation of {@link IOKFRepository}.

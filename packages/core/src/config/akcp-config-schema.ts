@@ -32,6 +32,8 @@ export const TargetConfigSchema = z.object({
       "eval-dataset",
       "dashboard-metadata",
       "policy-bundle",
+      "graph-json",
+      "okf-bundle",
     ])
     .default("context-pack"),
   out: z.string().min(1).optional(),

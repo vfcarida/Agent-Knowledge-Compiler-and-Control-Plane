@@ -161,5 +161,27 @@ describe("Policy Linter", () => {
       expect(result.valid).toBe(true);
       expect(result.issues).toHaveLength(0);
     });
+
+    it("loads and validates GDPR, HIPAA, and SOC 2 compliance policy cards without lint issues", async () => {
+      const path = await import("node:path");
+      const { loadPolicy } = await import("../../policy/load.js");
+
+      const complianceDir = path.resolve(
+        __dirname,
+        "../../../../../docs/specs/examples/compliance",
+      );
+      const files = [
+        "gdpr-data-privacy.policy.yaml",
+        "hipaa-phi-protection.policy.yaml",
+        "soc2-change-management.policy.yaml",
+      ];
+
+      for (const file of files) {
+        const card = loadPolicy(path.join(complianceDir, file));
+        const lintResult = lintPolicyCard(card);
+        expect(lintResult.valid).toBe(true);
+        expect(lintResult.issues).toHaveLength(0);
+      }
+    });
   });
 });

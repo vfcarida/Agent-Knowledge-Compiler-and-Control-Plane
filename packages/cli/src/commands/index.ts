@@ -14,6 +14,7 @@ import { registerDoctorCommand } from "./core/doctor.js";
 // Governance
 import { registerPolicyValidateCommand } from "./governance/policy-validate.js";
 import { registerPolicyExplainCommand } from "./governance/policy-explain.js";
+import { registerPolicyLintCommand } from "./governance/policy-lint.js";
 import { registerConformanceRunCommand } from "./governance/conformance-run.js";
 
 // Graph
@@ -58,6 +59,7 @@ export function registerAllCommands(program: Command, ctx: CLIContext): void {
   // Governance
   registerPolicyValidateCommand(program, ctx);
   registerPolicyExplainCommand(program, ctx);
+  registerPolicyLintCommand(program, ctx);
   registerConformanceRunCommand(program, ctx);
 
   // Graph

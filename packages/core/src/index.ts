@@ -70,6 +70,8 @@ export { OkfBundleTarget } from "./targets/okf-bundle.js";
 export { OpenWikiDocsTarget } from "./targets/openwiki-docs.js";
 export { AgentsMdTarget } from "./targets/agents-md.js";
 export { McpResourcesManifestTarget } from "./targets/mcp-resources-manifest.js";
+export { McpToolsManifestTarget } from "./targets/mcp-tools-manifest.js";
+export { McpPromptsManifestTarget } from "./targets/mcp-prompts-manifest.js";
 export { PolicyBundleTarget } from "./targets/policy-bundle.js";
 export { EvalDatasetTarget } from "./targets/eval-dataset.js";
 export { GraphJsonTarget } from "./targets/graph-json.js";
@@ -257,3 +259,12 @@ export * from "./privacy/waf.js";
 
 // Semantic & Policy Diffing
 export * from "./diff/index.js";
+
+// Semantic Knowledge Graph & Impact Analysis
+export * from "./graph/types.js";
+export { buildSemanticGraph } from "./graph/build-graph.js";
+export { computeImpactMap } from "./graph/impact-analysis.js";
+export {
+  normalizeLinkId,
+  extractMarkdownLinks,
+} from "./graph/extract-links.js";

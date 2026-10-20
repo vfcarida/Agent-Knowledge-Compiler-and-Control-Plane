@@ -2,40 +2,41 @@
 
 This document maps the currently implemented commands in `packages/cli/src/index.ts` against their public documentation status to ensure the surface is honest and aligned.
 
-| Implemented Command     | Documented in `docs/specs/cli.md`? | Mentioned in README? | Status       | Notes                                                          |
-| ----------------------- | :--------------------------------: | :------------------: | ------------ | -------------------------------------------------------------- |
-| `akcp quickstart`       |                Yes                 |         Yes          | Stable       | Bootstrap, compile, and launch Control Plane in one command.   |
-| `akcp init`             |                Yes                 |         Yes          | Stable       | Initializes `.agent-context`.                                  |
-| `akcp validate`         |                Yes                 |         Yes          | Beta         | Offline schema validation.                                     |
-| `akcp scan`             |                Yes                 |          No          | Beta         | Analyzes raw repo and suggests OKF template mapping.           |
-| `akcp compile`          |                Yes                 |         Yes          | Beta         | Compiles AK-IR and targets.                                    |
-| `akcp inspect`          |                Yes                 |          No          | Beta         | Inspects compilation manifests (formerly `inspect-artifact`).  |
-| `akcp verify`           |                 No                 |          No          | Beta         | Verifies manifest provenance/integrity.                        |
-| `akcp diff`             |                Yes                 |          No          | Planned      | [Stub] Skeleton exists but just outputs hardcoded text.        |
-| `akcp import`           |                 No                 |          No          | Alpha        | [Experimental] Imports from external sources (e.g., OpenWiki). |
-| `akcp serve mcp`        |                Yes                 |         Yes          | Beta         | Boots MCP Profile Server or Automation Server.                 |
-| `akcp serve automation` |                Yes                 |         Yes          | Beta         | Boots MCP Automation Server directly with HITL gates.          |
-| `akcp serve dashboard`  |                Yes                 |         Yes          | Beta         | Launch the AKCP Control Plane Dashboard locally.               |
-| `akcp control-plane`    |                 No                 |          No          | Experimental | [Experimental] Manage runtime governance/HITL.                 |
-| `akcp evals`            |                 No                 |          No          | Beta         | Manage evaluation datasets and runs.                           |
-| `akcp docs`             |                 No                 |          No          | Beta         | Manage and diagnose repository documentation.                  |
-| `akcp doctor`           |                Yes                 |         Yes          | Stable       | Diagnoses environment.                                         |
-| `akcp agents sync`      |                 No                 |          No          | Beta         | Syncs managed context block in `AGENTS.md`.                    |
-| `akcp config validate`  |                 No                 |          No          | Beta         | Validates `akcp.yaml`.                                         |
-| `akcp policy validate`  |                 No                 |          No          | Beta         | Validates machine-readable Policy Cards.                       |
-| `akcp policy explain`   |                 No                 |          No          | Beta         | Explains Policy Cards in human text.                           |
-| `akcp plan`             |                 No                 |          No          | Beta         | Generates an execution plan for compile.                       |
-| `akcp reconcile`        |                 No                 |          No          | Beta         | Reconciles state (dry-run by default).                         |
-| `akcp graph build`      |                 No                 |          No          | Beta         | Builds Knowledge Graph.                                        |
-| `akcp graph inspect`    |                 No                 |          No          | Beta         | Inspects concepts in graph.                                    |
-| `akcp graph impacted`   |                 No                 |          No          | Beta         | Finds downstream impacted artifacts.                           |
-| `akcp context plan`     |                 No                 |          No          | Beta         | Generates an economics context report.                         |
-| `akcp lifecycle report` |                 No                 |          No          | Beta         | Reports on document freshness.                                 |
-| `akcp conformance run`  |                 No                 |          No          | Beta         | Runs the AKCP conformance suite.                               |
-| `akcp scorecard`        |                 No                 |          No          | Beta         | Calculate Agent Knowledge Readiness Scorecard.                 |
-| `akcp plugin`           |                 No                 |          No          | Beta         | Manage AKCP build-time plugins.                                |
-| `akcp privacy`          |                 No                 |          No          | Beta         | Manage PII redaction and privacy compliance.                   |
-| `akcp completion`       |                 No                 |          No          | Beta         | Generate shell autocompletion script.                          |
+| Implemented Command     | Documented in `docs/specs/cli.md`? | Mentioned in README? | Status | Notes                                                         |
+| ----------------------- | :--------------------------------: | :------------------: | ------ | ------------------------------------------------------------- |
+| `akcp quickstart`       |                Yes                 |         Yes          | Stable | Bootstrap, compile, and launch Control Plane in one command.  |
+| `akcp init`             |                Yes                 |         Yes          | Stable | Initializes `.agent-context`.                                 |
+| `akcp validate`         |                Yes                 |         Yes          | Beta   | Offline schema validation.                                    |
+| `akcp scan`             |                Yes                 |          No          | Beta   | Analyzes raw repo and suggests OKF template mapping.          |
+| `akcp compile`          |                Yes                 |         Yes          | Beta   | Compiles AK-IR and targets.                                   |
+| `akcp inspect`          |                Yes                 |          No          | Beta   | Inspects compilation manifests (formerly `inspect-artifact`). |
+| `akcp verify`           |                Yes                 |         Yes          | Stable | Verifies cryptographic manifest provenance/integrity.         |
+| `akcp diff`             |                Yes                 |         Yes          | Stable | Computes semantic, policy, and Git revision diffs.            |
+| `akcp import`           |                Yes                 |          No          | Beta   | Imports from external sources (e.g., OpenWiki).               |
+| `akcp serve mcp`        |                Yes                 |         Yes          | Stable | Boots MCP Profile Server or Automation Server.                |
+| `akcp serve automation` |                Yes                 |         Yes          | Stable | Boots MCP Automation Server directly with HITL gates.         |
+| `akcp serve dashboard`  |                Yes                 |         Yes          | Stable | Launch the AKCP Control Plane Dashboard locally.              |
+| `akcp control-plane`    |                Yes                 |         Yes          | Stable | Inspect runtime governance, policies, approvals, and audit.   |
+| `akcp evals`            |                Yes                 |         Yes          | Stable | Run prompt-injection, retrieval-grounding, and bundle evals.  |
+| `akcp docs`             |                Yes                 |          No          | Stable | Manage and diagnose repository documentation.                 |
+| `akcp doctor`           |                Yes                 |         Yes          | Stable | Diagnoses environment.                                        |
+| `akcp agents sync`      |                Yes                 |          No          | Stable | Syncs managed context block in `AGENTS.md`.                   |
+| `akcp config validate`  |                Yes                 |          No          | Stable | Validates `akcp.yaml`.                                        |
+| `akcp policy validate`  |                Yes                 |         Yes          | Stable | Validates machine-readable Policy Cards.                      |
+| `akcp policy explain`   |                Yes                 |         Yes          | Stable | Explains Policy Cards and traces requests.                    |
+| `akcp policy lint`      |                Yes                 |         Yes          | Stable | Detects shadowed, contradictory, and redundant policy rules.  |
+| `akcp plan`             |                Yes                 |          No          | Stable | Generates an execution plan for compile.                      |
+| `akcp reconcile`        |                Yes                 |          No          | Stable | Reconciles state (dry-run by default).                        |
+| `akcp graph build`      |                Yes                 |         Yes          | Stable | Builds Knowledge Graph.                                       |
+| `akcp graph inspect`    |                Yes                 |         Yes          | Stable | Inspects concepts in graph.                                   |
+| `akcp graph impacted`   |                Yes                 |         Yes          | Stable | Finds downstream impacted artifacts via BFS traversal.        |
+| `akcp context plan`     |                Yes                 |         Yes          | Stable | Generates a token-budget economics context report.            |
+| `akcp lifecycle report` |                Yes                 |         Yes          | Stable | Reports on document freshness and TTL expiration.             |
+| `akcp conformance run`  |                Yes                 |         Yes          | Stable | Runs the AKCP conformance suite.                              |
+| `akcp scorecard`        |                Yes                 |         Yes          | Stable | Calculate Agent Knowledge Readiness Scorecard.                |
+| `akcp plugin`           |                Yes                 |          No          | Stable | Manage AKCP build-time plugins.                               |
+| `akcp privacy`          |                Yes                 |         Yes          | Stable | Manage PII redaction and privacy compliance.                  |
+| `akcp completion`       |                Yes                 |          No          | Stable | Generate shell autocompletion script.                         |
 
 ## Core Commands (Stable/Beta)
 
@@ -197,20 +198,24 @@ akcp doctor [options]
 
 ### `akcp diff`
 
-**Status**: Planned
+**Status**: Stable
 
-Not yet implemented. Returns NOT_IMPLEMENTED error.
-
-[Planned] Show semantic context changes since last build
+Show semantic, governance, and capability differences between two bundles, builds, or Git revisions.
 
 ```bash
-akcp diff [options] [directory]
+akcp diff [options] [base] [target]
 ```
 
 **Options:**
 
 ```
--h, --help  display help for command
+-f, --format <type>       Output format: text, json, markdown (default: "text")
+-o, --output <path>       Write diff report to specified file
+--strict                  Exit with code 1 if any breaking changes are detected
+--fail-on-breaking        Exit with code 1 if any breaking changes are detected
+--from-git <rev>          Compare against a bundle snapshot from a specific Git revision (e.g. HEAD, main)
+--to-git <rev>            Compare target against a specific Git revision instead of working tree
+-h, --help                display help for command
 ```
 
 ### `akcp config validate`
@@ -341,11 +346,9 @@ akcp import [options] <source>
 
 ### `akcp evals`
 
-**Status**: Planned
+**Status**: Stable
 
-Not yet implemented. Returns NOT_IMPLEMENTED error.
-
-Manage evaluation datasets and runs
+Manage evaluation datasets and run evaluation scenarios (`prompt-injection`, `retrieval-grounding`, or full bundle evaluation suites).
 
 ```bash
 akcp evals [options] [command]
@@ -354,12 +357,14 @@ akcp evals [options] [command]
 **Options:**
 
 ```
--h, --help      display help for command
+--scenario <name>  Specific scenario to run (prompt-injection, retrieval-grounding)
+--report           Generate a detailed evaluation report
+-h, --help         display help for command
 ```
 
 ### `akcp docs`
 
-**Status**: Beta
+**Status**: Stable
 
 Manage and diagnose repository documentation
 
@@ -375,7 +380,7 @@ akcp docs [options] [command]
 
 ### `akcp agents sync`
 
-**Status**: Beta
+**Status**: Stable
 
 Synchronize the managed context block within agent instruction files
 
@@ -391,9 +396,7 @@ akcp agents sync [options]
 
 ### `akcp plan`
 
-**Status**: Planned
-
-Not yet implemented. Returns NOT_IMPLEMENTED error.
+**Status**: Stable
 
 Generate execution plan based on akcp.yaml
 
@@ -410,9 +413,7 @@ akcp plan [options]
 
 ### `akcp reconcile`
 
-**Status**: Planned
-
-Not yet implemented. Returns NOT_IMPLEMENTED error.
+**Status**: Stable
 
 Reconcile desired state with current environment
 
@@ -430,11 +431,9 @@ akcp reconcile [options]
 
 ### `akcp plugin`
 
-**Status**: Planned
+**Status**: Stable
 
-Not yet implemented. Returns NOT_IMPLEMENTED error.
-
-Manage AKCP build-time plugins
+Manage AKCP build-time plugins (`akcp plugin list`)
 
 ```bash
 akcp plugin [options] [command]
@@ -448,11 +447,9 @@ akcp plugin [options] [command]
 
 ### `akcp privacy`
 
-**Status**: Planned
+**Status**: Stable
 
-Not yet implemented. Returns NOT_IMPLEMENTED error.
-
-Manage PII redaction and privacy compliance
+Manage PII redaction and privacy compliance (`akcp privacy scan`)
 
 ```bash
 akcp privacy [options] [command]
@@ -500,9 +497,9 @@ akcp policy validate [options] <file>
 
 ### `akcp policy explain`
 
-**Status**: Beta
+**Status**: Stable
 
-Explain a PolicyCard in human-readable text
+Explain a PolicyCard in human-readable text and optionally trace a simulated request
 
 ```bash
 akcp policy explain [options] <file>
@@ -511,12 +508,32 @@ akcp policy explain [options] <file>
 **Options:**
 
 ```
--h, --help  display help for command
+--request <json>  Simulated request as JSON (tool, agentId, riskLevel, scopes)
+--verbose         Show all evaluated rules
+-h, --help        display help for command
+```
+
+### `akcp policy lint`
+
+**Status**: Stable
+
+Analyze PolicyCard files or directories for shadowed, contradictory, or redundant rules
+
+```bash
+akcp policy lint [options] [target]
+```
+
+**Options:**
+
+```
+-f, --format <format>  Output format (text, json) (default: "text")
+--strict               Treat lint warnings as errors
+-h, --help             display help for command
 ```
 
 ### `akcp conformance run`
 
-**Status**: Beta
+**Status**: Stable
 
 Run conformance suite on a target bundle
 
@@ -533,11 +550,11 @@ akcp conformance run [options]
 -h, --help                display help for command
 ```
 
-## Knowledge Graph (Beta)
+## Knowledge Graph (Stable)
 
 ### `akcp graph build`
 
-**Status**: Beta
+**Status**: Stable
 
 Build the knowledge graph from the OKF bundle
 
@@ -548,16 +565,16 @@ akcp graph build [options]
 **Options:**
 
 ```
---bundle <directory>  Directory containing akcp.yaml or okf bundle (default:
-".")
+--bundle <directory>  Directory containing akcp.yaml or okf bundle (default: ".")
+-o, --out <path>      Output path for graph JSON (default: "dist/akcp/graph.json")
 -h, --help            display help for command
 ```
 
 ### `akcp graph inspect`
 
-**Status**: Beta
+**Status**: Stable
 
-Inspect a concept in the knowledge graph
+Inspect a concept or summary in the knowledge graph
 
 ```bash
 akcp graph inspect [options]
@@ -566,38 +583,39 @@ akcp graph inspect [options]
 **Options:**
 
 ```
--c, --concept <id>  Concept ID to inspect
--h, --help          display help for command
+-c, --concept <id>    Concept ID to inspect
+-g, --graph <path>    Path to graph JSON (default: "dist/akcp/graph.json")
+--bundle <directory>  Bundle directory containing dist/akcp/graph.json
+-h, --help            display help for command
 ```
 
 ### `akcp graph impacted`
 
-**Status**: Planned
+**Status**: Stable
 
-Not yet implemented. Returns NOT_IMPLEMENTED error.
-
-List all downstream concepts impacted by a change to this concept
+List all downstream concepts impacted by a change to a concept
 
 ```bash
-akcp graph impacted [options]
+akcp graph impacted [options] [conceptId]
 ```
 
 **Options:**
 
 ```
--c, --concept <id>  Concept ID to analyze
--h, --help          display help for command
+-c, --concept <id>    Concept ID to analyze
+-g, --graph <path>    Path to graph JSON (default: "dist/akcp/graph.json")
+--bundle <directory>  Bundle directory containing dist/akcp/graph.json
+-f, --format <format> Output format (text, json) (default: "text")
+-h, --help            display help for command
 ```
 
-## Context & Economics (Beta)
+## Context & Economics (Stable)
 
 ### `akcp context plan`
 
-**Status**: Planned
+**Status**: Stable
 
-Not yet implemented. Returns NOT_IMPLEMENTED error.
-
-Simulate context packing and generate an economics report
+Simulate context packing and generate a token-budget economics report
 
 ```bash
 akcp context plan [options]
@@ -606,21 +624,20 @@ akcp context plan [options]
 **Options:**
 
 ```
--t, --task <task>        Task description for relevance scoring (default:
-"general task")
--b, --budget <tokens>    Maximum tokens allowed in the budget (default:
-"10000")
--p, --profile <profile>  Profile schema to load (default: "career")
--h, --help               display help for command
+-t, --task <task>         Task description for relevance scoring (default: "general task")
+-b, --budget <tokens>     Maximum tokens allowed in the budget (default: "10000")
+-p, --profile <profile>   Profile schema to load (default: "career")
+-c, --config <path>       Path to akcp.yaml or bundle directory
+--bundle <directory>      Directory containing akcp.yaml
+-f, --format <format>     Output format (text, json) (default: "text")
+-h, --help                display help for command
 ```
 
 ### `akcp lifecycle report`
 
-**Status**: Planned
+**Status**: Stable
 
-Not yet implemented. Returns NOT_IMPLEMENTED error.
-
-Generate a lifecycle report (active, stale, deprecated)
+Generate a lifecycle freshness report (active, stale, deprecated)
 
 ```bash
 akcp lifecycle report [options]
@@ -629,14 +646,15 @@ akcp lifecycle report [options]
 **Options:**
 
 ```
--h, --help  display help for command
+-c, --config <path>    Path to akcp.yaml or bundle directory
+-b, --bundle <dir>     Directory containing akcp.yaml
+-f, --format <format>  Output format (text, json) (default: "text")
+-h, --help             display help for command
 ```
 
 ### `akcp scorecard`
 
-**Status**: Planned
-
-Not yet implemented. Returns NOT_IMPLEMENTED error.
+**Status**: Stable
 
 Calculate Agent Knowledge Readiness Scorecard
 
@@ -648,13 +666,6 @@ akcp scorecard [options]
 
 ```
 -b, --bundle <directory>  Path to the context bundle
--f, --format <format>     Output format (json or markdown) (default:
-"markdown")
+-f, --format <format>     Output format (json or markdown) (default: "markdown")
 -h, --help                display help for command
 ```
-
-## Action Items for Coherence
-
-- Rename references of `build` to `compile` in documentation to match code.
-
-- Ensure the `README.md` reflects this exact status.

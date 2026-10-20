@@ -45,7 +45,7 @@ export function registerGraphBuildCommand(
         const targetImpl = new GraphJsonTarget();
         const output = await targetImpl.compile(ir, {
           type: "graph-json",
-          out: "dist/knowledge-graph.json",
+          out: path.join(targetDir, "dist/knowledge-graph.json"),
         });
 
         console.log(`[OK] Graph generated at ${output.outputPath}`);

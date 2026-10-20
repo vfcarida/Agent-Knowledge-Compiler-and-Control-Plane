@@ -198,28 +198,28 @@ Measured on local hardware using `pnpm run bench` (`vitest bench`):
 | **Concepts**              | [Overview](docs/concepts/overview.md) • [OKF](docs/concepts/okf.md) • [AK-IR](docs/concepts/ak-ir.md) • [Compiler](docs/concepts/compiler.md) • [Control Plane](docs/concepts/control-plane.md)              |
 | **Specs & Standards**     | [AKCP Config](docs/specs/akcp-yaml.md) • [Policy Cards](docs/specs/policy-cards.md) • [MCP Tools](docs/specs/mcp-tool-contracts.md) • [Conformance](docs/specs/conformance.md)                               |
 | **Security & Governance** | [Threat Model](docs/security/threat-model.md) • [Automation Safety](docs/security/automation-safety.md) • [MCP Hardening](docs/security/mcp-hardening.md)                                                    |
-| **Reference**             | [CLI Usage](docs/reference/cli.md) • [Compile Targets](docs/reference/compile-targets.md) • [Glossary](docs/glossary.md) • [Architecture](docs/architecture/README.md)                                       |
+| **Reference**             | [CLI Usage](docs/reference/cli.md) • [Compile Targets](docs/reference/compile-targets.md) • [Glossary](docs/glossary.md) • [Architecture](docs/architecture/README.md) • [References](docs/references.md)    |
 
 - [How AKCP Compares](docs/concepts/comparison.md) — Positioning vs RAG, LangGraph, MCP
 
 ## Current Maturity Status
 
-| Area                     | Status       | Evidence                                                 | Next milestone           |
-| ------------------------ | ------------ | -------------------------------------------------------- | ------------------------ |
-| AKCP CLI                 | Beta         | tests, examples, init command                            | npm publish              |
-| AK-IR Compiler           | Beta         | spec, fixtures, pipeline stages                          | auto-normalization       |
-| MCP Profile Server       | Beta         | contract tests, SSE transport                            | remote hosting           |
-| MCP Automation Server    | Alpha        | safety tests, browser automation                         | real cloud integrations  |
-| Control Plane (Gateway)  | Beta         | auth, rate limit, HITL, PII, WAF                         | distributed deployment   |
-| Control Plane CLI        | Beta         | inspect, policies, approvals, audit commands & CLI tests | remote control API       |
-| Dashboard UI & Serve     | Beta         | React app, e2e tests, Express BFF serve command          | feature completion       |
-| IT Operations (flagship) | Beta         | policies, evals, expected-output                         | real infrastructure      |
-| Career (starter)         | Stable       | full walkthrough, golden outputs                         |                          |
-| Customer Support         | Beta         | sources, 8 policies, capabilities, evals, golden outputs | production CRM connector |
-| Semantic Diff Engine     | Beta         | unit tests, CLI diff tests, multi-format output          | git rev integration      |
-| Graph & Policy Linter    | Beta         | link target validation, cycle detection, policy linter   | CLI policy lint command  |
-| VSCode Extension         | Experimental | syntax highlighting                                      | validation, autocomplete |
-| Legacy CLI               | Removed      | legacy binaries deleted in v0.1.0                        | —                        |
+| Area                     | Status  | Evidence                                                                     | Next milestone             |
+| ------------------------ | ------- | ---------------------------------------------------------------------------- | -------------------------- |
+| AKCP CLI                 | Stable  | 30+ commands, integration tests, policy lint, git diff, graph & lifecycle    | npm registry publication   |
+| AK-IR Compiler           | Stable  | 11 deterministic compile targets, SHA-256 provenance, concurrent ingestion   | incremental watch mode     |
+| MCP Profile Server       | Stable  | contract tests, untrusted boundaries, opt-in WAF, stdio & HTTP transports    | federated OAuth            |
+| MCP Automation Server    | Beta    | HITL approval store, SHA-256 replay protection, governed domain tools        | cloud provider connectors  |
+| Control Plane (Gateway)  | Stable  | auth, token-bucket rate limit, HITL, PII redaction, WAF, OPA integration     | multi-region state sync    |
+| Control Plane CLI        | Stable  | inspect, policies, approvals, audit commands & CLI tests                     | remote control API         |
+| Dashboard UI & Serve     | Stable  | React 19 SPA, Overview & Settings panels, Playwright e2e tests, Express BFF  | live WebSocket streaming   |
+| IT Operations (flagship) | Stable  | policies, evals, expected-output, golden compiler verification               | live Kubernetes adapter    |
+| Career (starter)         | Stable  | full walkthrough, golden outputs                                             | —                          |
+| Customer Support         | Stable  | sources, 8 policies, capabilities, governed MCP tools, golden outputs        | external CRM webhook sync  |
+| Semantic Diff Engine     | Stable  | AST diff, `--from-git` / `--to-git` revision comparison, CI gating           | PR comment action          |
+| Graph & Policy Linter    | Stable  | link target validation, cycle detection, `akcp policy lint`, GDPR/HIPAA/SOC2 | IDE quick-fix code actions |
+| VSCode Extension         | Beta    | syntax highlighting, OKF frontmatter diagnostics, autocomplete, commands     | VSCode Marketplace publish |
+| Legacy CLI               | Removed | legacy binaries deleted in v0.1.0                                            | —                          |
 
 For formal definitions, see the [Maturity and Status Guide](docs/status.md).
 
@@ -231,7 +231,7 @@ We actively welcome community contributions. To get started, read [CONTRIBUTING.
 
 ## Authorship & Acknowledgments
 
-_Designed and architected by [Vinicius Caridá](https://github.com/vfcarida). Implementation and test-suite verification accelerated with AI-assisted engineering workflows._
+> _Designed and architected by [Vinicius Caridá](https://github.com/vfcarida). Implementation and verification accelerated with AI-assisted engineering workflows._
 
 ---
 

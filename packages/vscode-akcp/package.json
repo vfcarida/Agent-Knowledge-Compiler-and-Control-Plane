@@ -37,6 +37,10 @@
       {
         "command": "akcp.validate",
         "title": "AKCP: Validate Context Pack"
+      },
+      {
+        "command": "akcp.compile",
+        "title": "AKCP: Compile Context Pack"
       }
     ]
   },
@@ -44,7 +48,9 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "test": "vitest run",
-    "compile": "tsc -b"
+    "compile": "tsc -b",
+    "typecheck": "tsc --noEmit",
+    "clean": "node -e \"import('fs').then(fs => fs.rmSync('dist', { recursive: true, force: true }))\""
   },
   "devDependencies": {
     "@types/vscode": "^1.80.0",
