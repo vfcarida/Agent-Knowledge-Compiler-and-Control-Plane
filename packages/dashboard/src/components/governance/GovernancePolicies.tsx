@@ -606,6 +606,25 @@ export function GovernancePolicies() {
             </div>
           </div>
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono pt-2 border-t border-zinc-800/60">
+          <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-1">
+            <div className="text-zinc-500 text-[10px] uppercase">
+              Chained-HMAC Macaroon Sub-Agent Delegation
+            </div>
+            <div className="text-neon-blue truncate">
+              akcp-macaroon-v1 • Monotonic Caveats Enforced
+            </div>
+          </div>
+          <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-1">
+            <div className="text-zinc-500 text-[10px] uppercase">
+              Flight Recorder & CycloneDX v1.5 KBOM
+            </div>
+            <div className="text-emerald-400 truncate">
+              Time-Travel Replay Active • sbom.cdx.json Attested
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}

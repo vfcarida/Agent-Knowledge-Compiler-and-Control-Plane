@@ -500,4 +500,74 @@ export function registerControlPlaneCommand(
         process.exit(1);
       }
     });
+
+  // Subcommand: replay
+  controlPlaneCmd
+    .command("replay")
+    .description(
+      "Execute Time-Travel Policy Replay of a recorded flight log against a candidate Policy Card",
+    )
+    .argument("<flightLog>", "Path to recorded flight log JSON file")
+    .requiredOption(
+      "-p, --policy <path>",
+      "Path to candidate Policy Card YAML/JSON file",
+    )
+    .option(
+      "--strict",
+      "Exit with code 1 if privilege relaxations or breaking blocks are detected",
+      false,
+    )
+    .option("--json", "Output replay report as JSON", false)
+    .action(async (flightLogInput, options) => {
+      const path = await import("path");
+      const {
+        ExecutionFlightRecorder,
+        loadPolicy,
+        replayFlightLogAgainstPolicy,
+      } = await import("@akcp/core");
+
+      try {
+        const flightLogPath = path.resolve(process.cwd(), flightLogInput);
+        const policyPath = path.resolve(process.cwd(), options.policy);
+
+        const entries = ExecutionFlightRecorder.loadFromFile(flightLogPath);
+        const candidatePolicy = loadPolicy(policyPath);
+        const report = replayFlightLogAgainstPolicy(entries, candidatePolicy);
+
+        if (options.json) {
+          console.log(JSON.stringify(report, null, 2));
+        } else {
+          console.log("=== AKCP Time-Travel Policy Replay ===");
+          console.log(`Total Replayed:      ${report.totalReplayed}`);
+          console.log(`Identical Decisions: ${report.identicalDecisions}`);
+          console.log(`Divergent Decisions: ${report.divergentDecisions}`);
+          console.log(
+            `Privilege Relaxed:   ${report.hasPrivilegeRelaxations ? "YES (WARNING)" : "No"}`,
+          );
+          console.log(
+            `Breaking Blocks:     ${report.hasBreakingBlocks ? "YES" : "No"}`,
+          );
+          if (report.divergences.length > 0) {
+            console.log("\nDecision Divergences:");
+            for (const d of report.divergences) {
+              console.log(
+                `  - [${d.divergenceKind}] (${d.requestId}) ${d.explanation}`,
+              );
+            }
+          }
+        }
+
+        if (
+          options.strict &&
+          (report.hasPrivilegeRelaxations || report.hasBreakingBlocks)
+        ) {
+          process.exit(1);
+        }
+      } catch (err: any) {
+        console.error(
+          `[ERROR] Time-Travel Policy Replay failed:\n${err.message}`,
+        );
+        process.exit(1);
+      }
+    });
 }

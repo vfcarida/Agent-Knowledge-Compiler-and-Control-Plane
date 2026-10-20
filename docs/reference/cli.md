@@ -813,3 +813,13 @@ Execute the Red-Team Adversarial Policy & Prompt Firewall Fuzzer across privileg
 ```bash
 akcp evals --scenario red-team [--report]
 ```
+
+### `akcp control-plane replay`
+
+**Status**: Beta
+
+Execute Time-Travel Policy Replay of a recorded `ExecutionFlightRecorder` JSON trace against a candidate Policy Card to detect privilege relaxations or newly blocked operations before deployment.
+
+```bash
+akcp control-plane replay <flightLog> -p <policyPath> [--strict] [--json]
+```

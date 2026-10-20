@@ -11,10 +11,10 @@ The full, living roadmap specification is maintained at [docs/governance/roadmap
 Production-ready and CI-validated capabilities shipping in current releases:
 
 - **OKF v0.1 Parsing & Normalization**: Full YAML frontmatter and Markdown body parsing with deterministic schema validation.
-- **AK-IR Intermediate Representation & 12 Compile Targets**: Type-safe IR compilation with SHA-256 provenance hashing and deterministic emission across `context-pack`, `openwiki`, `agent-instructions`, `mcp-resources`, `mcp-tools`, `mcp-prompts`, `policy-bundle`, `eval-dataset`, `dashboard-metadata`, `graph-json`, `okf-bundle`, and `hybrid-index`.
+- **AK-IR Intermediate Representation & 13 Compile Targets**: Type-safe IR compilation with SHA-256 provenance hashing and deterministic emission across `context-pack`, `openwiki`, `agent-instructions`, `mcp-resources`, `mcp-tools`, `mcp-prompts`, `policy-bundle`, `eval-dataset`, `dashboard-metadata`, `graph-json`, `okf-bundle`, `hybrid-index`, and `sbom-cyclonedx` (CycloneDX v1.5 Knowledge & AI Bill of Materials).
 - **Hybrid Retrieval Engine (`HybridRetriever` & `akcp context plan --strategy hybrid`)**: Combines Okapi BM25 lexical scoring, deterministic L2-normalized dense embeddings, and Personalized PageRank over the Semantic Knowledge Graph via Reciprocal Rank Fusion (RRF).
 - **Cryptographic Provenance Signing (`akcp sign` & `akcp verify --public-key`)**: Ed25519 asymmetric signing and verification of in-toto ITE-6 provenance attestations (`compile --sign-key`, `akcp sign`, `akcp verify`).
-- **Zero-Trust MCP Gateway & JWT/OIDC Identity Verification**: Policy-enforced tool execution interceptor with HS256/EdDSA/RS256 JWT bearer verification, OIDC scope/role mapping, Streamable HTTP JSON-RPC 2.0 (`POST /mcp`), rate limiting, PII redaction, and audit logging.
+- **Zero-Trust MCP Gateway & JWT/OIDC Identity Verification**: Policy-enforced tool execution interceptor with HS256/EdDSA/RS256 JWT bearer verification, OIDC scope/role mapping, pre-flight WAF prompt-injection blocking, FinOps hard budget circuit-breaking, boundary PII vault tokenization/detokenization, Streamable HTTP JSON-RPC 2.0 (`POST /mcp`), rate limiting, and audit logging.
 - **Reactive Incremental Watch Compiler (`akcp compile --watch`)**: Real-time file watcher guided by the Semantic Knowledge Graph `impactMap` to compute downstream blast radius and recompile affected targets.
 - **Human-In-The-Loop (HITL) Store**: Approval gating for high-risk agent operations with TTL-bound, single-use SHA-256 tokens backed by SQLite/Redis persistence.
 - **Policy Cards Engine & Policy Linter (`akcp policy lint`)**: Declarative YAML governance supporting condition evaluations, environment scoping, conflict resolution, and static detection of shadowed, contradictory, and redundant rules.
@@ -38,6 +38,9 @@ Production-ready and CI-validated capabilities shipping in current releases:
 - **Epistemic Contradiction & Drift Detector (`akcp graph contradictions`)**: Graph-wide detection of normative polarity conflicts (`MUST` vs `NEVER`), numeric SLA parameter divergences, and active-to-deprecated dependency links.
 - **Isolated Object-Capability (OCap) VM Plugin Sandbox (`VmPluginSandbox`)**: `node:vm` isolated plugin execution with attenuated host capabilities, path-traversal confinement, SHA-256 code integrity checks, and CPU timeout enforcement.
 - **Red-Team Adversarial Policy Fuzzer (`akcp evals --scenario red-team`)**: Automated fuzzing of privilege escalation, unapproved external submissions, prompt-in-argument injection, and shadow tool probes.
+- **Chained-HMAC Macaroon Sub-Agent Delegation (`DelegationMacaroonService`)**: Offline-attenuated capability delegation tokens (`akcp_mac_*`) enforcing monotonic tool, risk-level, side-effect, and token-budget caveats across multi-agent hierarchies.
+- **Deterministic Flight Recorder & Time-Travel Policy Replay (`ExecutionFlightRecorder` & `akcp control-plane replay`)**: Captures runtime gateway decision envelopes and replays historical agent traffic against candidate Policy Cards to detect privilege relaxations or breaking blocks prior to rollout.
+- **CycloneDX v1.5 Knowledge & AI Bill of Materials (`SbomCycloneDxTarget` / `sbom-cyclonedx`)**: Emits standardized `sbom.cdx.json` supply-chain inventories covering OKF concepts, MCP capabilities, SHA-256 hashes, and graph dependencies.
 - **Production Reference Domains**: Golden compiler snapshots and verification for `career`, `it-operations`, and `customer-support`.
 
 ---

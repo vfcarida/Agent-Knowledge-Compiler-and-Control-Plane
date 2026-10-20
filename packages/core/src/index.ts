@@ -80,6 +80,12 @@ export { EvalDatasetTarget } from "./targets/eval-dataset.js";
 export { GraphJsonTarget } from "./targets/graph-json.js";
 export { DashboardMetadataTarget } from "./targets/dashboard-metadata.js";
 export { HybridIndexTarget } from "./targets/hybrid-index.js";
+export {
+  SbomCycloneDxTarget,
+  buildCycloneDxKbom,
+  type CycloneDxBom,
+  type CycloneDxComponent,
+} from "./targets/sbom-cyclonedx.js";
 
 // Infrastructure
 export { FrontmatterParser } from "./infrastructure/frontmatter-parser.js";
@@ -159,6 +165,7 @@ export * from "./policies/adversarial-fuzzer.js";
 
 // Identity & Capabilities
 export * from "./identity/types.js";
+export * from "./identity/delegation-macaroon.js";
 /**
  * Represents a request from an agent to execute an MCP capability.
  */
@@ -169,6 +176,7 @@ export * from "./capabilities/request.js";
  */
 export { MCPGateway } from "./capabilities/gateway.js";
 export * from "./capabilities/gateway.js";
+export * from "./capabilities/flight-recorder.js";
 export * from "./capabilities/approval-store.js";
 export * from "./capabilities/quorum-approval-store.js";
 export * from "./capabilities/json-schema-to-zod.js";

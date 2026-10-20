@@ -66,6 +66,7 @@ export function registerCompileCommand(
         GraphJsonTarget,
         DashboardMetadataTarget,
         HybridIndexTarget,
+        SbomCycloneDxTarget,
         ProvenanceManifestBuilder,
         writeSignedAttestation,
         computeWatchImpactPlan,
@@ -257,6 +258,7 @@ export function registerCompileCommand(
           "graph-json": new GraphJsonTarget(),
           "okf-bundle": new OkfBundleTarget(),
           "hybrid-index": new HybridIndexTarget(),
+          "sbom-cyclonedx": new SbomCycloneDxTarget(),
         };
 
         if (!skipTargetGeneration) {

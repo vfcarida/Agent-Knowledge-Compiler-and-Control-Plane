@@ -14,6 +14,7 @@ import { EvalDatasetTarget } from "../targets/eval-dataset.js";
 import { GraphJsonTarget } from "../targets/graph-json.js";
 import { DashboardMetadataTarget } from "../targets/dashboard-metadata.js";
 import { HybridIndexTarget } from "../targets/hybrid-index.js";
+import { SbomCycloneDxTarget } from "../targets/sbom-cyclonedx.js";
 import type { CompileTarget } from "../targets/types.js";
 import { ProvenanceManifestBuilder } from "../provenance/build-manifest.js";
 import { computeFileSha256 } from "../provenance/hash.js";
@@ -57,6 +58,7 @@ function createTargetRegistry(): Record<string, CompileTarget> {
     "graph-json": new GraphJsonTarget(),
     "dashboard-metadata": new DashboardMetadataTarget(),
     "hybrid-index": new HybridIndexTarget(),
+    "sbom-cyclonedx": new SbomCycloneDxTarget(),
   };
 }
 

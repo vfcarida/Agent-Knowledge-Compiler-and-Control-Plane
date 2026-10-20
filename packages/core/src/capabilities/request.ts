@@ -11,4 +11,6 @@ export interface CapabilityRequest {
   payload: unknown;
   apiKey?: string;
   sourceId?: string;
+  /** Optional Chained-HMAC Macaroon token for attenuated sub-agent delegation */
+  delegationToken?: string;
 }
