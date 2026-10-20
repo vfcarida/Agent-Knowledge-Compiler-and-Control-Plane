@@ -32,7 +32,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@stryker-mutator/core": "^8.7.1",
+    "@stryker-mutator/core": "^10.0.0",
     "@stryker-mutator/vitest-runner": "^8.7.1",
     "@types/node": "catalog:",
     "fast-check": "^3.23.0",
