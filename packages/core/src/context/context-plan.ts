@@ -3,6 +3,7 @@ import type { ContextBudget } from "./budget.js";
 import type { ContextPackManifest } from "./context-pack-manifest.js";
 import { TokenEstimator } from "./token-estimator.js";
 import { RelevanceScore } from "./relevance-score.js";
+import { HybridRetriever } from "./hybrid-retrieval.js";
 import { chunkMarkdown } from "./markdown-chunker.js";
 
 export interface ContextPlanOptions {
@@ -10,6 +11,7 @@ export interface ContextPlanOptions {
   profile?: string;
   budget: ContextBudget;
   mode?: "minimal" | "balanced" | "full" | "audit";
+  strategy?: "lexical" | "hybrid";
 }
 
 export class ContextPlanner {
@@ -27,10 +29,22 @@ export class ContextPlanner {
       generatedAt: new Date().toISOString(),
     };
 
+    const hybridScores = new Map<string, number>();
+    if (options.strategy === "hybrid") {
+      const ranked = HybridRetriever.rank(documents, options.task);
+      for (const r of ranked) {
+        hybridScores.set(r.conceptId, r.rrfScore);
+      }
+    }
+
     // 1. Score all documents deterministically
     const scoredDocs = documents
       .map((doc) => {
-        const relevance = RelevanceScore.calculate(doc, options.task);
+        const relevance =
+          options.strategy === "hybrid"
+            ? (hybridScores.get(doc.conceptId) ??
+              RelevanceScore.calculate(doc, options.task))
+            : RelevanceScore.calculate(doc, options.task);
 
         // Calculate token cost for this document based on the requested mode
         let contentToEstimate = "";

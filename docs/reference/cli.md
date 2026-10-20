@@ -141,9 +141,13 @@ akcp compile [options]
 --target <type>       Specific target to compile (e.g., all, mcp-resources,
 mcp-tools, mcp-prompts, context-pack, openwiki,
 agent-instructions, eval-dataset, dashboard-metadata,
-policy-bundle) (default: "all")
+policy-bundle, graph-json, okf-bundle, hybrid-index) (default: "all")
 --provenance          Enable full cryptographic provenance tracking (default:
 false)
+--strict              Treat compiler and policy warnings as errors (exit non-zero)
+--force               Bypass the incremental-build cache and force recompilation
+--sign-key <path>     Path to Ed25519 private key PEM file to sign the provenance manifest
+-w, --watch           Watch OKF source directories and incrementally recompile impacted concepts
 -h, --help            display help for command
 ```
 
@@ -164,11 +168,30 @@ akcp inspect [options]
 -h, --help         display help for command
 ```
 
+### `akcp sign`
+
+**Status**: Stable
+
+Cryptographically sign a compiled bundle provenance manifest with Ed25519 (in-toto ITE-6)
+
+```bash
+akcp sign [options] [manifest]
+```
+
+**Options:**
+
+```
+-k, --private-key <path>       Path to Ed25519 private key PEM file
+--generate-keys <directory>    Generate a new Ed25519 keypair (akcp-signing.key and akcp-signing.pub)
+-f, --format <format>          Output format (text, json) (default: "text")
+-h, --help                     display help for command
+```
+
 ### `akcp verify`
 
-**Status**: Beta
+**Status**: Stable
 
-Verify the cryptographic provenance and integrity of a compiled bundle
+Verify the cryptographic provenance, file hashes, and optional Ed25519 attestation of a compiled bundle
 
 ```bash
 akcp verify [options] <manifest>
@@ -177,7 +200,10 @@ akcp verify [options] <manifest>
 **Options:**
 
 ```
--h, --help  display help for command
+-p, --public-key <path>   Path to Ed25519 public key PEM file to verify signed in-toto attestation
+-a, --attestation <path>  Explicit path to .attestation.json file
+-f, --format <format>     Output format (text, json) (default: "text")
+-h, --help                display help for command
 ```
 
 ### `akcp doctor`

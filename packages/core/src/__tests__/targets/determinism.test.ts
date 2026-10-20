@@ -10,6 +10,7 @@ import { PolicyBundleTarget } from "../../targets/policy-bundle.js";
 import { EvalDatasetTarget } from "../../targets/eval-dataset.js";
 import { GraphJsonTarget } from "../../targets/graph-json.js";
 import { DashboardMetadataTarget } from "../../targets/dashboard-metadata.js";
+import { HybridIndexTarget } from "../../targets/hybrid-index.js";
 import type { AgentKnowledgeIR } from "../../ir/types.js";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -107,4 +108,6 @@ describe("Compile Targets Determinism", () => {
     testTargetDeterminism(GraphJsonTarget, "graph.json"));
   it("DashboardMetadataTarget should be deterministic", () =>
     testTargetDeterminism(DashboardMetadataTarget, "dashboard.json"));
+  it("HybridIndexTarget should be deterministic", () =>
+    testTargetDeterminism(HybridIndexTarget, "hybrid-index.json"));
 });

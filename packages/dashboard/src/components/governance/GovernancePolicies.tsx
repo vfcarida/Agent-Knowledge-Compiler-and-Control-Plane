@@ -1,6 +1,6 @@
 /**
  * @module components/governance/GovernancePolicies
- * @description Renders zero-trust governance policies, HITL gates, and autonomy boundaries.
+ * @description Renders zero-trust governance policies, HITL gates, autonomy boundaries, and an interactive Policy & Firewall Playground.
  */
 
 import { useState, useEffect, useMemo } from "react";
@@ -14,6 +14,8 @@ import {
   FileCheck,
   UserCheck,
   Scale,
+  Play,
+  Terminal,
 } from "lucide-react";
 
 interface PolicyRule {
@@ -104,6 +106,15 @@ export function GovernancePolicies() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedRisk, setSelectedRisk] = useState<string>("all");
 
+  // Policy & Prompt Firewall Playground state
+  const [simAgentId, setSimAgentId] = useState<string>("support-triage-agent");
+  const [simTool, setSimTool] = useState<string>("draft_support_reply");
+  const [simSideEffect, setSimSideEffect] = useState<string>("read");
+  const [simApprovalToken, setSimApprovalToken] = useState<string>("");
+  const [simPayload, setSimPayload] = useState<string>(
+    '{"customerEmail": "alice@example.com", "message": "Please reset my billing password"}',
+  );
+
   useEffect(() => {
     const fetchPolicies = async () => {
       try {
@@ -151,6 +162,113 @@ export function GovernancePolicies() {
     const high = policies.filter((p) => p.riskLevel === "high").length;
     return { total, critical, hitl, high };
   }, [policies]);
+
+  const simulationTrace = useMemo(() => {
+    const steps: Array<{ stage: string; status: string; detail: string }> = [];
+    const lowerPayload = simPayload.toLowerCase();
+
+    // Layer 1: Prompt Injection WAF check
+    const injectionPatterns = [
+      "ignore previous instructions",
+      "ignore all previous",
+      "system prompt",
+      "you are now",
+      "bypass policy",
+    ];
+    const matchedInjection = injectionPatterns.find((p) =>
+      lowerPayload.includes(p),
+    );
+    if (matchedInjection) {
+      steps.push({
+        stage: "Layer 1: Prompt Firewall (WAF)",
+        status: "BLOCKED",
+        detail: `Adversarial instruction override detected ("${matchedInjection}"). Execution halted before gateway.`,
+      });
+      return {
+        finalDecision: "DENY (WAF_BLOCKED)",
+        color: "rose",
+        sanitizedPayload: simPayload,
+        steps,
+      };
+    }
+    steps.push({
+      stage: "Layer 1: Prompt Firewall (WAF)",
+      status: "PASSED",
+      detail: "No prompt injection or jailbreak heuristics triggered.",
+    });
+
+    // Layer 2: PII Sanitization check
+    const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+    const ssnRegex = /\b\d{3}-\d{2}-\d{4}\b/g;
+    const sanitized = simPayload
+      .replace(emailRegex, "[REDACTED_EMAIL]")
+      .replace(ssnRegex, "[REDACTED_SSN]");
+    const piiFound = sanitized !== simPayload;
+    steps.push({
+      stage: "Layer 2: Privacy & PII Detector",
+      status: piiFound ? "REDACTED" : "CLEAN",
+      detail: piiFound
+        ? "Sensitive PII entities scrubbed via akcp.policy.pii-sanitization obligation."
+        : "Zero high-risk PII entities detected in payload.",
+    });
+
+    // Layer 3: Zero-Trust Capability & HITL Gate
+    if (
+      simTool === "delete_database" ||
+      simTool === "execute_shell" ||
+      simSideEffect === "unauthorized"
+    ) {
+      steps.push({
+        stage: "Layer 3: Zero-Trust Policy Engine",
+        status: "DENIED",
+        detail: `Matched rule 'akcp.policy.zero-trust-default': Tool '${simTool}' is outside allowed capability boundaries for '${simAgentId}'.`,
+      });
+      return {
+        finalDecision: "DENY (POLICY_VIOLATION)",
+        color: "rose",
+        sanitizedPayload: sanitized,
+        steps,
+      };
+    }
+
+    if (
+      simSideEffect === "external-submit" ||
+      simTool === "submit_application"
+    ) {
+      if (!simApprovalToken.trim()) {
+        steps.push({
+          stage: "Layer 3: HITL Approval Gate",
+          status: "PAUSED",
+          detail:
+            "Matched rule 'akcp.policy.hitl-external-submit': External submission requires a one-time SHA-256 human approval token.",
+        });
+        return {
+          finalDecision: "REQUIRE_APPROVAL (HITL_GATE)",
+          color: "amber",
+          sanitizedPayload: sanitized,
+          steps,
+        };
+      }
+      steps.push({
+        stage: "Layer 3: HITL Approval Gate",
+        status: "CONSUMED",
+        detail: `One-time approval token '${simApprovalToken.slice(0, 12)}...' verified and consumed.`,
+      });
+    } else {
+      steps.push({
+        stage: "Layer 3: Zero-Trust Policy Engine",
+        status: "ALLOWED",
+        detail: `Capability '${simTool}' (${simSideEffect}) permitted for agent '${simAgentId}'.`,
+      });
+    }
+
+    return {
+      finalDecision: "ALLOW",
+      color: "emerald",
+      sanitizedPayload: sanitized,
+      steps,
+    };
+  }, [simAgentId, simTool, simSideEffect, simApprovalToken, simPayload]);
 
   const getRiskBadgeClass = (risk: string) => {
     switch (risk.toLowerCase()) {
@@ -247,6 +365,126 @@ export function GovernancePolicies() {
             <div className="text-xs text-zinc-400 font-medium">
               Enforcement SLA
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Interactive Policy & Prompt Firewall Playground */}
+      <div className="glass-panel p-6 rounded-2xl border border-neon-indigo/25 space-y-5">
+        <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
+          <div className="flex items-center gap-2.5">
+            <Terminal className="w-5 h-5 text-neon-indigo" />
+            <div>
+              <h3 className="text-base font-bold text-zinc-100">
+                Interactive Policy & Prompt Firewall Playground
+              </h3>
+              <p className="text-xs text-zinc-400">
+                Simulate an MCP capability request across WAF Prompt Injection
+                filters, PII Redaction, and Zero-Trust HITL rules.
+              </p>
+            </div>
+          </div>
+          <span
+            className={`text-xs font-mono font-bold px-3 py-1 rounded-full border ${
+              simulationTrace.color === "rose"
+                ? "bg-rose-500/15 text-rose-400 border-rose-500/30"
+                : simulationTrace.color === "amber"
+                  ? "bg-amber-500/15 text-amber-300 border-amber-500/30"
+                  : "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
+            }`}
+          >
+            Decision: {simulationTrace.finalDecision}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-xs text-zinc-400 mb-1">
+              Agent Identity
+            </label>
+            <input
+              type="text"
+              value={simAgentId}
+              onChange={(e) => setSimAgentId(e.target.value)}
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 font-mono"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-zinc-400 mb-1">
+              MCP Tool / Capability
+            </label>
+            <select
+              value={simTool}
+              onChange={(e) => setSimTool(e.target.value)}
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 font-mono"
+            >
+              <option value="draft_support_reply">draft_support_reply</option>
+              <option value="submit_application">submit_application</option>
+              <option value="read_document_chunk">read_document_chunk</option>
+              <option value="delete_database">delete_database (Denied)</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs text-zinc-400 mb-1">
+              Side-Effect Class
+            </label>
+            <select
+              value={simSideEffect}
+              onChange={(e) => setSimSideEffect(e.target.value)}
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 font-mono"
+            >
+              <option value="read">read</option>
+              <option value="write">write</option>
+              <option value="external-submit">external-submit (HITL)</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs text-zinc-400 mb-1">
+              HITL Approval Token (optional)
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. tok_sha256_approved"
+              value={simApprovalToken}
+              onChange={(e) => setSimApprovalToken(e.target.value)}
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 font-mono"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs text-zinc-400 mb-1">
+              Simulated Tool Arguments / Prompt Payload
+            </label>
+            <textarea
+              rows={3}
+              value={simPayload}
+              onChange={(e) => setSimPayload(e.target.value)}
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 font-mono"
+            />
+          </div>
+          <div className="space-y-2">
+            <div className="text-xs text-zinc-400 font-medium flex items-center gap-1.5">
+              <Play className="w-3.5 h-3.5 text-neon-indigo" />
+              Gateway Evaluation Trace:
+            </div>
+            {simulationTrace.steps.map((step, i) => (
+              <div
+                key={i}
+                className="p-2.5 rounded-xl bg-zinc-900/90 border border-zinc-800 text-xs flex items-start justify-between gap-2"
+              >
+                <div>
+                  <span className="font-semibold text-zinc-200">
+                    {step.stage}:
+                  </span>{" "}
+                  <span className="text-zinc-400">{step.detail}</span>
+                </div>
+                <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 shrink-0">
+                  {step.status}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

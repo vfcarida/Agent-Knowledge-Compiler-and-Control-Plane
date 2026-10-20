@@ -29,6 +29,11 @@ export function registerContextPlanCommand(
     )
     .option("-p, --profile <profile>", "Profile schema to load", "career")
     .option(
+      "-s, --strategy <strategy>",
+      "Retrieval ranking strategy (lexical, hybrid)",
+      "lexical",
+    )
+    .option(
       "-c, --config <path>",
       "Path to akcp.yaml or directory containing it",
     )
@@ -94,6 +99,7 @@ export function registerContextPlanCommand(
           profile: options.profile,
           budget: { maxTokens: budgetTokens },
           mode: "balanced",
+          strategy: options.strategy === "hybrid" ? "hybrid" : "lexical",
         });
 
         if (options.format === "json") {

@@ -283,9 +283,9 @@ describe("CLI Smoke Tests", () => {
       }
     });
 
-    it("should execute context plan and lifecycle report with --bundle option", async () => {
+    it("should execute context plan (lexical and hybrid) and lifecycle report with --bundle option", async () => {
       const planOut = await runCli(
-        "context plan --bundle examples/domains/career --budget 2000 --format json",
+        "context plan --bundle examples/domains/career --budget 2000 --strategy hybrid --format json",
       );
       const parsedPlan = JSON.parse(planOut);
       expect(parsedPlan.budgetTokens).toBe(2000);
@@ -296,6 +296,58 @@ describe("CLI Smoke Tests", () => {
       );
       const parsedLifecycle = JSON.parse(lifecycleOut);
       expect(parsedLifecycle.totalDocuments).toBeGreaterThan(0);
+    });
+
+    it("should sign and verify a compiled bundle manifest using Ed25519 keys", async () => {
+      const os = await import("os");
+      const tmpKeyDir = fs.mkdtempSync(path.join(os.tmpdir(), "akcp-sign-"));
+      const tmpManifest = path.join(tmpKeyDir, "akcp-manifest.json");
+      const dummyTarget = path.join(tmpKeyDir, "ir.json");
+      try {
+        fs.writeFileSync(dummyTarget, '{"hello":"world"}', "utf-8");
+        const crypto = await import("crypto");
+        const hash = crypto
+          .createHash("sha256")
+          .update('{"hello":"world"}')
+          .digest("hex");
+        fs.writeFileSync(
+          tmpManifest,
+          JSON.stringify(
+            {
+              version: "1.0.0",
+              akcpVersion: "0.1.0",
+              createdAt: new Date().toISOString(),
+              source: { bundlePath: tmpKeyDir, hash },
+              targets: [
+                {
+                  name: "context-pack",
+                  outputs: [dummyTarget],
+                  hash,
+                },
+              ],
+            },
+            null,
+            2,
+          ),
+          "utf-8",
+        );
+
+        const signOut = await runCli(
+          `sign "${tmpManifest}" --generate-keys "${tmpKeyDir}" --format json`,
+        );
+        const parsedSign = JSON.parse(signOut);
+        expect(parsedSign.signed).toBe(true);
+        expect(fs.existsSync(parsedSign.attestationPath)).toBe(true);
+
+        const verifyOut = await runCli(
+          `verify "${tmpManifest}" --public-key "${parsedSign.publicKeyPath}" --format json`,
+        );
+        const parsedVerify = JSON.parse(verifyOut);
+        expect(parsedVerify.isValid).toBe(true);
+        expect(parsedVerify.signatureValid).toBe(true);
+      } finally {
+        fs.rmSync(tmpKeyDir, { recursive: true, force: true });
+      }
     });
   });
 });

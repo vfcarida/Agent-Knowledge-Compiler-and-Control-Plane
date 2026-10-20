@@ -1,33 +1,87 @@
 import type { AgentKnowledgeIR } from "../ir/types.js";
+import type { OKFDocument } from "../domain/types.js";
 import type { GraphNode, GraphEdge, KnowledgeGraphSummary } from "./types.js";
+import { extractMarkdownLinks } from "./extract-links.js";
 
-export function buildSemanticGraph(ir: AgentKnowledgeIR) {
+export function buildSemanticGraph(input: AgentKnowledgeIR | OKFDocument[]) {
   const nodes: GraphNode[] = [];
   const edges: GraphEdge[] = [];
 
   const validConceptIds = new Set<string>();
 
-  // 1. Build Nodes
-  ir.concepts.forEach((concept) => {
-    validConceptIds.add(concept.conceptId);
-    nodes.push({
-      conceptId: concept.conceptId,
-      type: concept.type,
-      byteSize: concept.budget.byteSize,
-      filePath: concept.source.filePath,
-    });
-  });
+  if (Array.isArray(input)) {
+    // 1. Build Nodes from OKFDocument[]
+    for (const doc of input) {
+      validConceptIds.add(doc.conceptId);
+      nodes.push({
+        conceptId: doc.conceptId,
+        type: doc.frontmatter.type || "Concept",
+        byteSize: Buffer.byteLength(doc.body || "", "utf-8"),
+        filePath: doc.filePath,
+      });
+    }
 
-  // 2. Build Edges (from ir.links, which now includes both frontmatter and markdown links)
-  if (ir.links) {
-    ir.links.forEach((link) => {
-      edges.push({
-        sourceConceptId: link.sourceConceptId,
-        targetConceptId: link.targetConceptId,
-        relationType: link.relationType,
-        isBroken: !validConceptIds.has(link.targetConceptId),
+    // 2. Build Edges from frontmatter (depends_on, references) and markdown links
+    for (const doc of input) {
+      const fm = doc.frontmatter as Record<string, unknown>;
+      const deps = Array.isArray(fm.depends_on)
+        ? (fm.depends_on as string[])
+        : [];
+      for (const target of deps) {
+        edges.push({
+          sourceConceptId: doc.conceptId,
+          targetConceptId: target,
+          relationType: "depends_on",
+          isBroken: !validConceptIds.has(target),
+        });
+      }
+
+      const refs = Array.isArray(fm.references)
+        ? (fm.references as string[])
+        : [];
+      for (const target of refs) {
+        edges.push({
+          sourceConceptId: doc.conceptId,
+          targetConceptId: target,
+          relationType: "references",
+          isBroken: !validConceptIds.has(target),
+        });
+      }
+
+      const mdLinks = extractMarkdownLinks(doc.conceptId, doc.body || "");
+      for (const link of mdLinks) {
+        edges.push({
+          sourceConceptId: doc.conceptId,
+          targetConceptId: link.targetConceptId,
+          relationType: link.relationType,
+          isBroken: !validConceptIds.has(link.targetConceptId),
+        });
+      }
+    }
+  } else {
+    const ir = input;
+    // 1. Build Nodes
+    (ir.concepts || []).forEach((concept) => {
+      validConceptIds.add(concept.conceptId);
+      nodes.push({
+        conceptId: concept.conceptId,
+        type: concept.type,
+        byteSize: concept.budget.byteSize,
+        filePath: concept.source.filePath,
       });
     });
+
+    // 2. Build Edges (from ir.links, which now includes both frontmatter and markdown links)
+    if (ir.links) {
+      ir.links.forEach((link) => {
+        edges.push({
+          sourceConceptId: link.sourceConceptId,
+          targetConceptId: link.targetConceptId,
+          relationType: link.relationType,
+          isBroken: !validConceptIds.has(link.targetConceptId),
+        });
+      });
+    }
   }
 
   // 3. Calculate Metrics

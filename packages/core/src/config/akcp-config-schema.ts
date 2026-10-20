@@ -34,6 +34,7 @@ export const TargetConfigSchema = z.object({
       "policy-bundle",
       "graph-json",
       "okf-bundle",
+      "hybrid-index",
     ])
     .default("context-pack"),
   out: z.string().min(1).optional(),

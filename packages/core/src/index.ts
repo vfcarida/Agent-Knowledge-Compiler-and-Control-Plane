@@ -18,6 +18,7 @@ export * from "./context/token-estimator.js";
 export * from "./context/relevance-score.js";
 export * from "./context/context-pack-manifest.js";
 export * from "./context/context-plan.js";
+export * from "./context/hybrid-retrieval.js";
 
 // Lifecycle
 export * from "./lifecycle/types.js";
@@ -76,6 +77,7 @@ export { PolicyBundleTarget } from "./targets/policy-bundle.js";
 export { EvalDatasetTarget } from "./targets/eval-dataset.js";
 export { GraphJsonTarget } from "./targets/graph-json.js";
 export { DashboardMetadataTarget } from "./targets/dashboard-metadata.js";
+export { HybridIndexTarget } from "./targets/hybrid-index.js";
 
 // Infrastructure
 export { FrontmatterParser } from "./infrastructure/frontmatter-parser.js";
@@ -184,6 +186,7 @@ export {
   type AuthConfig,
   type AuthResult,
 } from "./capabilities/auth.js";
+export * from "./capabilities/jwt-auth.js";
 export {
   CostTracker,
   estimateTokens,
@@ -229,6 +232,7 @@ export * from "./scanner/scan.js";
 
 // Compiler
 export * from "./compiler/incremental-build-state.js";
+export * from "./compiler/watch-planner.js";
 export * from "./compiler/pipeline.js";
 export { runCompilerPipeline } from "./compiler/run-pipeline.js";
 

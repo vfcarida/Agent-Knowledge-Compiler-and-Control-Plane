@@ -9,6 +9,7 @@ import { registerCompileCommand } from "./core/compile.js";
 import { registerScanCommand } from "./core/scan.js";
 import { registerInspectCommand } from "./core/inspect.js";
 import { registerVerifyCommand } from "./core/verify.js";
+import { registerSignCommand } from "./core/sign.js";
 import { registerDoctorCommand } from "./core/doctor.js";
 
 // Governance
@@ -54,6 +55,7 @@ export function registerAllCommands(program: Command, ctx: CLIContext): void {
   registerScanCommand(program, ctx);
   registerInspectCommand(program, ctx);
   registerVerifyCommand(program, ctx);
+  registerSignCommand(program, ctx);
   registerDoctorCommand(program, ctx);
 
   // Governance

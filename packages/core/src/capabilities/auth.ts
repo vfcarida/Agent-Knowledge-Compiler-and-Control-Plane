@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { TokenBucketRateLimiter } from "./rate-limiter.js";
+import { verifyJwtToken, type JwtAuthConfig } from "./jwt-auth.js";
 
 export interface AgentCredential {
   agentId: string;
@@ -14,6 +15,7 @@ export interface AuthConfig {
   requireAuth: boolean; // if false, auth is skipped (dev mode)
   maxAuthAttempts?: number; // Default: 5
   authCooldownMs?: number; // Default: 10000 (10s per token)
+  jwt?: JwtAuthConfig;
 }
 
 // Keyed by AuthConfig object identity (not a single module-level instance) so
@@ -39,6 +41,7 @@ export interface AuthResult {
   authenticated: boolean;
   agentId?: string;
   scopes?: string[];
+  roles?: string[];
   reason?: string;
 }
 
@@ -82,6 +85,27 @@ export function authenticate(
       authenticated: false,
       reason:
         "No API key provided. Include _apiKey in request payload or X-AKCP-Key header.",
+    };
+  }
+
+  // Check if token is a JWT (3 dot-separated base64url segments or Bearer prefix) and JWT config is active
+  if (
+    config.jwt &&
+    (apiKey.startsWith("Bearer ") || apiKey.split(".").length === 3)
+  ) {
+    const jwtRes = verifyJwtToken(apiKey, config.jwt);
+    if (!jwtRes.valid) {
+      return {
+        authenticated: false,
+        reason: jwtRes.reason || "Invalid JWT token.",
+      };
+    }
+    authLimiter.reset(sourceKey);
+    return {
+      authenticated: true,
+      agentId: jwtRes.agentId,
+      scopes: jwtRes.scopes,
+      roles: jwtRes.roles,
     };
   }
 

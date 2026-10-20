@@ -11,14 +11,17 @@ The full, living roadmap specification is maintained at [docs/governance/roadmap
 Production-ready and CI-validated capabilities shipping in current releases:
 
 - **OKF v0.1 Parsing & Normalization**: Full YAML frontmatter and Markdown body parsing with deterministic schema validation.
-- **AK-IR Intermediate Representation & 11 Compile Targets**: Type-safe IR compilation with SHA-256 provenance hashing and deterministic emission across `context-pack`, `openwiki`, `agent-instructions`, `mcp-resources`, `mcp-tools`, `mcp-prompts`, `policy-bundle`, `eval-dataset`, `dashboard-metadata`, `graph-json`, and `okf-bundle`.
-- **Zero-Trust MCP Gateway**: Policy-enforced tool execution interceptor with rate limiting, PII redaction, and audit logging.
-- **Human-In-The-Loop (HITL) Store**: Approval gating for high-risk agent operations with TTL-bound, single-use SHA-256 tokens.
+- **AK-IR Intermediate Representation & 12 Compile Targets**: Type-safe IR compilation with SHA-256 provenance hashing and deterministic emission across `context-pack`, `openwiki`, `agent-instructions`, `mcp-resources`, `mcp-tools`, `mcp-prompts`, `policy-bundle`, `eval-dataset`, `dashboard-metadata`, `graph-json`, `okf-bundle`, and `hybrid-index`.
+- **Hybrid Retrieval Engine (`HybridRetriever` & `akcp context plan --strategy hybrid`)**: Combines Okapi BM25 lexical scoring, deterministic L2-normalized dense embeddings, and Personalized PageRank over the Semantic Knowledge Graph via Reciprocal Rank Fusion (RRF).
+- **Cryptographic Provenance Signing (`akcp sign` & `akcp verify --public-key`)**: Ed25519 asymmetric signing and verification of in-toto ITE-6 provenance attestations (`compile --sign-key`, `akcp sign`, `akcp verify`).
+- **Zero-Trust MCP Gateway & JWT/OIDC Identity Verification**: Policy-enforced tool execution interceptor with HS256/EdDSA/RS256 JWT bearer verification, OIDC scope/role mapping, Streamable HTTP JSON-RPC 2.0 (`POST /mcp`), rate limiting, PII redaction, and audit logging.
+- **Reactive Incremental Watch Compiler (`akcp compile --watch`)**: Real-time file watcher guided by the Semantic Knowledge Graph `impactMap` to compute downstream blast radius and recompile affected targets.
+- **Human-In-The-Loop (HITL) Store**: Approval gating for high-risk agent operations with TTL-bound, single-use SHA-256 tokens backed by SQLite/Redis persistence.
 - **Policy Cards Engine & Policy Linter (`akcp policy lint`)**: Declarative YAML governance supporting condition evaluations, environment scoping, conflict resolution, and static detection of shadowed, contradictory, and redundant rules.
 - **Enterprise Compliance Bundles**: Turnkey, CI-linted policy templates mapped to GDPR, HIPAA, and SOC 2 requirements (`docs/specs/examples/compliance/`).
 - **Semantic & Git Revision Diff Engine (`akcp diff`)**: AST-level diffing between knowledge bundles or Git revisions (`--from-git`, `--to-git`) with breaking-change severity classification.
 - **Grounding & Adversarial Evaluation (`akcp evals`)**: Automated evaluation suites for prompt-injection defense (`--scenario prompt-injection`) and retrieval grounding Precision@k / Recall@k (`--scenario retrieval-grounding`).
-- **Unified CLI Suite & VSCode Extension**: Modular CLI commands plus VSCode extension with OKF frontmatter diagnostics and completions.
+- **Interactive Control Plane Dashboard & VSCode Extension**: Interactive SVG Semantic Graph & Blast Radius Explorer, Policy & Prompt Firewall Playground, and VSCode extension with OKF frontmatter diagnostics and completions.
 - **Production Reference Domains**: Golden compiler snapshots and verification for `career`, `it-operations`, and `customer-support`.
 
 ---

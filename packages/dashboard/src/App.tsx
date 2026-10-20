@@ -53,7 +53,7 @@ export default function App() {
       case "packs":
         return <ContextPacks data={data} />;
       case "graph":
-        return <GraphReport />;
+        return <GraphReport data={data} />;
       case "mcp":
         return <MCPCapabilities />;
       case "approvals":

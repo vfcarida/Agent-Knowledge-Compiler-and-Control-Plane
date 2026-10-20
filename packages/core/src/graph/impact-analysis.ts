@@ -5,7 +5,10 @@ import type { GraphEdge, ImpactMap } from "./types.js";
  * If A links to B, then B impacts A.
  * Returns a map from a ConceptId to all ConceptIds that transitively depend on it.
  */
-export function computeImpactMap(edges: GraphEdge[]): ImpactMap {
+export function computeImpactMap(
+  input: GraphEdge[] | { edges: GraphEdge[] },
+): ImpactMap {
+  const edges = Array.isArray(input) ? input : input.edges;
   const directImpacts: Record<string, Set<string>> = {};
 
   // Build direct reverse edges (if A -> B, then B -> A in reverse)

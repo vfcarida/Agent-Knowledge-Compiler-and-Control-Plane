@@ -37,6 +37,15 @@ export function registerCompileCommand(
       "Bypass the incremental-build cache and force recompilation of all targets",
       false,
     )
+    .option(
+      "--sign-key <path>",
+      "Path to Ed25519 private key PEM file to sign the provenance manifest",
+    )
+    .option(
+      "-w, --watch",
+      "Watch OKF source directories and incrementally recompile impacted concepts",
+      false,
+    )
     .action(async (options) => {
       const fs = await import("fs");
       const path = await import("path");
@@ -56,7 +65,10 @@ export function registerCompileCommand(
         EvalDatasetTarget,
         GraphJsonTarget,
         DashboardMetadataTarget,
+        HybridIndexTarget,
         ProvenanceManifestBuilder,
+        writeSignedAttestation,
+        computeWatchImpactPlan,
         hashConfig,
       } = await import("@akcp/core");
 
@@ -244,6 +256,7 @@ export function registerCompileCommand(
           "dashboard-metadata": new DashboardMetadataTarget(),
           "graph-json": new GraphJsonTarget(),
           "okf-bundle": new OkfBundleTarget(),
+          "hybrid-index": new HybridIndexTarget(),
         };
 
         if (!skipTargetGeneration) {
@@ -278,6 +291,78 @@ export function registerCompileCommand(
           console.log(
             `[OK] Compilation complete. Manifest written to ${fullManifestPath}`,
           );
+
+          if (options.signKey) {
+            const keyPath = path.resolve(process.cwd(), options.signKey);
+            if (!fs.existsSync(keyPath)) {
+              console.error(`[ERROR] Signing key not found at ${keyPath}`);
+              process.exit(1);
+            }
+            const privateKeyPem = fs.readFileSync(keyPath, "utf-8");
+            const writtenManifest = JSON.parse(
+              fs.readFileSync(fullManifestPath, "utf-8"),
+            );
+            const attestationPath = await writeSignedAttestation(
+              writtenManifest,
+              fullManifestPath,
+              privateKeyPem,
+            );
+            console.log(
+              `[OK] Signed provenance attestation written to ${attestationPath}`,
+            );
+          }
+        }
+
+        if (options.watch) {
+          console.log(
+            `[WATCH] Watching ${targetDir} for knowledge graph changes...`,
+          );
+          let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+          fs.watch(targetDir, { recursive: true }, (_eventType, filename) => {
+            if (!filename || filename.includes("dist")) return;
+            if (debounceTimer) clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(async () => {
+              const changedPath = path.resolve(targetDir, filename);
+              const pseudoDocs = (ir.concepts || []).map((c: any) => ({
+                conceptId: c.conceptId,
+                filePath: c.source?.filePath || `${c.conceptId}.md`,
+                frontmatter: c.frontmatter,
+                body: c.body,
+                rawContent: c.body,
+              }));
+              const plan = computeWatchImpactPlan(
+                changedPath,
+                pseudoDocs,
+                targetsToRun.map((t: any) => t.type),
+              );
+              console.log(
+                `[WATCH] Change detected in ${filename} -> Impacted concepts (${plan.impactedConceptIds.length}): ${plan.impactedConceptIds.join(", ") || "full rebuild"}`,
+              );
+              const rebuildRes = await compileToIR(targetDir, {
+                sources: config.compile?.sources,
+                generateProvenance: options.provenance,
+                privacy: config.privacy,
+                capabilities,
+                policies: resolveIrPolicies(config),
+              });
+              if (rebuildRes.ok) {
+                for (const targetConf of targetsToRun) {
+                  if (plan.affectedTargetTypes.includes(targetConf.type)) {
+                    const targetImpl = targetInstances[targetConf.type];
+                    if (targetImpl) {
+                      await targetImpl.compile(rebuildRes.value.ir, {
+                        ...targetConf,
+                        out: path.resolve(targetDir, targetConf.out),
+                      });
+                    }
+                  }
+                }
+                console.log(
+                  `[WATCH] Incremental recompilation complete for targets: ${plan.affectedTargetTypes.join(", ")}`,
+                );
+              }
+            }, 200);
+          });
         }
       } catch (err: any) {
         console.error(`[ERROR] Compilation failed: ${err.message}`);
