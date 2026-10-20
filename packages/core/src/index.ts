@@ -11,6 +11,7 @@ export * from "./scorecard/recommendations.js";
 export * from "./plugins/manifest-schema.js";
 export * from "./plugins/loader.js";
 export * from "./plugins/registry.js";
+export * from "./plugins/sandbox-runner.js";
 
 // Context Economics
 export * from "./context/budget.js";
@@ -154,6 +155,7 @@ export * from "./policies/opa-provider.js";
 export * from "./policies/linter.js";
 export * from "./policies/formal-verifier.js";
 export * from "./policies/zk-policy-proof.js";
+export * from "./policies/adversarial-fuzzer.js";
 
 // Identity & Capabilities
 export * from "./identity/types.js";
@@ -266,6 +268,7 @@ export { RegexPiiDetector } from "./privacy/regex-pii-detector.js";
  */
 export { createPiiDetector } from "./privacy/create-detector.js";
 export * from "./privacy/waf.js";
+export * from "./privacy/pii-vault.js";
 
 // Semantic & Policy Diffing
 export * from "./diff/index.js";
@@ -278,6 +281,7 @@ export {
   normalizeLinkId,
   extractMarkdownLinks,
 } from "./graph/extract-links.js";
+export * from "./graph/contradiction-detector.js";
 
 // Bidirectional OpenWiki Sync, Autonomous OKF Synthesis, and Federated Registries
 export * from "./connectors/bidirectional-sync.js";

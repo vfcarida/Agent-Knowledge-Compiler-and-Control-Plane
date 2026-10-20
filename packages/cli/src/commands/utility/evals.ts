@@ -12,7 +12,7 @@ export function registerEvalsCommand(program: Command, _ctx: CLIContext): void {
   evalsCmd
     .option(
       "--scenario <name>",
-      "Specific scenario to run (prompt-injection, retrieval-grounding)",
+      "Specific scenario to run (prompt-injection, retrieval-grounding, red-team)",
     )
     .option("--report", "Generate a report")
     .action(async (options) => {
@@ -65,9 +65,31 @@ export function registerEvalsCommand(program: Command, _ctx: CLIContext): void {
           console.error(`[ERROR] Scenario failed: ${err.message}`);
           process.exit(1);
         }
+      } else if (options.scenario === "red-team") {
+        const { runAdversarialRedTeamSuite } = await import("@akcp/core");
+        console.log(`[INFO] Running evaluation scenario: red-team`);
+        try {
+          const result = await runAdversarialRedTeamSuite();
+          if (options.report) {
+            console.log("\n=== EVALUATION REPORT ===");
+            console.log(`Scenario: ${result.scenario}`);
+            console.log(`Total Vectors: ${result.totalVectors}`);
+            console.log(`Defended Vectors: ${result.defendedVectors}`);
+            console.log(`Breached Vectors: ${result.breachedVectors}`);
+            console.log(
+              `Resilience Score: ${(result.resilienceScore * 100).toFixed(1)}%`,
+            );
+            console.log(`Passed: ${result.passed ? "YES" : "NO"}`);
+            console.log("=========================\n");
+          }
+          process.exit(result.passed ? 0 : 1);
+        } catch (err: any) {
+          console.error(`[ERROR] Scenario failed: ${err.message}`);
+          process.exit(1);
+        }
       } else {
         console.error(
-          "[ERROR] Scenario not specified or unsupported. Use --scenario prompt-injection or --scenario retrieval-grounding",
+          "[ERROR] Scenario not specified or unsupported. Use --scenario prompt-injection, --scenario retrieval-grounding, or --scenario red-team",
         );
         process.exit(1);
       }

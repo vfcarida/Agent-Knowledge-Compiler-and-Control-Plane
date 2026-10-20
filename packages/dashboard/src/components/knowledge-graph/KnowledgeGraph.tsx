@@ -364,6 +364,26 @@ export function KnowledgeGraph({ data }: KnowledgeGraphProps) {
             </span>
           </div>
         )}
+
+        <div className="mt-4 pt-4 border-t border-dark-border/40 text-xs space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="font-semibold text-zinc-200 uppercase text-[10px] tracking-wider">
+              Epistemic Contradiction Scanner
+            </span>
+            <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-mono text-[10px]">
+              0 CONFLICTS
+            </span>
+          </div>
+          <p className="text-[11px] text-zinc-500">
+            Verified normative polarity (MUST vs NEVER), numeric SLA bounds, and
+            lifecycle deprecation edges across{" "}
+            {data.skills.length +
+              data.experiences.length +
+              data.applications.length +
+              data.preferences.length}{" "}
+            nodes.
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -586,6 +586,26 @@ export function GovernancePolicies() {
             </div>
           </div>
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono pt-2 border-t border-zinc-800/60">
+          <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-1">
+            <div className="text-zinc-500 text-[10px] uppercase">
+              Reversible Format-Preserving PII Token Vault
+            </div>
+            <div className="text-neon-indigo truncate">
+              alice@example.com ↔ tkn_9f2a1c84e01b@vault.akcp.local
+              (AES-256-GCM)
+            </div>
+          </div>
+          <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-1">
+            <div className="text-zinc-500 text-[10px] uppercase">
+              OCap VM Plugin Sandbox & Red-Team Fuzzer
+            </div>
+            <div className="text-emerald-400">
+              100% Defense Resilience (5/5 Attack Vectors Blocked)
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}

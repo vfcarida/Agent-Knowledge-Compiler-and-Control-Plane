@@ -26,6 +26,7 @@ import { registerRegistryCommand } from "./governance/registry.js";
 import { registerGraphBuildCommand } from "./graph/build.js";
 import { registerGraphInspectCommand } from "./graph/inspect.js";
 import { registerGraphImpactedCommand } from "./graph/impacted.js";
+import { registerGraphContradictionsCommand } from "./graph/contradictions.js";
 
 // Context
 import { registerContextPlanCommand } from "./context/plan.js";
@@ -77,6 +78,7 @@ export function registerAllCommands(program: Command, ctx: CLIContext): void {
   registerGraphBuildCommand(program, ctx);
   registerGraphInspectCommand(program, ctx);
   registerGraphImpactedCommand(program, ctx);
+  registerGraphContradictionsCommand(program, ctx);
 
   // Context
   registerContextPlanCommand(program, ctx);

@@ -793,3 +793,23 @@ Generate and verify a privacy-preserving selective-disclosure policy execution p
 ```bash
 akcp policy prove [target] [-t <tool>] [-a <agent>] [-r <risk>] [-s <sideEffect>] [-e <env>] [-d <discloseFields>] [-f <format>]
 ```
+
+### `akcp graph contradictions`
+
+**Status**: Beta
+
+Detect normative polarity conflicts (`MUST` vs `NEVER`), numeric SLA divergences, and stale dependency overrides across the Semantic Knowledge Graph.
+
+```bash
+akcp graph contradictions [-b <bundleDir>] [-f <format>] [--strict]
+```
+
+### `akcp evals --scenario red-team`
+
+**Status**: Beta
+
+Execute the Red-Team Adversarial Policy & Prompt Firewall Fuzzer across privilege escalation, unapproved external submission, and shadow-tool attack vectors.
+
+```bash
+akcp evals --scenario red-team [--report]
+```

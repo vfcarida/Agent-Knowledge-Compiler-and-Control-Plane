@@ -34,6 +34,10 @@ Production-ready and CI-validated capabilities shipping in current releases:
 - **Multi-Party Quorum HITL & CRDT Multi-Cluster Replication (`QuorumApprovalStore`)**: $M$-of-$N$ distinct supervisor quorum gating with self-approval blocking and state-based join-semilattice CRDT synchronization across clusters.
 - **Privacy-Preserving Selective-Disclosure Policy Proofs (`akcp policy prove`)**: Salted 256-bit SHA-256 attribute commitments and Merkle witness verification proving policy compliance without exposing blinded attributes.
 - **Semantic-Preserving Adaptive Context Compressor (`compressDocumentSemantically` & `packWithAdaptiveBudget`)**: Preserves Markdown headings, normative invariants (`MUST`/`NEVER`), and `[[WikiLinks]]` under tight FinOps `CostTracker` token budgets.
+- **Reversible Format-Preserving PII Token Vault (`PiiTokenVault`)**: Deterministic `HMAC-SHA256` format-preserving pseudonymization (`tkn_*@vault.akcp.local`) backed by `AES-256-GCM` encrypted vault storage and governed boundary detokenization.
+- **Epistemic Contradiction & Drift Detector (`akcp graph contradictions`)**: Graph-wide detection of normative polarity conflicts (`MUST` vs `NEVER`), numeric SLA parameter divergences, and active-to-deprecated dependency links.
+- **Isolated Object-Capability (OCap) VM Plugin Sandbox (`VmPluginSandbox`)**: `node:vm` isolated plugin execution with attenuated host capabilities, path-traversal confinement, SHA-256 code integrity checks, and CPU timeout enforcement.
+- **Red-Team Adversarial Policy Fuzzer (`akcp evals --scenario red-team`)**: Automated fuzzing of privilege escalation, unapproved external submissions, prompt-in-argument injection, and shadow tool probes.
 - **Production Reference Domains**: Golden compiler snapshots and verification for `career`, `it-operations`, and `customer-support`.
 
 ---
