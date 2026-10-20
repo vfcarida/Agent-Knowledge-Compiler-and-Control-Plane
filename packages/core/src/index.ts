@@ -151,6 +151,7 @@ export * from "./policies/internal-provider.js";
 export * from "./policies/cedar-provider.js";
 export * from "./policies/opa-provider.js";
 export * from "./policies/linter.js";
+export * from "./policies/formal-verifier.js";
 
 // Identity & Capabilities
 export * from "./identity/types.js";
@@ -165,6 +166,7 @@ export * from "./capabilities/request.js";
 export { MCPGateway } from "./capabilities/gateway.js";
 export * from "./capabilities/gateway.js";
 export * from "./capabilities/approval-store.js";
+export * from "./capabilities/json-schema-to-zod.js";
 /**
  * Rate limiter implementations for controlling agent MCP capability usage.
  */

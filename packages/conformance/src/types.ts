@@ -3,7 +3,13 @@ export type ConformanceLevel =
   | "OKF-compatible"
   | "AKCP-profile-compatible"
   | "AKCP-compiler-compatible"
-  | "AKCP-control-plane-compatible";
+  | "AKCP-control-plane-compatible"
+  | "AKCP-zero-trust-attested";
+
+export interface ConformanceRunnerOptions {
+  verifyZeroTrust?: boolean;
+  publicKeyPem?: string;
+}
 
 export interface ConformanceDetail {
   file?: string;

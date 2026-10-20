@@ -416,4 +416,88 @@ export function registerControlPlaneCommand(
         process.exit(1);
       }
     });
+
+  // Subcommand: audit-verify
+  controlPlaneCmd
+    .command("audit-verify")
+    .description(
+      "Cryptographically verify SHA-256 hash-chaining and Merkle root integrity of the audit ledger",
+    )
+    .option("-f, --file <path>", "Path to audit log file")
+    .option("--json", "Output verification report as JSON", false)
+    .action(async (options) => {
+      const fs = await import("fs");
+      const path = await import("path");
+      const { FileAuditLogService, GENESIS_AUDIT_HASH } =
+        await import("@akcp/core");
+
+      try {
+        const candidatePaths = options.file
+          ? [path.resolve(process.cwd(), options.file)]
+          : [
+              path.resolve(process.cwd(), ".akcp/audit.log"),
+              path.resolve(process.cwd(), "reports/audit.log"),
+              path.resolve(process.cwd(), "audit.log"),
+            ];
+
+        let activePath: string | null = null;
+        for (const p of candidatePaths) {
+          if (fs.existsSync(p)) {
+            activePath = p;
+            break;
+          }
+        }
+
+        if (!activePath) {
+          const emptyReport = {
+            valid: true,
+            totalEvents: 0,
+            merkleRoot: GENESIS_AUDIT_HASH,
+            headHash: GENESIS_AUDIT_HASH,
+            findings: [],
+          };
+          if (options.json) {
+            console.log(JSON.stringify(emptyReport, null, 2));
+          } else {
+            console.log("=== AKCP Audit Ledger Verification ===");
+            console.log("No audit log file found (0 events).");
+          }
+          return;
+        }
+
+        const auditService = new FileAuditLogService(activePath);
+        const result = await auditService.verifyLedger();
+
+        if (options.json) {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(
+            `=== AKCP Audit Ledger Verification (Source: ${activePath}) ===`,
+          );
+          console.log(
+            `Status:       ${result.valid ? "VERIFIED (Tamper-Free)" : "TAMPER DETECTED"}`,
+          );
+          console.log(`Total Events: ${result.totalEvents}`);
+          console.log(`Merkle Root:  ${result.merkleRoot}`);
+          console.log(`Head Hash:    ${result.headHash}`);
+          if (result.findings.length > 0) {
+            console.log("\nTamper Findings:");
+            for (const f of result.findings) {
+              console.log(
+                `  - [Index ${f.index} | ${f.eventId}] ${f.reason}: expected ${f.expected}, got ${f.actual}`,
+              );
+            }
+          }
+        }
+
+        if (!result.valid) {
+          process.exit(1);
+        }
+      } catch (err: any) {
+        console.error(
+          `[ERROR] Audit ledger verification failed:\n${err.message}`,
+        );
+        process.exit(1);
+      }
+    });
 }

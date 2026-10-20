@@ -4,10 +4,17 @@ import {
   OKFFileRepository,
   buildKnowledgeIR,
   loadAkcpConfig,
+  extractGatewayPolicies,
+  verifyPolicyInvariants,
+  readAndVerifyAttestation,
   type AgentKnowledgeIR,
 } from "@akcp/core";
 
-import type { ConformanceReport, ConformanceDetail } from "./types.js";
+import type {
+  ConformanceReport,
+  ConformanceDetail,
+  ConformanceRunnerOptions,
+} from "./types.js";
 import path from "path";
 
 const SIDE_EFFECTING_CAPABILITY_TYPES = new Set([
@@ -19,13 +26,22 @@ const SIDE_EFFECTING_CAPABILITY_TYPES = new Set([
 export class ConformanceRunner {
   private bundlePath: string;
   private profile: string;
+  private options: ConformanceRunnerOptions;
 
-  constructor(bundlePath: string, profile: string = "career") {
+  constructor(
+    bundlePath: string,
+    profile: string = "career",
+    options: ConformanceRunnerOptions = {},
+  ) {
     this.bundlePath = bundlePath;
     this.profile = profile;
+    this.options = options;
   }
 
-  public async run(): Promise<ConformanceReport> {
+  public async run(
+    runOptions?: ConformanceRunnerOptions,
+  ): Promise<ConformanceReport> {
+    const opts = { ...this.options, ...runOptions };
     const report: ConformanceReport = {
       conformanceLevel: "none",
       profileDetected: this.profile,
@@ -229,6 +245,91 @@ export class ConformanceRunner {
 
     if (controlPlaneCompatible) {
       report.conformanceLevel = "AKCP-control-plane-compatible";
+    } else {
+      return report;
+    }
+
+    // Level 5 (Opt-in Zero-Trust Attestation): AKCP-zero-trust-attested
+    if (opts.verifyZeroTrust && ir) {
+      let zeroTrustAttested = true;
+
+      // 1. Formal Policy Invariant Verification
+      const gatewayPolicies = extractGatewayPolicies(ir);
+      const formalReport = verifyPolicyInvariants(gatewayPolicies);
+      if (!formalReport.verified) {
+        zeroTrustAttested = false;
+        report.failed++;
+        report.details.push({
+          type: "error",
+          message: `Formal policy verification failed with ${formalReport.counterexamples.length} counterexample(s).`,
+          ruleId: "AKCP-ZT-FORMAL-POLICY",
+        });
+      } else {
+        report.passed++;
+      }
+
+      // 2. Cryptographic Provenance & Optional Ed25519 Attestation Verification
+      const candidateManifests = [
+        path.join(this.bundlePath, "dist", "akcp-manifest.json"),
+        path.join(this.bundlePath, "akcp-manifest.json"),
+        path.join(this.bundlePath, "dist", "build-manifest.json"),
+        path.join(this.bundlePath, "build-manifest.json"),
+      ];
+
+      let foundManifestPath: string | undefined;
+      for (const candidate of candidateManifests) {
+        if (await fsAdapter.exists(candidate)) {
+          foundManifestPath = candidate;
+          break;
+        }
+      }
+
+      if (!foundManifestPath) {
+        zeroTrustAttested = false;
+        report.failed++;
+        report.details.push({
+          type: "error",
+          message:
+            "Missing cryptographic build manifest (akcp-manifest.json) required for AKCP-zero-trust-attested.",
+          ruleId: "AKCP-ZT-PROVENANCE-MANIFEST",
+        });
+      } else {
+        report.passed++;
+        if (opts.publicKeyPem) {
+          const attestationPath =
+            foundManifestPath.replace(/\.json$/, "") + ".attestation.json";
+          if (!(await fsAdapter.exists(attestationPath))) {
+            zeroTrustAttested = false;
+            report.failed++;
+            report.details.push({
+              type: "error",
+              message: `Missing Ed25519 signed attestation at ${path.basename(attestationPath)}.`,
+              ruleId: "AKCP-ZT-ATTESTATION-SIG",
+            });
+          } else {
+            const verified = await readAndVerifyAttestation(
+              attestationPath,
+              opts.publicKeyPem,
+            );
+            if (!verified.valid) {
+              zeroTrustAttested = false;
+              report.failed++;
+              report.details.push({
+                type: "error",
+                message:
+                  "Ed25519 provenance attestation signature verification failed.",
+                ruleId: "AKCP-ZT-ATTESTATION-SIG",
+              });
+            } else {
+              report.passed++;
+            }
+          }
+        }
+      }
+
+      if (zeroTrustAttested) {
+        report.conformanceLevel = "AKCP-zero-trust-attested";
+      }
     }
 
     return report;

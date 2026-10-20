@@ -750,3 +750,23 @@ akcp registry list -r <registryDir>
 akcp registry verify -r <registryDir> -d <domain> [-p <publicKeyPath>] [--require-signed]
 akcp registry compose -r <registryDir> -d <domainsCsv> [-o <outDir>] [-p <publicKeyPath>] [--require-signed]
 ```
+
+### `akcp policy verify`
+
+**Status**: Beta
+
+Formally verify policy safety invariants or prove semantic equivalence across the finite request state space.
+
+```bash
+akcp policy verify [target] [--compare <otherTarget>] [-f <format>]
+```
+
+### `akcp control-plane audit-verify`
+
+**Status**: Beta
+
+Cryptographically verify SHA-256 hash-chaining (`prevHash` to `entryHash`) and Merkle root integrity of the runtime audit ledger.
+
+```bash
+akcp control-plane audit-verify [-f <filePath>] [--json]
+```

@@ -26,6 +26,10 @@ Production-ready and CI-validated capabilities shipping in current releases:
 - **Autonomous Governed OKF Synthesis (`akcp synthesize`)**: Automated frontmatter synthesis, PII/secret-driven sensitivity elevation, and semantic `[[WikiLink]]` auto-discovery.
 - **Governed Cloud Infrastructure & Webhook Adapters**: Kubernetes remediation adapter (`rollout restart`, `scale`, `rollback`, `logs`) with namespace allowlists and change-window gates, plus HMAC-SHA256 Signed Webhook adapter with SSRF protection and W3C TraceContext propagation.
 - **Federated Knowledge Registries (`akcp registry`)**: Cross-domain bundle publication, Ed25519 signature verification, collision detection, and Federated Knowledge Mesh composition.
+- **Tamper-Evident Hash-Chained Audit Ledger & Merkle Tree (`akcp control-plane audit-verify`)**: SHA-256 hash-chaining (`prevHash` -> `entryHash`) from Genesis with binary Merkle tree root calculation and tamper detection.
+- **Formal Policy Verifier & Equivalence Prover (`akcp policy verify`)**: Exhaustive finite-domain verification of zero-trust safety invariants and semantic equivalence proofs across Policy Cards.
+- **Deterministic JSON-Schema-to-Zod Compiler (`compileJsonSchemaToZod`)**: Runtime input/output contract compilation and validation for MCP capability handlers.
+- **Zero-Trust Conformance Certification (`AKCP-zero-trust-attested`)**: Level 5 conformance certification (`akcp conformance run --zero-trust`) verifying formal policy invariants and Ed25519 provenance attestations.
 - **Production Reference Domains**: Golden compiler snapshots and verification for `career`, `it-operations`, and `customer-support`.
 
 ---
@@ -44,7 +48,6 @@ Features undergoing active engineering and API stabilization:
 Architectural investigations scoped for future major initiatives:
 
 - **Zero-Knowledge Policy Proofs**: Cryptographic proofs of policy evaluation without revealing sensitive context attributes.
-- **Formal Verification of Policy Cards**: SMT-solver backed equivalence and reachability proofs across policy sets.
 
 ---
 

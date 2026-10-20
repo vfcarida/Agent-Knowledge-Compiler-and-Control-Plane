@@ -18,14 +18,33 @@ export function registerConformanceRunCommand(
     .requiredOption("-b, --bundle <directory>", "Path to the context bundle")
     .option("-p, --profile <profile>", "AKCP profile to test against", "career")
     .option("-f, --format <format>", "Output format (text or json)", "text")
+    .option(
+      "--zero-trust",
+      "Verify formal policy invariants and cryptographic provenance for AKCP-zero-trust-attested certification",
+      false,
+    )
+    .option(
+      "--public-key <path>",
+      "Path to Ed25519 public key PEM for signed attestation verification",
+    )
     .action(async (options) => {
       const path = await import("path");
+      const fs = await import("fs");
       const { ConformanceRunner } = await import("@akcp/conformance");
 
       try {
         const bundlePath = path.resolve(process.cwd(), options.bundle);
+        const publicKeyPem = options.publicKey
+          ? fs.readFileSync(
+              path.resolve(process.cwd(), options.publicKey),
+              "utf-8",
+            )
+          : undefined;
 
-        const runner = new ConformanceRunner(bundlePath, options.profile);
+        const runner = new ConformanceRunner(bundlePath, options.profile, {
+          verifyZeroTrust: Boolean(options.zeroTrust),
+          publicKeyPem,
+        });
         const report = await runner.run();
 
         if (options.format === "json") {
@@ -48,6 +67,15 @@ export function registerConformanceRunCommand(
               name: "AKCP-control-plane-compatible",
               label: "Level 4: AKCP-control-plane-compatible",
             },
+            ...(options.zeroTrust ||
+            report.conformanceLevel === "AKCP-zero-trust-attested"
+              ? [
+                  {
+                    name: "AKCP-zero-trust-attested",
+                    label: "Level 5: AKCP-zero-trust-attested",
+                  },
+                ]
+              : []),
           ];
 
           console.log("\n=============================================");

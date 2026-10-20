@@ -121,4 +121,52 @@ describe("ActionRegistry", () => {
     // Handler should be preserved
     expect(updated?.handler).toBe(mockHandler);
   });
+
+  it("compiles inputsSchema and outputsSchema from IR into strict Zod validators and enforces contracts via execute()", async () => {
+    const registry = new ActionRegistry();
+    const mockIR: any = {
+      capabilities: [
+        {
+          name: "create_ticket",
+          kind: "tool",
+          description: "Create a support ticket",
+          riskLevel: "medium",
+          inputsSchema: {
+            type: "object",
+            required: ["subject", "severity"],
+            additionalProperties: false,
+            properties: {
+              subject: { type: "string", minLength: 5 },
+              severity: { enum: ["low", "high", "critical"] },
+            },
+          },
+          outputsSchema: {
+            type: "object",
+            required: ["ticketId"],
+            properties: {
+              ticketId: { type: "string" },
+            },
+          },
+        },
+      ],
+    };
+
+    registry.registerFromIR(mockIR);
+
+    // Invalid input should fail contract check
+    const badInput = await registry.execute("create_ticket", {
+      subject: "hi",
+      severity: "invalid",
+    });
+    expect(badInput.success).toBe(false);
+    expect(badInput.error).toContain("Input contract violation");
+
+    // Valid input but simulated output lacks ticketId -> fails output contract check
+    const badOutput = await registry.execute("create_ticket", {
+      subject: "Database outage",
+      severity: "critical",
+    });
+    expect(badOutput.success).toBe(false);
+    expect(badOutput.error).toContain("Output contract violation");
+  });
 });
